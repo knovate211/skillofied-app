@@ -357,7 +357,7 @@ const ProfilePage: React.FC = () => {
             <SectionCard title="Generic Details" onEdit={() => open('generic')}>
               <div className={styles.grid2}>
                 <InfoRow label="Work Experience" value={generic.workExperience} />
-                {/* <InfoRow label="Career Gap" value={generic.careerGap} /> */}
+                <InfoRow label="Career Gap" value={generic.careerGap} />
                 <InfoRow label="Current State" value={generic.currentState} />
                 <InfoRow label="Current City" value={generic.currentCity} />
                 <div className={styles.fullSpan}>
@@ -450,7 +450,7 @@ const ProfilePage: React.FC = () => {
       {/* ── Generic Details Modal ── */}
       <Modal isOpen={openModal === 'generic'} title="Generic Details" onClose={() => setOpenModal(null)} onSave={save}>
         <FG label="Work Experience" req><SelInput opts={WORK_EXP_OPTIONS} value={dGeneric.workExperience} onChange={e => setDGeneric(g => ({ ...g, workExperience: e.target.value }))} /></FG>
-        {/* <FG label="Career gap in years" req><SelInput opts={CAREER_GAP_OPTIONS} value={dGeneric.careerGap} onChange={e => setDGeneric(g => ({ ...g, careerGap: e.target.value }))} /></FG> */}
+        <FG label="Career gap in years" req><SelInput opts={CAREER_GAP_OPTIONS} value={dGeneric.careerGap} onChange={e => setDGeneric(g => ({ ...g, careerGap: e.target.value }))} /></FG>
         <FG label="Current State" req><TxtInput placeholder="e.g. Karnataka" value={dGeneric.currentState} onChange={e => setDGeneric(g => ({ ...g, currentState: e.target.value }))} /></FG>
         <FG label="Current City" req><TxtInput placeholder="e.g. Bengaluru" value={dGeneric.currentCity} onChange={e => setDGeneric(g => ({ ...g, currentCity: e.target.value }))} /></FG>
         <FG label="Preferred Location" req>
