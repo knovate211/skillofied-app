@@ -2,6 +2,7 @@ import React, { useState, Suspense, lazy } from 'react';
 import { Group as PanelGroup, Panel, Separator as PanelResizeHandle } from 'react-resizable-panels';
 import ConsolePanel from '../../practice/ConsolePanel';
 import ProblemDescriptionPanel from '../../practice/ProblemDescriptionPanel';
+import { useToast } from '../../../context/ToastContext';
 import { runScratchpadApi } from '../../../api';
 
 const IDEPanel = lazy(() => import('../../practice/IDEPanel'));
@@ -41,8 +42,6 @@ interface Props {
   runnable?: boolean;
   /** Pre-set stdin fixture (e.g. SQL tables) */
   fixture?: string;
-  /** Validation error message from parent wrapper */
-  error?: string | null;
   /** Examples of inputs/outputs for the task */
   examples?: { input: string; output: string; explanation?: string }[];
 }
@@ -58,6 +57,8 @@ const LANGUAGE_LABEL: Record<string, string> = {
   sql: 'PostgreSQL',
   dockerfile: 'Dockerfile',
   shell: 'Shell',
+  yaml: 'YAML',
+  protobuf: 'Protocol Buffers',
 };
 
 // ─── SQL result formatter (same as AssignmentCodeEditor) ─────────────────────
@@ -104,7 +105,6 @@ const AssignmentIDE: React.FC<Props> = ({
   onSubmit,
   runnable = true,
   fixture,
-  error,
   examples,
 }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -113,6 +113,7 @@ const AssignmentIDE: React.FC<Props> = ({
   const [consoleTab, setConsoleTab] = useState<'testcases' | 'output' | 'custom'>('testcases');
   const [customInput, setCustomInput] = useState('');
 
+  const { showToast } = useToast();
   const label = LANGUAGE_LABEL[language] ?? language;
 
   // Adapt the prompt string into the shape ProblemDescriptionPanel expects
@@ -138,11 +139,13 @@ const AssignmentIDE: React.FC<Props> = ({
       const result = await runScratchpadApi(language, value, fixture ?? customInput);
       if (result.timedOut) {
         setRunResults({ success: false, totalCases: 0, passedCases: 0, results: [], error: 'Timed out. Check for an infinite loop.' });
+        showToast('Timed out. Check for an infinite loop.', 'error');
       } else if (result.exitCode !== 0) {
+        const detail = result.stderr.trim() || result.stdout.trim() || `Exited with code ${result.exitCode}`;
         setRunResults({
-          success: false, totalCases: 0, passedCases: 0, results: [],
-          error: result.stderr.trim() || result.stdout.trim() || `Exited with code ${result.exitCode}`,
+          success: false, totalCases: 0, passedCases: 0, results: [], error: detail,
         });
+        showToast(detail.split('\n')[0] || 'Your code failed to run.', 'error');
       } else {
         const raw = result.stdout.trim();
         const text = language === 'sql' ? formatSqlOutput(raw) : raw || '(no output — did you print anything?)';
@@ -172,12 +175,19 @@ const AssignmentIDE: React.FC<Props> = ({
           results: results,
           runtime: 'N/A',
         });
+        showToast(
+          overallSuccess
+            ? (examples?.length ? `Ran successfully — ${passedCount}/${results.length} example(s) matched.` : 'Ran successfully.')
+            : `Ran, but only ${passedCount}/${results.length} example(s) matched.`,
+          overallSuccess ? 'success' : 'info'
+        );
       }
     } catch (err) {
+      const detail = err instanceof Error ? err.message : 'Could not run your code.';
       setRunResults({
-        success: false, totalCases: 0, passedCases: 0, results: [],
-        error: err instanceof Error ? err.message : 'Could not run your code.',
+        success: false, totalCases: 0, passedCases: 0, results: [], error: detail,
       });
+      showToast(detail, 'error');
     } finally {
       setIsRunning(false);
     }
@@ -196,19 +206,6 @@ const AssignmentIDE: React.FC<Props> = ({
           {!isFullscreen && (
             <>
               <Panel defaultSize={40} minSize={25} style={{ display: 'flex', flexDirection: 'column' }}>
-                {error && (
-                  <div style={{
-                    background: '#2a0a0a',
-                    borderBottom: '1px solid #f8717130',
-                    color: '#f87171',
-                    padding: '12px 16px',
-                    fontSize: '12.5px',
-                    fontWeight: 700,
-                    lineHeight: '1.5',
-                  }}>
-                    ⚠️ {error}
-                  </div>
-                )}
                 <div style={{ flex: 1, minHeight: 0 }}>
                   <ProblemDescriptionPanel
                     problem={problemForPanel}

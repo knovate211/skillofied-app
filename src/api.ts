@@ -716,3 +716,262 @@ export async function recordProctorEventApi(
   });
   return data.recordProctorEvent;
 }
+
+// ── Practice ──────────────────────────────────────────────────────────────────
+
+export interface PracticeSetSummary {
+  id: string;
+  title: string;
+  level: string;
+  levelColor: string;
+  bgColor: string;
+  totalProblems: number;
+  progress: number;
+}
+
+export type ProblemStatus = 'Solved' | 'Unsolved' | 'In Progress';
+
+export interface PracticeProblemSummary {
+  id: string;
+  slug: string;
+  title: string;
+  difficulty: 'Easy' | 'Medium' | 'Hard';
+  topic: string;
+  xp: number;
+  setId?: string;
+  status: ProblemStatus;
+}
+
+export interface ProblemExampleDto {
+  input: string;
+  output: string;
+  explanation?: string;
+}
+
+export interface ProblemHint {
+  order: number;
+  title: string;
+  body: string;
+}
+
+export interface StarterCodes {
+  javascript: string;
+  python: string;
+  java: string;
+  cpp: string;
+  go?: string;
+}
+
+export interface ProblemDetailDto {
+  id: string;
+  slug: string;
+  title: string;
+  difficulty: 'Easy' | 'Medium' | 'Hard';
+  topic: string;
+  xp: number;
+  statement: string;
+  constraints: string[];
+  tags: string[];
+  examples: ProblemExampleDto[];
+  hints: ProblemHint[];
+  starterCodes: StarterCodes;
+  setId?: string;
+  userStatus?: string;
+}
+
+export interface TestCaseResult {
+  testCaseId: string;
+  input: string;
+  expectedOutput: string;
+  actualOutput: string;
+  status: string;
+  executionMs: number;
+  error: string;
+}
+
+export interface RunCodeResult {
+  jobId: string;
+  overallStatus: string;
+  testResults: TestCaseResult[];
+  compileError: string;
+  runtimeMs: number;
+}
+
+export interface SubmissionRecord {
+  id: string;
+  problemId: string;
+  language: string;
+  status: string;
+  runtimeMs: number;
+  memoryKb: number;
+  submittedAt: string;
+}
+
+export interface SubmissionDetail extends SubmissionRecord {
+  testResults: TestCaseResult[];
+}
+
+/** The backend reports `InProgress`; the UI labels it `In Progress`. */
+export function normalizeProblemStatus(userStatus?: string): ProblemStatus {
+  if (userStatus === 'Solved') return 'Solved';
+  if (userStatus === 'InProgress') return 'In Progress';
+  return 'Unsolved';
+}
+
+/** `Accepted` / `WrongAnswer` / anything else is treated as a runtime failure. */
+export function normalizeSubmissionStatus(status: string): 'Accepted' | 'Wrong Answer' | 'Runtime Error' {
+  if (status === 'Accepted') return 'Accepted';
+  if (status === 'WrongAnswer') return 'Wrong Answer';
+  return 'Runtime Error';
+}
+
+const PRACTICE_SET_FIELDS = `
+  id
+  title
+  level
+  levelColor
+  bgColor
+  totalProblems
+  progress
+`;
+
+const TEST_RESULT_FIELDS = `
+  testCaseId
+  input
+  expectedOutput
+  actualOutput
+  status
+  executionMs
+  error
+`;
+
+export async function listPracticeSetsApi(): Promise<PracticeSetSummary[]> {
+  const query = `
+    query ListPracticeSets {
+      listPracticeSets { ${PRACTICE_SET_FIELDS} }
+    }
+  `;
+  const data = await graphqlRequest<{ listPracticeSets: PracticeSetSummary[] }>(query);
+  return data.listPracticeSets || [];
+}
+
+export async function listProblemsApi(setId?: string): Promise<PracticeProblemSummary[]> {
+  const query = `
+    query ListProblems($setId: String) {
+      listProblems(setId: $setId) {
+        problems {
+          id
+          slug
+          title
+          difficulty
+          topic
+          xp
+          setId
+          userStatus
+        }
+      }
+    }
+  `;
+  const data = await graphqlRequest<{ listProblems: { problems: any[] } }>(query, { setId });
+  const problems = data.listProblems?.problems || [];
+  return problems.map((p) => ({
+    id: p.id,
+    slug: p.slug,
+    title: p.title,
+    difficulty: p.difficulty,
+    topic: p.topic,
+    xp: p.xp,
+    setId: p.setId,
+    status: normalizeProblemStatus(p.userStatus),
+  }));
+}
+
+export async function getProblemApi(id: string): Promise<ProblemDetailDto | null> {
+  const query = `
+    query GetProblem($id: String!) {
+      getProblem(id: $id) {
+        id
+        slug
+        title
+        difficulty
+        topic
+        xp
+        statement
+        constraints
+        tags
+        examples { input output explanation }
+        hints { order title body }
+        starterCodes { javascript python java cpp go }
+        setId
+        userStatus
+      }
+    }
+  `;
+  const data = await graphqlRequest<{ getProblem: ProblemDetailDto }>(query, { id });
+  return data.getProblem || null;
+}
+
+export async function listSubmissionsApi(problemId: string): Promise<SubmissionRecord[]> {
+  const query = `
+    query ListSubmissions($problemId: String) {
+      listSubmissions(problemId: $problemId) {
+        submissions {
+          id
+          problemId
+          language
+          status
+          runtimeMs
+          memoryKb
+          submittedAt
+        }
+      }
+    }
+  `;
+  const data = await graphqlRequest<{ listSubmissions: { submissions: SubmissionRecord[] } }>(query, { problemId });
+  return data.listSubmissions?.submissions || [];
+}
+
+export async function runCodeApi(problemId: string, language: string, code: string): Promise<RunCodeResult> {
+  const mutation = `
+    mutation RunCode($problemId: String!, $language: String!, $code: String!) {
+      runCode(problemId: $problemId, language: $language, code: $code) {
+        jobId
+        overallStatus
+        testResults { ${TEST_RESULT_FIELDS} }
+        compileError
+        runtimeMs
+      }
+    }
+  `;
+  const data = await graphqlRequest<{ runCode: RunCodeResult }>(mutation, { problemId, language, code });
+  return data.runCode;
+}
+
+export async function submitCodeApi(problemId: string, language: string, code: string): Promise<string> {
+  const mutation = `
+    mutation SubmitCode($problemId: String!, $language: String!, $code: String!) {
+      submitCode(problemId: $problemId, language: $language, code: $code) {
+        submissionId
+      }
+    }
+  `;
+  const data = await graphqlRequest<{ submitCode: { submissionId: string } }>(mutation, { problemId, language, code });
+  return data.submitCode.submissionId;
+}
+
+export async function getSubmissionApi(id: string): Promise<SubmissionDetail> {
+  const query = `
+    query GetSubmission($id: String!) {
+      getSubmission(id: $id) {
+        id
+        status
+        runtimeMs
+        memoryKb
+        testResults { ${TEST_RESULT_FIELDS} }
+        submittedAt
+      }
+    }
+  `;
+  const data = await graphqlRequest<{ getSubmission: SubmissionDetail }>(query, { id });
+  return data.getSubmission;
+}

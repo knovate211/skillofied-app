@@ -42,33 +42,29 @@ const ModuleQuiz: React.FC<ModuleQuizProps> = ({ moduleId, title = 'Module Quiz'
     getQuizAttemptsCached()
       .then((attempts) => {
         if (cancelled) return;
-        console.log('[Quiz Debug] Loaded attempts:', attempts, 'Looking for moduleId:', moduleId);
         const prior = attempts.find((a) => a.moduleId === moduleId);
         if (prior) {
-          console.log('[Quiz Debug] Found prior attempt:', prior);
           setPreviousBest({ score: prior.score, total: prior.totalQuestions, at: prior.completedAt });
           if (prior.selectedAnswers) {
             try {
-              console.log('[Quiz Debug] Parsing selectedAnswers:', prior.selectedAnswers);
               // Convert parsed integer keys if necessary
               const parsed = JSON.parse(prior.selectedAnswers);
               const mapped: Record<number, string> = {};
               Object.entries(parsed).forEach(([k, v]) => {
                 mapped[Number(k)] = String(v);
               });
-              console.log('[Quiz Debug] Restoring answers state:', mapped);
               setAnswers(mapped);
               // Also show the quiz in submitted/graded state so correct/incorrect options highlight
               setScore(prior.score);
               setTotal(prior.totalQuestions);
             } catch (e) {
-              console.error('[Quiz Debug] Failed to parse previous answers:', e);
+              console.error('Failed to parse previous quiz answers:', e);
             }
           }
         }
       })
       .catch((err) => {
-        console.error('[Quiz Debug] Failed to load quiz attempts:', err);
+        console.error('Failed to load quiz attempts:', err);
       });
 
     return () => {

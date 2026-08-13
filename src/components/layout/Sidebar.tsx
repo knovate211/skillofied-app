@@ -34,6 +34,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, enrolledCourses }) =
   }, [isOpen]);
 
   const isGolangUnlocked = enrolledCourses.some(c => c.title.includes('Golang'));
+  const isGenAIUnlocked = enrolledCourses.some(c => c.title.includes('GenAI') || c.title.includes('Generative AI'));
   const isFullStackUnlocked = enrolledCourses.some(c => c.title.includes('Full Stack') || c.title.includes('Fullstack'));
   const isFrontendUnlocked = enrolledCourses.some(c => c.title === 'Front-End Technologies') || isFullStackUnlocked;
   const isJavaUnlocked = enrolledCourses.some(c => c.title === 'Java Development' || c.title === 'Java') || isFullStackUnlocked;
@@ -50,12 +51,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, enrolledCourses }) =
       category: 'Development',
     },
     {
-      title: 'Full Stack Engineering',
-      path: '/courses/fullstack',
-      isUnlocked: isFullStackUnlocked,
-      icon: '🏛️',
+      title: 'GenAI & Forward Deployed Engineering',
+      path: '/courses/genai',
+      isUnlocked: isGenAIUnlocked,
+      icon: '🤖',
       category: 'Development',
     },
+    // Full Stack is an entitlement rather than a course of its own: enrolling in
+    // it unlocks Front-End, Java and SQL below, which is where the actual
+    // curriculum lives. It is deliberately not listed here.
     {
       title: 'Front-End Technologies',
       path: '/courses/frontend',

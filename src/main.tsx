@@ -4,16 +4,19 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { ThemeProvider } from './context/ThemeContext';
 import { CourseHeaderProvider } from './context/CourseHeaderContext';
+import { ToastProvider } from './context/ToastContext';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ThemeProvider>
-      <BrowserRouter>
-        <CourseHeaderProvider>
-          <App />
-        </CourseHeaderProvider>
-      </BrowserRouter>
+      <ToastProvider>
+        <BrowserRouter>
+          <CourseHeaderProvider>
+            <App />
+          </CourseHeaderProvider>
+        </BrowserRouter>
+      </ToastProvider>
     </ThemeProvider>
   </React.StrictMode>
 );

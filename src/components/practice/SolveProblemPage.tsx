@@ -9,9 +9,37 @@ import ProblemDescriptionPanel from './ProblemDescriptionPanel';
 import IDEPanel from './IDEPanel';
 import ConsolePanel from './ConsolePanel';
 
-import { getProblemDetail, ProblemDetail } from '../../data/problemsData';
+// Type-only: erased at build time, so the 2.5k-line fallback dataset below is
+// never pulled into this chunk. It is loaded on demand only if the API fails.
+import type { ProblemDetail } from '../../data/problemsData';
 import { practiceProblems } from '../../data/mockData';
-import { graphqlRequest } from '../../api';
+import {
+  getProblemApi,
+  getSubmissionApi,
+  listSubmissionsApi,
+  normalizeSubmissionStatus,
+  runCodeApi,
+  submitCodeApi,
+  TestCaseResult,
+} from '../../api';
+
+/** Loaded lazily so the offline fallback never ships in the main solve bundle. */
+async function loadFallbackProblem(id: string, nameFallback: string): Promise<ProblemDetail> {
+  const { getProblemDetail } = await import('../../data/problemsData');
+  return getProblemDetail(id, nameFallback);
+}
+
+const isSqlProblem = (p: { tags?: string[]; topic?: string } | null): boolean =>
+  !!p && (p.tags?.includes('SQL') || p.topic === 'Database' || p.topic === 'Databases');
+
+const toPanelResults = (testResults: TestCaseResult[]) =>
+  testResults.map((tr) => ({
+    input: tr.input,
+    expected: tr.expectedOutput,
+    actual: tr.actualOutput,
+    passed: tr.status === 'Accepted',
+    stdout: tr.error,
+  }));
 
 // Toast interface
 interface Toast {
@@ -36,7 +64,7 @@ const SolveProblemPage: React.FC = () => {
   const problemName = baseProb ? baseProb.title : 'Challenge';
 
   // Load problem details
-  const [problem, setProblem] = useState<ProblemDetail>(() => getProblemDetail(id || '', problemName));
+  const [problem, setProblem] = useState<ProblemDetail | null>(null);
 
   // Workspace settings state
   const [language, setLanguage] = useState<string>(() => {
@@ -62,115 +90,55 @@ const SolveProblemPage: React.FC = () => {
     setRunResults(null);
     setConsoleTab('testcases');
 
-    graphqlRequest(`
-      query($id: String!) {
-        getProblem(id: $id) {
-          id
-          slug
-          title
-          difficulty
-          topic
-          xp
-          statement
-          constraints
-          tags
-          examples {
-            input
-            output
-            explanation
-          }
-          hints {
-            order
-            title
-            body
-          }
-          starterCodes {
-            javascript
-            python
-            java
-            cpp
-            go
-          }
-          setId
-          userStatus
-        }
-      }
-    `, { id })
-      .then((data) => {
-        if (data && data.getProblem) {
-          const prob = data.getProblem;
-          setProblem(prob);
+    // Applies a freshly loaded problem, picking the language and seeding the
+    // editor from either saved work or the starter template.
+    const applyProblem = (prob: ProblemDetail) => {
+      setProblem(prob);
 
-          const isSql = prob.tags?.includes('SQL') || prob.topic === 'Database' || prob.topic === 'Databases';
-          const newLang = isSql ? 'sql' : (localStorage.getItem(`lang_${id}`) || 'javascript');
-          setLanguage(newLang);
+      const newLang = isSqlProblem(prob) ? 'sql' : (localStorage.getItem(`lang_${id}`) || 'javascript');
+      setLanguage(newLang);
 
-          // Load saved code or default
-          const savedCode = localStorage.getItem(`code_${id}_${newLang}`);
-          if (savedCode) {
-            setCode(savedCode);
-          } else {
-            const starterKey = newLang === 'sql' ? 'javascript' : newLang;
-            setCode(prob.starterCodes[starterKey as keyof typeof prob.starterCodes] || '');
-          }
-
-          // Load custom input default
-          if (prob.examples && prob.examples.length > 0) {
-            setCustomInput(prob.examples[0].input);
-          } else {
-            setCustomInput('');
-          }
-        }
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.error("Failed to load problem details from API:", err);
-        const detail = getProblemDetail(id || '', problemName);
-        setProblem(detail);
-        
-        const isSql = detail.tags?.includes('SQL') || detail.topic === 'Database' || detail.topic === 'Databases';
-        const newLang = isSql ? 'sql' : (localStorage.getItem(`lang_${id}`) || 'javascript');
-        setLanguage(newLang);
-
+      const savedCode = localStorage.getItem(`code_${id}_${newLang}`);
+      if (savedCode) {
+        setCode(savedCode);
+      } else {
         const starterKey = newLang === 'sql' ? 'javascript' : newLang;
-        setCode(detail.starterCodes[starterKey as keyof typeof detail.starterCodes] || '');
-        setIsLoading(false);
-      });
+        setCode(prob.starterCodes[starterKey as keyof typeof prob.starterCodes] || '');
+      }
+
+      setCustomInput(prob.examples?.length ? prob.examples[0].input : '');
+    };
+
+    getProblemApi(id || '')
+      .then(async (prob) => {
+        applyProblem(prob ? (prob as unknown as ProblemDetail) : await loadFallbackProblem(id || '', problemName));
+      })
+      .catch(async (err) => {
+        console.error("Failed to load problem details from API:", err);
+        applyProblem(await loadFallbackProblem(id || '', problemName));
+      })
+      .finally(() => setIsLoading(false));
 
     // Load historical submissions from API
-    graphqlRequest(`
-      query($problemId: String) {
-        listSubmissions(problemId: $problemId) {
-          submissions {
-            id
-            problemId
-            language
-            status
-            runtimeMs
-            memoryKb
-            submittedAt
-          }
-        }
-      }
-    `, { problemId: id })
-      .then((data) => {
-        if (data && data.listSubmissions && data.listSubmissions.submissions) {
-          const list = data.listSubmissions.submissions.map((s: any) => ({
-            status: (s.status === 'Accepted' ? 'Accepted' : (s.status === 'WrongAnswer' ? 'Wrong Answer' : 'Runtime Error')) as any,
-            timestamp: new Date(s.submittedAt).toLocaleString(),
-            language: s.language.toUpperCase(),
-            runtime: `${s.runtimeMs}ms`,
-            code: ''
-          }));
-          setSubmissions(list);
-        }
+    listSubmissionsApi(id || '')
+      .then((records) => {
+        setSubmissions(records.map((s) => ({
+          status: normalizeSubmissionStatus(s.status),
+          timestamp: new Date(s.submittedAt).toLocaleString(),
+          language: s.language.toUpperCase(),
+          runtime: `${s.runtimeMs}ms`,
+          code: '',
+        })));
       })
       .catch((err) => console.error("Failed to load submissions from API:", err));
 
-  }, [id, problemName, language]);
+    // `problemName` derives from `id`, and `language` is set by this effect —
+    // including either would refetch the problem and discard in-progress code.
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Load default/saved code on language change
   useEffect(() => {
+    if (!problem) return;
     const savedCode = localStorage.getItem(`code_${id}_${language}`);
     if (savedCode) {
       setCode(savedCode);
@@ -208,6 +176,7 @@ const SolveProblemPage: React.FC = () => {
   };
 
   const handleResetCode = () => {
+    if (!problem) return;
     const confirmReset = window.confirm("Are you sure you want to reset your editor to the default starter code?");
     if (confirmReset) {
       const defaultCode = problem.starterCodes[language as keyof typeof problem.starterCodes] || '';
@@ -223,40 +192,13 @@ const SolveProblemPage: React.FC = () => {
     setConsoleTab('output');
 
     try {
-      const data = await graphqlRequest(`
-        mutation($problemId: String!, $language: String!, $code: String!) {
-          runCode(problemId: $problemId, language: $language, code: $code) {
-            jobId
-            overallStatus
-            testResults {
-              testCaseId
-              input
-              expectedOutput
-              actualOutput
-              status
-              executionMs
-              error
-            }
-            compileError
-            runtimeMs
-          }
-        }
-      `, { problemId: id, language, code });
-
-      const run = data.runCode;
-      const results = run.testResults.map((tr: any) => ({
-        input: tr.input,
-        expected: tr.expectedOutput,
-        actual: tr.actualOutput,
-        passed: tr.status === 'Accepted',
-        stdout: tr.error,
-      }));
+      const run = await runCodeApi(id || '', language, code);
 
       setRunResults({
         success: run.overallStatus === 'Accepted',
         totalCases: run.testResults.length,
-        passedCases: run.testResults.filter((tr: any) => tr.status === 'Accepted').length,
-        results: results,
+        passedCases: run.testResults.filter((tr) => tr.status === 'Accepted').length,
+        results: toPanelResults(run.testResults),
         runtime: `${run.runtimeMs}ms`,
         memory: 'N/A',
       });
@@ -282,15 +224,7 @@ const SolveProblemPage: React.FC = () => {
     setConsoleTab('output');
 
     try {
-      const data = await graphqlRequest(`
-        mutation($problemId: String!, $language: String!, $code: String!) {
-          submitCode(problemId: $problemId, language: $language, code: $code) {
-            submissionId
-          }
-        }
-      `, { problemId: id, language, code });
-
-      const submissionId = data.submitCode.submissionId;
+      const submissionId = await submitCodeApi(id || '', language, code);
       showToast("Code submitted! Awaiting evaluation...", "info");
 
       // Poll getSubmission until it's graded
@@ -306,53 +240,24 @@ const SolveProblemPage: React.FC = () => {
         }
 
         try {
-          const subData = await graphqlRequest(`
-            query($id: String!) {
-              getSubmission(id: $id) {
-                id
-                status
-                runtimeMs
-                memoryKb
-                testResults {
-                  testCaseId
-                  input
-                  expectedOutput
-                  actualOutput
-                  status
-                  executionMs
-                  error
-                }
-                submittedAt
-              }
-            }
-          `, { id: submissionId });
-
-          const sub = subData.getSubmission;
+          const sub = await getSubmissionApi(submissionId);
           if (sub.status !== 'Pending' && sub.status !== 'Running') {
             clearInterval(pollInterval);
             setIsSubmitting(false);
             setIsRunning(false);
 
-            const results = sub.testResults.map((tr: any) => ({
-              input: tr.input,
-              expected: tr.expectedOutput,
-              actual: tr.actualOutput,
-              passed: tr.status === 'Accepted',
-              stdout: tr.error,
-            }));
-
             setRunResults({
               success: sub.status === 'Accepted',
               totalCases: sub.testResults.length,
-              passedCases: sub.testResults.filter((tr: any) => tr.status === 'Accepted').length,
-              results: results,
+              passedCases: sub.testResults.filter((tr) => tr.status === 'Accepted').length,
+              results: toPanelResults(sub.testResults),
               runtime: `${sub.runtimeMs}ms`,
               memory: `${(sub.memoryKb / 1024).toFixed(1)}MB`,
             });
 
             // Update submissions list
             const newSubmission: Submission = {
-              status: (sub.status === 'Accepted' ? 'Accepted' : (sub.status === 'WrongAnswer' ? 'Wrong Answer' : 'Runtime Error')) as any,
+              status: normalizeSubmissionStatus(sub.status),
               timestamp: new Date(sub.submittedAt).toLocaleString(),
               language: language.toUpperCase(),
               runtime: `${sub.runtimeMs}ms`,
@@ -452,7 +357,7 @@ const SolveProblemPage: React.FC = () => {
                   onReset={handleResetCode}
                   isFullscreen={isFullscreen}
                   onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
-                  isSqlMode={problem?.tags?.includes('SQL') || problem?.topic === 'Database' || problem?.topic === 'Databases'}
+                  isSqlMode={isSqlProblem(problem)}
                 />
               </Panel>
 

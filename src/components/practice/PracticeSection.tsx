@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCarousel } from '../../hooks/useCarousel';
-import { graphqlRequest } from '../../api';
+import { getMyCoursesApi, listPracticeSetsApi } from '../../api';
 import { practiceSetMetadata } from '../../data/mockData';
 import SectionHeader from '../layout/SectionHeader';
 import PracticeCard from './PracticeCard';
@@ -20,52 +20,26 @@ const PracticeSection: React.FC<PracticeSectionProps> = ({ isHomePage = false })
 
   useEffect(() => {
     // 1. Load course enrollment statuses to verify Marketing courses
-    graphqlRequest(`
-      query {
-        getMyCourses {
-          id
-          title
-        }
-      }
-    `).then((data) => {
-      if (data && data.getMyCourses) {
-        const hasMarketing = data.getMyCourses.some((c: any) => 
+    getMyCoursesApi()
+      .then((courses) => {
+        const hasMarketing = (courses || []).some((c: any) =>
           c.title.includes('SEO') || c.title.includes('Marketing') || c.id === 'seo' || c.id === 'digital-marketing'
         );
         setIsMarketingEnrolled(hasMarketing);
-      }
-    }).catch(err => console.error("Failed to load courses:", err));
+      })
+      .catch(err => console.error("Failed to load courses:", err));
 
-    // 2. Load practice sets
-    graphqlRequest(`
-      query {
-        listPracticeSets {
-          id
-          title
-          level
-          levelColor
-          bgColor
-          totalProblems
-          progress
-        }
-      }
-    `)
-      .then((data) => {
-        if (data && data.listPracticeSets) {
-          const fetchedSets = [...data.listPracticeSets];
-          
-          // Enrich with category and description
-          const enrichedSets = fetchedSets.map(s => {
-             const meta = practiceSetMetadata[s.id];
-             return {
-               ...s,
-               category: meta?.category || 'General Practice',
-               description: meta?.description || 'Test your skills with these challenges.',
-             };
-          });
-
-          setSets(enrichedSets);
-        }
+    // 2. Load practice sets, enriched with local category/description metadata
+    listPracticeSetsApi()
+      .then((fetchedSets) => {
+        setSets(fetchedSets.map((s) => {
+          const meta = practiceSetMetadata[s.id];
+          return {
+            ...s,
+            category: meta?.category || 'General Practice',
+            description: meta?.description || 'Test your skills with these challenges.',
+          };
+        }));
         setIsLoading(false);
       })
       .catch((err) => {

@@ -41,6 +41,8 @@ const COURSE_ROUTES: Record<string, string> = {
   'Mastering SQL': '/courses/sql',
   'Golang Engineering': '/courses/golang',
   'Full Stack Engineering': '/courses/fullstack',
+  'GenAI & Forward Deployed Engineering': '/courses/genai',
+  'GenAI Engineering': '/courses/genai',
   'Software Testing': '/courses/testing',
   'SEO Fundamentals': '/courses/seo',
   'Digital Marketing Strategy': '/courses/digital-marketing',

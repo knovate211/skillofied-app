@@ -14,16 +14,17 @@ interface Props {
   page: number;
 }
 
-const GolangModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
+const GenAIModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   const [courseData, setCourseData] = useState<any>(null);
 
+  // Loaded on demand so the course content stays out of the main bundle.
   useEffect(() => {
-    import('./GolangCourseData').then((module) => {
-      setCourseData(module.GOLANG_COURSE_DATA);
+    import('./GenAICourseData').then((module) => {
+      setCourseData(module.GENAI_COURSE_DATA);
     });
   }, []);
 
-  // Isolate non-module renders
+  // Non-module sections render without the course data.
   if (moduleId === 'projects') return <MajorProjects page={page} />;
   if (moduleId === 'interview') return <InterviewPrep page={page} />;
   if (moduleId === 'assessment') return <FinalAssessment page={page} />;
@@ -31,8 +32,20 @@ const GolangModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
 
   if (!courseData) {
     return (
-      <div className={styles.contentArea} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '200px' }}>
-        <div style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid var(--accent)', borderTopColor: 'transparent', animation: 'spin 1s linear infinite' }} />
+      <div
+        className={styles.contentArea}
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '200px' }}
+      >
+        <div
+          style={{
+            width: 24,
+            height: 24,
+            borderRadius: '50%',
+            border: '2px solid var(--accent)',
+            borderTopColor: 'transparent',
+            animation: 'spin 1s linear infinite',
+          }}
+        />
       </div>
     );
   }
@@ -42,23 +55,26 @@ const GolangModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
     return <div className={styles.contentArea}>Item not found</div>;
   }
 
-  // Calculate length of lessons
   const lessons = moduleData.lessons || [];
   const totalLessons = lessons.length;
 
-  // 1. Quizzes (Always active on page totalLessons + 1)
+  // Quiz sits immediately after the lessons, then the practice set.
   if (page === totalLessons + 1) {
-    const questions = moduleData.quiz || [];
-    return <ModuleQuiz key={moduleId} moduleId={`golang-${moduleId}`} questions={questions} />;
+    return <ModuleQuiz key={moduleId} moduleId={`genai-${moduleId}`} questions={moduleData.quiz || []} />;
   }
 
-  // 2. Assignments (Always active on page totalLessons + 2)
   if (page === totalLessons + 2) {
     const assignment = moduleData.assignment || { prompts: [] };
-    return <ModuleAssignment key={moduleId} title="Module Practice Set" questions={assignment.prompts} />;
+    return (
+      <ModuleAssignment
+        key={moduleId}
+        moduleId={`genai-${moduleId}`}
+        title="Module Practice Set"
+        questions={assignment.prompts}
+      />
+    );
   }
 
-  // 3. Lessons
   const lessonData = lessons[page - 1];
   if (!lessonData) {
     return (
@@ -77,18 +93,20 @@ const GolangModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
         </h2>
         <div style={{ fontSize: '15px', lineHeight: '1.7', marginBottom: '16px', color: 'var(--text)' }}>
           {lessonData.theory.split('\n').map((p: string, idx: number) => (
-            <p key={idx} style={{ marginBottom: '12px' }}>{p}</p>
+            <p key={idx} style={{ marginBottom: '12px' }}>
+              {p}
+            </p>
           ))}
         </div>
         {lessonData.syntax && (
           <div style={{ marginBottom: '24px' }}>
-            <CodeSnippet language="go" code={lessonData.syntax} isRunnable={false} />
+            <CodeSnippet language="python" code={lessonData.syntax} isRunnable={false} />
           </div>
         )}
         {lessonData.codeExample && (
           <div style={{ marginBottom: '20px' }}>
             <h4 style={{ fontSize: '14px', fontWeight: 600, margin: '0 0 8px' }}>Worked Example</h4>
-            <CodeSnippet language="go" code={lessonData.codeExample} isRunnable={false} />
+            <CodeSnippet language="python" code={lessonData.codeExample} isRunnable={false} />
             {lessonData.codeOutput && (
               <div style={{ marginTop: '10px' }}>
                 <div style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '6px' }}>
@@ -112,11 +130,21 @@ const GolangModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
           </div>
         )}
         {lessonData.takeaways && lessonData.takeaways.length > 0 && (
-          <div style={{ marginTop: '20px', padding: '16px', background: 'var(--bg-secondary)', borderRadius: '8px', borderLeft: '4px solid var(--accent)' }}>
+          <div
+            style={{
+              marginTop: '20px',
+              padding: '16px',
+              background: 'var(--bg-secondary)',
+              borderRadius: '8px',
+              borderLeft: '4px solid var(--accent)',
+            }}
+          >
             <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 600 }}>Key Takeaways</h4>
             <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '14px', color: 'var(--text-secondary)' }}>
               {lessonData.takeaways.map((item: string, index: number) => (
-                <li key={index} style={{ marginBottom: '4px' }}>{item}</li>
+                <li key={index} style={{ marginBottom: '4px' }}>
+                  {item}
+                </li>
               ))}
             </ul>
           </div>
@@ -126,4 +154,4 @@ const GolangModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   );
 };
 
-export default GolangModuleRenderer;
+export default GenAIModuleRenderer;

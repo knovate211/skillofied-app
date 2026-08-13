@@ -2,9 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { practiceSets, practiceProblems as initialProblems } from '../../data/mockData';
 import { TopicType, PracticeProblem } from '../../types';
-import { graphqlRequest } from '../../api';
+import { listPracticeSetsApi, listProblemsApi } from '../../api';
 import TopicChip from '../common/TopicChip';
 import styles from './PracticeDetail.module.css';
+
+// Topic chips are derived from the problems actually in this set, so an SQL
+// set shows SQL topics rather than a hardcoded list of DSA categories.
+// TOPIC_ORDER puts known topics in a sensible teaching order; anything new
+// still appears, sorted alphabetically after them.
+const TOPIC_ORDER: TopicType[] = [
+  // DSA
+  'Array', 'String', 'HashMap', 'Linked List', 'Tree', 'Graph',
+  'DP', 'Stack/Queue', 'Heap', 'Backtracking',
+  // Language fundamentals
+  'Operators', 'Conditionals', 'Loops', 'Functions', 'Arrays', 'Strings', 'Objects',
+  // SQL
+  'Filtering', 'Aggregation', 'Joins', 'Subqueries', 'Window Functions',
+  'String Functions', 'Date Functions', 'Data Modification',
+];
 
 const PracticeDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -18,70 +33,19 @@ const PracticeDetail: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
 
-    Promise.all([
-      graphqlRequest(`
-        query {
-          listPracticeSets {
-            id
-            title
-            level
-            levelColor
-            bgColor
-            totalProblems
-            progress
-          }
-        }
-      `),
-      graphqlRequest(`
-        query($setId: String) {
-          listProblems(setId: $setId) {
-            problems {
-              id
-              slug
-              title
-              difficulty
-              topic
-              xp
-              setId
-              userStatus
-            }
-          }
-        }
-      `, { setId: id })
-    ])
-      .then(([setData, probData]) => {
-        if (setData && setData.listPracticeSets) {
-          const found = setData.listPracticeSets.find((s: any) => s.id === id);
-          if (found) {
-            setCurrentSet(found);
-          } else {
-            setCurrentSet(practiceSets.find((ps) => ps.id === id) || practiceSets[2]);
-          }
-        } else {
-          setCurrentSet(practiceSets.find((ps) => ps.id === id) || practiceSets[2]);
-        }
+    const fallbackSet = () => practiceSets.find((ps) => ps.id === id) || practiceSets[2];
+    const fallbackProblems = () => initialProblems.filter((p) => !p.setId || p.setId === id);
 
-        if (probData && probData.listProblems && probData.listProblems.problems) {
-          const list = probData.listProblems.problems.map((p: any) => ({
-            id: p.id,
-            slug: p.slug,
-            title: p.title,
-            difficulty: p.difficulty,
-            topic: p.topic,
-            xp: p.xp,
-            setId: p.setId,
-            status: (p.userStatus === 'Solved' ? 'Solved' : (p.userStatus === 'InProgress' ? 'In Progress' : 'Unsolved')) as any
-          }));
-          setProblems(list);
-        } else {
-          setProblems(initialProblems.filter(p => !p.setId || p.setId === id || p.setId === currentSet?.id));
-        }
+    Promise.all([listPracticeSetsApi(), listProblemsApi(id)])
+      .then(([sets, fetchedProblems]) => {
+        setCurrentSet(sets.find((s) => s.id === id) || fallbackSet());
+        setProblems(fetchedProblems.length > 0 ? (fetchedProblems as PracticeProblem[]) : fallbackProblems());
         setIsLoading(false);
       })
       .catch((err) => {
         console.error("Failed to load details from API:", err);
-        setCurrentSet(practiceSets.find((ps) => ps.id === id) || practiceSets[2]);
-        setProblems(initialProblems.filter(p => !p.setId || p.setId === id));
+        setCurrentSet(fallbackSet());
+        setProblems(fallbackProblems());
         setIsLoading(false);
       });
   }, [id]);
@@ -113,21 +77,6 @@ const PracticeDetail: React.FC = () => {
     ? problems
     : problems.filter((p) => p.topic === activeTopic);
 
-  // Topic chips are derived from the problems actually in this set, so an SQL
-  // set shows SQL topics rather than a hardcoded list of DSA categories.
-  // TOPIC_ORDER puts known topics in a sensible teaching order; anything new
-  // still appears, sorted alphabetically after them.
-  const TOPIC_ORDER: TopicType[] = [
-    // DSA
-    'Array', 'String', 'HashMap', 'Linked List', 'Tree', 'Graph',
-    'DP', 'Stack/Queue', 'Heap', 'Backtracking',
-    // Language fundamentals
-    'Operators', 'Conditionals', 'Loops', 'Functions', 'Arrays', 'Strings', 'Objects',
-    // SQL
-    'Filtering', 'Aggregation', 'Joins', 'Subqueries', 'Window Functions',
-    'String Functions', 'Date Functions', 'Data Modification',
-  ];
-
   const presentTopics = Array.from(new Set(problems.map((p) => p.topic))).filter(Boolean);
 
   const topics: TopicType[] = [
@@ -144,7 +93,7 @@ const PracticeDetail: React.FC = () => {
 
   // Calculate overall completion percent based on current solved problems
   const totalSolved = problems.filter((p) => p.status === 'Solved').length;
-  const overallProgress = (totalSolved / problems.length) * 100;
+  const overallProgress = problems.length > 0 ? (totalSolved / problems.length) * 100 : 0;
 
   if (isLoading || !currentSet) {
     return (
