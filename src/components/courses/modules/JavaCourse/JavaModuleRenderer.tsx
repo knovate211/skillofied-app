@@ -4,6 +4,8 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import LessonLayout from '../../shared/LessonLayout';
+import { renderLessonTheory, lessonBadge } from '../../shared/lessonTheory';
 import { SYLLABUS } from '../../JavaCoursePage';
 import { SyllabusModule } from '../../../../types';
 
@@ -11,59 +13,6 @@ interface Props {
   moduleId: string;
   page: number;
 }
-
-const renderFormattedTheory = (text: string) => {
-  const parts = text.split(/(```[\s\S]*?```)/g);
-
-  return parts.map((part, idx) => {
-    if (part.startsWith('```')) {
-      const lines = part.split('\n');
-      const firstLine = lines[0];
-      const language = firstLine.replace('```', '').trim() || 'code';
-      const code = lines.slice(1, -1).join('\n');
-      return (
-        <CodeSnippet 
-          key={idx} 
-          title={language === 'java' ? 'Solution.java' : 'Code Block'} 
-          code={code} 
-          language={language}
-          isRunnable={false}
-        />
-      );
-    } else {
-      const paragraphs = part.split('\n');
-      return paragraphs.map((para, pIdx) => {
-        if (!para.trim()) return null;
-
-        const inlineParts = para.split(/(\*\*.*?\*\*|`.*?`)/g);
-        const parsedElements = inlineParts.map((inlinePart, iIdx) => {
-          if (inlinePart.startsWith('**') && inlinePart.endsWith('**')) {
-            return <strong key={iIdx} style={{ color: 'var(--text-primary)' }}>{inlinePart.slice(2, -2)}</strong>;
-          } else if (inlinePart.startsWith('`') && inlinePart.endsWith('`')) {
-            return <code key={iIdx} style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid var(--border)', padding: '2px 6px', borderRadius: '6px', fontFamily: 'monospace', color: '#ef4444', fontSize: '90%' }}>{inlinePart.slice(1, -1)}</code>;
-          } else {
-            return inlinePart;
-          }
-        });
-
-        const isListItem = /^\d+\.\s/.test(para) || para.trim().startsWith('-') || para.trim().startsWith('*');
-        if (isListItem) {
-          return (
-            <div key={`${pIdx}`} style={{ margin: '8px 0 8px 16px', fontSize: '14px', lineHeight: '1.6', color: 'var(--text-secondary)' }}>
-              {parsedElements}
-            </div>
-          );
-        }
-
-        return (
-          <p key={`${pIdx}`} className={styles.paragraph} style={{ margin: '0 0 14px' }}>
-            {parsedElements}
-          </p>
-        );
-      });
-    }
-  });
-};
 
 const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   const [courseData, setCourseData] = useState<Record<string, ModuleData> | null>(null);
@@ -232,57 +181,57 @@ const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
 
   // --- Render Mappings ---
   if (pageType === 'lesson' && activeLesson) {
+    const lesson = activeLesson;
+
     return (
-      <div style={{ maxWidth: '850px', margin: '0 auto', padding: '0 16px' }}>
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>{activeLesson.title}</h2>
-          <div style={{ marginBottom: '20px' }}>{renderFormattedTheory(activeLesson.theory)}</div>
-          
-          {activeLesson.objectives.length > 0 && (
-            <>
-              <h3 className={styles.subtitle}>Learning Objectives</h3>
-              <ul style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px', fontSize: '13px', color: 'var(--text-secondary)' }}>
-                {activeLesson.objectives.map((obj, i) => <li key={i}>{obj}</li>)}
-              </ul>
-            </>
-          )}
+      <LessonLayout
+        badge={lessonBadge(lesson.id)}
+        title={lesson.title}
+        theory={renderLessonTheory(lesson.theory, 'java', 'Solution.java')}
+        callout={lesson.callout}
+        objectives={lesson.objectives}
+        takeaways={lesson.takeaways}
+        sidePanel={lesson.sidePanel}
+      >
+        {lesson.syntax && (
+          <>
+            <h3 className={styles.subtitle}>Syntax Breakdown</h3>
+            <CodeSnippet title="Syntax Definition" code={lesson.syntax} language="syntax" isRunnable={false} />
+          </>
+        )}
 
-          {activeLesson.syntax && (
-            <>
-              <h3 className={styles.subtitle}>Syntax Breakdown</h3>
-              <CodeSnippet title="Syntax Definition" code={activeLesson.syntax} language="syntax" isRunnable={false} />
-            </>
-          )}
+        {lesson.codeExample && (
+          <>
+            <h3 className={styles.subtitle}>Code Demonstration</h3>
+            <CodeSnippet title={`${lesson.title.replace(/\s+/g, '')}.java`} code={lesson.codeExample} language="java" isRunnable={false} />
+            {lesson.codeOutput && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '12px' }}>
+                <button
+                  className={styles.saveBtn}
+                  onClick={() => runCodeExample(lesson.codeOutput || '')}
+                  disabled={isRunning}
+                >
+                  {isRunning ? 'Compiling & Running...' : '▶ Run Code'}
+                </button>
+                {(isRunning || consoleOutput) && (
+                  <div style={{ background: '#09090b', color: '#10b981', padding: '16px', borderRadius: '10px', fontFamily: 'monospace', fontSize: '12px', minHeight: '40px', border: '1.5px solid var(--border)' }}>
+                    {isRunning ? 'Compiling main class Solution...' : consoleOutput}
+                  </div>
+                )}
+              </div>
+            )}
+          </>
+        )}
 
-          {activeLesson.codeExample && (
-            <>
-              <h3 className={styles.subtitle}>Code Demonstration</h3>
-              <CodeSnippet title={`${activeLesson.title.replace(/\s+/g, '')}.java`} code={activeLesson.codeExample} language="java" isRunnable={false} />
-              {activeLesson.codeOutput && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '12px' }}>
-                  <button 
-                    className={styles.saveBtn} 
-                    onClick={() => runCodeExample(activeLesson?.codeOutput || '')}
-                    disabled={isRunning}
-                  >
-                    {isRunning ? 'Compiling & Running...' : '▶ Run Code'}
-                  </button>
-                  {(isRunning || consoleOutput) && (
-                    <div style={{ background: '#09090b', color: '#10b981', padding: '16px', borderRadius: '10px', fontFamily: 'monospace', fontSize: '12px', minHeight: '40px', border: '1.5px solid var(--border)' }}>
-                      {isRunning ? 'Compiling main class Solution...' : consoleOutput}
-                    </div>
-                  )}
-                </div>
-              )}
-            </>
-          )}
-
-          <h3 className={styles.subtitle}>Key Takeaways</h3>
-          <ul style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px', fontSize: '13px', color: 'var(--text-secondary)' }}>
-            {activeLesson.takeaways.map((item, i) => <li key={i}>{item}</li>)}
-          </ul>
-        </div>
-      </div>
+        {lesson.mistakes && lesson.mistakes.length > 0 && (
+          <>
+            <h3 className={styles.subtitle}>Common Mistakes</h3>
+            <ul style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px', fontSize: '13px', color: 'var(--text-secondary)', borderLeft: '3px solid #f97316', paddingTop: '4px', paddingBottom: '4px', marginLeft: '2px' }}>
+              {lesson.mistakes.map((item, i) => <li key={i}>{item}</li>)}
+            </ul>
+          </>
+        )}
+      </LessonLayout>
     );
   }
 

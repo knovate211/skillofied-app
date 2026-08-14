@@ -1,5 +1,6 @@
 import React from 'react';
 import CoursePageShell from './shared/CoursePageShell';
+import LessonChrome from './shared/LessonChrome';
 import { SyllabusModule } from '../../types';
 
 // Import modular lesson components
@@ -364,7 +365,28 @@ const SYLLABUS: SyllabusModule[] = [
 ];
 
 // ─── Module Content Router ─────────────────────────────────────────────────
+// The Frontend lessons are hand-authored JSX rather than course data, so they
+// cannot go through LessonLayout like the other courses. Routing every page
+// through LessonChrome here gives them the template's header, measure, and type
+// scale without rewriting the seventeen module files.
 function renderFrontendContent(moduleId: string, page: number): React.ReactNode {
+  const content = renderModule(moduleId, page);
+
+  // Only the teaching modules get the reading measure. The overview, projects,
+  // prep, assessment, and certification sections are wide dashboard layouts
+  // (video players, project grids, certificate art) that it would squeeze.
+  if (!/^m\d+$/.test(moduleId)) return content;
+
+  const itemId = SYLLABUS.find((m) => m.id === moduleId)?.items[page - 1]?.id;
+
+  // Quizzes and assignments bring their own centred layout, so wrapping them
+  // would nest two identical containers.
+  if (itemId?.endsWith('-quiz') || itemId?.endsWith('-assignment')) return content;
+
+  return <LessonChrome itemId={itemId}>{content}</LessonChrome>;
+}
+
+function renderModule(moduleId: string, page: number): React.ReactNode {
   switch (moduleId) {
     case 'overview': return <CourseOverview page={page} />;
     case 'm1': return <Module1 page={page} />;

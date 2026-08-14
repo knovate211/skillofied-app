@@ -459,7 +459,7 @@
 }
 
 .outcomeCard {
-  background: var(--bg-surface-2);
+  background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px;
@@ -520,7 +520,7 @@
 .lockedModulePreview {
   width: 100%;
   max-width: 500px;
-  background: var(--bg-surface-2);
+  background: var(--bg-surface);
   border: 1px dashed var(--border);
   border-radius: 14px;
   padding: 20px;
@@ -648,7 +648,7 @@
   padding: 10px 14px;
   border-radius: 10px;
   border: 1.5px solid var(--border);
-  background: var(--bg-surface-2);
+  background: var(--bg-surface);
   color: var(--text-primary);
   font-size: 13.5px;
   outline: none;
@@ -702,7 +702,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 18px;
-  background: var(--bg-surface-2);
+  background: var(--bg-surface);
   border: 1.5px solid var(--border);
   border-radius: 12px;
   gap: 16px;
@@ -758,7 +758,7 @@
   padding: 12px 16px;
   border-radius: 12px;
   border: 1px solid var(--border);
-  background: var(--bg-surface-2);
+  background: var(--bg-surface);
   display: flex;
   align-items: flex-start;
   gap: 12px;
@@ -792,7 +792,9 @@
   gap: 6px;
   margin: 24px 0;
   padding: 16px;
-  background: var(--bg-surface-2);
+  background: var(--bg-surface);
+  /* Needs its own edge now that it no longer differs from the page by fill. */
+  border: 1px solid var(--border);
   border-radius: 12px;
   font-family: monospace;
   font-size: 12px;
@@ -970,7 +972,7 @@
 }
 
 .typeCard {
-  background: var(--bg-surface-2);
+  background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px;
@@ -1025,7 +1027,7 @@
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  background: var(--bg-surface-2);
+  background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: 10px;
   cursor: pointer;
@@ -1088,7 +1090,7 @@
 }
 
 .careerCard {
-  background: var(--bg-surface-2);
+  background: var(--bg-surface);
   border: 1.5px solid var(--border);
   border-radius: 12px;
   padding: 16px;
@@ -1120,12 +1122,15 @@
   gap: 20px;
 }
 
+/* The card is the raised surface and the options sit recessed inside it.
+   Using --bg-surface-2 here read as a muddy beige in light mode, and the
+   hardcoded shadow was tuned for the dark theme only. */
 .quizBlock {
   padding: 24px;
   border: 1px solid var(--border);
   border-radius: 16px;
-  background: var(--bg-surface-2);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-sm);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -1153,7 +1158,7 @@
   padding: 14px 18px;
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: var(--bg-surface);
+  background: var(--bg-page);
   color: var(--text-secondary);
   font-size: 13.5px;
   font-weight: 500;
@@ -1163,8 +1168,10 @@
   font-family: inherit;
 }
 
+/* Lifting to the card's own surface reads as a hover in both themes; the old
+   white overlay was invisible against a light background. */
 .quizBlockOption:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-surface);
   border-color: var(--accent);
   color: var(--text-primary);
   transform: translateY(-1px);
@@ -1213,7 +1220,7 @@
   padding: 12px 16px;
   border-radius: 12px;
   border: 1.5px solid var(--border);
-  background: var(--bg-surface-2);
+  background: var(--bg-surface);
   color: var(--text-primary);
   font-family: inherit;
   font-size: 13px;
@@ -1407,7 +1414,9 @@
   border: none;
   border-right: 1px solid var(--border);
   border-radius: 0;
-  background: var(--bg-surface-2);
+  /* The brief is instructions to the learner, so it carries the shared
+     callout treatment rather than the neutral surface. */
+  background: var(--callout-bg);
   padding: 16px 18px;
 }
 
@@ -1561,4 +1570,94 @@
 
 .assignmentResizer:hover::after {
   background: var(--accent);
+}
+/* ── Lesson chrome (Figma lesson template) ───────────────────────────────────
+   Applied by LessonChrome around the hand-authored Frontend lesson pages, so
+   they pick up the template's header, measure, and typography without each of
+   the 17 module files being rewritten. Everything here is scoped under
+   .lessonChrome so the quiz, assignment, and other course pages that share this
+   stylesheet are untouched. */
+
+.lessonChrome {
+  --chrome-badge-bg: #e8e9fd;
+  --chrome-badge-fg: #4f46e5;
+
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 8px 16px 40px;
+}
+
+:global([data-theme='dark']) .lessonChrome {
+  --chrome-badge-bg: rgba(99, 102, 241, 0.18);
+  --chrome-badge-fg: #a5b4fc;
+}
+
+.lessonChromeBadge {
+  display: inline-block;
+  background: var(--chrome-badge-bg);
+  color: var(--chrome-badge-fg);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+}
+
+/* The pages keep their own markup; only the type scale is brought in line. */
+.lessonChrome .tabContent {
+  padding: 0;
+}
+
+.lessonChrome .cardTitle {
+  font-size: 32px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0 0 22px;
+}
+
+.lessonChrome .paragraph {
+  font-size: 15px;
+  line-height: 1.85;
+  margin: 0 0 16px;
+}
+
+.lessonChrome .subtitle {
+  font-size: 19px;
+  font-weight: 700;
+  margin: 32px 0 16px;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+/* .tipBox is used across the module files but was never given a definition, so
+   these callouts rendered as bare text. Styled to match the lesson callout. */
+.lessonChrome .tipBox {
+  background: var(--callout-bg);
+  border: 1px solid var(--callout-border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin: 8px 0 24px;
+}
+
+.lessonChrome .tipBoxTitle {
+  margin: 0 0 6px;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.lessonChrome .tipBoxText {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 760px) {
+  .lessonChrome {
+    padding: 8px 4px 32px;
+  }
+  .lessonChrome .cardTitle {
+    font-size: 26px;
+  }
 }

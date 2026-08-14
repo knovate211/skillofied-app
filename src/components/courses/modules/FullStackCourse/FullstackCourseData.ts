@@ -1,4 +1,5 @@
 import { QuizQuestion } from '../../../../types';
+import type { LessonCallout, LessonSidePanel } from '../../shared/LessonLayout';
 
 export interface Lesson {
   id: string;
@@ -10,6 +11,10 @@ export interface Lesson {
   codeOutput?: string;
   mistakes?: string[];
   takeaways: string[];
+  /** Highlighted "think of it like this" box under the theory. */
+  callout?: LessonCallout;
+  /** Right-hand explainer card: diagram + supporting checklist. */
+  sidePanel?: LessonSidePanel;
 }
 
 export interface ModuleData {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import StandardLessonView from '../../shared/StandardLessonView';
 import styles from '../../FrontendCoursePage.module.css';
 
 import MajorProjects from './MajorProjects';
@@ -69,61 +69,7 @@ const GolangModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
     );
   }
 
-  return (
-    <div style={{ maxWidth: '850px', margin: '0 auto', padding: '0 16px' }}>
-      <div className={styles.contentArea}>
-        <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '20px', color: 'var(--heading)' }}>
-          {lessonData.title}
-        </h2>
-        <div style={{ fontSize: '15px', lineHeight: '1.7', marginBottom: '16px', color: 'var(--text)' }}>
-          {lessonData.theory.split('\n').map((p: string, idx: number) => (
-            <p key={idx} style={{ marginBottom: '12px' }}>{p}</p>
-          ))}
-        </div>
-        {lessonData.syntax && (
-          <div style={{ marginBottom: '24px' }}>
-            <CodeSnippet language="go" code={lessonData.syntax} isRunnable={false} />
-          </div>
-        )}
-        {lessonData.codeExample && (
-          <div style={{ marginBottom: '20px' }}>
-            <h4 style={{ fontSize: '14px', fontWeight: 600, margin: '0 0 8px' }}>Worked Example</h4>
-            <CodeSnippet language="go" code={lessonData.codeExample} isRunnable={false} />
-            {lessonData.codeOutput && (
-              <div style={{ marginTop: '10px' }}>
-                <div style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '6px' }}>
-                  Output
-                </div>
-                <pre style={{ margin: 0, padding: '12px 14px', background: '#09090b', color: '#10b981', borderRadius: '8px', fontSize: '13px', lineHeight: 1.6, overflowX: 'auto' }}>
-                  <code>{lessonData.codeOutput}</code>
-                </pre>
-              </div>
-            )}
-          </div>
-        )}
-        {lessonData.mistakes && lessonData.mistakes.length > 0 && (
-          <div style={{ marginTop: '20px', padding: '16px', background: 'var(--bg-secondary)', borderRadius: '8px', borderLeft: '4px solid #f59e0b' }}>
-            <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 600 }}>Common Mistakes</h4>
-            <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '14px', color: 'var(--text-secondary)' }}>
-              {lessonData.mistakes.map((item: string, index: number) => (
-                <li key={index} style={{ marginBottom: '4px' }}>{item}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {lessonData.takeaways && lessonData.takeaways.length > 0 && (
-          <div style={{ marginTop: '20px', padding: '16px', background: 'var(--bg-secondary)', borderRadius: '8px', borderLeft: '4px solid var(--accent)' }}>
-            <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 600 }}>Key Takeaways</h4>
-            <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '14px', color: 'var(--text-secondary)' }}>
-              {lessonData.takeaways.map((item: string, index: number) => (
-                <li key={index} style={{ marginBottom: '4px' }}>{item}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+  return <StandardLessonView lesson={lessonData} language="go" snippetTitle="main.go" />;
 };
 
 export default GolangModuleRenderer;

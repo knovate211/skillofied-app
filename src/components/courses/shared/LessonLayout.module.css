@@ -1,0 +1,352 @@
+/* ── Lesson template (Figma: "Lesson 1.2 What is Java?") ───────────────────── */
+
+.wrap {
+  /* Local tokens so every tint has one definition per theme instead of being
+     re-derived at each use site. */
+  --lesson-badge-bg: #e8e9fd;
+  --lesson-badge-fg: #4f46e5;
+  --lesson-check: #22c55e;
+  --lesson-card-shadow: var(--shadow-sm);
+
+  --lesson-tint-1-bg: #f5f1fd;
+  --lesson-tint-1-border: #e6dcfa;
+  --lesson-tint-1-fg: #6d43c8;
+  --lesson-tint-2-bg: #eef8f1;
+  --lesson-tint-2-border: #d6ecdd;
+  --lesson-tint-2-fg: #2f8a52;
+  --lesson-tint-3-bg: #eef4fd;
+  --lesson-tint-3-border: #d9e6f9;
+  --lesson-tint-3-fg: #2f6fc4;
+
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 8px 16px 40px;
+}
+
+:global([data-theme='dark']) .wrap {
+  --lesson-badge-bg: rgba(99, 102, 241, 0.18);
+  --lesson-badge-fg: #a5b4fc;
+  --lesson-check: #34d399;
+  --lesson-card-shadow: none;
+
+  --lesson-tint-1-bg: rgba(139, 92, 246, 0.12);
+  --lesson-tint-1-border: rgba(139, 92, 246, 0.26);
+  --lesson-tint-1-fg: #c4b5fd;
+  --lesson-tint-2-bg: rgba(34, 197, 94, 0.12);
+  --lesson-tint-2-border: rgba(34, 197, 94, 0.26);
+  --lesson-tint-2-fg: #86efac;
+  --lesson-tint-3-bg: rgba(59, 130, 246, 0.12);
+  --lesson-tint-3-border: rgba(59, 130, 246, 0.26);
+  --lesson-tint-3-fg: #93c5fd;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 400px;
+  gap: 40px;
+  align-items: start;
+}
+
+.main {
+  min-width: 0;
+}
+
+/* ── Header ── */
+.badge {
+  display: inline-block;
+  background: var(--lesson-badge-bg);
+  color: var(--lesson-badge-fg);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+}
+
+.title {
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin: 0 0 22px;
+}
+
+/* ── Theory prose ── */
+.theory > p {
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--text-secondary);
+  margin: 0 0 16px;
+}
+
+/* Inline code only. Scoped to the prose blocks so it never reaches the
+   syntax-highlighted spans inside a CodeSnippet, which sit in this container
+   too and would pick up a chip background on every token. */
+.theory > p code,
+.theory > .theoryListItem code {
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px 7px;
+  font-family: 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 90%;
+  color: #e0563f;
+}
+
+.theory > p strong,
+.theory > .theoryListItem strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.theoryListItem {
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--text-secondary);
+  margin: 8px 0 8px 18px;
+}
+
+/* ── Info callout ── */
+.callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: var(--callout-bg);
+  border: 1px solid var(--callout-border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin: 8px 0 32px;
+}
+
+.calloutIcon {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--callout-icon);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+.calloutText {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.calloutText em {
+  color: var(--callout-fg);
+  font-style: normal;
+}
+
+/* ── Section headings ── */
+.sectionHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 22px;
+}
+
+.sectionIcon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 32px 0;
+}
+
+/* ── Learning objectives ── */
+.objectives {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.objective {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.objectiveIcon {
+  flex: 0 0 auto;
+  font-size: 30px;
+  line-height: 1.1;
+}
+
+.objectiveText {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* ── Key takeaways ── */
+.takeaways {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.takeaway {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid transparent;
+}
+
+.takeawayIcon {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: var(--bg-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+}
+
+.takeawayText {
+  font-size: 12.5px;
+  line-height: 1.55;
+  font-weight: 500;
+}
+
+.tint1 {
+  background: var(--lesson-tint-1-bg);
+  border-color: var(--lesson-tint-1-border);
+}
+.tint1 .takeawayText {
+  color: var(--lesson-tint-1-fg);
+}
+
+.tint2 {
+  background: var(--lesson-tint-2-bg);
+  border-color: var(--lesson-tint-2-border);
+}
+.tint2 .takeawayText {
+  color: var(--lesson-tint-2-fg);
+}
+
+.tint3 {
+  background: var(--lesson-tint-3-bg);
+  border-color: var(--lesson-tint-3-border);
+}
+.tint3 .takeawayText {
+  color: var(--lesson-tint-3-fg);
+}
+
+/* ── Side panel ── */
+.side {
+  position: sticky;
+  top: 24px;
+}
+
+.sideCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--lesson-card-shadow);
+}
+
+.sideTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin: 0 0 22px;
+}
+
+.sideDiagram {
+  margin-bottom: 28px;
+  overflow-x: auto;
+}
+
+.sideBulletsTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 16px;
+}
+
+.sideBullets {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sideBullet {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.sideBulletCheck {
+  flex: 0 0 auto;
+  color: var(--lesson-check);
+  margin-top: 1px;
+}
+
+.sideBulletLabel {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* ── Extra sections injected by the renderer (syntax, code demo, mistakes) ── */
+.extras {
+  margin-top: 32px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1120px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+  .side {
+    position: static;
+  }
+}
+
+@media (max-width: 760px) {
+  .wrap {
+    padding: 8px 4px 32px;
+  }
+  .title {
+    font-size: 26px;
+  }
+  .objectives,
+  .takeaways {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+}

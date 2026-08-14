@@ -2,7 +2,10 @@ import React from 'react';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
 import { SyllabusModule } from '../../../../types';
-import { MarketingBlock, MarketingCourseContent } from './types';
+import { MarketingCourseContent } from './types';
+import LessonLayout from '../../shared/LessonLayout';
+import LessonBlocks, { LessonBlock } from '../../shared/LessonBlocks';
+import { lessonBadge } from '../../shared/lessonTheory';
 import styles from '../../FrontendCoursePage.module.css';
 
 interface Props {
@@ -11,158 +14,6 @@ interface Props {
   moduleId: string;
   page: number;
 }
-
-const Block: React.FC<{ block: MarketingBlock }> = ({ block }) => {
-  switch (block.type) {
-    case 'heading':
-      return (
-        <h3
-          style={{
-            fontSize: '16px',
-            fontWeight: 700,
-            margin: '26px 0 10px',
-            color: 'var(--heading, var(--text-primary))',
-          }}
-        >
-          {block.value}
-        </h3>
-      );
-
-    case 'text':
-      return (
-        <p style={{ fontSize: '15px', lineHeight: 1.7, marginBottom: '14px', color: 'var(--text)' }}>
-          {block.value}
-        </p>
-      );
-
-    case 'list': {
-      const Tag = block.ordered ? 'ol' : 'ul';
-      return (
-        <Tag
-          style={{
-            margin: '0 0 16px',
-            paddingLeft: '22px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '7px',
-            fontSize: '14.5px',
-            lineHeight: 1.6,
-            color: 'var(--text-secondary)',
-          }}
-        >
-          {block.items.map((item, i) => (
-            <li key={i}>{item}</li>
-          ))}
-        </Tag>
-      );
-    }
-
-    case 'alert':
-      return (
-        <div
-          style={{
-            background: 'var(--bg-surface-2)',
-            borderLeft: '4px solid var(--accent)',
-            padding: '14px 16px',
-            marginBottom: '18px',
-            borderRadius: '0 8px 8px 0',
-          }}
-        >
-          <strong style={{ display: 'block', marginBottom: '4px', color: 'var(--heading, var(--text-primary))' }}>
-            In practice
-          </strong>
-          <p style={{ margin: 0, fontSize: '14px', lineHeight: 1.6, color: 'var(--text)' }}>
-            {block.value}
-          </p>
-        </div>
-      );
-
-    case 'example':
-      return (
-        <div
-          style={{
-            background: 'var(--bg-surface-2)',
-            border: '1px solid var(--border)',
-            borderRadius: '10px',
-            padding: '16px',
-            marginBottom: '18px',
-          }}
-        >
-          <h4 style={{ margin: '0 0 8px', fontSize: '13.5px', color: 'var(--accent)' }}>
-            {block.title}
-          </h4>
-          <p
-            style={{
-              margin: 0,
-              fontSize: '14px',
-              lineHeight: 1.65,
-              color: 'var(--text-secondary)',
-              whiteSpace: 'pre-wrap',
-            }}
-          >
-            {block.value}
-          </p>
-        </div>
-      );
-
-    case 'table':
-      return (
-        <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
-          <table
-            style={{
-              width: '100%',
-              borderCollapse: 'collapse',
-              fontSize: '13.5px',
-              border: '1px solid var(--border)',
-            }}
-          >
-            <thead>
-              <tr>
-                {block.headers.map((h) => (
-                  <th
-                    key={h}
-                    style={{
-                      textAlign: 'left',
-                      padding: '10px 12px',
-                      background: 'var(--bg-surface-2)',
-                      borderBottom: '1px solid var(--border)',
-                      color: 'var(--heading, var(--text-primary))',
-                      fontWeight: 600,
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {block.rows.map((row, ri) => (
-                <tr key={ri}>
-                  {row.map((cell, ci) => (
-                    <td
-                      key={ci}
-                      style={{
-                        padding: '10px 12px',
-                        borderBottom: '1px solid var(--border)',
-                        color: 'var(--text-secondary)',
-                        verticalAlign: 'top',
-                      }}
-                    >
-                      {cell}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      );
-
-    default:
-      return null;
-  }
-};
 
 const MarketingModuleRenderer: React.FC<Props> = ({ syllabus, content, moduleId, page }) => {
   const module = syllabus.find((m) => m.id === moduleId);
@@ -208,49 +59,13 @@ const MarketingModuleRenderer: React.FC<Props> = ({ syllabus, content, moduleId,
   }
 
   return (
-    <div style={{ maxWidth: '850px', margin: '0 auto', padding: '0 16px' }}>
-      <div className={styles.tabContent}>
-        <h2 className={styles.cardTitle}>{lesson.title}</h2>
-
-        <p
-          style={{
-            fontSize: '13.5px',
-            color: 'var(--text-secondary)',
-            marginBottom: '20px',
-            paddingBottom: '14px',
-            borderBottom: '1px solid var(--border)',
-          }}
-        >
-          <strong style={{ color: 'var(--accent)' }}>By the end of this lesson: </strong>
-          {lesson.objective}
-        </p>
-
-        {lesson.content.map((block, i) => (
-          <Block key={i} block={block} />
-        ))}
-
-        {lesson.takeaways.length > 0 && (
-          <>
-            <h3 className={styles.subtitle}>Key takeaways</h3>
-            <ul
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '6px',
-                paddingLeft: '20px',
-                fontSize: '13.5px',
-                lineHeight: 1.6,
-                color: 'var(--text-secondary)',
-              }}
-            >
-              {lesson.takeaways.map((t, i) => (
-                <li key={i}>{t}</li>
-              ))}
-            </ul>
-          </>
-        )}
-      </div>
-    </div>
+    <LessonLayout
+      badge={lessonBadge(item.id)}
+      title={lesson.title}
+      theory={<LessonBlocks blocks={lesson.content as LessonBlock[]} alertLabel="In practice" />}
+      objectives={lesson.objective ? [lesson.objective] : []}
+      takeaways={lesson.takeaways}
+    />
   );
 };
 

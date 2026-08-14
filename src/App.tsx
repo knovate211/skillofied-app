@@ -4,7 +4,6 @@ import Navbar from './components/layout/Navbar';
 import BottomNav from './components/layout/BottomNav';
 import Sidebar from './components/layout/Sidebar';
 import CoursesSection from './components/courses/CoursesSection';
-import PendingActionsSection from './components/pending/PendingActionsSection';
 import Login from './components/auth/Login';
 import { getMyCoursesApi } from './api';
 import styles from './App.module.css';
@@ -180,7 +179,6 @@ const App: React.FC = () => {
                           <TodaySchedule />
                           <CoursesSection />
                           <PracticeSection isHomePage />
-                          <PendingActionsSection />
                         </>
                       }
                     />

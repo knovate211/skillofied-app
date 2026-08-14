@@ -27,6 +27,14 @@
   --grad-primary: linear-gradient(135deg, #d4a237 0%, #28C5BC 100%);
   --shadow-sm: 0 2px 8px rgba(16, 14, 53, 0.05);
   --shadow-md: 0 6px 24px rgba(16, 14, 53, 0.08);
+
+  /* Callouts: the single informational-aside treatment used by tips, notes,
+     worked examples, and deliverables across every course. Warnings keep their
+     own amber so a pitfall still reads differently from a note. */
+  --callout-bg: #eef7fd;
+  --callout-border: #d3e7f6;
+  --callout-fg: #2f7fc4;
+  --callout-icon: #3b9fe0;
 }
 
 [data-theme="dark"] {
@@ -42,6 +50,11 @@
   --grad-primary: linear-gradient(135deg, #d4a237 0%, #28C5BC 100%);
   --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.25);
   --shadow-md: 0 12px 36px rgba(0, 0, 0, 0.40);
+
+  --callout-bg: rgba(59, 159, 224, 0.10);
+  --callout-border: rgba(59, 159, 224, 0.28);
+  --callout-fg: #7cc0ec;
+  --callout-icon: #3b9fe0;
 }
 
 *,
