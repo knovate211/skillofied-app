@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,450;0,9..144,550;0,9..144,650;1,9..144,500&family=Figtree:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @theme {
   --color-bg-page: var(--bg-page);
@@ -11,50 +11,106 @@
   --color-border: var(--border);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
+
+  --color-rose: var(--rose);
+  --color-rose-deep: var(--rose-deep);
+  --color-rose-tint: var(--rose-tint);
+  --color-olive: var(--olive);
+  --color-olive-deep: var(--olive-deep);
+  --color-olive-tint: var(--olive-tint);
+  --color-honey: var(--honey);
+  --color-honey-deep: var(--honey-deep);
+  --color-honey-tint: var(--honey-tint);
 }
 
-/* ── CSS Variables ── */
+/* ── CSS Variables ──
+   The palette is warm-neutral: a paper background, three seasonal accents
+   (rose / olive / honey) that colour-code cards, and a single ink ramp.
+   Legacy names (--bg-page, --accent, …) are kept so every screen that has not
+   been reworked yet still picks up the new colours. */
 :root {
-  --bg-page: #FAF9F5;
-  --bg-surface: #ffffff;
-  --bg-surface-2: #ECEAE4;
-  --text-primary: #100E35;
-  --text-secondary: #484762;
-  --text-muted: #6b6a64;
-  --border: #e0dfd5;
-  --accent: #28C5BC;
-  --accent-hover: #1ea69f;
-  --grad-primary: linear-gradient(135deg, #d4a237 0%, #28C5BC 100%);
-  --shadow-sm: 0 2px 8px rgba(16, 14, 53, 0.05);
-  --shadow-md: 0 6px 24px rgba(16, 14, 53, 0.08);
+  /* Type */
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'Figtree', 'DM Sans', 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Paper & ink */
+  --bg-page: #FDF7F0;
+  --bg-surface: #FFFFFF;
+  --bg-surface-2: #F7EDE2;
+  --text-primary: #463A34;
+  --text-secondary: #8C7E77;
+  /* Nudged darker than the design's --ink-faint so small body copy stays
+     legible; --ink-faint below keeps the original value for decorative labels. */
+  --text-muted: #A9998F;
+  --ink-faint: #C4B7AD;
+  --border: #EFE1D2;
+
+  /* Accents */
+  --rose: #E7A99A;
+  --rose-deep: #CE7C68;
+  --rose-tint: #FBEAE3;
+
+  --olive: #A9B98B;
+  --olive-deep: #7E9260;
+  --olive-tint: #EBF0E1;
+
+  --honey: #E9C273;
+  --honey-deep: #CE9C3C;
+  --honey-tint: #FBEFD9;
+
+  /* Rose carries primary actions. */
+  --accent: #CE7C68;
+  --accent-hover: #B96551;
+  --grad-primary: linear-gradient(135deg, #E9C273 0%, #CE7C68 100%);
+  --grad-hero: linear-gradient(120deg, #F7E3D8 0%, #FBEEE1 55%, #FDF7F0 100%);
+
+  --shadow-sm: 0 6px 16px -10px rgba(70, 58, 52, 0.16);
+  --shadow-md: 0 14px 30px -16px rgba(70, 58, 52, 0.20);
 
   /* Callouts: the single informational-aside treatment used by tips, notes,
      worked examples, and deliverables across every course. Warnings keep their
      own amber so a pitfall still reads differently from a note. */
-  --callout-bg: #eef7fd;
-  --callout-border: #d3e7f6;
-  --callout-fg: #2f7fc4;
-  --callout-icon: #3b9fe0;
+  --callout-bg: #EBF0E1;
+  --callout-border: #D6E0C4;
+  --callout-fg: #63764A;
+  --callout-icon: #7E9260;
 }
 
 [data-theme="dark"] {
-  --bg-page: #100E35;
-  --bg-surface: #151240;
-  --bg-surface-2: #1e1b52;
-  --text-primary: #f1f3f9;
-  --text-secondary: #a0aec0;
-  --text-muted: #718096;
-  --border: #1e1b52;
-  --accent: #28C5BC;
-  --accent-hover: #1ea69f;
-  --grad-primary: linear-gradient(135deg, #d4a237 0%, #28C5BC 100%);
-  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.25);
-  --shadow-md: 0 12px 36px rgba(0, 0, 0, 0.40);
+  --bg-page: #241C18;
+  --bg-surface: #2E2521;
+  --bg-surface-2: #3A2F29;
+  --text-primary: #F6EEE7;
+  --text-secondary: #C1AFA4;
+  --text-muted: #9C897D;
+  --ink-faint: #7D6B60;
+  --border: #453831;
 
-  --callout-bg: rgba(59, 159, 224, 0.10);
-  --callout-border: rgba(59, 159, 224, 0.28);
-  --callout-fg: #7cc0ec;
-  --callout-icon: #3b9fe0;
+  --rose: #E7A99A;
+  --rose-deep: #E08F79;
+  --rose-tint: rgba(231, 169, 154, 0.16);
+
+  --olive: #A9B98B;
+  --olive-deep: #9DB27C;
+  --olive-tint: rgba(169, 185, 139, 0.16);
+
+  --honey: #E9C273;
+  --honey-deep: #E0B159;
+  --honey-tint: rgba(233, 194, 115, 0.16);
+
+  --accent: #E08F79;
+  --accent-hover: #E7A99A;
+  --grad-primary: linear-gradient(135deg, #E9C273 0%, #E08F79 100%);
+  --grad-hero: linear-gradient(120deg, #3E2E27 0%, #33272232 55%, #241C18 100%);
+
+  --shadow-sm: 0 6px 16px -10px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 14px 30px -16px rgba(0, 0, 0, 0.55);
+
+  --callout-bg: rgba(169, 185, 139, 0.10);
+  --callout-border: rgba(169, 185, 139, 0.28);
+  --callout-fg: #BCCBA1;
+  --callout-icon: #A9B98B;
 }
 
 *,
@@ -66,7 +122,7 @@
 }
 
 body {
-  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+  font-family: var(--font-body);
   background: var(--bg-page);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;

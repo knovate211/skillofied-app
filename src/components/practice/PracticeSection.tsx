@@ -71,6 +71,7 @@ const PracticeSection: React.FC<PracticeSectionProps> = ({ isHomePage = false })
       <section className={styles.section}>
         <SectionHeader
           title="Practice"
+          eyebrow="Sharpen your skills"
           onPrev={prev}
           onNext={next}
           canPrev={canPrev}

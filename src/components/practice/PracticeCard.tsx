@@ -2,57 +2,23 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PracticeSet } from '../../types';
 import styles from './PracticeCard.module.css';
+import { formatPracticeSetTitle } from '../../utils/practiceHelpers';
 
 interface Props {
   practiceSet: PracticeSet;
 }
 
-const TrophyIcon: React.FC<{ color: string }> = ({ color }) => (
-  <svg 
-    width="18" 
-    height="18" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke={color} 
-    strokeWidth="2.2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round"
-  >
-    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-    <path d="M4 22h16" />
-    <path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34" />
-    <path d="M12 2a4 4 0 0 0-4 4v5a4 4 0 0 0 8 0V6a4 4 0 0 0-4-4z" />
-  </svg>
-);
-
+/* Difficulty reads as colour: olive for the gentle end, honey in the middle,
+   rose for the hardest set. */
 const getLevelTheme = (level: string) => {
   const lvl = level.toLowerCase();
   if (lvl.includes('advanced')) {
-    return {
-      accent: '#9b5cf6', // purple
-      lightBg: '#f5f0ff',
-      darkText: '#7c3aed',
-      trackColor: 'rgba(155, 92, 246, 0.12)',
-      label: 'Advanced Challenge',
-    };
-  } else if (lvl.includes('intermediate')) {
-    return {
-      accent: '#28C5BC', // teal
-      lightBg: '#E8FAF8',
-      darkText: '#1ea69f',
-      trackColor: 'rgba(40, 197, 188, 0.12)',
-      label: 'Intermediate Challenge',
-    };
-  } else {
-    return {
-      accent: '#22c55e', // green
-      lightBg: '#f0fdf4',
-      darkText: '#15803d',
-      trackColor: 'rgba(34, 197, 94, 0.12)',
-      label: 'Beginner Challenge',
-    };
+    return { toneClass: styles.toneRose, label: 'Advanced Challenge' };
   }
+  if (lvl.includes('intermediate')) {
+    return { toneClass: styles.toneHoney, label: 'Intermediate Challenge' };
+  }
+  return { toneClass: styles.toneOlive, label: 'Beginner Challenge' };
 };
 
 const getPracticeStatus = (progress: number) => {
@@ -61,138 +27,96 @@ const getPracticeStatus = (progress: number) => {
   return 'In progress';
 };
 
-const getActionButtonText = (progress: number) => {
-  return progress === 0 ? 'Start practice' : 'Continue';
-};
-
-const formatTitle = (title: string) => {
-  if (title === 'Masters of Algorith...') {
-    return 'Masters of Algorithms';
-  }
-  return title;
-};
+const SproutIcon: React.FC = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.9"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M12 21v-8" />
+    <path d="M12 13C12 9.5 9.5 7 6 7c0 3.5 2.5 6 6 6z" />
+    <path d="M12 13c0-3.5 2.5-6 6-6 0 3.5-2.5 6-6 6z" />
+  </svg>
+);
 
 const PracticeCard: React.FC<Props> = ({ practiceSet }) => {
   const navigate = useNavigate();
   const theme = getLevelTheme(practiceSet.level);
   const status = getPracticeStatus(practiceSet.progress);
-  const actionText = getActionButtonText(practiceSet.progress);
+  const actionText = practiceSet.progress === 0 ? 'Start practice' : 'Continue';
+  const displayProgress = Math.round(practiceSet.progress);
+  const displayTitle = formatPracticeSetTitle(practiceSet.title);
 
-  // Format progress for display (e.g. 4.5%)
-  const displayProgress = practiceSet.progress.toFixed(1).replace(/\.0$/, '');
-
-  // Circular progress calculations (r=36, strokeWidth=6, sqSize=90)
-  const radius = 36;
-  const strokeWidth = 6;
-  const sqSize = 90;
-  const center = sqSize / 2;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (practiceSet.progress / 100) * circumference;
+  const open = () => navigate(`/practice/${practiceSet.id}`);
 
   return (
-    <div className={styles.card} onClick={() => navigate(`/practice/${practiceSet.id}`)} role="button" tabIndex={0}>
-      {/* Header */}
+    <div
+      className={`${styles.card} ${theme.toneClass}`}
+      onClick={open}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          open();
+        }
+      }}
+    >
       <div className={styles.header}>
-        <div className={styles.iconWrap} style={{ background: theme.lightBg }}>
-          <TrophyIcon color={theme.accent} />
+        <div className={styles.icon}>
+          <SproutIcon />
         </div>
-        <div className={styles.titleBlock}>
-          <h3 className={styles.title} title={formatTitle(practiceSet.title)}>
-            {formatTitle(practiceSet.title)}
-          </h3>
-          <p className={styles.level}>{theme.label}</p>
-        </div>
+        <h3 className={styles.setName} title={displayTitle}>
+          {displayTitle}
+        </h3>
+        <p className={styles.level}>{theme.label}</p>
       </div>
 
-      {/* Circular Progress Section */}
-      <div className={styles.progressSection}>
-        <div className={styles.progressCircleContainer}>
-          <svg 
-            width={sqSize} 
-            height={sqSize} 
-            viewBox={`0 0 ${sqSize} ${sqSize}`} 
-            className={styles.progressSvg}
-          >
-            {/* Background Track */}
-            <circle
-              cx={center}
-              cy={center}
-              r={radius}
-              strokeWidth={strokeWidth}
-              className={styles.progressTrack}
-              style={{ stroke: theme.trackColor }}
-            />
-            {/* Active Stroke */}
-            <circle
-              cx={center}
-              cy={center}
-              r={radius}
-              strokeWidth={strokeWidth}
-              className={styles.progressFillCircle}
-              style={{
-                stroke: theme.accent,
-                strokeDasharray: circumference,
-                strokeDashoffset: strokeDashoffset,
-              }}
-              transform={`rotate(-90 ${center} ${center})`}
-            />
-          </svg>
-          <div className={styles.progressTextContainer}>
-            <span className={styles.progressPercent}>{displayProgress}%</span>
-            <span className={styles.progressLabelText}>progress</span>
+      <div className={styles.body}>
+        <div className={styles.pin}>
+          <b>{displayProgress}%</b>
+          <span>done</span>
+        </div>
+
+        <div className={styles.track}>
+          <div
+            className={styles.fill}
+            style={{ width: `${Math.min(100, Math.max(0, practiceSet.progress))}%` }}
+          />
+        </div>
+
+        <div className={styles.metaRow}>
+          <div className={styles.problemCount}>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M4 7h16" />
+              <path d="M4 12h10" />
+              <path d="M4 17h13" />
+            </svg>
+            <span>{practiceSet.totalProblems} problems</span>
           </div>
-        </div>
-      </div>
 
-      {/* Time / Stats & Status Row */}
-      <div className={styles.timeStatusRow}>
-        <div className={styles.problemsContainer}>
-          <svg 
-            width="14" 
-            height="14" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2.5" 
-            strokeLinecap="round" 
-            strokeLinejoin="round"
-            className={styles.problemsIcon}
-          >
-            <path d="M12 2L2 7l10 5 10-5-10-5z" />
-            <path d="M2 17l10 5 10-5" />
-            <path d="M2 12l10 5 10-5" />
-          </svg>
-          <span className={styles.problemsCountValue}>
-            {practiceSet.totalProblems} Problems
-          </span>
+          <span className={styles.badge}>{status}</span>
         </div>
-        
-        <span 
-          className={styles.statusBadge}
-          style={{ background: theme.lightBg, color: theme.darkText }}
-        >
-          {status}
-        </span>
-      </div>
 
-      {/* Action Button */}
-      <button className={styles.joinBtn}>
-        <svg 
-          width="16" 
-          height="16" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2" 
-          strokeLinecap="round" 
-          strokeLinejoin="round"
-          className={styles.joinIcon}
-        >
-          <line x1="5" y1="12" x2="19" y2="12" />
-          <polyline points="12 5 19 12 12 19" />
-        </svg>
-        <span>{actionText}</span>
-      </button>
+        <button className={styles.btn}>
+          <span>{actionText}</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
     </div>
   );
 };

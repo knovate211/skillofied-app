@@ -4,6 +4,7 @@ import { practiceSets, practiceProblems as initialProblems } from '../../data/mo
 import { TopicType, PracticeProblem } from '../../types';
 import { listPracticeSetsApi, listProblemsApi } from '../../api';
 import TopicChip from '../common/TopicChip';
+import { formatPracticeSetTitle } from '../../utils/practiceHelpers';
 import styles from './PracticeDetail.module.css';
 
 // Topic chips are derived from the problems actually in this set, so an SQL
@@ -121,7 +122,7 @@ const PracticeDetail: React.FC = () => {
         <div className={styles.heroLeft}>
           <div className={styles.titleBlock}>
             <span className={styles.badge}>Practice Set</span>
-            <h1 className={styles.title}>{currentSet.title}</h1>
+            <h1 className={styles.title}>{formatPracticeSetTitle(currentSet.title)}</h1>
             <p className={styles.description}>
               Master core concepts through interactive challenges. Build your problem-solving skills step-by-step.
             </p>

@@ -58,12 +58,12 @@
 }
 
 .logoText {
-  font-size: 21px;
-  font-weight: 800;
-  letter-spacing: -0.6px;
-  background: linear-gradient(135deg, #d4a237, #28C5BC);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
   transition: opacity 0.2s ease;
 }
 
@@ -94,7 +94,7 @@
 
 .themeBtn:hover {
   border-color: var(--accent);
-  background: rgba(61, 111, 242, 0.08);
+  background: var(--rose-tint);
   transform: rotate(12deg) scale(1.08);
   color: var(--accent);
 }
@@ -123,10 +123,11 @@
 
 
 .avatar {
-  width: 36px;
-  height: 36px;
-  background: linear-gradient(135deg, #d4a237, #28C5BC);
-  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  background: var(--grad-primary);
+  /* The organic blob, not a plain circle — it echoes the brand mark. */
+  border-radius: 55% 45% 50% 50% / 50% 55% 45% 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -140,8 +141,8 @@
 
 .avatar:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 0 3px rgba(61, 111, 242, 0.25);
-  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--rose-tint);
+  border-color: var(--rose);
 }
 
 .logoutBtn {
