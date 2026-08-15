@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './Login.module.css';
 import loginIllustration from '../../assets/login_illustration.png';
+import knovateLogo from '../../assets/knovate-logo.png';
 import { loginApi } from '../../api';
 
 interface LoginProps {
@@ -38,33 +39,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       {/* Left illustration panel with light theme background */}
       <div className={styles.illustrationPanel}>
         <div className={styles.leftLogo}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 60" width="200" height="48">
-            <defs>
-              <linearGradient id="knovateGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#E5C07B" />
-                <stop offset="100%" stopColor="#56B6C2" />
-              </linearGradient>
-            </defs>
-
-            {/* Open Book (Teal Outline) */}
-            <path d="M 20 40 Q 30 35 40 40 L 40 22 Q 30 18 20 22 Z" fill="none" stroke="#56B6C2" strokeWidth="2.5" strokeLinejoin="round"/>
-            <path d="M 40 40 Q 50 35 60 40 L 60 22 Q 50 18 40 22 Z" fill="none" stroke="#56B6C2" strokeWidth="2.5" strokeLinejoin="round"/>
-            
-            {/* Book Center Fold */}
-            <line x1="40" y1="22" x2="40" y2="40" stroke="#56B6C2" strokeWidth="2.5" strokeLinecap="round" />
-            
-            {/* Lightbulb (Yellow Glow and Base) */}
-            <circle cx="40" cy="16" r="6" fill="#F4D03F" />
-            <path d="M 37 18 L 43 18 L 42 24 L 38 24 Z" fill="#E67E22" />
-            
-            {/* Light Rays / Sparks */}
-            <line x1="40" y1="4" x2="40" y2="7" stroke="#F4D03F" strokeWidth="2" strokeLinecap="round"/>
-            <line x1="29" y1="10" x2="32" y2="12" stroke="#F4D03F" strokeWidth="2" stroke-linecap="round"/>
-            <line x1="51" y1="10" x2="48" y2="12" stroke="#F4D03F" strokeWidth="2" stroke-linecap="round"/>
-            
-            {/* Logo Text */}
-            <text x="70" y="38" fontFamily="Arial, Helvetica, sans-serif" fontSize="26" fontWeight="bold" fill="url(#knovateGrad)">Knovate</text>
-          </svg>
+          <img src={knovateLogo} alt="Knovate" className={styles.brandLogo} />
         </div>
         <img
           src={loginIllustration}

@@ -48,27 +48,23 @@
   user-select: none;
 }
 
-.logoIcon {
+.logo {
+  /* Rendered at half its intrinsic height so it stays crisp on 2x screens. */
+  height: 34px;
+  width: auto;
+  display: block;
   flex-shrink: 0;
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.logoContainer:hover .logoIcon {
-  transform: scale(1.1) rotate(-6deg);
+.logoContainer:hover .logo {
+  transform: scale(1.04);
 }
 
-.logoText {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 24px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
-  transition: opacity 0.2s ease;
-}
-
-.logoContainer:hover .logoText {
-  opacity: 0.9;
+@media (max-width: 900px) {
+  .logo {
+    height: 28px;
+  }
 }
 
 .right {

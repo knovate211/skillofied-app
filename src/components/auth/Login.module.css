@@ -40,11 +40,10 @@
   box-shadow: 0 4px 10px rgba(40, 197, 188, 0.2);
 }
 
-.leftLogoText {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: #100E35;
-  letter-spacing: -0.5px;
+.brandLogo {
+  height: 42px;
+  width: auto;
+  display: block;
 }
 
 .illustration {
