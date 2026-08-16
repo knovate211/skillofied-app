@@ -24,6 +24,11 @@ export default defineConfig(({ mode }) => {
           target: apiTarget,
           changeOrigin: true,
         },
+        // Public endpoints behind the login page's "Forgot password?" flow.
+        '/api/password-reset': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
         '/api/anthropic': {
           target: 'https://api.anthropic.com',
           changeOrigin: true,

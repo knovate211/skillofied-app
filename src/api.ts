@@ -205,6 +205,61 @@ export async function loginApi(email: string, password: string): Promise<LoginRe
   return resp.json();
 }
 
+async function postPublic(
+  path: string,
+  body: Record<string, unknown>,
+  fallbackError: string,
+): Promise<any> {
+  const resp = await fetch(`${API_BASE}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+
+  const data = await resp.json().catch(() => ({}));
+  if (!resp.ok) {
+    throw new Error(data.error || fallbackError);
+  }
+  return data;
+}
+
+/**
+ * Step 1 of the password reset.
+ *
+ * Returns whether the server wants a code. It only sends one when mail delivery
+ * is configured; otherwise it resets on the email address alone and the client
+ * goes straight to the new password.
+ *
+ * When a code IS required this succeeds whether or not the address belongs to an
+ * account — the server deliberately answers identically either way, so this
+ * cannot be used to discover who has an account. Never report "unknown email"
+ * from this call.
+ */
+export async function requestPasswordResetApi(email: string): Promise<{ codeRequired: boolean }> {
+  const data = await postPublic(
+    '/api/password-reset/request',
+    { email },
+    'Could not start the reset. Please try again.',
+  );
+  return { codeRequired: data.code_required !== false };
+}
+
+/**
+ * Step 2: sets the new password. `code` is the emailed six-digit code, or an
+ * empty string when the server reported that no code is required.
+ */
+export async function confirmPasswordResetApi(
+  email: string,
+  code: string,
+  newPassword: string,
+): Promise<void> {
+  await postPublic(
+    '/api/password-reset/confirm',
+    { email, code, new_password: newPassword },
+    'Could not update your password. Please try again.',
+  );
+}
+
 export async function graphqlRequest<T = any>(query: string, variables: Record<string, any> = {}): Promise<T> {
   const token = localStorage.getItem('token');
   const headers: Record<string, string> = {
