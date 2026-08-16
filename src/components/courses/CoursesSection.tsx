@@ -82,7 +82,7 @@ const CoursesSection: React.FC = () => {
   if (loading) {
     return (
       <section className={styles.section}>
-        <SectionHeader title="Continue growing" eyebrow="Pick up where you left off" />
+        <SectionHeader title="Development Courses" eyebrow="Pick up where you left off" />
         <div className={styles.grid}>
           <p style={{ color: 'var(--text-secondary)' }}>Loading courses...</p>
         </div>
@@ -93,7 +93,7 @@ const CoursesSection: React.FC = () => {
   if (courses.length === 0) {
     return (
       <section className={styles.section}>
-        <SectionHeader title="Continue growing" eyebrow="Pick up where you left off" />
+        <SectionHeader title="Development Courses" eyebrow="Pick up where you left off" />
         <div className={styles.grid}>
           <p style={{ color: 'var(--text-secondary)' }}>You are not enrolled in any courses yet.</p>
         </div>
@@ -118,7 +118,7 @@ const CoursesSection: React.FC = () => {
 
   return (
     <section className={styles.section}>
-      <CategoryRow title="Continue growing" eyebrow="Pick up where you left off" courses={devCourses} />
+      <CategoryRow title="Development Courses" eyebrow="Pick up where you left off" courses={devCourses} />
       <CategoryRow title="Marketing Courses" eyebrow="Grow your reach" courses={marketingCourses} />
       <CategoryRow title="QA & Software Testing" eyebrow="Sharpen your rigour" courses={testingCourses} />
     </section>

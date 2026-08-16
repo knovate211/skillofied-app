@@ -1,198 +1,165 @@
 .container {
+  max-width: 1124px;
+  margin: 0 auto;
+  padding-bottom: 40px;
+}
+
+/* ── back link ── */
+.backLink {
   display: flex;
-  flex-direction: column;
-  gap: 24px;
-  animation: fadeIn 0.4s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.header {
-  display: flex;
-  align-items: center;
-}
-
-.backBtn {
-  display: inline-flex;
   align-items: center;
   gap: 8px;
   background: none;
   border: none;
-  color: var(--text-secondary, #94a3b8);
+  padding: 0;
+  color: var(--text-secondary);
   font-family: inherit;
-  font-size: 15px;
   font-weight: 600;
+  font-size: 14.5px;
+  margin: 6px 0 22px;
   cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  margin-left: -12px;
+  transition: color 0.2s ease;
 }
 
-.backBtn:hover {
-  color: var(--text-primary, #ffffff);
-  background-color: var(--bg-card-hover, #1d2842);
+.backLink:hover {
+  color: var(--rose-deep);
 }
 
-/* Hero Section */
+/* ── practice set hero ── */
 .heroCard {
+  background: var(--grad-hero);
+  border-radius: 28px;
+  padding: 34px 38px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 32px;
   gap: 32px;
-  position: relative;
-  overflow: hidden;
-}
-
-.heroCard::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -20%;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(61, 111, 242, 0.05) 0%, rgba(61, 111, 242, 0) 70%);
-  pointer-events: none;
+  flex-wrap: wrap;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 36px;
 }
 
 .heroLeft {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  min-width: 280px;
 }
 
 .badge {
   display: inline-block;
-  align-self: flex-start;
-  font-size: 12px;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
-  background: rgba(61, 111, 242, 0.1);
-  padding: 4px 10px;
+  color: var(--rose-deep);
+  background: rgba(255, 255, 255, 0.6);
+  padding: 6px 14px;
   border-radius: 20px;
-  letter-spacing: 0.8px;
+  margin-bottom: 14px;
 }
 
 .title {
-  font-size: 32px;
-  font-weight: 800;
-  margin: 6px 0 10px 0;
-  letter-spacing: -0.5px;
-  background: linear-gradient(135deg, #100E35 0%, #28C5BC 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 36px;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin: 0 0 10px;
 }
 
 .description {
   color: var(--text-secondary);
   font-size: 15px;
-  line-height: 1.6;
-  max-width: 580px;
-  margin: 0;
+  line-height: 1.55;
+  max-width: 520px;
+  margin: 0 0 20px;
 }
 
 .metaInfo {
   display: flex;
-  gap: 24px;
+  gap: 28px;
   flex-wrap: wrap;
 }
 
 .metaItem {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
+  font-size: 13.5px;
   color: var(--text-secondary);
 }
 
-.metaLabel {
-  color: var(--text-muted);
-}
-
-.metaVal {
-  font-weight: 700;
+.metaItem b {
   color: var(--text-primary);
+  font-weight: 700;
 }
 
-.heroRight {
-  width: 280px;
-  background: var(--bg-surface-2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-}
+/* Difficulty text tones, shared with the pills and solve buttons below. */
+.textEasy { color: var(--olive-deep); }
+.textMedium { color: var(--honey-deep); }
+.textHard { color: var(--rose-deep); }
 
-.progressContainer {
+.progressCard {
+  background: rgba(255, 255, 255, 0.72);
+  border-radius: 20px;
+  padding: 22px 26px;
+  min-width: 230px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-}
-
-.progressText {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
+  justify-content: center;
 }
 
 .progressLabel {
   font-size: 13px;
-  font-weight: 600;
-  color: var(--text-secondary, #94a3b8);
+  color: var(--text-secondary);
+  margin-bottom: 6px;
 }
 
 .progressPercent {
-  font-size: 24px;
-  font-weight: 800;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 34px;
   color: var(--text-primary);
+  margin-bottom: 14px;
 }
 
-.progressBarWrapper {
-  height: 8px;
-  background-color: var(--border);
-  border-radius: 10px;
+.progressTrack {
+  height: 10px;
+  border-radius: 20px;
+  background: var(--honey-tint);
   overflow: hidden;
+  margin-bottom: 10px;
 }
 
-.progressBarFill {
+.progressFill {
   height: 100%;
-  border-radius: 10px;
-  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 20px;
+  background: linear-gradient(90deg, var(--honey-deep), var(--rose-deep));
+  transition: width 1.1s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 
 .solvedCount {
-  font-size: 12px;
-  color: var(--text-muted);
+  font-size: 12.5px;
+  color: var(--ink-faint);
 }
 
-/* Filter Section */
+[data-theme="dark"] .progressCard {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .badge {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ── topic filters ── */
 .filterSection {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  margin-bottom: 38px;
 }
 
 .filterTitle {
+  font-family: var(--font-mono);
   font-size: 12px;
-  font-weight: 700;
-  color: var(--text-secondary, #64748b);
-  letter-spacing: 1.5px;
-  margin: 0;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 14px;
 }
 
 .chipsGrid {
@@ -201,188 +168,193 @@
   gap: 12px;
 }
 
-/* Problems Grid & Section */
+/* ── challenges ── */
 .problemsSection {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  margin-top: 10px;
+  margin-bottom: 8px;
 }
 
 .sectionHeader {
   display: flex;
+  align-items: baseline;
   justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--border-color, #232d45);
-  padding-bottom: 12px;
+  gap: 16px;
+  margin-bottom: 22px;
 }
 
 .subTitle {
-  font-size: 18px;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 24px;
+  color: var(--text-primary);
   margin: 0;
 }
 
 .resultsCount {
-  font-size: 14px;
-  color: var(--text-secondary, #64748b);
+  font-size: 13.5px;
+  color: var(--ink-faint);
 }
 
 .problemsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
 .problemCard {
+  background: var(--bg-surface);
+  border-radius: 22px;
+  padding: 22px 22px 20px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  background-color: var(--bg-surface);
-  border: 1.5px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-  min-height: 190px;
-  transition: all 0.2s ease;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
 }
 
 .problemCard:hover {
-  transform: translateY(-2px);
-  border-color: var(--accent);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
 }
 
+/* A finished challenge keeps its ring, so completed work stays visible
+   without needing a badge. */
 .solvedCard {
-  border-color: rgba(34, 197, 94, 0.3) !important;
-  background: rgba(34, 197, 94, 0.03);
-}
-
-.probMain {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  border-color: var(--olive-deep);
+  box-shadow: 0 0 0 3px var(--olive-tint), var(--shadow-sm);
 }
 
 .probHeader {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 16px;
 }
 
-.difficultyBadge {
+.difficultyPill {
+  font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 4px;
-  letter-spacing: 0.3px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
 }
 
-.easy {
-  color: #22c55e;
-  background: rgba(34, 197, 94, 0.1);
-}
-
-.medium {
-  color: #28C5BC;
-  background: rgba(40, 197, 188, 0.1);
-}
-
-.hard {
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.1);
-}
+.pillEasy { background: var(--olive-tint); color: var(--olive-deep); }
+.pillMedium { background: var(--honey-tint); color: var(--honey-deep); }
+.pillHard { background: var(--rose-tint); color: var(--rose-deep); }
 
 .xpVal {
-  font-size: 13px;
-  font-weight: 700;
-  color: #eab308;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--honey-deep);
+  white-space: nowrap;
 }
 
 .probTitle {
-  font-size: 16px;
-  font-weight: 700;
-  margin: 0;
-  line-height: 1.4;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.3;
   color: var(--text-primary);
+  /* Reserves two lines so the topic tag and footer align across a row
+     regardless of title length. */
+  min-height: 47px;
+  margin: 0 0 12px;
 }
 
 .probTopicTag {
   display: inline-block;
   align-self: flex-start;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--text-secondary);
-  background-color: var(--bg-surface-2);
+  background: var(--bg-page);
   border: 1px solid var(--border);
-  padding: 2px 6px;
-  border-radius: 4px;
+  padding: 5px 12px;
+  border-radius: 14px;
+  margin-bottom: 18px;
+}
+
+.probDivider {
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 16px;
+  /* Pushes the footer down so short cards still align at the bottom. */
+  margin-top: auto;
 }
 
 .probFooter {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-top: 16px;
-  border-top: 1px solid var(--border);
-  padding-top: 14px;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.statusBadge {
-  font-size: 12px;
+.status {
+  font-size: 13px;
   font-weight: 600;
+  color: var(--ink-faint);
 }
 
-.solvedBadge {
-  color: #22c55e;
-}
-
-.inProgressBadge {
-  color: #28C5BC;
-}
-
-.unsolvedBadge {
-  color: var(--text-muted);
+.statusSolved {
+  color: var(--olive-deep);
 }
 
 .solveBtn {
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 700;
-  color: #ffffff;
-  background: var(--grad-primary);
-  color: #100E35;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
+  border-radius: 14px;
+  padding: 10px 18px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: #fff;
   cursor: pointer;
-  transition: all 0.2s ease;
+  white-space: nowrap;
+  transition: filter 0.2s, transform 0.2s;
 }
 
 .solveBtn:hover {
   filter: brightness(1.08);
-  transform: scale(1.02);
+  transform: translateY(-1px);
 }
 
-.solvedBtn {
-  background-color: transparent;
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
+.btnEasy { background: linear-gradient(120deg, var(--olive-deep), var(--olive)); }
+.btnMedium { background: linear-gradient(120deg, var(--honey-deep), var(--honey)); }
+.btnHard { background: linear-gradient(120deg, var(--rose-deep), var(--rose)); }
+
+[data-theme="dark"] .solveBtn {
+  color: #241C18;
 }
 
-.solvedBtn:hover {
-  background-color: var(--bg-surface-2);
-  color: var(--text-primary);
-  border-color: var(--text-secondary);
-}
-
-@media (max-width: 768px) {
-  .heroCard {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 24px;
+@media (max-width: 1000px) {
+  .problemsGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  .heroRight {
-    width: auto;
+}
+
+@media (max-width: 700px) {
+  .heroCard {
+    padding: 26px 22px;
+    border-radius: 24px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .progressCard {
+    width: 100%;
+  }
+
+  .problemsGrid {
+    grid-template-columns: 1fr;
   }
 }
