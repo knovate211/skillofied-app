@@ -4,7 +4,6 @@ import Navbar from './components/layout/Navbar';
 import BottomNav from './components/layout/BottomNav';
 import Sidebar from './components/layout/Sidebar';
 import CoursesSection from './components/courses/CoursesSection';
-import PendingActionsSection from './components/pending/PendingActionsSection';
 import Login from './components/auth/Login';
 import { getMyCoursesApi } from './api';
 import styles from './App.module.css';
@@ -15,6 +14,7 @@ const FrontendCoursePage = lazy(() => import('./components/courses/FrontendCours
 const JavaCoursePage = lazy(() => import('./components/courses/JavaCoursePage'));
 const SqlCoursePage = lazy(() => import('./components/courses/SqlCoursePage'));
 const GolangCoursePage = lazy(() => import('./components/courses/GolangCoursePage'));
+const GenAICoursePage = lazy(() => import('./components/courses/GenAICoursePage'));
 const FullStackCoursePage = lazy(() => import('./components/courses/FullStackCoursePage'));
 const TestingCoursePage = lazy(() => import('./components/courses/TestingCoursePage'));
 const CoursePlaceholderPage = lazy(() => import('./components/courses/CoursePlaceholderPage'));
@@ -179,7 +179,6 @@ const App: React.FC = () => {
                           <TodaySchedule />
                           <CoursesSection />
                           <PracticeSection isHomePage />
-                          <PendingActionsSection />
                         </>
                       }
                     />
@@ -188,6 +187,7 @@ const App: React.FC = () => {
                     <Route path="/courses/java" element={<JavaCoursePage />} />
                     <Route path="/courses/sql" element={<SqlCoursePage />} />
                     <Route path="/courses/golang" element={<GolangCoursePage />} />
+                    <Route path="/courses/genai" element={<GenAICoursePage />} />
                     <Route path="/courses/fullstack" element={<FullStackCoursePage />} />
                     <Route path="/courses/seo" element={<SeoCoursePage />} />
                     <Route path="/courses/digital-marketing" element={<DigitalMarketingCoursePage />} />

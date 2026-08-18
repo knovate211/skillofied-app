@@ -6,28 +6,92 @@ import { getCourseButtonText, getCourseProgress } from '../../utils/courseHelper
 
 interface Props {
   course: Course;
+  /** Position in its row — decides which of the three accents the card wears. */
+  index?: number;
 }
 
-const getCourseTheme = (_initial: string) => {
-  return {
-    accent: '#28C5BC',
-    lightBg: '#E8FAF8',
-    darkText: '#1ea69f',
-    trackColor: 'rgba(40, 197, 188, 0.12)',
-  };
-};
+/* The three seasonal accents, cycled across a row so neighbouring cards never
+   share a colour. Each class supplies --band / --band-ink / --band-ink-deep /
+   --track-bg, and carries its own dark-theme values. */
+const TONES = [styles.toneHoney, styles.toneOlive, styles.toneRose];
 
-const formatTitle = (title: string) => {
-  if (title === 'Front-End Technologies') {
-    return 'Front-End Tech';
+const formatTitle = (title: string) => (title === 'Front-End Technologies' ? 'Front-End Tech' : title);
+
+const iconFor = (title: string) => {
+  const t = title.toLowerCase();
+  const props = {
+    width: 20,
+    height: 20,
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 1.9,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+  };
+
+  if (t.includes('sql') || t.includes('database')) {
+    return (
+      <svg {...props}>
+        <ellipse cx="12" cy="5" rx="8" ry="3" />
+        <path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5" />
+        <path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
+      </svg>
+    );
   }
-  return title;
-};
-const formatStatus = (status: string) => {
-  if (status === 'NOT STARTED') return 'Not started';
-  if (status === 'IN PROGRESS') return 'In progress';
-  if (status === 'COMPLETED') return 'Completed';
-  return status;
+  if (t.includes('front-end') || t.includes('frontend')) {
+    return (
+      <svg {...props}>
+        <path d="M4 7h16" />
+        <path d="M4 12h10" />
+        <path d="M4 17h13" />
+      </svg>
+    );
+  }
+  if (t.includes('java')) {
+    return (
+      <svg {...props}>
+        <path d="M5 8h11v5a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5V8z" />
+        <path d="M16 9h2a2.5 2.5 0 0 1 0 5h-2" />
+        <path d="M8 3c0 1.5 1.5 1.5 1.5 3M12 3c0 1.5 1.5 1.5 1.5 3" />
+      </svg>
+    );
+  }
+  if (t.includes('genai') || t.includes('ai')) {
+    return (
+      <svg {...props}>
+        <path d="M12 3l1.9 4.9L19 9.8l-4.2 3.2L15.6 18 12 15.3 8.4 18l.8-5L5 9.8l5.1-1.9z" />
+      </svg>
+    );
+  }
+  if (t.includes('testing') || t.includes('qa')) {
+    return (
+      <svg {...props}>
+        <path d="M20 6L9 17l-5-5" />
+      </svg>
+    );
+  }
+  if (t.includes('seo') || t.includes('marketing')) {
+    return (
+      <svg {...props}>
+        <path d="M3 11v2a1 1 0 0 0 1 1h3l5 4V6L7 10H4a1 1 0 0 0-1 1z" />
+        <path d="M17 8a5 5 0 0 1 0 8" />
+      </svg>
+    );
+  }
+  if (t.includes('golang') || t.includes('full stack') || t.includes('fullstack')) {
+    return (
+      <svg {...props}>
+        <path d="M9 8l-5 4 5 4M15 8l5 4-5 4" />
+      </svg>
+    );
+  }
+  return (
+    <svg {...props}>
+      <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5V5.5z" />
+      <path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H19v3H6.5A2.5 2.5 0 0 1 4 20.5z" />
+    </svg>
+  );
 };
 
 /**
@@ -41,143 +105,69 @@ const COURSE_ROUTES: Record<string, string> = {
   'Mastering SQL': '/courses/sql',
   'Golang Engineering': '/courses/golang',
   'Full Stack Engineering': '/courses/fullstack',
+  'GenAI & Forward Deployed Engineering': '/courses/genai',
+  'GenAI Engineering': '/courses/genai',
   'Software Testing': '/courses/testing',
   'SEO Fundamentals': '/courses/seo',
   'Digital Marketing Strategy': '/courses/digital-marketing',
 };
 
-const CourseCard: React.FC<Props> = ({ course }) => {
+const CourseCard: React.FC<Props> = ({ course, index = 0 }) => {
   const navigate = useNavigate();
-  const theme = getCourseTheme(course.initial);
-  
-  // Format progress for display
-  const progressValue = getCourseProgress(course.title);
-  const displayProgress = progressValue.toString();
+  const toneClass = TONES[index % TONES.length];
 
-  // Circular progress calculations (r=36, strokeWidth=6, sqSize=90)
-  const radius = 36;
-  const strokeWidth = 6;
-  const sqSize = 90;
-  const center = sqSize / 2;
-  const circumference = 2 * Math.PI * radius;
-  
-  const strokeDashoffset = circumference - (progressValue / 100) * circumference;
+  const progressValue = getCourseProgress(course.title);
+  const displayProgress = Math.round(progressValue);
+
+  const open = () => {
+    const route = COURSE_ROUTES[course.title];
+    // No course page built yet — the syllabus landing page still shows the
+    // outline rather than dead-ending the learner.
+    navigate(route || '/courses');
+  };
 
   return (
-    <div className={styles.card}>
-      {/* Header */}
+    <div className={`${styles.card} ${toneClass}`}>
       <div className={styles.header}>
-        <div 
-          className={styles.initial} 
-          style={{ background: 'linear-gradient(135deg, #d4a237 0%, #28C5BC 100%)', color: '#ffffff' }}
-        >
-          {course.initial}
-        </div>
-        <div className={styles.info}>
-          <h3 className={styles.title}>{formatTitle(course.title)}</h3>
-          <p className={styles.mentor}>{course.mentor}</p>
-        </div>
+        <div className={styles.icon}>{iconFor(course.title)}</div>
+        <h3 className={styles.courseName}>{formatTitle(course.title)}</h3>
+        <p className={styles.instructor}>{course.mentor}</p>
       </div>
 
-      {/* Progress Circle Section */}
-      <div className={styles.progressSection}>
-        <div className={styles.progressCircleContainer}>
-          <svg 
-            width={sqSize} 
-            height={sqSize} 
-            viewBox={`0 0 ${sqSize} ${sqSize}`} 
-            className={styles.progressSvg}
-          >
-            {/* Background Track */}
-            <circle
-              cx={center}
-              cy={center}
-              r={radius}
-              strokeWidth={strokeWidth}
-              className={styles.progressTrack}
-              style={{ stroke: theme.trackColor }}
-            />
-            {/* Active Stroke */}
-            <circle
-              cx={center}
-              cy={center}
-              r={radius}
-              strokeWidth={strokeWidth}
-              className={styles.progressFillCircle}
-              style={{
-                stroke: theme.accent,
-                strokeDasharray: circumference,
-                strokeDashoffset: strokeDashoffset,
-              }}
-              transform={`rotate(-90 ${center} ${center})`}
-            />
-          </svg>
-          <div className={styles.progressTextContainer}>
-            <span className={styles.progressPercent}>{displayProgress}%</span>
-            <span className={styles.progressLabelText}>progress</span>
+      <div className={styles.body}>
+        <div className={styles.pin}>
+          <b>{displayProgress}%</b>
+          <span>done</span>
+        </div>
+
+        <div className={styles.track}>
+          <div className={styles.fill} style={{ width: `${Math.min(100, Math.max(0, progressValue))}%` }} />
+        </div>
+
+        <div className={styles.metaRow}>
+          <div className={styles.timeTag}>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <polyline points="12 7 12 12 15.5 14" />
+            </svg>
+            <span>{course.classTime}</span>
           </div>
         </div>
-      </div>
 
-      {/* Time & Status Row */}
-      <div className={styles.timeStatusRow}>
-        <div className={styles.classTime}>
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={styles.clockIcon}
-          >
-            <circle cx="12" cy="12" r="10" />
-            <polyline points="12 6 12 12 16 14" />
-          </svg>
-          <span className={styles.classValue}>{course.classTime}</span>
-        </div>
-        
-        <span 
-          className={styles.statusBadge}
-          style={{ background: theme.lightBg, color: theme.darkText }}
-        >
-          {formatStatus(course.status)}
-        </span>
+        <button className={styles.btn} onClick={open}>
+          <span>{getCourseButtonText(course.progress)}</span>
+          <span aria-hidden="true">→</span>
+        </button>
       </div>
-
-      {/* Join Class Button */}
-      <button 
-        className={styles.joinBtn}
-        onClick={() => {
-          const route = COURSE_ROUTES[course.title];
-          if (route) {
-            navigate(route);
-          } else {
-            // No course page built yet — the syllabus landing page still
-            // shows the outline rather than dead-ending the learner.
-            navigate('/courses');
-          }
-        }}
-      >
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={styles.joinIcon}
-        >
-          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-          <polyline points="10 17 15 12 10 7" />
-          <line x1="15" y1="12" x2="3" y2="12" />
-        </svg>
-        <span>{getCourseButtonText(course.progress)}</span>
-      </button>
     </div>
   );
 };

@@ -2,9 +2,42 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { practiceSets, practiceProblems as initialProblems } from '../../data/mockData';
 import { TopicType, PracticeProblem } from '../../types';
-import { graphqlRequest } from '../../api';
+import { listPracticeSetsApi, listProblemsApi } from '../../api';
 import TopicChip from '../common/TopicChip';
+import { formatPracticeSetTitle } from '../../utils/practiceHelpers';
 import styles from './PracticeDetail.module.css';
+
+// Topic chips are derived from the problems actually in this set, so an SQL
+// set shows SQL topics rather than a hardcoded list of DSA categories.
+// TOPIC_ORDER puts known topics in a sensible teaching order; anything new
+// still appears, sorted alphabetically after them.
+const TOPIC_ORDER: TopicType[] = [
+  // DSA
+  'Array', 'String', 'HashMap', 'Linked List', 'Tree', 'Graph',
+  'DP', 'Stack/Queue', 'Heap', 'Backtracking',
+  // Language fundamentals
+  'Operators', 'Conditionals', 'Loops', 'Functions', 'Arrays', 'Strings', 'Objects',
+  // SQL
+  'Filtering', 'Aggregation', 'Joins', 'Subqueries', 'Window Functions',
+  'String Functions', 'Date Functions', 'Data Modification',
+];
+
+/** Levels arrive as "beginner Challenge" — the hero wants just "Beginner". */
+const formatDifficulty = (level: string) => {
+  const word = (level || '').trim().split(/\s+/)[0] || 'Beginner';
+  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+};
+
+/* Difficulty drives colour throughout the page — the pill, the solve button,
+   and the hero's difficulty line all resolve to the same three tones. */
+type Tone = 'Easy' | 'Medium' | 'Hard';
+
+const toneFor = (difficulty: string): Tone => {
+  const d = (difficulty || '').toLowerCase();
+  if (d.startsWith('hard') || d.startsWith('advanced')) return 'Hard';
+  if (d.startsWith('medium') || d.startsWith('intermediate')) return 'Medium';
+  return 'Easy';
+};
 
 const PracticeDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -18,70 +51,19 @@ const PracticeDetail: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
 
-    Promise.all([
-      graphqlRequest(`
-        query {
-          listPracticeSets {
-            id
-            title
-            level
-            levelColor
-            bgColor
-            totalProblems
-            progress
-          }
-        }
-      `),
-      graphqlRequest(`
-        query($setId: String) {
-          listProblems(setId: $setId) {
-            problems {
-              id
-              slug
-              title
-              difficulty
-              topic
-              xp
-              setId
-              userStatus
-            }
-          }
-        }
-      `, { setId: id })
-    ])
-      .then(([setData, probData]) => {
-        if (setData && setData.listPracticeSets) {
-          const found = setData.listPracticeSets.find((s: any) => s.id === id);
-          if (found) {
-            setCurrentSet(found);
-          } else {
-            setCurrentSet(practiceSets.find((ps) => ps.id === id) || practiceSets[2]);
-          }
-        } else {
-          setCurrentSet(practiceSets.find((ps) => ps.id === id) || practiceSets[2]);
-        }
+    const fallbackSet = () => practiceSets.find((ps) => ps.id === id) || practiceSets[2];
+    const fallbackProblems = () => initialProblems.filter((p) => !p.setId || p.setId === id);
 
-        if (probData && probData.listProblems && probData.listProblems.problems) {
-          const list = probData.listProblems.problems.map((p: any) => ({
-            id: p.id,
-            slug: p.slug,
-            title: p.title,
-            difficulty: p.difficulty,
-            topic: p.topic,
-            xp: p.xp,
-            setId: p.setId,
-            status: (p.userStatus === 'Solved' ? 'Solved' : (p.userStatus === 'InProgress' ? 'In Progress' : 'Unsolved')) as any
-          }));
-          setProblems(list);
-        } else {
-          setProblems(initialProblems.filter(p => !p.setId || p.setId === id || p.setId === currentSet?.id));
-        }
+    Promise.all([listPracticeSetsApi(), listProblemsApi(id)])
+      .then(([sets, fetchedProblems]) => {
+        setCurrentSet(sets.find((s) => s.id === id) || fallbackSet());
+        setProblems(fetchedProblems.length > 0 ? (fetchedProblems as PracticeProblem[]) : fallbackProblems());
         setIsLoading(false);
       })
       .catch((err) => {
         console.error("Failed to load details from API:", err);
-        setCurrentSet(practiceSets.find((ps) => ps.id === id) || practiceSets[2]);
-        setProblems(initialProblems.filter(p => !p.setId || p.setId === id));
+        setCurrentSet(fallbackSet());
+        setProblems(fallbackProblems());
         setIsLoading(false);
       });
   }, [id]);
@@ -113,21 +95,6 @@ const PracticeDetail: React.FC = () => {
     ? problems
     : problems.filter((p) => p.topic === activeTopic);
 
-  // Topic chips are derived from the problems actually in this set, so an SQL
-  // set shows SQL topics rather than a hardcoded list of DSA categories.
-  // TOPIC_ORDER puts known topics in a sensible teaching order; anything new
-  // still appears, sorted alphabetically after them.
-  const TOPIC_ORDER: TopicType[] = [
-    // DSA
-    'Array', 'String', 'HashMap', 'Linked List', 'Tree', 'Graph',
-    'DP', 'Stack/Queue', 'Heap', 'Backtracking',
-    // Language fundamentals
-    'Operators', 'Conditionals', 'Loops', 'Functions', 'Arrays', 'Strings', 'Objects',
-    // SQL
-    'Filtering', 'Aggregation', 'Joins', 'Subqueries', 'Window Functions',
-    'String Functions', 'Date Functions', 'Data Modification',
-  ];
-
   const presentTopics = Array.from(new Set(problems.map((p) => p.topic))).filter(Boolean);
 
   const topics: TopicType[] = [
@@ -144,7 +111,7 @@ const PracticeDetail: React.FC = () => {
 
   // Calculate overall completion percent based on current solved problems
   const totalSolved = problems.filter((p) => p.status === 'Solved').length;
-  const overallProgress = (totalSolved / problems.length) * 100;
+  const overallProgress = problems.length > 0 ? (totalSolved / problems.length) * 100 : 0;
 
   if (isLoading || !currentSet) {
     return (
@@ -157,63 +124,50 @@ const PracticeDetail: React.FC = () => {
   return (
     <div className={styles.container}>
       {/* Back Header */}
-      <div className={styles.header}>
-        <button className={styles.backBtn} onClick={handleBack}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="19" y1="12" x2="5" y2="12" />
-            <polyline points="12 19 5 12 12 5" />
-          </svg>
-          <span>Back to Practice</span>
-        </button>
-      </div>
+      <button className={styles.backLink} onClick={handleBack}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+        <span>Back to Practice</span>
+      </button>
 
       {/* Hero card / Intro */}
       <div className={styles.heroCard}>
         <div className={styles.heroLeft}>
-          <div className={styles.titleBlock}>
-            <span className={styles.badge}>Practice Set</span>
-            <h1 className={styles.title}>{currentSet.title}</h1>
-            <p className={styles.description}>
-              Master core concepts through interactive challenges. Build your problem-solving skills step-by-step.
-            </p>
-          </div>
+          <span className={styles.badge}>Practice Set</span>
+          <h1 className={styles.title}>{formatPracticeSetTitle(currentSet.title)}</h1>
+          <p className={styles.description}>
+            Master core concepts through interactive challenges. Build your problem-solving skills step by step.
+          </p>
           <div className={styles.metaInfo}>
             <div className={styles.metaItem}>
-              <span className={styles.metaLabel}>Difficulty:</span>
-              <span className={styles.metaVal} style={{ color: currentSet.levelColor }}>
-                {currentSet.level}
-              </span>
+              Difficulty:{' '}
+              <b className={styles[`text${toneFor(currentSet.level)}`]}>
+                {formatDifficulty(currentSet.level)}
+              </b>
             </div>
             <div className={styles.metaItem}>
-              <span className={styles.metaLabel}>Total Problems:</span>
-              <span className={styles.metaVal}>{problems.length} Challenges</span>
+              Total problems: <b>{problems.length} challenges</b>
             </div>
           </div>
         </div>
 
         {/* Progress Display */}
-        <div className={styles.heroRight}>
-          <div className={styles.progressContainer}>
-            <div className={styles.progressText}>
-              <span className={styles.progressLabel}>Overall Progress</span>
-              <span className={styles.progressPercent}>{overallProgress.toFixed(1)}%</span>
-            </div>
-            <div className={styles.progressBarWrapper}>
-              <div 
-                className={styles.progressBarFill} 
-                style={{ width: `${overallProgress}%`, background: 'var(--grad-primary)' }}
-              />
-            </div>
-            <span className={styles.solvedCount}>
-              {totalSolved} of {problems.length} solved
-            </span>
+        <div className={styles.progressCard}>
+          <span className={styles.progressLabel}>Overall progress</span>
+          <span className={styles.progressPercent}>{overallProgress.toFixed(1)}%</span>
+          <div className={styles.progressTrack}>
+            <div className={styles.progressFill} style={{ width: `${overallProgress}%` }} />
           </div>
+          <span className={styles.solvedCount}>
+            {totalSolved} of {problems.length} solved
+          </span>
         </div>
       </div>
 
       {/* Filter Section */}
       <div className={styles.filterSection}>
-        <h2 className={styles.filterTitle}>FILTER BY TOPIC</h2>
+        <h2 className={styles.filterTitle}>Filter by topic</h2>
         <div className={styles.chipsGrid}>
           {topics.map((topic) => {
             const { solved, total } = getTopicStats(topic);
@@ -235,7 +189,7 @@ const PracticeDetail: React.FC = () => {
       <div className={styles.problemsSection}>
         <div className={styles.sectionHeader}>
           <h3 className={styles.subTitle}>
-            {activeTopic === 'All' ? 'All Challenges' : `${activeTopic} Challenges`}
+            {activeTopic === 'All' ? 'All challenges' : `${activeTopic} challenges`}
           </h3>
           <span className={styles.resultsCount}>{filteredProblems.length} results</span>
         </div>
@@ -243,43 +197,35 @@ const PracticeDetail: React.FC = () => {
         <div className={styles.problemsGrid}>
           {filteredProblems.map((prob) => {
             const isSolved = prob.status === 'Solved';
-            const isInProgress = prob.status === 'In Progress';
+            const tone = toneFor(prob.difficulty);
 
             return (
-              <div 
-                key={prob.id} 
+              <div
+                key={prob.id}
                 className={`${styles.problemCard} ${isSolved ? styles.solvedCard : ''}`}
               >
-                <div className={styles.probMain}>
-                  <div className={styles.probHeader}>
-                    <span 
-                      className={`${styles.difficultyBadge} ${
-                        prob.difficulty === 'Easy' ? styles.easy : 
-                        prob.difficulty === 'Medium' ? styles.medium : styles.hard
-                      }`}
-                    >
-                      {prob.difficulty}
-                    </span>
-                    <span className={styles.xpVal}>+{prob.xp} XP</span>
-                  </div>
-                  <h4 className={styles.probTitle}>{prob.title}</h4>
-                  <span className={styles.probTopicTag}>{prob.topic}</span>
+                <div className={styles.probHeader}>
+                  <span className={`${styles.difficultyPill} ${styles[`pill${tone}`]}`}>
+                    {prob.difficulty}
+                  </span>
+                  <span className={styles.xpVal}>+{prob.xp} XP</span>
                 </div>
 
+                <h4 className={styles.probTitle}>{prob.title}</h4>
+                <span className={styles.probTopicTag}>{prob.topic}</span>
+
+                <div className={styles.probDivider} />
+
                 <div className={styles.probFooter}>
-                  <span 
-                    className={`${styles.statusBadge} ${
-                      isSolved ? styles.solvedBadge : 
-                      isInProgress ? styles.inProgressBadge : styles.unsolvedBadge
-                    }`}
-                  >
+                  <span className={`${styles.status} ${isSolved ? styles.statusSolved : ''}`}>
                     {prob.status}
                   </span>
-                  <button 
+                  <button
                     onClick={() => handleSolve(prob.id)}
-                    className={`${styles.solveBtn} ${isSolved ? styles.solvedBtn : ''}`}
+                    className={`${styles.solveBtn} ${styles[`btn${tone}`]}`}
                   >
-                    {isSolved ? 'Try Again' : 'Solve Challenge'}
+                    <span>{isSolved ? 'Try again' : 'Solve'}</span>
+                    <span aria-hidden="true">→</span>
                   </button>
                 </div>
               </div>

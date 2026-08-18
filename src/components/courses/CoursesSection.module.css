@@ -1,11 +1,15 @@
 .section {
-  margin-bottom: 36px;
+  margin-bottom: 46px;
+}
+
+.categoryGroup {
+  margin-bottom: 46px;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+  gap: 22px;
 }
 
 @media (max-width: 900px) {

@@ -5,24 +5,27 @@ import CourseCard from './CourseCard';
 import styles from './CoursesSection.module.css';
 import { getMyCoursesApi } from '../../api';
 
-const CategoryRow: React.FC<{ title: string; courses: any[] }> = ({ title, courses }) => {
+const CategoryRow: React.FC<{ title: string; eyebrow?: string; courses: any[] }> = ({ title, eyebrow, courses }) => {
   const { startIndex, prev, next, canPrev, canNext } = useCarousel(courses.length, 3);
   const visible = courses.slice(startIndex, startIndex + 3);
 
   if (courses.length === 0) return null;
 
   return (
-    <div style={{ marginBottom: '2.5rem' }}>
+    <div className={styles.categoryGroup}>
       <SectionHeader
         title={title}
+        eyebrow={eyebrow}
         onPrev={prev}
         onNext={next}
         canPrev={canPrev}
         canNext={canNext}
       />
       <div className={styles.grid}>
-        {visible.map((course) => (
-          <CourseCard key={course.id} course={course} />
+        {visible.map((course, i) => (
+          /* Tone cycles with the visible slot, so a row is always honey →
+             olive → rose regardless of how far the carousel has scrolled. */
+          <CourseCard key={course.id} course={course} index={i} />
         ))}
       </div>
     </div>
@@ -79,7 +82,7 @@ const CoursesSection: React.FC = () => {
   if (loading) {
     return (
       <section className={styles.section}>
-        <SectionHeader title="Courses" />
+        <SectionHeader title="Development Courses" eyebrow="Pick up where you left off" />
         <div className={styles.grid}>
           <p style={{ color: 'var(--text-secondary)' }}>Loading courses...</p>
         </div>
@@ -90,7 +93,7 @@ const CoursesSection: React.FC = () => {
   if (courses.length === 0) {
     return (
       <section className={styles.section}>
-        <SectionHeader title="Courses" />
+        <SectionHeader title="Development Courses" eyebrow="Pick up where you left off" />
         <div className={styles.grid}>
           <p style={{ color: 'var(--text-secondary)' }}>You are not enrolled in any courses yet.</p>
         </div>
@@ -115,9 +118,9 @@ const CoursesSection: React.FC = () => {
 
   return (
     <section className={styles.section}>
-      <CategoryRow title="Development Courses" courses={devCourses} />
-      <CategoryRow title="Marketing Courses" courses={marketingCourses} />
-      <CategoryRow title="QA & Software Testing" courses={testingCourses} />
+      <CategoryRow title="Development Courses" eyebrow="Pick up where you left off" courses={devCourses} />
+      <CategoryRow title="Marketing Courses" eyebrow="Grow your reach" courses={marketingCourses} />
+      <CategoryRow title="QA & Software Testing" eyebrow="Sharpen your rigour" courses={testingCourses} />
     </section>
   );
 };

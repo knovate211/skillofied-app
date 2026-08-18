@@ -1,5 +1,5 @@
 .section {
-  margin-bottom: 36px;
+  margin-bottom: 46px;
 }
 
 .categoryGroup {
@@ -7,16 +7,18 @@
 }
 
 .categoryTitle {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--heading, #1e293b);
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
   margin-bottom: 24px;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+  gap: 22px;
 }
 
 @media (max-width: 900px) {
@@ -30,14 +32,14 @@
 .comingSoonCard {
   background: var(--bg-surface-2, rgba(30, 41, 59, 0.4));
   border: 1px dashed var(--border, rgba(255, 255, 255, 0.15));
-  border-radius: 12px;
+  border-radius: 26px;
   padding: 32px 24px;
   text-align: center;
   position: relative;
   overflow: hidden;
   max-width: 480px;
   margin: 0 auto;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-sm);
 }
 
 .comingSoonAnimation {
@@ -65,9 +67,10 @@
 }
 
 .comingSoonHeader {
-  font-size: 18px;
+  font-family: var(--font-display);
+  font-size: 19px;
   font-weight: 600;
-  color: var(--heading, #f8fafc);
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
@@ -82,8 +85,8 @@
   display: inline-block;
   font-size: 12px;
   font-weight: 600;
-  color: var(--accent, #6366f1);
-  background: rgba(99, 102, 241, 0.12);
+  color: var(--rose-deep);
+  background: var(--rose-tint);
   padding: 4px 12px;
   border-radius: 9999px;
   letter-spacing: 0.05em;

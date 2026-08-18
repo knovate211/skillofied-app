@@ -10,6 +10,10 @@ export interface LessonBlock {
 export interface LessonContent {
   title: string;
   content: LessonBlock[];
+  /** Rendered as the icon cards under the prose; omit for a prose-only lesson. */
+  objectives?: string[];
+  /** Rendered as the tinted cards at the foot of the lesson. */
+  takeaways?: string[];
 }
 
 export interface AssignmentContent {

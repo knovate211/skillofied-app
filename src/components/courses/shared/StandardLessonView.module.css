@@ -1,0 +1,45 @@
+/* Extra blocks slotted into LessonLayout: syntax, worked example, mistakes. */
+
+.heading {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 28px 0 12px;
+}
+
+.heading:first-child {
+  margin-top: 0;
+}
+
+.outputLabel {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin: 14px 0 6px;
+}
+
+.output {
+  margin: 0;
+  padding: 14px 16px;
+  background: #09090b;
+  color: #10b981;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 12.5px;
+  line-height: 1.65;
+  overflow-x: auto;
+}
+
+.mistakes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 6px 0 6px 22px;
+  border-left: 3px solid #f59e0b;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}

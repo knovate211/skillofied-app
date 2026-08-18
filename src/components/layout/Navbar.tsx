@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Navbar.module.css';
+import knovateLogo from '../../assets/knovate-logo.png';
 import { useTheme } from '../../context/ThemeContext';
 import { useCourseHeader } from '../../context/CourseHeaderContext';
 
@@ -42,27 +43,10 @@ const Navbar: React.FC<NavbarProps> = ({ onProfileClick, onLogoClick, onLogout, 
           </svg>
         </button>
         <div className={styles.logoContainer} onClick={onLogoClick} role="button" tabIndex={0} aria-label="Go to home">
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="url(#logo-grad)"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={styles.logoIcon}
-          >
-            <defs>
-              <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#d4a237" />
-                <stop offset="100%" stopColor="#28C5BC" />
-              </linearGradient>
-            </defs>
-            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
-          </svg>
-          <span className={styles.logoText}>Knovate</span>
+          {/* The lockup already carries the wordmark, so there is no text
+              alongside it — the mark and the "K" of Knovate are interlocked
+              and cannot be split. */}
+          <img src={knovateLogo} alt="Knovate" className={styles.logo} />
         </div>
       </div>
 

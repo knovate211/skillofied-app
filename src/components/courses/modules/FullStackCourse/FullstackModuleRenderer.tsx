@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import StandardLessonView from '../../shared/StandardLessonView';
 import styles from '../../FrontendCoursePage.module.css';
 
 interface Props {
@@ -63,23 +63,7 @@ const FullstackModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
     );
   }
 
-  return (
-    <div style={{ maxWidth: '850px', margin: '0 auto', padding: '0 16px' }}>
-      <div className={styles.contentArea}>
-        <h2 style={{ fontSize: '24px', marginBottom: '20px', color: 'var(--heading)' }}>
-          {lessonData.title}
-        </h2>
-        <p style={{ fontSize: '15px', lineHeight: '1.6', marginBottom: '16px', color: 'var(--text)' }}>
-          {lessonData.theory}
-        </p>
-        {lessonData.syntax && (
-          <div style={{ marginBottom: '24px' }}>
-            <CodeSnippet language="javascript" code={lessonData.syntax} isRunnable={false} />
-          </div>
-        )}
-      </div>
-    </div>
-  );
+  return <StandardLessonView lesson={lessonData} language="javascript" snippetTitle="example.js" />;
 };
 
 export default FullstackModuleRenderer;

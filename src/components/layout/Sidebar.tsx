@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './Sidebar.module.css';
+import knovateLogo from '../../assets/knovate-logo.png';
 
 interface CourseEligibility {
   title: string;
@@ -34,6 +35,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, enrolledCourses }) =
   }, [isOpen]);
 
   const isGolangUnlocked = enrolledCourses.some(c => c.title.includes('Golang'));
+  const isGenAIUnlocked = enrolledCourses.some(c => c.title.includes('GenAI') || c.title.includes('Generative AI'));
   const isFullStackUnlocked = enrolledCourses.some(c => c.title.includes('Full Stack') || c.title.includes('Fullstack'));
   const isFrontendUnlocked = enrolledCourses.some(c => c.title === 'Front-End Technologies') || isFullStackUnlocked;
   const isJavaUnlocked = enrolledCourses.some(c => c.title === 'Java Development' || c.title === 'Java') || isFullStackUnlocked;
@@ -50,12 +52,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, enrolledCourses }) =
       category: 'Development',
     },
     {
-      title: 'Full Stack Engineering',
-      path: '/courses/fullstack',
-      isUnlocked: isFullStackUnlocked,
-      icon: '🏛️',
+      title: 'GenAI & Forward Deployed Engineering',
+      path: '/courses/genai',
+      isUnlocked: isGenAIUnlocked,
+      icon: '🤖',
       category: 'Development',
     },
+    // Full Stack is an entitlement rather than a course of its own: enrolling in
+    // it unlocks Front-End, Java and SQL below, which is where the actual
+    // curriculum lives. It is deliberately not listed here.
     {
       title: 'Front-End Technologies',
       path: '/courses/frontend',
@@ -143,27 +148,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, enrolledCourses }) =
           </button>
           
           <div className={styles.logoContainer} onClick={() => handleNavigation('/')} role="button" tabIndex={0}>
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="url(#logo-grad-sidebar)"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className={styles.logoIcon}
-            >
-              <defs>
-                <linearGradient id="logo-grad-sidebar" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#3D6FF2" />
-                  <stop offset="100%" stopColor="#00D4FF" />
-                </linearGradient>
-              </defs>
-              <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-              <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
-            </svg>
-            <span className={styles.logoText}>Knovate</span>
+            <img src={knovateLogo} alt="Knovate" className={styles.logo} />
           </div>
         </div>
 

@@ -48,27 +48,23 @@
   user-select: none;
 }
 
-.logoIcon {
+.logo {
+  /* Rendered at half its intrinsic height so it stays crisp on 2x screens. */
+  height: 34px;
+  width: auto;
+  display: block;
   flex-shrink: 0;
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.logoContainer:hover .logoIcon {
-  transform: scale(1.1) rotate(-6deg);
+.logoContainer:hover .logo {
+  transform: scale(1.04);
 }
 
-.logoText {
-  font-size: 21px;
-  font-weight: 800;
-  letter-spacing: -0.6px;
-  background: linear-gradient(135deg, #d4a237, #28C5BC);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  transition: opacity 0.2s ease;
-}
-
-.logoContainer:hover .logoText {
-  opacity: 0.9;
+@media (max-width: 900px) {
+  .logo {
+    height: 28px;
+  }
 }
 
 .right {
@@ -94,7 +90,7 @@
 
 .themeBtn:hover {
   border-color: var(--accent);
-  background: rgba(61, 111, 242, 0.08);
+  background: var(--rose-tint);
   transform: rotate(12deg) scale(1.08);
   color: var(--accent);
 }
@@ -123,10 +119,11 @@
 
 
 .avatar {
-  width: 36px;
-  height: 36px;
-  background: linear-gradient(135deg, #d4a237, #28C5BC);
-  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  background: var(--grad-primary);
+  /* The organic blob, not a plain circle — it echoes the brand mark. */
+  border-radius: 55% 45% 50% 50% / 50% 55% 45% 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -140,8 +137,8 @@
 
 .avatar:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 0 3px rgba(61, 111, 242, 0.25);
-  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--rose-tint);
+  border-color: var(--rose);
 }
 
 .logoutBtn {

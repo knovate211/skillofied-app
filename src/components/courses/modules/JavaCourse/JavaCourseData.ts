@@ -1,5 +1,6 @@
 import { QuizQuestion } from '../../../../types';
 import { AssignmentQuestion } from '../../shared/ModuleAssignment';
+import type { LessonCallout, LessonSidePanel } from '../../shared/LessonLayout';
 
 export interface Lesson {
   id: string;
@@ -11,6 +12,10 @@ export interface Lesson {
   codeOutput?: string;
   mistakes?: string[];
   takeaways: string[];
+  /** Highlighted "think of it like this" box under the theory. */
+  callout?: LessonCallout;
+  /** Right-hand explainer card: diagram + supporting checklist. */
+  sidePanel?: LessonSidePanel;
 }
 
 
@@ -70,11 +75,30 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
           'Understand how Java combines compilation and interpretation for cross-platform execution.',
           'Learn the role of the JIT (Just-In-Time) compiler in performance optimization.'
         ],
-        theory: 'Java is unique because it is both a compiled and an interpreted language. When you write code in Java, it is saved in a `.java` source file. Rather than compiling directly into machine code that runs on a specific operating system, the Java compiler (`javac`) compiles the source code into an intermediate format called bytecode, which is saved in a `.class` file. Bytecode is a highly optimized set of instructions that is neutral to the platform. The Java Virtual Machine (JVM) then reads and interprets this bytecode, executing it on the underlying operating system. This compilation-interpretation hybrid model gives Java its characteristic cross-platform portability. Additionally, modern JVMs utilize Just-In-Time (JIT) compilation to compile hot sections of bytecode directly into native machine code at runtime, providing near-native execution performance.',
+        theory:
+          'Java is a powerful, platform-independent programming language created by Sun Microsystems (now Oracle). It is both `compiled` and `interpreted`, making it unique. When you write Java code, it is saved in a `.java` source file.\n' +
+          'The Java compiler (`javac`) converts this source code into an intermediate format called `bytecode`, which is stored in a `.class` file. Bytecode is a highly optimized set of instructions that is neutral to the platform.\n' +
+          'The Java Virtual Machine (`JVM`) then reads and executes this bytecode on the underlying operating system. This compilation-interpretation hybrid model gives Java its famous **portability**, **security**, and **performance**. Just-In-Time (JIT) compilers further optimize bytecode at runtime for near-native speed.',
+        callout: {
+          lead: 'Think of Java like this:',
+          text: 'You write once, compile to bytecode, and run anywhere.'
+        },
+        sidePanel: {
+          title: 'How Java Works',
+          diagram: 'java-pipeline',
+          bulletsTitle: 'Why Java?',
+          bullets: [
+            { label: 'Platform Independent', text: 'Runs on any device with a JVM' },
+            { label: 'Robust & Secure', text: 'Built-in security features & strong memory management' },
+            { label: 'High Performance', text: 'JIT compiler optimizes code at runtime' },
+            { label: 'Object-Oriented', text: 'Promotes modular, reusable, and maintainable code' },
+            { label: 'Large Ecosystem', text: 'Rich standard library & active community' }
+          ]
+        },
         takeaways: [
-          'Java source code is compiled into platform-neutral bytecode.',
-          'Bytecode is executed on the target machine by the Java Virtual Machine.',
-          'Hybrid architecture allows Java to be both secure and highly portable.'
+          'Java source code is compiled into platform-neutral bytecode (.class).',
+          'Bytecode is executed on the target machine by the Java Virtual Machine (JVM).',
+          'Hybrid architecture + JIT compilation makes Java secure, portable, and fast.'
         ]
       },
       {

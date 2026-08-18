@@ -68,7 +68,7 @@ const CoursePageShell: React.FC<CoursePageShellProps> = ({
     handleBackToCourses,
     isFirstItem,
     isLastItem,
-  } = useSyllabusNavigation(syllabus, allItems, 'overview-welcome', maxIndexRead, setMaxIndexRead);
+  } = useSyllabusNavigation(syllabus, allItems, 'overview-welcome', maxIndexRead, setMaxIndexRead, storageKey);
 
   // The syllabus is a drawer opened from the navbar, exactly like the main app
   // sidebar. This page only reads the state and closes it on selection.

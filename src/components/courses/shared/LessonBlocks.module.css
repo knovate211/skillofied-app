@@ -1,0 +1,130 @@
+/* Block-authored lesson bodies (SQL, SEO, Digital Marketing). Typography is
+   kept in step with LessonLayout's `.theory` prose. */
+
+.text {
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--text-secondary);
+  margin: 0 0 16px;
+}
+
+.heading {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 28px 0 12px;
+}
+
+.code {
+  margin: 0 0 22px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0 0 18px;
+  padding-left: 22px;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+/* ── Note / in-practice callout, styled like the lesson callout ── */
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: var(--callout-bg);
+  border: 1px solid var(--callout-border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin: 0 0 20px;
+}
+
+.alertIcon {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--callout-icon);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+.alertLabel {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.alertText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+/* ── Worked example: an aside, so it carries the shared callout treatment ── */
+.example {
+  background: var(--callout-bg);
+  border: 1px solid var(--callout-border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin: 0 0 20px;
+}
+
+.exampleTitle {
+  margin: 0 0 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--callout-fg);
+}
+
+.exampleText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+}
+
+/* ── Table ── */
+.tableWrap {
+  overflow-x: auto;
+  margin: 0 0 22px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.table th {
+  text-align: left;
+  padding: 11px 13px;
+  background: var(--bg-surface-2);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 11px 13px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+  line-height: 1.6;
+}

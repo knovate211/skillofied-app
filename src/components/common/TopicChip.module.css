@@ -1,73 +1,70 @@
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  background-color: var(--bg-surface);
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 16px;
-  color: var(--text-secondary);
+  gap: 9px;
+  padding: 11px 18px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
   font-family: inherit;
-  font-size: 14px;
   font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
   outline: none;
 }
 
 .chip:hover {
-  background-color: var(--bg-surface-2);
-  border-color: var(--accent);
-  transform: translateY(-1px);
+  border-color: var(--rose-deep);
+}
+
+.chip:focus-visible {
+  outline: 2px solid var(--rose-deep);
+  outline-offset: 2px;
 }
 
 .chip.active {
-  background: var(--grad-primary, linear-gradient(135deg, #3D6FF2 0%, #00D4FF 100%));
+  background: linear-gradient(120deg, var(--honey-deep), var(--rose-deep));
   border-color: transparent;
-  color: #ffffff;
-  box-shadow: 0 0 12px rgba(61, 111, 242, 0.25);
+  color: #fff;
 }
 
 .icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   transition: color 0.2s ease;
 }
 
-.chip:hover .icon {
-  color: var(--accent);
+.icon svg {
+  width: 16px;
+  height: 16px;
 }
 
 .chip.active .icon {
-  color: #ffffff !important;
+  color: #fff;
 }
 
 .textIcon {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   line-height: 1;
 }
 
 .name {
-  color: var(--text-primary);
-  transition: color 0.2s ease;
-}
-
-.chip.active .name {
-  color: #ffffff !important;
+  color: inherit;
 }
 
 .count {
-  color: var(--text-muted);
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 12px;
   font-weight: 500;
-  margin-left: 2px;
+  color: var(--ink-faint);
   transition: color 0.2s ease;
 }
 
 .chip.active .count {
-  color: rgba(255, 255, 255, 0.8) !important;
-  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
 }

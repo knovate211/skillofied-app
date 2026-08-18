@@ -3,6 +3,7 @@ import AssignmentIDE from './AssignmentIDE';
 import { usePublishLessonFooter, useCourseHeader } from '../../../context/CourseHeaderContext';
 import styles from '../FrontendCoursePage.module.css';
 import { submitQuizApi } from '../../../api';
+import { useToast } from '../../../context/ToastContext';
 import { getQuizAttemptsCached, invalidateQuizAttempts } from './quizAttemptsCache';
 
 /**
@@ -83,7 +84,6 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
   );
   const [index, setIndex] = useState(0);
   const [submittedTasks, setSubmittedTasks] = useState<boolean[]>(() => items.map(() => false));
-  const [error, setError] = useState<string | null>(null);
 
   const [score, setScore] = useState<number | null>(null);
   const [total, setTotal] = useState<number | null>(null);
@@ -158,9 +158,12 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
   }, [answers, gradedQuestions, submittedAnswers, moduleId, isLoaded]);
 
   const { onAdvanceLesson } = useCourseHeader();
+  const { showToast } = useToast();
+
+  /** Every submit outcome surfaces as a toast — that is the only message channel. */
+  const fail = (message: string) => showToast(message, 'error');
 
   const setAnswer = (value: string) => {
-    setError(null);
     setAnswers((prev) => prev.map((a, i) => (i === index ? value : a)));
   };
 
@@ -176,6 +179,14 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
     setGradedQuestions((prev) => prev.map((v, i) => (i === index ? true : v)));
     setSubmittedAnswers((prev) => prev.map((v, i) => (i === index ? answers[index] : v)));
 
+    if (!isLast) {
+      const correct = active.kind === 'mcq' && answers[index] === active.correctAnswer;
+      showToast(
+        correct ? 'Correct answer.' : 'Answer checked — see the highlighted options.',
+        correct ? 'success' : 'info'
+      );
+    }
+
     // If it is the last question, submit the full set to the backend database to store score
     if (isLast) {
       setSubmitting(true);
@@ -189,8 +200,9 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
         setScore(result.score);
         setTotal(result.totalQuestions);
         setSubmittedTasks(items.map(() => true));
+        showToast(`Assignment submitted — you scored ${result.score}/${result.totalQuestions}.`, 'success');
       } catch (err) {
-        setError(
+        fail(
           err instanceof Error
             ? `Could not save your assignment: ${err.message}`
             : 'Could not save your assignment. Please check your connection.'
@@ -201,10 +213,70 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
     }
   };
 
-  const handleSubmitTask = () => {
-    // This is called from the bottom bar on the last task once it is submitted/graded
+  /** Bottom-bar navigation only — leaves the lesson without recording anything. */
+  const handleAdvanceLesson = () => {
     if (onAdvanceLesson) {
       onAdvanceLesson();
+    }
+  };
+
+  /**
+   * Submit the current code or written task: record the answer, mark the task
+   * done, then move to the next task. On the last task this falls through to
+   * the "all tasks submitted" screen rather than skipping to the next lesson —
+   * navigating away is the bottom bar's job, not the submit button's.
+   */
+  const handleSubmitTask = async () => {
+    const current = items[index];
+    const value = (answers[index] ?? '').trim();
+
+    if (!value) {
+      fail('Write your answer before submitting.');
+      return;
+    }
+    if (current.kind === 'code' && value === current.starterCode.trim()) {
+      fail('This is still the starter code — make your changes before submitting.');
+      return;
+    }
+
+    setSubmittedAnswers((prev) => prev.map((v, i) => (i === index ? answers[index] : v)));
+    setSubmittedTasks((prev) => prev.map((v, i) => (i === index ? true : v)));
+
+    if (!isLast) {
+      showToast(`Task ${index + 1} submitted. Moving to task ${index + 2}.`, 'success');
+      goTo(index + 1);
+      return;
+    }
+
+    // Only MCQ tasks are auto-graded. An assignment with no MCQs has no answer
+    // key on the server, so submitting would fail with "no quiz keys found".
+    const mcqPayload = items
+      .map((_, idx) => ({
+        questionId: idx + 1,
+        answer: idx === index ? answers[index] : (submittedAnswers[idx] || answers[idx] || ''),
+      }))
+      .filter((_, idx) => items[idx].kind === 'mcq');
+
+    if (mcqPayload.length === 0) {
+      showToast('Assignment submitted. A mentor will review your work.', 'success');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const result = await submitQuizApi(moduleId + '-assignment', mcqPayload);
+      setScore(result.score);
+      setTotal(result.totalQuestions);
+      showToast(`Assignment submitted — you scored ${result.score}/${result.totalQuestions}.`, 'success');
+    } catch (err) {
+      fail(
+        err instanceof Error
+          ? `Could not save your assignment: ${err.message}`
+          : 'Could not save your assignment. Please check your connection.'
+      );
+      setSubmittedTasks((prev) => prev.map((v, i) => (i === index ? false : v)));
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -215,15 +287,14 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
     setAnswers(items.map((q) => (q.kind === 'code' ? q.starterCode : '')));
     setScore(null);
     setTotal(null);
-    setError(null);
     setIndex(0);
     setSubmittedTasks(items.map(() => false));
     setGradedQuestions(items.map((q) => q.kind !== 'mcq'));
     setSubmittedAnswers(items.map(() => ''));
+    showToast('Assignment reset — your answers were cleared.', 'info');
   };
 
   const goTo = (next: number) => {
-    setError(null);
     setIndex(next);
   };
 
@@ -238,7 +309,7 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
           label: `${index + 1} / ${items.length}`,
           onPrev: index === 0 ? undefined : () => goTo(index - 1),
           onNext: canGoNext
-            ? (isLast ? handleSubmitTask : () => goTo(index + 1))
+            ? (isLast ? handleAdvanceLesson : () => goTo(index + 1))
             : undefined,
           prevDisabled: index === 0 ? undefined : false,
           nextDisabled: !canGoNext,
@@ -369,7 +440,6 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
           onSubmit={handleSubmitTask}
           runnable={active.runnable}
           fixture={active.fixture}
-          error={error}
           examples={(active as any).examples}
         />
       </div>
@@ -393,9 +463,6 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
       />
-      {error && (
-        <p style={{ fontSize: 12, color: '#f87171', margin: '8px 0 0' }}>{error}</p>
-      )}
       <div className={styles.assignmentFooter}>
         <button
           className={styles.saveBtn}

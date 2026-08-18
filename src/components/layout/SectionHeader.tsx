@@ -3,17 +3,19 @@ import styles from './SectionHeader.module.css';
 
 interface Props {
   title: string;
+  /** Small mono kicker set above the title, e.g. "Pick up where you left off". */
+  eyebrow?: string;
   onPrev?: () => void;
   onNext?: () => void;
   canPrev?: boolean;
   canNext?: boolean;
 }
 
-const SectionHeader: React.FC<Props> = ({ title, onPrev, onNext, canPrev, canNext }) => (
+const SectionHeader: React.FC<Props> = ({ title, eyebrow, onPrev, onNext, canPrev, canNext }) => (
   <div className={styles.header}>
-    <div className={styles.titleRow}>
+    <div className={styles.titles}>
+      {eyebrow && <p className={styles.eyebrow}>{eyebrow}</p>}
       <h2 className={styles.title}>{title}</h2>
-      <button className={styles.helpBtn} aria-label="Help">?</button>
     </div>
     {(onPrev && onNext) && (
       <div className={styles.controls}>

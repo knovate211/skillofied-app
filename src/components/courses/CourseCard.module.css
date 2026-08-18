@@ -1,225 +1,199 @@
+/* Tone tokens. Each card wears one of the three seasonal accents; the dark
+   theme swaps the pale bands for translucent washes so the white body can go
+   dark without the header looking like a sticker. */
+.toneHoney {
+  --band: #FBEFD9;
+  --band-ink: #8A6420;
+  --band-ink-deep: #CE9C3C;
+  --track-bg: #F7E7C4;
+}
+
+.toneOlive {
+  --band: #EBF0E1;
+  --band-ink: #56663C;
+  --band-ink-deep: #7E9260;
+  --track-bg: #DEE7CE;
+}
+
+.toneRose {
+  --band: #FBEAE3;
+  --band-ink: #A25742;
+  --band-ink-deep: #CE7C68;
+  --track-bg: #F6DCD3;
+}
+
+[data-theme="dark"] .toneHoney {
+  --band: rgba(233, 194, 115, 0.14);
+  --band-ink: #E9C273;
+  --band-ink-deep: #E0B159;
+  --track-bg: rgba(233, 194, 115, 0.16);
+}
+
+[data-theme="dark"] .toneOlive {
+  --band: rgba(169, 185, 139, 0.14);
+  --band-ink: #BCCBA1;
+  --band-ink-deep: #9DB27C;
+  --track-bg: rgba(169, 185, 139, 0.16);
+}
+
+[data-theme="dark"] .toneRose {
+  --band: rgba(231, 169, 154, 0.14);
+  --band-ink: #E7A99A;
+  --band-ink-deep: #E08F79;
+  --track-bg: rgba(231, 169, 154, 0.16);
+}
+
 .card {
-  --card-bg: #ffffff;
-  --card-border: #e8eaf0;
-  --text-title: #1a1a2e;
-  --text-mentor: #6b7190;
-  --time-color: #6b7190;
-  --btn-bg: transparent;
-  --btn-border: #e8eaf0;
-  --btn-text: #1a1a2e;
-  --btn-hover-bg: #f5f6fa;
-  --card-hover-shadow: rgba(0, 0, 0, 0.04);
-  
-  background: var(--card-bg);
-  border: 1.2px solid var(--card-border);
-  border-radius: 18px;
-  padding: 16px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  background: var(--bg-surface);
+  border-radius: 26px;
+  /* visible, not hidden — the progress pin deliberately straddles the seam
+     between the coloured header and the white body. */
+  overflow: visible;
+  box-shadow: var(--shadow-sm);
   position: relative;
-  min-width: 0;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px var(--card-hover-shadow);
-  border-color: var(--card-hover-border, var(--card-border));
-}
-
-:global([data-theme="dark"]) .card {
-  --card-bg: #242424;
-  --card-border: #2f2f2f;
-  --card-hover-border: #444444;
-  --text-title: #ffffff;
-  --text-mentor: #a0a0a0;
-  --time-color: #a0a0a0;
-  --btn-bg: transparent;
-  --btn-border: #383838;
-  --btn-text: #ffffff;
-  --btn-hover-bg: #2d2d2d;
-  --card-hover-shadow: rgba(0, 0, 0, 0.35);
+  box-shadow: var(--shadow-md);
 }
 
 .header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.initial {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  font-weight: 700;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  flex: 1;
-  min-width: 0;
-}
-
-.title {
-  font-size: 14.5px;
-  font-weight: 700;
-  color: var(--text-title);
-  margin: 0;
-  line-height: 1.2;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.mentor {
-  font-size: 11.5px;
-  font-weight: 500;
-  color: var(--text-mentor);
-  margin: 0;
-  line-height: 1.2;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.progressSection {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 4px 0;
-}
-
-.progressCircleContainer {
+  border-radius: 26px 26px 0 0;
+  padding: 22px 24px 34px;
   position: relative;
-  width: 90px;
-  height: 90px;
+  background: var(--band);
+}
+
+.icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  margin-bottom: 14px;
+  color: var(--band-ink);
 }
 
-.progressSvg {
-  position: absolute;
-  top: 0;
-  left: 0;
+[data-theme="dark"] .icon {
+  background: rgba(255, 255, 255, 0.08);
 }
 
-.progressTrack {
-  fill: none;
-}
-
-.progressFillCircle {
-  fill: none;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.progressTextContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  z-index: 2;
-}
-
-.progressPercent {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--text-title);
-  line-height: 1.1;
-}
-
-.progressLabelText {
-  font-size: 9px;
+.courseName {
+  font-family: var(--font-display);
   font-weight: 600;
-  color: var(--text-mentor);
-  text-transform: lowercase;
-  margin-top: 1px;
+  font-size: 19px;
+  line-height: 1.25;
+  margin: 0;
+  color: var(--band-ink);
 }
 
-.timeStatusRow {
+.instructor {
+  font-size: 13px;
+  color: var(--band-ink);
+  opacity: 0.72;
+  margin: 3px 0 0;
+}
+
+.body {
+  padding: 26px 24px 24px;
+  position: relative;
+  background: var(--bg-surface);
+  border-radius: 0 0 26px 26px;
+}
+
+.pin {
+  position: absolute;
+  top: -20px;
+  right: 24px;
+  background: var(--bg-surface);
+  border-radius: 14px;
+  padding: 8px 12px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pin b {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--band-ink-deep);
+}
+
+.pin span {
+  font-size: 10.5px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.track {
+  height: 12px;
+  border-radius: 20px;
+  background: var(--track-bg);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: 20px;
+  background: var(--band-ink-deep);
+  transition: width 1.1s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.metaRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  margin-bottom: 20px;
 }
 
-.classTime {
+.timeTag {
   display: flex;
   align-items: center;
-  gap: 5px;
-  color: var(--time-color);
-  min-width: 0;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-secondary);
 }
 
-.clockIcon {
-  opacity: 0.85;
-  flex-shrink: 0;
-}
-
-.classValue {
-  font-size: 11.5px;
-  font-weight: 600;
-  letter-spacing: -0.1px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.statusBadge {
-  font-size: 10.5px;
-  font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 99px;
-  white-space: nowrap;
-  text-align: center;
-  flex-shrink: 0;
-  line-height: 1.3;
-}
-
-.joinBtn {
+.btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
   width: 100%;
-  background: var(--grad-primary, linear-gradient(135deg, #3D6FF2 0%, #00D4FF 100%));
   border: none;
-  border-radius: 8px;
-  padding: 9px 12px;
-  font-size: 12.5px;
+  border-radius: 16px;
+  padding: 14px 18px;
   font-weight: 700;
-  color: #ffffff;
+  font-size: 14.5px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  outline: none;
+  background: var(--band-ink-deep);
+  color: #fff;
+  transition: filter 0.2s, transform 0.2s;
 }
 
-.joinBtn:hover {
+.btn:hover {
   filter: brightness(1.08);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(61, 111, 242, 0.2);
 }
 
-.joinBtn:active {
-  transform: translateY(0);
+[data-theme="dark"] .btn {
+  color: #241C18;
 }
 
-.joinIcon {
-  flex-shrink: 0;
-  transition: transform 0.2s ease;
-}
+@media (max-width: 700px) {
+  .header {
+    padding: 20px 20px 32px;
+  }
 
-.joinBtn:hover .joinIcon {
-  transform: translateX(2px);
+  .body {
+    padding: 26px 20px 20px;
+  }
 }
