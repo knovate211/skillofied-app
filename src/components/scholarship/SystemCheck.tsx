@@ -14,6 +14,25 @@ export interface CheckResult {
  * through, because a false negative here would cost somebody a scholarship. The
  * point is to surface a fixable problem while fixing it is still free.
  */
+export async function runCameraCheck(): Promise<CheckResult> {
+  // Asked here rather than at the clock, so a blocked camera is a thing to fix
+  // now instead of a proctoring finding two minutes into a one-attempt exam.
+  // The stream is released immediately — this only establishes permission.
+  const hint =
+    'Your camera and microphone are monitored during this test. Allow access when your browser asks, ' +
+    'or the test will record that it was blocked.';
+  if (!navigator.mediaDevices?.getUserMedia) {
+    return { label: 'Camera and microphone', ok: false, hint };
+  }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    stream.getTracks().forEach((t) => t.stop());
+    return { label: 'Camera and microphone', ok: true, hint };
+  } catch {
+    return { label: 'Camera and microphone', ok: false, hint };
+  }
+}
+
 export function runChecks(): CheckResult[] {
   const el = document.documentElement as HTMLElement & { webkitRequestFullscreen?: () => void };
   return [

@@ -477,6 +477,8 @@ export interface AssessmentSummaryItem {
   liveAttemptId: string;
   canStart: boolean;
   blockedReason: string;
+  /** Present so the instructions screen can disclose monitoring before consent. */
+  proctoring?: Proctoring | null;
 }
 
 export interface McqOption {
@@ -593,6 +595,7 @@ export async function listAssessmentsApi(scope = ''): Promise<AssessmentSummaryI
         id title description purpose companyName companyLogo
         durationMinutes totalMarks questionCount sectionSummary
         opensAt closesAt maxAttempts attemptsUsed liveAttemptId canStart blockedReason
+        proctoring { requireFullscreen tabSwitchLimit blockCopyPaste webcam }
       }
     }
   `;

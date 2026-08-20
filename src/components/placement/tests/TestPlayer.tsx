@@ -12,6 +12,7 @@ import McqQuestionView from './McqQuestionView';
 import QuestionPalette, { isAnswered } from './QuestionPalette';
 import { formatDuration, useAttemptTimer } from './hooks/useAttemptTimer';
 import { useAutosave } from './hooks/useAutosave';
+import { useMediaProctor } from './hooks/useMediaProctor';
 import { useProctor } from './hooks/useProctor';
 import styles from './Tests.module.css';
 
@@ -65,13 +66,20 @@ const TestPlayer: React.FC = () => {
 
   const timeLeft = useAttemptTimer(serverSeconds, () => { void endTest('timeout'); });
 
-  const { warning, dismissWarning, enterFullscreen, exitFullscreen } = useProctor(
+  const { warning, dismissWarning, enterFullscreen, exitFullscreen, needsFullscreen, report } = useProctor(
     attemptId,
     state?.proctoring,
     state?.status === 'in_progress' && !submittedRef.current,
     () => { void endTest('proctor'); },
   );
   exitFullscreenRef.current = exitFullscreen;
+
+  // Detects and reports; never records. See useMediaProctor.
+  const media = useMediaProctor({
+    enabled: !!state?.proctoring?.webcam,
+    active: state?.status === 'in_progress' && !submittedRef.current,
+    report,
+  });
 
   // Initial load / resume.
   useEffect(() => {
@@ -184,6 +192,42 @@ const TestPlayer: React.FC = () => {
         <div className={styles.warningBanner}>
           <span>⚠ {warning}</span>
           <button className={styles.warningClose} onClick={dismissWarning}>×</button>
+        </div>
+      ) : null}
+
+      {/* Browsers only grant fullscreen from a user gesture, so it cannot simply
+          be taken on load. Asking out loud beats the old approach of hanging the
+          request off a click handler on the question pane: a candidate who never
+          happened to click there sat a "fullscreen" test in a window, and no
+          part of the interface told them. */}
+      {/* The self-view is the honest half of camera proctoring: a candidate can
+          see exactly what is being watched, and a covered or dead camera is
+          obvious to them before it becomes a finding against them. */}
+      {state?.proctoring?.webcam ? (
+        <div className={styles.selfView}>
+          {media.state === 'live' ? (
+            <>
+              <video ref={media.attachVideo} muted playsInline className={styles.selfViewVideo} />
+              <span className={styles.selfViewLabel}>
+                <span className={styles.selfViewDot} aria-hidden /> Monitored
+              </span>
+            </>
+          ) : (
+            <div className={styles.selfViewOff}>
+              {media.state === 'requesting'
+                ? 'Starting camera…'
+                : media.error || 'Camera off'}
+            </div>
+          )}
+        </div>
+      ) : null}
+
+      {needsFullscreen ? (
+        <div className={styles.fullscreenPrompt}>
+          <span>This test runs full-screen. Leaving it is recorded.</span>
+          <button className={styles.fullscreenBtn} onClick={enterFullscreen}>
+            Enter full screen
+          </button>
         </div>
       ) : null}
 

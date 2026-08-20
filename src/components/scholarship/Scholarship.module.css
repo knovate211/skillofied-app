@@ -222,3 +222,284 @@
 .awardWon .awardHeadline strong { color: var(--res-ok-ink, #15803d); }
 .awardMissed  { border-left-color: var(--text-muted); }
 .awardPending { border-left-color: var(--res-warn-fill, #f59e0b); }
+
+/* ── Pre-test briefing ───────────────────────────────────────────────────────
+   Two panels: what the test is, fixed on the left; everything the candidate has
+   to read, scrolling on the right. The split exists so the duration and the
+   title stay in view while they scroll — those are the two facts people check
+   again halfway down — and so the one irreversible button sits in a fixed place
+   rather than wherever the scroll happens to end. */
+
+.briefing {
+  display: grid;
+  grid-template-columns: minmax(280px, 34%) 1fr;
+  min-height: 100vh;
+  background: var(--bg-page);
+  color: var(--text-primary);
+}
+
+.brief {
+  display: flex;
+  flex-direction: column;
+  padding: 44px 40px;
+  background:
+    radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%),
+    var(--bg-surface);
+  border-right: 1px solid var(--border);
+}
+
+.briefLogo { width: 132px; height: auto; margin-bottom: 40px; }
+
+.briefTitle {
+  margin: 0 0 14px;
+  font-size: clamp(26px, 3vw, 38px);
+  font-weight: 700;
+  line-height: 1.14;
+  letter-spacing: -.01em;
+  text-wrap: balance;
+}
+
+.briefDesc {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 42ch;
+}
+
+.briefPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 13px 20px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-page);
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.briefFoot {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 26px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+.briefFootMeta { font-size: 12px; }
+
+/* ── the reading panel ───────────────────────────────────────────────────── */
+
+.briefMain {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: 100vh;
+}
+
+.briefScroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 44px 48px 28px;
+  max-width: 78ch;
+}
+
+.briefH2 {
+  margin: 0 0 26px;
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+}
+
+.briefH3 {
+  margin: 30px 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+/* Only when it sits directly under the page heading. Keyed off :first-of-type
+   this collapsed the gap wherever an h3 merely happened to be first in the
+   step, which on the permissions screen ran "PERMISSIONS" straight into the
+   paragraph above it. */
+.briefH2 + .briefH3 { margin-top: 0; }
+
+.briefP {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.68;
+  color: var(--text-secondary);
+}
+
+.briefUl {
+  margin: 0;
+  /* The app's global reset strips list markers, which is right for navigation
+     and wrong here — these are instructions somebody has to work through, and
+     an unmarked list reads as one long paragraph. */
+  list-style: disc outside;
+  padding-left: 20px;
+  font-size: 14.5px;
+  line-height: 1.68;
+  color: var(--text-secondary);
+}
+.briefUl li { margin-bottom: 9px; }
+.briefUl strong { color: var(--text-primary); font-weight: 600; }
+.briefUl code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12.5px;
+  color: var(--text-primary);
+}
+
+/* ── format table ────────────────────────────────────────────────────────── */
+
+.formatTable {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.formatRow {
+  display: grid;
+  grid-template-columns: 56px 1fr 110px;
+  gap: 12px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+  align-items: center;
+}
+.formatRow:first-child { border-top: 0; }
+
+.formatHead {
+  background: var(--bg-surface);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── the footer that never scrolls away ──────────────────────────────────── */
+
+.briefFooter {
+  flex: none;
+  padding: 18px 48px 22px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-surface);
+}
+
+.briefActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.briefNote {
+  flex: 1 1 320px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.briefActions .primaryBtn { width: auto; min-width: 190px; }
+
+@media (max-width: 900px) {
+  .briefing { grid-template-columns: 1fr; }
+  .brief { border-right: 0; border-bottom: 1px solid var(--border); padding: 28px 24px; }
+  .briefLogo { margin-bottom: 22px; }
+  .briefPill { margin-top: 20px; }
+  .briefMain { max-height: none; }
+  .briefScroll { padding: 28px 24px 20px; overflow-y: visible; }
+  .briefFooter { padding: 16px 24px 20px; }
+}
+
+/* ── Permission cards ────────────────────────────────────────────────────────
+   One card per permission, because each one fails separately and is fixed
+   separately. A single "checks failed" banner tells the candidate who denied
+   the camera nothing about what to do, and tells the one on a second monitor
+   the same nothing. */
+
+.permList { display: flex; flex-direction: column; gap: 10px; }
+
+.permCard {
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--bg-surface);
+  overflow: hidden;
+  transition: border-color .15s;
+}
+.permCardOk { border-color: var(--res-ok-ink, #15803d); }
+
+.permHead {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 15px 17px;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.permIcon { display: inline-flex; color: var(--text-muted); flex: none; }
+.permTitle { flex: 1; }
+
+.permStatus {
+  flex: none;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+.permOk   { color: var(--res-ok-ink, #15803d); }
+.permBad  { color: var(--res-bad-ink, #b91c1c); }
+.permWarn { color: var(--res-warn-ink, #b45309); }
+.permIdle { color: var(--text-muted); }
+
+.permChevron { flex: none; color: var(--text-muted); font-size: 13px; }
+
+.permBody { padding: 0 17px 16px 45px; }
+
+.permText {
+  margin: 0 0 13px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.permAction {
+  padding: 9px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.permAction:disabled { opacity: .55; cursor: not-allowed; }
+
+/* ── step indicator ──────────────────────────────────────────────────────── */
+
+.dots { display: flex; gap: 6px; margin-right: auto; }
+.dot, .dotOn {
+  width: 22px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--border);
+}
+.dotOn { background: var(--accent); }
