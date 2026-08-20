@@ -1245,3 +1245,110 @@
   color: var(--res-warn-ink, #b45309);
   background: var(--bg-surface);
 }
+
+/* ── Submitted notice ─────────────────────────────────────────────────────── */
+/* Shown instead of a result when the server withholds the score. It is the
+   last thing a scholarship candidate sees, and for most of them the only page
+   of ours they will have read carefully — so it is deliberately calm, wide and
+   short on furniture. */
+
+.submittedScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  overflow-y: auto;
+  background: var(--bg-page, #fbf7f1);
+}
+
+.submittedCard {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 40px 36px;
+  border-radius: 18px;
+  background: var(--surface-1, #fff);
+  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+  text-align: left;
+}
+
+.submittedTick {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 20px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 28px;
+  line-height: 1;
+  color: #0f7b4f;
+  background: rgba(15, 123, 79, 0.12);
+}
+
+.submittedTitle {
+  margin: 0 0 10px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.submittedLead {
+  margin: 0 0 28px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.submittedNext {
+  padding: 22px 24px;
+  border-radius: 12px;
+  background: var(--surface-2, rgba(0, 0, 0, 0.025));
+  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.06));
+}
+
+.submittedNextHead {
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary, var(--text-secondary));
+}
+
+/* Not display:grid — that makes the items grid children and drops the list
+   markers, and the numbering is the point: these are three steps in order. */
+.submittedSteps {
+  margin: 0;
+  padding-left: 22px;
+  list-style: decimal;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--text-primary);
+}
+
+.submittedSteps li { margin-bottom: 10px; padding-left: 4px; }
+.submittedSteps li:last-child { margin-bottom: 0; }
+
+.submittedFinePrint {
+  margin: 18px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.07));
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.submittedStamp {
+  margin: 20px 0 0;
+  font-size: 13px;
+  color: var(--text-tertiary, var(--text-secondary));
+}
+
+@media (max-width: 560px) {
+  .submittedCard { padding: 28px 20px; }
+  .submittedTitle { font-size: 22px; }
+}

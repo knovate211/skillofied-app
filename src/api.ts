@@ -542,6 +542,12 @@ export interface AttemptState {
   questions: AttemptQuestion[];
   maxScore: number;
   negativeMarking: number;
+  /**
+   * The server refuses to show this candidate their own score. Scholarship
+   * results are a fee decision staff make and email out, so the player ends on
+   * "submitted" rather than a score screen.
+   */
+  resultsWithheld: boolean;
 }
 
 export interface AttemptSummary {
@@ -564,6 +570,8 @@ export interface AttemptResult {
   summary: AttemptSummary;
   questions: AttemptQuestion[];
   revealed: boolean;
+  /** Marks and questions are absent by design, not because grading failed. */
+  withheld: boolean;
 }
 
 const ATTEMPT_QUESTION_FIELDS = `
@@ -579,7 +587,7 @@ const ATTEMPT_STATE_FIELDS = `
   serverNow expiresAt secondsLeft
   sections { id title kind orderIndex durationMinutes }
   questions { ${ATTEMPT_QUESTION_FIELDS} }
-  maxScore negativeMarking
+  maxScore negativeMarking resultsWithheld
 `;
 
 const ATTEMPT_SUMMARY_FIELDS = `
@@ -751,6 +759,7 @@ export async function getAttemptResultApi(attemptId: string): Promise<AttemptRes
         summary { ${ATTEMPT_SUMMARY_FIELDS} }
         questions { ${ATTEMPT_QUESTION_FIELDS} }
         revealed
+        withheld
       }
     }
   `;
@@ -1072,6 +1081,13 @@ export interface ScholarshipOutcome {
   isScholarship: boolean;
   courseName?: string;
   status?: string;
+  /**
+   * The result exists but is not served to the candidate — it is reviewed and
+   * emailed by staff. When set, every scoring field below is absent.
+   */
+  withheld?: boolean;
+  /** The address the result will be sent to, echoed back so the page can show it. */
+  email?: string;
   /** True while the judge is still grading — no score to show yet. */
   pending?: boolean;
   percent?: number;

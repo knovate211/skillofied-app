@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { AttemptQuestion, AttemptResult, getAttemptResultApi } from '../../../api';
 import ScholarshipResultBanner from '../../scholarship/ScholarshipResultBanner';
+import SubmittedNotice from './SubmittedNotice';
 import styles from './Tests.module.css';
 
 // Plain /placement lands on the Jobs tab; a candidate leaving a test belongs
@@ -89,6 +90,20 @@ const ResultPage: React.FC = () => {
 
   if (!result) {
     return <div className={styles.empty}>Loading your result…</div>;
+  }
+
+  // The server withholds the marks for scholarship papers, so there is no
+  // score to render — show the same confirmation the player ends on. This is
+  // the guard for anyone who reaches /result/:id directly: by URL, by the back
+  // button, or from a link they kept.
+  if (result.withheld) {
+    return (
+      <SubmittedNotice
+        attemptId={attemptId}
+        title={result.summary?.assessmentName}
+        submittedAt={formatDate(result.summary?.submittedAt ?? '')}
+      />
+    );
   }
 
   const { summary, questions, revealed } = result;

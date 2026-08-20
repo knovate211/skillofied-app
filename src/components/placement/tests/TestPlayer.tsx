@@ -10,6 +10,7 @@ import {
 import CodingQuestionView from './CodingQuestionView';
 import McqQuestionView from './McqQuestionView';
 import QuestionPalette, { isAnswered } from './QuestionPalette';
+import SubmittedNotice from './SubmittedNotice';
 import { formatDuration, useAttemptTimer } from './hooks/useAttemptTimer';
 import { useAutosave } from './hooks/useAutosave';
 import { useMediaProctor } from './hooks/useMediaProctor';
@@ -35,9 +36,15 @@ const TestPlayer: React.FC = () => {
   const [loadError, setLoadError] = useState('');
   const [confirming, setConfirming] = useState(false);
   const [ending, setEnding] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const questionEnteredAt = useRef<number>(Date.now());
   const submittedRef = useRef(false);
+
+  // endTest is memoised on [attemptId, flushNow, navigate] and captured by the
+  // countdown; reading state through a ref keeps it from being rebuilt — and
+  // rearming the timer — every time the paper reloads.
+  const stateRef = useRef<AttemptState | null>(null);
 
   const { queue, flushNow, status: saveStatus } = useAutosave(setServerSeconds);
 
@@ -57,10 +64,16 @@ const TestPlayer: React.FC = () => {
       // The server auto-submits on expiry anyway; the result page is the
       // source of truth either way.
     }
-    // Release the screen before leaving the player — the result page lives in
-    // the normal app shell, and a candidate should never be stuck fullscreen
-    // once their test is over.
+    // Release the screen before leaving the player — a candidate should never
+    // be stuck fullscreen once their test is over.
     await exitFullscreenRef.current();
+
+    // A scholarship paper has no score screen to go to. Stop here rather than
+    // routing to /result, which would only redirect back to the same message.
+    if (stateRef.current?.resultsWithheld) {
+      setSubmitted(true);
+      return;
+    }
     navigate(`/placement/tests/result/${attemptId}`, { replace: true });
   }, [attemptId, flushNow, navigate]);
 
@@ -88,12 +101,14 @@ const TestPlayer: React.FC = () => {
       try {
         const s = await getAttemptStateApi(attemptId);
         if (cancelled) return;
+        stateRef.current = s;
         setState(s);
         setQuestions(s.questions);
         setServerSeconds(s.secondsLeft);
         if (s.status !== 'in_progress') {
           submittedRef.current = true;
-          navigate(`/placement/tests/result/${attemptId}`, { replace: true });
+          if (s.resultsWithheld) setSubmitted(true);
+          else navigate(`/placement/tests/result/${attemptId}`, { replace: true });
         }
       } catch (e) {
         if (!cancelled) setLoadError(e instanceof Error ? e.message : 'Could not load your test.');
@@ -109,10 +124,12 @@ const TestPlayer: React.FC = () => {
     const id = window.setInterval(async () => {
       try {
         const s = await getAttemptStateApi(attemptId);
+        stateRef.current = s;
         setServerSeconds(s.secondsLeft);
         if (s.status !== 'in_progress' && !submittedRef.current) {
           submittedRef.current = true;
-          navigate(`/placement/tests/result/${attemptId}`, { replace: true });
+          if (s.resultsWithheld) setSubmitted(true);
+          else navigate(`/placement/tests/result/${attemptId}`, { replace: true });
         }
       } catch {
         // offline — the local countdown carries on until we reconnect
@@ -168,6 +185,20 @@ const TestPlayer: React.FC = () => {
     questionEnteredAt.current = Date.now();
     setCurrent(index);
   };
+
+  // Ahead of loadError and the loading guard: once the paper is in, nothing
+  // about fetching it matters any more, and a candidate must never see a
+  // network error where their confirmation should be.
+  if (submitted) {
+    return (
+      <SubmittedNotice
+        attemptId={attemptId}
+        title={state?.title}
+        standalone
+        onDone={() => navigate('/', { replace: true })}
+      />
+    );
+  }
 
   if (loadError) {
     return (
