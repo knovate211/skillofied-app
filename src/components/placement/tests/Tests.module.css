@@ -893,3 +893,270 @@
   .palettePane { display: none; }
   .playerFooter { right: 0; }
 }
+
+/* ── Coding workbench ────────────────────────────────────────────────────────
+   Three regions the candidate sizes themselves: statement, editor, console.
+   Fixed proportions are the thing people complain about first in a browser
+   IDE — a long statement and a long function never want the same split. */
+
+.wbLayout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.wbGroup, .wbInnerGroup { flex: 1; min-height: 0; }
+
+.wbHandleV {
+  width: 6px;
+  background: var(--border);
+  cursor: col-resize;
+  transition: background .15s;
+}
+.wbHandleH {
+  height: 6px;
+  background: var(--border);
+  cursor: row-resize;
+  transition: background .15s;
+}
+.wbHandleV:hover, .wbHandleH:hover { background: var(--accent); }
+
+/* ── Statement ─────────────────────────────────────────────────────────────── */
+
+.wbStatement {
+  height: 100%;
+  overflow-y: auto;
+  padding: 16px 18px;
+  background: var(--bg-surface);
+}
+
+.wbProblemTitle { margin: 0 0 12px; font-size: 17px; font-weight: 700; }
+
+.wbProse {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+/* Single newlines inside a paragraph are meaningful in a problem statement
+   (a formula, a sample layout); blank lines become separate <p>s. */
+.wbProse p { white-space: pre-wrap; }
+.wbProse code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12.5px;
+  color: var(--text-primary);
+}
+.wbProse strong { color: var(--text-primary); font-weight: 600; }
+
+.wbSubhead {
+  margin: 18px 0 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.wbExample {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+.wbExample code {
+  display: inline-block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12.5px;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+}
+.wbNote { margin-top: 6px; font-size: 12.5px; color: var(--text-muted); }
+
+.wbIoLabel {
+  display: inline-block;
+  min-width: 74px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.wbConstraints {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* ── Editor pane ───────────────────────────────────────────────────────────── */
+
+.wbEditorPane {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--bg-page);
+}
+
+.wbToolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-surface);
+}
+
+.wbToolGroup { display: flex; gap: 4px; }
+
+.wbSelect {
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 13px;
+}
+
+.wbIconBtn {
+  padding: 6px 9px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.wbIconBtn:hover { color: var(--text-primary); border-color: var(--accent); }
+
+.wbShortcut { font-size: 11.5px; color: var(--text-muted); }
+
+/* ── Console ───────────────────────────────────────────────────────────────── */
+
+.wbConsole {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--bg-surface);
+}
+
+.wbTabs {
+  display: flex;
+  gap: 2px;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.wbTab, .wbTabOn {
+  padding: 9px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+.wbTabOn { color: var(--text-primary); border-bottom-color: var(--accent); }
+
+.wbConsoleBody { flex: 1; min-height: 0; overflow-y: auto; padding: 12px 14px; }
+
+.wbMuted { font-size: 13px; line-height: 1.6; color: var(--text-muted); }
+
+.wbCaseChips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+
+.wbChip {
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+/* Pass/fail is stated by the tick or cross as well as the colour. */
+.wbChipPass { color: var(--res-ok-ink); border-color: var(--res-ok-ink); }
+.wbChipFail { color: var(--res-bad-ink); border-color: var(--res-bad-ink); }
+.wbChipOn { background: var(--bg-page); box-shadow: inset 0 0 0 1px currentColor; }
+
+.wbCaseDetail pre, .wbCaseDetailPre {
+  margin: 4px 0 12px;
+  padding: 9px 11px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg-page);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12.5px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.wbBad { color: var(--res-bad-ink); border-color: var(--res-bad-ink); }
+
+.wbCompileError {
+  margin: 0;
+  padding: 11px 13px;
+  border: 1px solid var(--res-bad-ink);
+  border-radius: 8px;
+  color: var(--res-bad-ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12.5px;
+  white-space: pre-wrap;
+}
+
+.wbCustom { display: flex; flex-direction: column; gap: 6px; height: 100%; }
+
+.wbTextarea {
+  min-height: 90px;
+  resize: vertical;
+  padding: 9px 11px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12.5px;
+  outline: none;
+}
+.wbTextarea:focus { border-color: var(--accent); }
+
+.wbHint { margin: 0; font-size: 12px; line-height: 1.5; color: var(--text-muted); }
+.wbHint code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+.wbHistory { margin: 0; padding: 0; list-style: none; }
+.wbHistory li {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 9px 0;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.wbHistory li:first-child { border-top: 0; }
+.wbHistTime { font-variant-numeric: tabular-nums; color: var(--text-muted); font-size: 12px; }
+.wbHistLang {
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.wbVerdictBar {
+  padding: 9px 14px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-surface);
+  font-size: 13px;
+}

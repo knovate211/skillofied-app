@@ -628,17 +628,22 @@ export interface SaveAnswerInput {
   timeSpentMs?: number;
   markedReview?: boolean;
   clearAnswer?: boolean;
+  /** Coding draft. Saved, never graded — grading is still Submit-only. */
+  language?: string;
+  code?: string;
 }
 
 export async function saveAnswerApi(input: SaveAnswerInput): Promise<{ saved: boolean; secondsLeft: number }> {
   const mutation = `
     mutation SaveAnswer(
       $attemptId: String!, $questionId: String!, $selectedOptionIds: [String!],
-      $textAnswer: String, $timeSpentMs: Int, $markedReview: Boolean, $clearAnswer: Boolean
+      $textAnswer: String, $timeSpentMs: Int, $markedReview: Boolean, $clearAnswer: Boolean,
+      $language: String, $code: String
     ) {
       saveAnswer(
         attemptId: $attemptId, questionId: $questionId, selectedOptionIds: $selectedOptionIds,
-        textAnswer: $textAnswer, timeSpentMs: $timeSpentMs, markedReview: $markedReview, clearAnswer: $clearAnswer
+        textAnswer: $textAnswer, timeSpentMs: $timeSpentMs, markedReview: $markedReview,
+        clearAnswer: $clearAnswer, language: $language, code: $code
       ) { saved secondsLeft }
     }
   `;
@@ -1029,4 +1034,67 @@ export async function getSubmissionApi(id: string): Promise<SubmissionDetail> {
   `;
   const data = await graphqlRequest<{ getSubmission: SubmissionDetail }>(query, { id });
   return data.getSubmission;
+}
+
+// ── Scholarship hand-off ──────────────────────────────────────────────────────
+
+export interface ScholarshipClaim {
+  /** A normal session JWT — same signer, claims and lifetime as /api/login. */
+  token: string;
+  user: { id: string; email: string; name: string; role: string };
+  assessmentId: string;
+  /** Passed to startAttempt; the invite is what makes the paper startable. */
+  inviteToken: string;
+  courseId: string;
+  applicationId: string;
+}
+
+/**
+ * Exchanges the one-time token from a scholarship link for a real session.
+ *
+ * The raw token only ever exists in the URL the applicant was redirected to (and
+ * in the email we sent them); the server holds nothing but its SHA-256, so this
+ * is the only way to turn it into a login. It is public by necessity — a
+ * candidate arriving from the marketing site has no credentials to present.
+ */
+export async function claimScholarshipApi(token: string): Promise<ScholarshipClaim> {
+  return postPublic(
+    '/api/scholarship/claim',
+    { token },
+    'This link is no longer valid. Please apply again or sign in.',
+  );
+}
+
+export interface ScholarshipOutcome {
+  isScholarship: boolean;
+  courseName?: string;
+  status?: string;
+  /** True while the judge is still grading — no score to show yet. */
+  pending?: boolean;
+  percent?: number;
+  score?: number;
+  maxScore?: number;
+  qualified?: boolean;
+  awardPercent?: number;
+  bandMinPercent?: number;
+  nextBandMinPercent?: number;
+  nextBandAwardPercent?: number;
+  /** Set once an admin has confirmed the decision; overrides the ladder. */
+  confirmedAwardPercent?: number;
+  slabs?: { minPercent: number; awardPercent: number }[];
+}
+
+/**
+ * What this attempt earned, if it was a scholarship attempt at all.
+ *
+ * Returns `{ isScholarship: false }` for ordinary practice and hiring attempts
+ * rather than erroring, so the result page can call it unconditionally.
+ */
+export async function getScholarshipOutcomeApi(attemptId: string): Promise<ScholarshipOutcome> {
+  const token = localStorage.getItem('token');
+  const resp = await fetch(`${API_BASE}/api/scholarship/outcome?attemptId=${encodeURIComponent(attemptId)}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  if (!resp.ok) return { isScholarship: false };
+  return resp.json();
 }

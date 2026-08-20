@@ -27,6 +27,8 @@ const PlacementSection = lazy(() => import('./components/placement/PlacementSect
 const TestPlayer = lazy(() => import('./components/placement/tests/TestPlayer'));
 const TestResultPage = lazy(() => import('./components/placement/tests/ResultPage'));
 const ProfilePage = lazy(() => import('./components/profile/ProfilePage'));
+const ScholarshipEntry = lazy(() => import('./components/scholarship/ScholarshipEntry'));
+const ScholarshipInstructions = lazy(() => import('./components/scholarship/ScholarshipInstructions'));
 
 // A clean simple loading indicator to show during code-split chunk loading
 const LoadingScreen: React.FC = () => (
@@ -85,6 +87,14 @@ const App: React.FC = () => {
     navigate('/');
   };
 
+  // Same state change as handleLogin, minus the redirect. The scholarship
+  // hand-off has its own destination — the instructions for the paper the
+  // candidate was invited to — and bouncing them to the dashboard first would
+  // lose them.
+  const handleSessionEstablished = () => {
+    setIsLoggedIn(true);
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('token');
@@ -109,13 +119,20 @@ const App: React.FC = () => {
     else if (tab === 'Placement') navigate('/placement');
   };
 
+  // The scholarship hand-off is public by necessity: a candidate arriving from
+  // the marketing site has no session until /scholarship/start exchanges their
+  // token for one. Redirecting them to the login form would strand them at a
+  // password they were never given.
+  const isPublicPath =
+    location.pathname === '/login' || location.pathname.startsWith('/scholarship/');
+
   useEffect(() => {
-    if (!isLoggedIn && location.pathname !== '/login') {
+    if (!isLoggedIn && !isPublicPath) {
       navigate('/login', { replace: true });
     } else if (isLoggedIn && location.pathname === '/login') {
       navigate('/', { replace: true });
     }
-  }, [isLoggedIn, location.pathname, navigate]);
+  }, [isLoggedIn, isPublicPath, location.pathname, navigate]);
 
   const isCourseDetailPage = location.pathname.startsWith('/courses/') && location.pathname !== '/courses';
 
@@ -125,6 +142,29 @@ const App: React.FC = () => {
         path="/login"
         element={<Login onLogin={handleLogin} />}
       />
+      {/* The scholarship hand-off, also outside the shell and also public: the
+          candidate has no session until /start spends their one-time token. */}
+      <Route
+        path="/scholarship/start"
+        element={
+          <Suspense fallback={<LoadingScreen />}>
+            <ScholarshipEntry onSession={handleSessionEstablished} />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/scholarship/instructions/:assessmentId"
+        element={
+          isLoggedIn ? (
+            <Suspense fallback={<LoadingScreen />}>
+              <ScholarshipInstructions />
+            </Suspense>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+
       {/* The test player runs outside the app shell: a live assessment gets the
           whole viewport, with no nav to wander off into mid-test. */}
       <Route

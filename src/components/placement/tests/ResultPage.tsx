@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { AttemptQuestion, AttemptResult, getAttemptResultApi } from '../../../api';
+import ScholarshipResultBanner from '../../scholarship/ScholarshipResultBanner';
 import styles from './Tests.module.css';
 
 // Plain /placement lands on the Jobs tab; a candidate leaving a test belongs
@@ -105,6 +106,12 @@ const ResultPage: React.FC = () => {
 
   return (
     <div className={styles.resultWrap}>
+      {/* Renders nothing unless this attempt belongs to a scholarship
+          application, so the ordinary practice and hiring result pages are
+          untouched. It leads because "40% off your course" is the answer the
+          candidate came for; the score breakdown below is the working. */}
+      <ScholarshipResultBanner attemptId={attemptId} evaluating={evaluating} />
+
       <section className={styles.scoreCard}>
         <div className={styles.scoreTop}>
           <div>

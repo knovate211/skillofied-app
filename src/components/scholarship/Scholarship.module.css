@@ -1,0 +1,224 @@
+/* The scholarship hand-off screens.
+
+   Every var(--res-*) below carries a literal fallback on purpose: those status
+   tokens are declared in Tests.module.css, which these screens never import.
+   Without the fallback the colour resolves to nothing — a status dot vanishes
+   and a "pass" tick renders in body grey, which is exactly the case where
+   colour is carrying meaning.
+   These render outside the app shell: a candidate arriving from the marketing
+   site is mid-flow into a timed exam, and a nav bar is somewhere to wander off
+   to. Same visual language as the test player for that reason. */
+
+.screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--bg-page);
+  color: var(--text-primary);
+}
+
+.card {
+  width: 100%;
+  max-width: 620px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 32px;
+  box-shadow: var(--shadow-sm);
+}
+
+.centered { text-align: center; }
+
+.spinner {
+  width: 26px;
+  height: 26px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation-duration: 3s; }
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 10px;
+}
+
+.title {
+  margin: 0 0 10px;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.lede {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 22px 0;
+}
+
+.metaItem {
+  flex: 1 1 120px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.metaValue { font-size: 20px; font-weight: 700; }
+.metaLabel { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+
+.rules { margin: 0; padding: 0; list-style: none; }
+
+.rules li {
+  display: flex;
+  gap: 10px;
+  padding: 11px 0;
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+.rules li:first-child { border-top: 0; }
+.rules b { color: var(--text-primary); font-weight: 600; }
+
+.bullet {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin-top: 8px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+.bulletWarn { background: var(--res-warn-fill, #f59e0b); }
+
+.checkRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+}
+.checkOk { color: var(--res-ok-ink, #15803d); font-weight: 700; }
+.checkBad { color: var(--res-warn-ink, #b45309); font-weight: 700; }
+
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 20px 0;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.consent input { margin-top: 3px; flex: none; }
+
+.primaryBtn {
+  width: 100%;
+  padding: 13px 18px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.primaryBtn:disabled { opacity: .5; cursor: not-allowed; }
+
+.ghostBtn {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.errorBox {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--res-bad-fill, #ef4444);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--res-bad-fill, #ef4444) 8%, transparent);
+  color: var(--res-bad-ink, #b91c1c);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+.footnote {
+  margin: 18px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+/* ── Award banner on the result page ─────────────────────────────────────────
+   Three states, and each says something. Colour never carries the meaning on
+   its own — the headline states the outcome in words. */
+
+.awardBanner {
+  border: 1px solid var(--border);
+  border-left-width: 4px;
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  background: var(--bg-surface);
+}
+
+.awardLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.awardHeadline {
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-primary);
+}
+
+.awardBody {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.awardWon     { border-left-color: var(--res-ok-ink, #15803d); }
+.awardWon .awardHeadline strong { color: var(--res-ok-ink, #15803d); }
+.awardMissed  { border-left-color: var(--text-muted); }
+.awardPending { border-left-color: var(--res-warn-fill, #f59e0b); }

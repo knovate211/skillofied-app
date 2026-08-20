@@ -24,6 +24,13 @@ export default defineConfig(({ mode }) => {
           target: apiTarget,
           changeOrigin: true,
         },
+        // Public endpoints behind the scholarship hand-off. A candidate
+        // arriving from the marketing site has no session yet — /claim is what
+        // gives them one.
+        '/api/scholarship': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
         // Public endpoints behind the login page's "Forgot password?" flow.
         '/api/password-reset': {
           target: apiTarget,

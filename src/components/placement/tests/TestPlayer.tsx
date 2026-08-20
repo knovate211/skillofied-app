@@ -147,6 +147,10 @@ const TestPlayer: React.FC = () => {
       markedReview: next.markedReview,
       timeSpentMs: spent,
       clearAnswer: next.selectedOptionIds.length === 0 && next.textAnswer.trim() === '',
+      // Coding drafts ride the same queue. The server stores them without
+      // grading, so a candidate who switches question, refreshes or crashes
+      // comes back to the code they had written rather than an empty editor.
+      ...(next.kind === 'coding' ? { language: next.language, code: next.code } : {}),
     });
   }, [attemptId, queue, question]);
 
@@ -226,6 +230,7 @@ const TestPlayer: React.FC = () => {
               total={questions.length}
               onSubmitted={(submissionId, language, code) =>
                 updateQuestion({ submissionId, language, code, gradingStatus: 'pending' }, false)}
+              onDraft={(language, code) => updateQuestion({ language, code })}
               onSecondsLeft={setServerSeconds}
             />
           ) : (

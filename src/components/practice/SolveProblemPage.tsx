@@ -19,6 +19,7 @@ import {
   listSubmissionsApi,
   normalizeSubmissionStatus,
   runCodeApi,
+  runScratchpadApi,
   submitCodeApi,
   TestCaseResult,
 } from '../../api';
@@ -190,6 +191,38 @@ const SolveProblemPage: React.FC = () => {
   const handleRunCode = async () => {
     setIsRunning(true);
     setConsoleTab('output');
+
+    // Custom input takes a different path on purpose. The sample-case runner
+    // wraps the solution in a harness that calls it with fixed arguments, so it
+    // has nowhere to put arbitrary stdin. runScratchpad executes the file
+    // verbatim instead, which is what "run it with my input" actually means.
+    if (customInput.trim()) {
+      try {
+        const out = await runScratchpadApi(language, code, customInput);
+        setRunResults({
+          success: out.exitCode === 0 && !out.timedOut,
+          custom: true,
+          totalCases: 1,
+          passedCases: out.exitCode === 0 ? 1 : 0,
+          results: [{
+            input: customInput,
+            expected: '',
+            actual: out.stdout || out.stderr || '(no output)',
+            passed: out.exitCode === 0 && !out.timedOut,
+          }],
+          runtime: `${out.executionMs}ms`,
+          memory: 'N/A',
+        });
+        if (out.timedOut) showToast('Your code timed out.', 'error');
+        else if (out.exitCode !== 0) showToast('Your code exited with an error.', 'error');
+        else showToast('Ran with your input.', 'success');
+      } catch (err: any) {
+        showToast(err.message || 'Failed to run with your input', 'error');
+      } finally {
+        setIsRunning(false);
+      }
+      return;
+    }
 
     try {
       const run = await runCodeApi(id || '', language, code);
