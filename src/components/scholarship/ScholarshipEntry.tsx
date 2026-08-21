@@ -69,9 +69,11 @@ const ScholarshipEntry: React.FC<Props> = ({ onSession }) => {
             Links expire three days after you apply. Applying again with the same email address
             sends a fresh one — you will not lose your place.
           </p>
-          <button className={styles.ghostBtn} onClick={() => navigate('/login', { replace: true })}>
-            Sign in instead
-          </button>
+          {/* No "sign in" here: a scholarship applicant has no password to sign
+              in with — the link was their only way in. Offering a login sends
+              them to a form they can never complete. There is nothing more for
+              them to do on this page, so we say so plainly. */}
+          <p className={styles.footnote}>You can close this tab now.</p>
         </div>
       </div>
     );

@@ -195,7 +195,6 @@ const TestPlayer: React.FC = () => {
         attemptId={attemptId}
         title={state?.title}
         standalone
-        onDone={() => navigate('/', { replace: true })}
       />
     );
   }

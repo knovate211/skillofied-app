@@ -23,8 +23,7 @@ const SubmittedNotice: React.FC<{
   submittedAt?: string;
   /** Rendered over the player, which has no app shell around it. */
   standalone?: boolean;
-  onDone?: () => void;
-}> = ({ attemptId, title, submittedAt, standalone = false, onDone }) => {
+}> = ({ attemptId, title, submittedAt, standalone = false }) => {
   const [email, setEmail] = useState('');
   const [courseName, setCourseName] = useState('');
 
@@ -49,11 +48,11 @@ const SubmittedNotice: React.FC<{
     <section className={styles.submittedCard} role="status" aria-live="polite">
       <div className={styles.submittedTick} aria-hidden="true">✓</div>
 
-      <h1 className={styles.submittedTitle}>Your test has been submitted</h1>
+      <h1 className={styles.submittedTitle}>Test submitted successfully</h1>
 
       <p className={styles.submittedLead}>
         {title ? <>Every answer you gave on <strong>{title}</strong> has been recorded.</> : 'Every answer you gave has been recorded.'}
-        {' '}You can close this window.
+        {' '}You will get an email with your result soon.
       </p>
 
       <div className={styles.submittedNext}>
@@ -76,9 +75,10 @@ const SubmittedNotice: React.FC<{
         <p className={styles.submittedStamp}>Received {submittedAt}</p>
       ) : null}
 
-      {onDone ? (
-        <button type="button" className={styles.ghostBtn} onClick={onDone}>Done</button>
-      ) : null}
+      {/* No button back into the app: an applicant is not a student and has no
+          portal to return to. Their session exists only to sit this test, which
+          is now done — so the honest instruction is simply to close the tab. */}
+      <p className={styles.submittedStamp}>You can close this tab now.</p>
     </section>
   );
 

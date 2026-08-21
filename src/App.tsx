@@ -6,6 +6,7 @@ import Sidebar from './components/layout/Sidebar';
 import CoursesSection from './components/courses/CoursesSection';
 import Login from './components/auth/Login';
 import { getMyCoursesApi } from './api';
+import { isApplicantSession } from './lib/session';
 import styles from './App.module.css';
 import TodaySchedule from './components/dashboard/TodaySchedule';
 
@@ -29,6 +30,7 @@ const TestResultPage = lazy(() => import('./components/placement/tests/ResultPag
 const ProfilePage = lazy(() => import('./components/profile/ProfilePage'));
 const ScholarshipEntry = lazy(() => import('./components/scholarship/ScholarshipEntry'));
 const ScholarshipInstructions = lazy(() => import('./components/scholarship/ScholarshipInstructions'));
+const ScholarshipSessionNotice = lazy(() => import('./components/scholarship/ScholarshipSessionNotice'));
 
 // A clean simple loading indicator to show during code-split chunk loading
 const LoadingScreen: React.FC = () => (
@@ -134,6 +136,24 @@ const App: React.FC = () => {
     }
   }, [isLoggedIn, isPublicPath, location.pathname, navigate]);
 
+  // Confine an applicant session to the test.
+  //
+  // A scholarship applicant holds a real 24h session — the assessment engine
+  // keys an attempt to a user id — but they are not a student, so the course
+  // portal is not theirs to browse. Without this, a lingering claim session
+  // let an applicant reach the student home, courses and practice simply by
+  // navigating to "/" (which is also where "Sign in instead" lands them once
+  // they already have a session). They may be on the scholarship pages and in
+  // the live test player; everywhere else sends them to the session notice.
+  useEffect(() => {
+    if (!isLoggedIn || !isApplicantSession()) return;
+    const p = location.pathname;
+    const allowed =
+      p.startsWith('/scholarship/') ||
+      p.startsWith('/placement/tests/attempt/');
+    if (!allowed) navigate('/scholarship/session', { replace: true });
+  }, [isLoggedIn, location.pathname, navigate]);
+
   const isCourseDetailPage = location.pathname.startsWith('/courses/') && location.pathname !== '/courses';
 
   return (
@@ -149,6 +169,14 @@ const App: React.FC = () => {
         element={
           <Suspense fallback={<LoadingScreen />}>
             <ScholarshipEntry onSession={handleSessionEstablished} />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/scholarship/session"
+        element={
+          <Suspense fallback={<LoadingScreen />}>
+            <ScholarshipSessionNotice />
           </Suspense>
         }
       />
