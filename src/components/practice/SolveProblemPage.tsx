@@ -33,6 +33,31 @@ async function loadFallbackProblem(id: string, nameFallback: string): Promise<Pr
 const isSqlProblem = (p: { tags?: string[]; topic?: string } | null): boolean =>
   !!p && (p.tags?.includes('SQL') || p.topic === 'Database' || p.topic === 'Databases');
 
+const LANGUAGE_LABELS: Record<string, string> = {
+  javascript: 'JavaScript',
+  python: 'Python',
+  java: 'Java',
+  cpp: 'C++',
+  go: 'Go',
+  sql: 'PostgreSQL',
+};
+
+/**
+ * The languages to offer for this problem.
+ *
+ * The editor used to hardcode all five on every problem. Most of the catalogue
+ * is Go exercises whose other four starters are placeholders — a learner
+ * picking the default JavaScript got `console.log("Hello World")` and no
+ * submission could turn that into a passing answer. The server now reports
+ * which languages have a real starter; fall back to the full list only when it
+ * says nothing.
+ */
+const languageOptions = (p: ProblemDetail | null): { id: string; label: string }[] | undefined => {
+  const supported = (p as { supportedLanguages?: string[] } | null)?.supportedLanguages;
+  if (!supported?.length) return undefined;
+  return supported.map((id) => ({ id, label: LANGUAGE_LABELS[id] ?? id }));
+};
+
 const toPanelResults = (testResults: TestCaseResult[]) =>
   testResults.map((tr) => ({
     input: tr.input,
@@ -96,7 +121,20 @@ const SolveProblemPage: React.FC = () => {
     const applyProblem = (prob: ProblemDetail) => {
       setProblem(prob);
 
-      const newLang = isSqlProblem(prob) ? 'sql' : (localStorage.getItem(`lang_${id}`) || 'javascript');
+      // Pick a language the problem can actually be solved in. Defaulting to
+      // JavaScript regardless is how a Go-only exercise opened on a
+      // `console.log("Hello World")` placeholder — and a remembered choice from
+      // another problem can be just as unsupported here.
+      const offered = languageOptions(prob)?.map((l) => l.id);
+      const remembered = localStorage.getItem(`lang_${id}`);
+      let newLang: string;
+      if (isSqlProblem(prob)) {
+        newLang = 'sql';
+      } else if (offered?.length) {
+        newLang = remembered && offered.includes(remembered) ? remembered : offered[0];
+      } else {
+        newLang = remembered || 'javascript';
+      }
       setLanguage(newLang);
 
       const savedCode = localStorage.getItem(`code_${id}_${newLang}`);
@@ -107,7 +145,13 @@ const SolveProblemPage: React.FC = () => {
         setCode(prob.starterCodes[starterKey as keyof typeof prob.starterCodes] || '');
       }
 
-      setCustomInput(prob.examples?.length ? prob.examples[0].input : '');
+      // Deliberately NOT seeded from the examples. `handleRunCode` treats a
+      // non-empty custom input as "run my scratchpad instead of grading", so
+      // pre-filling it here made Run code silently skip every test case and
+      // report Accepted on code that had never been graded. The example is
+      // shown as the textarea placeholder instead — visible, but not active
+      // until the learner actually types something.
+      setCustomInput('');
     };
 
     getProblemApi(id || '')
@@ -156,18 +200,6 @@ const SolveProblemPage: React.FC = () => {
     }
   }, [code, id, language]);
 
-  // Keyboard shortcut Ctrl + Enter to run code
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-        e.preventDefault();
-        handleRunCode();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [code, language, problem]);
-
   const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
     const toastId = Math.random().toString(36).substr(2, 9);
     setToasts((prev) => [...prev, { id: toastId, message, type }]);
@@ -200,8 +232,8 @@ const SolveProblemPage: React.FC = () => {
       try {
         const out = await runScratchpadApi(language, code, customInput);
         setRunResults({
+          mode: 'custom',
           success: out.exitCode === 0 && !out.timedOut,
-          custom: true,
           totalCases: 1,
           passedCases: out.exitCode === 0 ? 1 : 0,
           results: [{
@@ -228,6 +260,7 @@ const SolveProblemPage: React.FC = () => {
       const run = await runCodeApi(id || '', language, code);
 
       setRunResults({
+        mode: 'run',
         success: run.overallStatus === 'Accepted',
         totalCases: run.testResults.length,
         passedCases: run.testResults.filter((tr) => tr.status === 'Accepted').length,
@@ -249,6 +282,28 @@ const SolveProblemPage: React.FC = () => {
       showToast(err.message || "Failed to run code", "error");
     }
   };
+
+  // Keyboard shortcut Ctrl + Enter to run code.
+  //
+  // The handler goes through a ref rather than being captured directly. The
+  // listener used to be re-registered on [code, language, problem], so it held
+  // whatever `handleRunCode` closure existed at the last change to one of
+  // those — and `customInput` is in none of them. Editing the custom input and
+  // pressing Ctrl+Enter therefore ran the *previous* input, or took the
+  // scratchpad branch on a box the learner had already cleared.
+  const runCodeRef = React.useRef(handleRunCode);
+  runCodeRef.current = handleRunCode;
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        runCodeRef.current();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Submit code asynchronously via API gateway and poll status
   const handleSubmitCode = async () => {
@@ -280,6 +335,7 @@ const SolveProblemPage: React.FC = () => {
             setIsRunning(false);
 
             setRunResults({
+              mode: 'submit',
               success: sub.status === 'Accepted',
               totalCases: sub.testResults.length,
               passedCases: sub.testResults.filter((tr) => tr.status === 'Accepted').length,
@@ -391,6 +447,7 @@ const SolveProblemPage: React.FC = () => {
                   isFullscreen={isFullscreen}
                   onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
                   isSqlMode={isSqlProblem(problem)}
+                  availableLanguages={languageOptions(problem)}
                 />
               </Panel>
 

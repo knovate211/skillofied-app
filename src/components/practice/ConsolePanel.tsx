@@ -33,6 +33,12 @@ interface CaseResult {
 }
 
 interface RunResults {
+  /**
+   * Which button produced this result, and therefore how it may be labelled.
+   * 'custom' is a scratchpad execution against the learner's own stdin — there
+   * are no test cases and no verdict, so it must never render as "Accepted".
+   */
+  mode?: 'run' | 'submit' | 'custom';
   success: boolean;
   totalCases: number;
   passedCases: number;
@@ -91,6 +97,13 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
 }) => {
   const [caseIdx, setCaseIdx] = useState(0);
   const [resultIdx, setResultIdx] = useState(0);
+
+  // `resultIdx` survives across runs and is never reset, so a "Case 3" selected
+  // during a graded run would index past the end of a later single-result custom
+  // run and blank the detail panel. Clamp rather than trust it.
+  const safeResultIdx = runResults
+    ? Math.min(resultIdx, Math.max(0, runResults.results.length - 1))
+    : 0;
 
   const tabStyle = (tab: typeof activeTab): React.CSSProperties => ({
     display: 'flex', alignItems: 'center', gap: 6,
@@ -216,6 +229,14 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
           {activeTab === 'custom' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, height: '100%' }}>
               <IOLabel>Provide Input Arguments</IOLabel>
+              {/* Run Code branches on this box being non-empty, which is not
+                  obvious from the UI. Say so, or a learner leaves a stray
+                  character here and wonders why nothing is ever graded. */}
+              <p style={{ fontSize: 11, color: customInput.trim() ? T.amber : T.textMuted, margin: 0, lineHeight: 1.5 }}>
+                {customInput.trim()
+                  ? 'While this box has content, Run Code executes your program against it instead of the test cases. Clear it to go back to grading.'
+                  : 'Leave empty to run against the sample test cases. One value per line, in argument order.'}
+              </p>
               <textarea
                 value={customInput}
                 onChange={e => onCustomInputChange(e.target.value)}
@@ -250,7 +271,7 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
                         ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.green} strokeWidth="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
                         : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.red} strokeWidth="2.5"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" /></svg>}
                       <span style={{ fontSize: 16, fontWeight: 800, color: runResults.success ? T.green : T.red }}>
-                        {isAssignmentMode
+                        {isAssignmentMode || runResults.mode === 'custom'
                           ? (runResults.success ? 'Executed Successfully' : 'Execution Failed')
                           : (runResults.success ? 'Accepted' : 'Wrong Answer')}
                       </span>
@@ -270,17 +291,20 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
                   ) : (
                     <>
                       <div style={{ fontSize: 12, color: T.textSecondary, fontWeight: 600 }}>
-                        {isAssignmentMode ? 'Code ran to completion without errors.' : (
+                        {isAssignmentMode ? 'Code ran to completion without errors.'
+                          : runResults.mode === 'custom' ? 'Ran against your custom input — not graded against the test cases.'
+                          : (
                           <>
                             Passed: <span style={{ color: T.green, fontWeight: 800 }}>{runResults.passedCases}</span> / {runResults.totalCases} cases
                           </>
                         )}
                       </div>
-                      {/* Case tabs */}
+                      {/* Case tabs — a custom run has a single result and no verdict per case. */}
+                      {runResults.mode !== 'custom' && (
                       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', paddingBottom: 10, borderBottom: `1px solid ${T.border}` }}>
                         {runResults.results.map((r, i) => (
                           <button key={i} className="cp-case" onClick={() => setResultIdx(i)} style={{
-                            ...casePillStyle(resultIdx === i),
+                            ...casePillStyle(safeResultIdx === i),
                             display: 'flex', alignItems: 'center', gap: 5,
                           }}>
                             {r.passed
@@ -290,16 +314,21 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
                           </button>
                         ))}
                       </div>
+                      )}
                       {/* Case detail */}
-                      {runResults.results[resultIdx] && (() => {
-                        const r = runResults.results[resultIdx];
+                      {runResults.results[safeResultIdx] && (() => {
+                        const r = runResults.results[safeResultIdx];
                         return (
                           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                             <div><IOLabel>Input</IOLabel><CodeBlock>{r.input}</CodeBlock></div>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                              <div><IOLabel>Expected Output</IOLabel><CodeBlock color={T.green}>{r.expected}</CodeBlock></div>
-                              <div><IOLabel>Your Output</IOLabel><CodeBlock color={r.passed ? T.green : T.red}>{r.actual}</CodeBlock></div>
-                            </div>
+                            {runResults.mode === 'custom' ? (
+                              <div><IOLabel>Your Output</IOLabel><CodeBlock color={r.passed ? T.textPrimary : T.red}>{r.actual}</CodeBlock></div>
+                            ) : (
+                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                                <div><IOLabel>Expected Output</IOLabel><CodeBlock color={T.green}>{r.expected}</CodeBlock></div>
+                                <div><IOLabel>Your Output</IOLabel><CodeBlock color={r.passed ? T.green : T.red}>{r.actual}</CodeBlock></div>
+                              </div>
+                            )}
                             {r.stdout && <div><IOLabel>Stdout</IOLabel><CodeBlock color={T.textSecondary}>{r.stdout}</CodeBlock></div>}
                           </div>
                         );

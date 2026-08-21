@@ -847,6 +847,8 @@ export interface ProblemDetailDto {
   examples: ProblemExampleDto[];
   hints: ProblemHint[];
   starterCodes: StarterCodes;
+  /** Languages this problem can actually be solved in, in display order. */
+  supportedLanguages?: string[];
   setId?: string;
   userStatus?: string;
 }
@@ -974,6 +976,7 @@ export async function getProblemApi(id: string): Promise<ProblemDetailDto | null
         examples { input output explanation }
         hints { order title body }
         starterCodes { javascript python java cpp go }
+        supportedLanguages
         setId
         userStatus
       }
