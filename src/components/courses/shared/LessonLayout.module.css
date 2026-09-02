@@ -47,6 +47,15 @@
   align-items: start;
 }
 
+/* No side panel: drop the reserved 400px column and centre the prose at a
+   comfortable measure, rather than letting it stretch across the full 1240px
+   or sit left-aligned against an empty gutter. */
+.gridSolo {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 880px;
+  margin: 0 auto;
+}
+
 .main {
   min-width: 0;
 }

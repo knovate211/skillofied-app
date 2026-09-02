@@ -1,8 +1,9 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { PracticeSet } from '../../types';
 import styles from './PracticeCard.module.css';
 import { formatPracticeSetTitle } from '../../utils/practiceHelpers';
+import ActionButton from '../common/ActionButton';
+import { useNavigatePending } from '../../hooks/useNavigatePending';
 
 interface Props {
   practiceSet: PracticeSet;
@@ -45,14 +46,16 @@ const SproutIcon: React.FC = () => (
 );
 
 const PracticeCard: React.FC<Props> = ({ practiceSet }) => {
-  const navigate = useNavigate();
+  const { go, isPending } = useNavigatePending();
   const theme = getLevelTheme(practiceSet.level);
   const status = getPracticeStatus(practiceSet.progress);
   const actionText = practiceSet.progress === 0 ? 'Start practice' : 'Continue';
   const displayProgress = Math.round(practiceSet.progress);
   const displayTitle = formatPracticeSetTitle(practiceSet.title);
 
-  const open = () => navigate(`/practice/${practiceSet.id}`);
+  const route = `/practice/${practiceSet.id}`;
+  const open = () => go(route);
+  const pending = isPending(route);
 
   return (
     <div
@@ -112,10 +115,17 @@ const PracticeCard: React.FC<Props> = ({ practiceSet }) => {
           <span className={styles.badge}>{status}</span>
         </div>
 
-        <button className={styles.btn}>
-          <span>{actionText}</span>
-          <span aria-hidden="true">→</span>
-        </button>
+        {/* The whole card is the click target, so this button only reports
+            state — the click bubbles up to the card's own handler. */}
+        <ActionButton
+          className={styles.btn}
+          loading={pending}
+          loadingText="Opening…"
+          trailing={<span aria-hidden="true">→</span>}
+          tabIndex={-1}
+        >
+          {actionText}
+        </ActionButton>
       </div>
     </div>
   );

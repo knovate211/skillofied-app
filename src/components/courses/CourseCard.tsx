@@ -1,8 +1,9 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Course } from '../../types';
 import styles from './CourseCard.module.css';
 import { getCourseButtonText, getCourseProgress } from '../../utils/courseHelpers';
+import ActionButton from '../common/ActionButton';
+import { useNavigatePending } from '../../hooks/useNavigatePending';
 
 interface Props {
   course: Course;
@@ -113,18 +114,15 @@ const COURSE_ROUTES: Record<string, string> = {
 };
 
 const CourseCard: React.FC<Props> = ({ course, index = 0 }) => {
-  const navigate = useNavigate();
+  const { go, isPending } = useNavigatePending();
   const toneClass = TONES[index % TONES.length];
 
   const progressValue = getCourseProgress(course.title);
   const displayProgress = Math.round(progressValue);
 
-  const open = () => {
-    const route = COURSE_ROUTES[course.title];
-    // No course page built yet — the syllabus landing page still shows the
-    // outline rather than dead-ending the learner.
-    navigate(route || '/courses');
-  };
+  // No course page built yet — the syllabus landing page still shows the
+  // outline rather than dead-ending the learner.
+  const route = COURSE_ROUTES[course.title] || '/courses';
 
   return (
     <div className={`${styles.card} ${toneClass}`}>
@@ -163,10 +161,15 @@ const CourseCard: React.FC<Props> = ({ course, index = 0 }) => {
           </div>
         </div>
 
-        <button className={styles.btn} onClick={open}>
-          <span>{getCourseButtonText(course.progress)}</span>
-          <span aria-hidden="true">→</span>
-        </button>
+        <ActionButton
+          className={styles.btn}
+          onClick={() => go(route)}
+          loading={isPending(route)}
+          loadingText="Opening…"
+          trailing={<span aria-hidden="true">→</span>}
+        >
+          {getCourseButtonText(progressValue)}
+        </ActionButton>
       </div>
     </div>
   );

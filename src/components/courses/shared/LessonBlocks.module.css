@@ -128,3 +128,358 @@
   vertical-align: top;
   line-height: 1.6;
 }
+
+/* ── Pitfall callout: amber, so a mistake never reads as a neutral note ── */
+.warning {
+  background: var(--honey-tint);
+  border-color: var(--honey);
+}
+
+.warningIcon {
+  background: var(--honey-deep);
+  font-style: normal;
+}
+
+/* ── Result grid, shared by `dataset` and `queryResult` ──
+   Mono type and row numbers so it reads as database output, not as prose. */
+.gridScroll {
+  overflow-x: auto;
+}
+
+.grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+.grid th {
+  text-align: left;
+  padding: 9px 13px;
+  background: var(--bg-surface-2);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.grid td {
+  padding: 8px 13px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.grid tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Row-number gutter: an ordinal, not data, so it stays faint and narrow. */
+.gridRowNum {
+  width: 34px;
+  text-align: right !important;
+  color: var(--ink-faint) !important;
+  font-size: 11px;
+  user-select: none;
+  border-right: 1px solid var(--border);
+  background: var(--bg-surface-2);
+}
+
+/* Rows a clause keeps / columns a join matches on. */
+.gridRowMark td {
+  background: var(--olive-tint);
+  color: var(--text-primary);
+}
+
+.gridColMark {
+  background: var(--honey-tint);
+}
+
+.gridNull {
+  color: var(--ink-faint);
+  font-style: italic;
+  font-size: 11px;
+}
+
+/* ── Stored table ── */
+.dataset {
+  margin: 0 0 22px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-surface);
+}
+
+.datasetHead,
+.qrResultHead {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--bg-surface-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.datasetIcon {
+  display: flex;
+  color: var(--callout-icon);
+}
+
+.datasetName {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.datasetCaption {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ── Query → result pairing ── */
+.qr {
+  margin: 0 0 24px;
+}
+
+.qrArrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 2px 0 10px;
+}
+
+.qrArrowLine {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.qrArrowLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.qrResult {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-surface);
+}
+
+.qrBadge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--callout-icon);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.qrRowCount {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.qrNote {
+  margin: 10px 0 0;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+/* ── Comparison cards ── */
+.compare {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px;
+  margin: 0 0 22px;
+}
+
+.compareCard {
+  border: 1px solid;
+  border-radius: 12px;
+  padding: 15px 17px;
+}
+
+.toneRose {
+  background: var(--rose-tint);
+  border-color: var(--rose);
+}
+
+.toneOlive {
+  background: var(--olive-tint);
+  border-color: var(--olive);
+}
+
+.toneHoney {
+  background: var(--honey-tint);
+  border-color: var(--honey);
+}
+
+.compareTitle {
+  margin: 0 0 3px;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.compareSubtitle {
+  margin: 0 0 10px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.compareList {
+  margin: 0;
+  padding-left: 17px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* ── Ordered pipeline ── */
+.steps {
+  margin: 0 0 22px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  background: var(--bg-surface);
+}
+
+.stepsTitle {
+  margin: 0 0 12px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.stepsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.step {
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+}
+
+.stepNum {
+  flex: 0 0 auto;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  background: var(--callout-icon);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+}
+
+.stepBody {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 9px;
+}
+
+.stepLabel {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.stepText {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* ── Inline diagram ── */
+.diagram {
+  margin: 0 0 22px;
+  padding: 18px 16px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-surface);
+}
+
+.diagramCaption {
+  margin-top: 12px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+/* ── Annotated syntax skeleton ── */
+.syntax {
+  margin: 0 0 22px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--callout-icon);
+  border-radius: 12px;
+  padding: 15px 18px;
+  background: var(--bg-surface);
+}
+
+.syntaxTitle {
+  margin: 0 0 11px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.syntaxList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.syntaxRow {
+  display: grid;
+  grid-template-columns: minmax(96px, max-content) 1fr;
+  gap: 6px 14px;
+  align-items: baseline;
+}
+
+.syntaxClause {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--callout-fg);
+}
+
+.syntaxText {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 520px) {
+  .syntaxRow {
+    grid-template-columns: 1fr;
+  }
+}

@@ -121,6 +121,16 @@
   padding: 0;
 }
 
+/* Global spin keyframe. Several components animate an inline-styled spinner
+   with `animation: spin ...`; keyframes declared inside a *.module.css file are
+   name-mangled by CSS Modules, so those references resolved to nothing and the
+   spinners sat still. Declaring it here once makes every one of them turn. */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 body {
   font-family: var(--font-body);
   background: var(--bg-page);

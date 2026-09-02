@@ -1,6 +1,60 @@
 import React, { useState } from 'react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
+import css from 'react-syntax-highlighter/dist/esm/languages/prism/css';
+import docker from 'react-syntax-highlighter/dist/esm/languages/prism/docker';
+import go from 'react-syntax-highlighter/dist/esm/languages/prism/go';
+import java from 'react-syntax-highlighter/dist/esm/languages/prism/java';
+import javascript from 'react-syntax-highlighter/dist/esm/languages/prism/javascript';
+import json from 'react-syntax-highlighter/dist/esm/languages/prism/json';
+import jsx from 'react-syntax-highlighter/dist/esm/languages/prism/jsx';
+import markup from 'react-syntax-highlighter/dist/esm/languages/prism/markup';
+import protobuf from 'react-syntax-highlighter/dist/esm/languages/prism/protobuf';
+import python from 'react-syntax-highlighter/dist/esm/languages/prism/python';
+import sql from 'react-syntax-highlighter/dist/esm/languages/prism/sql';
+import tsx from 'react-syntax-highlighter/dist/esm/languages/prism/tsx';
+import typescript from 'react-syntax-highlighter/dist/esm/languages/prism/typescript';
+import yaml from 'react-syntax-highlighter/dist/esm/languages/prism/yaml';
+
+/**
+ * PrismLight with explicit registration, not Prism.
+ *
+ * The default `Prism` export pulls in all ~300 grammars — roughly 600 KB of
+ * JavaScript for the dozen languages this app actually shows. Registering only
+ * what the courses use keeps highlighting identical and the chunk small.
+ *
+ * Add a language here when course content starts using one; an unregistered
+ * language renders as plain text rather than failing.
+ */
+const LANGUAGES: Record<string, unknown> = {
+  bash, css, docker, go, java, javascript, json, jsx,
+  markup, protobuf, python, sql, tsx, typescript, yaml,
+};
+Object.entries(LANGUAGES).forEach(([name, grammar]) => {
+  SyntaxHighlighter.registerLanguage(name, grammar);
+});
+
+/** Course content writes these spellings; Prism knows the values. */
+const ALIASES: Record<string, string> = {
+  html: 'markup',
+  xml: 'markup',
+  dockerfile: 'docker',
+  js: 'javascript',
+  ts: 'typescript',
+  golang: 'go',
+  postgres: 'sql',
+  postgresql: 'sql',
+  shell: 'bash',
+  sh: 'bash',
+  yml: 'yaml',
+};
+
+/** Normalise the authored language to a registered grammar name. */
+const resolveLanguage = (language: string): string => {
+  const key = language.trim().toLowerCase();
+  return ALIASES[key] ?? key;
+};
 import styles from '../courses/FrontendCoursePage.module.css';
 
 interface Props {
@@ -98,7 +152,7 @@ const CodeSnippet: React.FC<Props> = ({ language, code, title, isRunnable = true
           {/* Code Content */}
           <div style={{ flex: 1, minWidth: 0 }}>
             <SyntaxHighlighter
-              language={language.toLowerCase()}
+              language={resolveLanguage(language)}
               style={vscDarkPlus}
               customStyle={{
                 margin: 0,

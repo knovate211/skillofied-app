@@ -7,6 +7,7 @@ import CoursesSection from './components/courses/CoursesSection';
 import Login from './components/auth/Login';
 import { getMyCoursesApi } from './api';
 import { isApplicantSession } from './lib/session';
+import { useNavigatePending } from './hooks/useNavigatePending';
 import styles from './App.module.css';
 import TodaySchedule from './components/dashboard/TodaySchedule';
 
@@ -72,6 +73,7 @@ const App: React.FC = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { go, isPending } = useNavigatePending();
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -114,12 +116,18 @@ const App: React.FC = () => {
 
   const activeTab = getActiveTab(location.pathname);
 
-  const handleTabChange = (tab: Tab) => {
-    if (tab === 'Home') navigate('/');
-    else if (tab === 'Course') navigate('/courses');
-    else if (tab === 'Practice') navigate('/practice');
-    else if (tab === 'Placement') navigate('/placement');
+  const TAB_ROUTES: Record<Tab, string> = {
+    Home: '/',
+    Course: '/courses',
+    Practice: '/practice',
+    Placement: '/placement',
   };
+
+  const handleTabChange = (tab: Tab) => go(TAB_ROUTES[tab]);
+
+  // Practice and Placement are lazy chunks, so the tab shows the wait.
+  const pendingTab =
+    (Object.keys(TAB_ROUTES) as Tab[]).find((t) => isPending(TAB_ROUTES[t])) ?? null;
 
   // The scholarship hand-off is public by necessity: a candidate arriving from
   // the marketing site has no session until /scholarship/start exchanges their
@@ -272,7 +280,7 @@ const App: React.FC = () => {
                 </Suspense>
               </main>
               {!isCourseDetailPage && (
-                <BottomNav active={activeTab} onChange={handleTabChange} />
+                <BottomNav active={activeTab} onChange={handleTabChange} pendingTab={pendingTab} />
               )}
             </div>
           ) : (
