@@ -25,8 +25,8 @@ const Module16: React.FC<Props> = ({ page }) => {
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 16.1: Context API</h2>
-          <p className={styles.paragraph}>In React, data is passed top-down via props. However, for global properties (e.g. user authentication or themes), passing props through dozens of nested intermediate components is tedious and error-prone (known as **Prop Drilling**).</p>
-          <p className={styles.paragraph}>The **Context API** provides a way to share values like these between components without having to explicitly pass a prop through every level of the tree.</p>
+          <p className={styles.paragraph}>In React, data is passed top-down via props. However, for global properties (e.g. user authentication or themes), passing props through dozens of nested intermediate components is tedious and error-prone (known as <strong>Prop Drilling</strong>).</p>
+          <p className={styles.paragraph}>The <strong>Context API</strong> provides a way to share values like these between components without having to explicitly pass a prop through every level of the tree.</p>
           
           <div className={styles.codeLabel}>Context creation and usage</div>
           <CodeSnippet isRunnable={true} language="JavaScript" code={`import React, { createContext, useContext } from 'react';

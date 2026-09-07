@@ -91,7 +91,7 @@ const Module1: React.FC<Props> = ({ page }) => {
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 1.2: What is Web Development?</h2>
           <p className={styles.paragraph}>Web Development is the process of building and maintaining websites and web applications.</p>
-          <p className={styles.paragraph}>A website can be categorized as **Static** (rarely changes, same for everyone) or **Dynamic** (interactive, updates based on action or user context).</p>
+          <p className={styles.paragraph}>A website can be categorized as <strong>Static</strong> (rarely changes, same for everyone) or <strong>Dynamic</strong> (interactive, updates based on action or user context).</p>
           <h3 className={styles.subtitle}>Interactive Activity</h3>
           <p className={styles.paragraph}>Identify whether the following websites are <strong>Static</strong> or <strong>Dynamic</strong>:</p>
           <div className={styles.activityGrid}>

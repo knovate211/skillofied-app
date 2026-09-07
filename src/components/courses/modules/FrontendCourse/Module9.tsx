@@ -68,8 +68,8 @@ const Module9: React.FC<Props> = ({ page }) => {
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 9.1: Synchronous vs Asynchronous</h2>
-          <p className={styles.paragraph}>JavaScript is <strong>single-threaded</strong>, meaning it can only execute one line of code at a time. In a **synchronous** execution, each line of code must wait for the previous one to finish. If a task takes a long time (like fetching database data), the entire page freezes.</p>
-          <p className={styles.paragraph}>**Asynchronous** operations allow JavaScript to initiate a long-running task, continue executing other code, and handle the task result once it completes.</p>
+          <p className={styles.paragraph}>JavaScript is <strong>single-threaded</strong>, meaning it can only execute one line of code at a time. In a <strong>synchronous</strong> execution, each line of code must wait for the previous one to finish. If a task takes a long time (like fetching database data), the entire page freezes.</p>
+          <p className={styles.paragraph}><strong>Asynchronous</strong> operations allow JavaScript to initiate a long-running task, continue executing other code, and handle the task result once it completes.</p>
           
           <h3 className={styles.subtitle}>Interactive Async Simulator</h3>
           <div style={{ background: 'var(--bg-surface-2)', padding: '16px', borderRadius: '8px' }}>
@@ -218,7 +218,7 @@ fetchPromise
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 9.7: API Integration</h2>
-          <p className={styles.paragraph}>API integration connects your frontend components to backend databases. A professional client application should always manage **Loading**, **Error**, and **Success** states in the UI.</p>
+          <p className={styles.paragraph}>API integration connects your frontend components to backend databases. A professional client application should always manage <strong>Loading</strong>, <strong>Error</strong>, and <strong>Success</strong> states in the UI.</p>
           
           <div className={styles.codeLabel}>React State Integration concept</div>
           <CodeSnippet isRunnable={true} language="JavaScript" code={`const [loading, setLoading] = useState(false);

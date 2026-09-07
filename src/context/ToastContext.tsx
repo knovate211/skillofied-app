@@ -1,5 +1,4 @@
-import React, { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { CheckCircle, Info, XCircle } from 'lucide-react';
 import styles from './ToastContext.module.css';
 
@@ -9,6 +8,8 @@ export interface Toast {
   id: string;
   message: string;
   type: ToastType;
+  /** Set while the exit animation plays; the row unmounts when it finishes. */
+  leaving?: boolean;
 }
 
 interface ToastContextValue {
@@ -32,16 +33,33 @@ const ICONS: Record<ToastType, typeof CheckCircle> = {
   info: Info,
 };
 
+/** Must match the exit animation in ToastContext.module.css. */
+const EXIT_MS = 180;
+
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
   // Timers are cleared on manual dismiss so a re-used id cannot close its successor.
   const timers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
   const seq = useRef(0);
 
+  // Dismissal is two steps: mark the toast leaving so CSS can play the exit and
+  // collapse the gap it leaves behind, then drop it once that has finished.
+  // This is what AnimatePresence + `layout` used to do, without shipping the
+  // 125 KB layout-projection engine to every visitor for two toasts.
   const dismissToast = useCallback((id: string) => {
     clearTimeout(timers.current[id]);
     delete timers.current[id];
-    setToasts((prev) => prev.filter((t) => t.id !== id));
+    setToasts((prev) => prev.map((t) => (t.id === id ? { ...t, leaving: true } : t)));
+    timers.current[`${id}:exit`] = setTimeout(() => {
+      delete timers.current[`${id}:exit`];
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, EXIT_MS);
+  }, []);
+
+  // Nothing should fire after the provider goes away.
+  useEffect(() => {
+    const pending = timers.current;
+    return () => Object.values(pending).forEach(clearTimeout);
   }, []);
 
   const showToast = useCallback((message: string, type: ToastType = 'info') => {
@@ -58,27 +76,24 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     <ToastContext.Provider value={value}>
       {children}
       <div className={styles.viewport} role="region" aria-label="Notifications">
-        <AnimatePresence initial={false}>
-          {toasts.map((toast) => {
-            const Icon = ICONS[toast.type];
-            return (
-              <motion.div
-                key={toast.id}
-                layout
-                initial={{ opacity: 0, y: -12, scale: 0.96 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, x: 40, scale: 0.96 }}
-                transition={{ duration: 0.18 }}
+        {toasts.map((toast) => {
+          const Icon = ICONS[toast.type];
+          return (
+            <div
+              key={toast.id}
+              className={`${styles.slot} ${toast.leaving ? styles.leaving : ''}`}
+            >
+              <div
                 className={`${styles.toast} ${styles[toast.type]}`}
                 role={toast.type === 'error' ? 'alert' : 'status'}
                 onClick={() => dismissToast(toast.id)}
               >
                 <Icon className={styles.icon} aria-hidden="true" />
                 <span className={styles.message}>{toast.message}</span>
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </ToastContext.Provider>
   );

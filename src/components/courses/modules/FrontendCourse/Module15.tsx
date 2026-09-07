@@ -110,7 +110,7 @@ if (error) {
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 15.4: CRUD Operations</h2>
-          <p className={styles.paragraph}>CRUD stands for **Create, Read, Update, Delete**. To modify data on a server, we specify headers and request bodies inside our fetch requests.</p>
+          <p className={styles.paragraph}>CRUD stands for <strong>Create, Read, Update, Delete</strong>. To modify data on a server, we specify headers and request bodies inside our fetch requests.</p>
           
           <div className={styles.codeLabel}>POST request (Create)</div>
           <CodeSnippet isRunnable={true} language="JavaScript" code={`fetch("https://api.example.com/items", {

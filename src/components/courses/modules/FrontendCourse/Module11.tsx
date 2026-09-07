@@ -121,7 +121,7 @@ const element = (
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 11.5: React Components</h2>
-          <p className={styles.paragraph}>Components are the building blocks of React applications. In modern React, we use **Functional Components** which are simply JavaScript functions that return JSX.</p>
+          <p className={styles.paragraph}>Components are the building blocks of React applications. In modern React, we use <strong>Functional Components</strong> which are simply JavaScript functions that return JSX.</p>
           
           <div className={styles.codeLabel}>Functional Component Definition</div>
           <CodeSnippet isRunnable={true} language="JavaScript" code={`import React from 'react';

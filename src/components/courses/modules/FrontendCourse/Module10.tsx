@@ -35,7 +35,7 @@ const Module10: React.FC<Props> = ({ page }) => {
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 10.1: Introduction to Git</h2>
-          <p className={styles.paragraph}><strong>Git</strong> is a free and open-source **Distributed Version Control System (VCS)** designed to track changes in source code files over time. It allows teams to collaborate, roll back to previous states, and manage different feature pipelines concurrently.</p>
+          <p className={styles.paragraph}><strong>Git</strong> is a free and open-source <strong>Distributed Version Control System (VCS)</strong> designed to track changes in source code files over time. It allows teams to collaborate, roll back to previous states, and manage different feature pipelines concurrently.</p>
           
           <h3 className={styles.subtitle}>Why Version Control Matters:</h3>
           <ul style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingLeft: '20px', fontSize: '13.5px', color: 'var(--text-secondary)' }}>

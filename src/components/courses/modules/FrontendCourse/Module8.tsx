@@ -48,7 +48,7 @@ const Module8: React.FC<Props> = ({ page }) => {
           <p className={styles.paragraph}>ECMAScript 2015 (ES6) introduced two block-scoped keywords: <code>let</code> and <code>const</code>, replacing the legacy function-scoped <code>var</code>.</p>
           
           <h3 className={styles.subtitle}>Reassignment vs Mutation</h3>
-          <p className={styles.paragraph}>A common misconception is that <code>const</code> makes variables immutable. In reality, it only prevents **reassignment** of the variable identifier. The properties of const objects and arrays can still be mutated.</p>
+          <p className={styles.paragraph}>A common misconception is that <code>const</code> makes variables immutable. In reality, it only prevents <strong>reassignment</strong> of the variable identifier. The properties of const objects and arrays can still be mutated.</p>
 
           <div className={styles.codeLabel}>Reassignment and Mutation sandbox</div>
           <CodeSnippet isRunnable={true} language="CSS" code={`const user = { name: "John" };

@@ -27,7 +27,7 @@ const Module14: React.FC<Props> = ({ page }) => {
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 14.1: Routing Basics</h2>
           <p className={styles.paragraph}>In standard websites, browser clicks trigger HTTP server requests, fetching entirely new HTML documents. This causes visible white screen flashes.</p>
-          <p className={styles.paragraph}>In a **Single Page Application (SPA)**, client-side routing intercepts browser transitions. It updates the layout view by swapping React components dynamically, resulting in smooth, instant transitions.</p>
+          <p className={styles.paragraph}>In a <strong>Single Page Application (SPA)</strong>, client-side routing intercepts browser transitions. It updates the layout view by swapping React components dynamically, resulting in smooth, instant transitions.</p>
         </div>
       );
 

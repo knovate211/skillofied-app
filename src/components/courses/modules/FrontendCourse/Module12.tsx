@@ -29,7 +29,7 @@ const Module12: React.FC<Props> = ({ page }) => {
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 12.1: State Introduction</h2>
-          <p className={styles.paragraph}>While **props** allow parents to pass data down, **state** is a component's private, local memory. State holds data that can change over time, and updates to state trigger component re-rendering.</p>
+          <p className={styles.paragraph}>While <strong>props</strong> allow parents to pass data down, <strong>state</strong> is a component's private, local memory. State holds data that can change over time, and updates to state trigger component re-rendering.</p>
           
           <h3 className={styles.subtitle}>Props vs State</h3>
           <table className={styles.table}>
@@ -109,7 +109,7 @@ function Counter() {
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 12.4: Forms in React</h2>
-          <p className={styles.paragraph}>In a **controlled component**, the form input element's value is controlled by React state. Every character typed triggers a state update via an <code>onChange</code> handler.</p>
+          <p className={styles.paragraph}>In a <strong>controlled component</strong>, the form input element's value is controlled by React state. Every character typed triggers a state update via an <code>onChange</code> handler.</p>
           
           <div className={styles.codeLabel}>Controlled Input structure</div>
           <CodeSnippet isRunnable={true} language="JavaScript" code={`function NameForm() {
