@@ -407,7 +407,59 @@ print(failed["error"], "->", failed["raw"][:23])`,
             { input: 'an empty list', output: '[]' },
           ],
         },
-        'Your team runs a Node platform and wants to add a document-summarisation feature. Write the recommendation you would give in two short paragraphs: where Python belongs in that architecture, where it does not, and what specifically you would put behind an interface of your own so the model provider can be changed later without a rewrite. Be concrete about the boundary — name what crosses it.',
+        {
+          kind: 'code',
+          prompt: 'A Node platform needs a document-summarisation feature, and the recommendation is to keep the model call behind an interface you own rather than scatter provider SDK calls through the codebase. Build that interface: a Summariser that validates its input, retries a flaky provider, and gives up cleanly — so swapping the provider later touches one class.',
+          language: 'python',
+          starterCode: `class FlakyProvider:
+    """Stands in for a real provider. Fails the first \`fail_times\` calls."""
+
+    def __init__(self, fail_times=0):
+        self.fail_times = fail_times
+        self.calls = 0
+
+    def complete(self, prompt):
+        self.calls += 1
+        if self.calls <= self.fail_times:
+            raise ConnectionError("upstream unavailable")
+        return "summary of: " + prompt
+
+
+class Summariser:
+    def __init__(self, provider, retries=2):
+        self.provider = provider
+        self.retries = retries
+
+    def summarise(self, text):
+        # TODO:
+        #   empty or whitespace-only text -> raise ValueError("text must not be empty")
+        #   otherwise call provider.complete with the trimmed text
+        #   retry a ConnectionError up to \`retries\` extra times, then re-raise
+        #   the last one
+        return ""
+
+
+ok = FlakyProvider()
+print(Summariser(ok).summarise("  quarterly report  "))
+
+flaky = FlakyProvider(fail_times=2)
+print(Summariser(flaky).summarise("quarterly report"))
+print("attempts:", flaky.calls)
+
+try:
+    Summariser(FlakyProvider()).summarise("   ")
+except ValueError as err:
+    print("ValueError:", err)
+
+broken = FlakyProvider(fail_times=9)
+try:
+    Summariser(broken, retries=1).summarise("quarterly report")
+except ConnectionError as err:
+    print("gave up after", broken.calls, "attempts:", err)`,
+          examples: [
+            { input: 'None', output: 'summary of: quarterly report\\nsummary of: quarterly report\\nattempts: 3\\nValueError: text must not be empty\\ngave up after 2 attempts: upstream unavailable', explanation: 'retries=2 means three attempts in total — the off-by-one that turns a retry budget into a thundering herd.' },
+          ],
+        },
       ],
     },
   },
@@ -613,7 +665,43 @@ print("eager model:   ", scores(tp=10, fp=40, fn=0))`,
             { input: 'a run that never diverges', output: "{'best_epoch': 3, 'diverged_at': None, 'overfitted': False}" },
           ],
         },
-        'A stakeholder asks you to build an ML classifier that routes incoming support tickets to one of four teams, and mentions that tickets already carry a mandatory "product area" dropdown field filled in by the customer. Write your response: what you would build instead and why, what evidence you would gather before agreeing that a model is needed, and — if it turns out one is needed — whether you would optimise for precision or recall and what that choice costs.',
+        {
+          kind: 'code',
+          prompt: 'A stakeholder wants incoming support tickets routed to one of four teams. Before reaching for a model, build the keyword baseline you have to beat — and measure it. Implement route() and print the accuracy, then print a MISROUTED line for every ticket the baseline gets wrong. Ties go to the alphabetically first team; no keyword hit at all means \'unrouted\'.',
+          language: 'python',
+          starterCode: `TICKETS = [
+    ("card declined at checkout", "billing"),
+    ("cannot reset my password", "account"),
+    ("app crashes on the payment screen", "engineering"),
+    ("refund not received", "billing"),
+    ("how do I export my data", "docs"),
+    ("login loop after update", "account"),
+]
+
+KEYWORDS = {
+    "billing": ["card", "refund", "invoice", "charge"],
+    "account": ["password", "login", "reset"],
+    "engineering": ["crash", "error", "bug"],
+    "docs": ["how do i", "export", "guide"],
+}
+
+
+def route(text):
+    # TODO: lowercase, count keyword hits per team, return the best team.
+    # Ties -> alphabetically first. No hits at all -> "unrouted".
+    return "unrouted"
+
+
+correct = sum(1 for text, gold in TICKETS if route(text) == gold)
+print(f"accuracy: {correct}/{len(TICKETS)}")
+for text, gold in TICKETS:
+    predicted = route(text)
+    if predicted != gold:
+        print(f"MISROUTED: {text!r} -> {predicted} (expected {gold})")`,
+          examples: [
+            { input: 'None', output: 'accuracy: 6/6', explanation: 'A baseline this strong is the number a model has to beat before it earns its place.' },
+          ],
+        },
       ],
     },
   },
@@ -902,7 +990,31 @@ print(f"\\n50,000 requests/day on 'large': {daily:,.0f} USD/day")`,
             { input: 'greedy_token(LOGITS)', output: 'yes' },
           ],
         },
-        'A colleague proposes removing your retrieval pipeline entirely: "the new model has a one-million-token window, so we can just put all 40,000 company documents in the prompt every time." Write the reply. Cover why this fails on cost, on latency, and on answer quality, and use the quadratic attention scaling from Lesson 3.3 to make the cost argument concrete. Then state what you would do instead.',
+        {
+          kind: 'code',
+          prompt: 'A colleague wants to delete the retrieval pipeline because the new model has a one-million-token context window. Work out whether the corpus even fits, then price both approaches per call. Implement plan() and cost() and print the four lines.',
+          language: 'python',
+          starterCode: `def plan(doc_tokens, window, reserve):
+    """Reserve is what you keep back for the system prompt and the answer."""
+    # TODO: return {"fits": bool, "usable": int, "overflow": int}
+    return {}
+
+
+def cost(tokens, price_per_million):
+    # TODO: round to 2 decimals
+    return 0.0
+
+
+for name, tokens in [("handbook", 80_000), ("corpus", 4_200_000)]:
+    p = plan(tokens, 1_000_000, 50_000)
+    print(f"{name}: fits={p['fits']} overflow={p['overflow']}")
+
+print("cost per call, full stuff:", cost(4_200_000, 3.0))
+print("cost per call, top-8 retrieval:", cost(8 * 800, 3.0))`,
+          examples: [
+            { input: 'None', output: 'handbook: fits=True overflow=0\\ncorpus: fits=False overflow=3250000\\ncost per call, full stuff: 12.6\\ncost per call, top-8 retrieval: 0.02', explanation: '630x the cost per call is the argument retrieval wins on, long before the window runs out.' },
+          ],
+        },
       ],
     },
   },
@@ -1200,7 +1312,45 @@ print("\\nthe prompt did not stop it — the allow-list did")`,
             { input: 'a fully valid response', output: "{'ok': True, 'payload': {'answer': '14 days', 'sources': [], 'confidence': 0.9}, 'problems': []}" },
           ],
         },
-        'You are reviewing a colleague\'s design for a support assistant. It retrieves knowledge-base articles, concatenates them into a single string with the user\'s question and the instructions, sends that as one user message, and gives the model a tool that can issue refunds up to £500. Write the review. Identify the specific injection risk, explain why "add \'ignore any instructions in the documents\' to the prompt" is not an adequate fix, and list the architectural changes you would require before approving it.',
+        {
+          kind: 'code',
+          prompt: 'A prompt template that silently renders a missing variable as a literal placeholder is how bad prompts reach production. Build the renderer that refuses: it must detect every {name} in the template, fail loudly when one is unfilled, and assemble the few-shot block.',
+          language: 'python',
+          starterCode: `import re
+
+TEMPLATE = "Classify the ticket into one of: {teams}.\\n{examples}Ticket: {ticket}\\nTeam:"
+
+
+def few_shot(pairs):
+    # TODO: "Ticket: <text>\\nTeam: <team>\\n" for each pair, concatenated
+    return ""
+
+
+def render(template, variables):
+    # TODO: find every {name} in the template.
+    # If any is missing from variables, raise KeyError("missing: a, b")
+    # with the names sorted. Otherwise return the formatted string.
+    return ""
+
+
+prompt = render(TEMPLATE, {
+    "teams": "billing, account",
+    "examples": few_shot([("refund late", "billing"), ("cannot log in", "account")]),
+    "ticket": "card declined",
+})
+
+print("lines:", len(prompt.splitlines()))
+print("shots:", prompt.count("Team: "))
+print("last line:", prompt.splitlines()[-1])
+
+try:
+    render(TEMPLATE, {"teams": "billing"})
+except KeyError as err:
+    print("error:", err.args[0])`,
+          examples: [
+            { input: 'None', output: 'lines: 7\\nshots: 2\\nlast line: Team:\\nerror: missing: examples, ticket', explanation: 'The final "Team:" has no trailing space, so it is not counted as a shot.' },
+          ],
+        },
       ],
     },
   },
@@ -1452,7 +1602,40 @@ print("\\n90% recall for a large speed gain is a tuning choice, not a defect")`,
             { input: 'DOC with max_chars=80', output: "# Refunds -> 'Refunds are issued within 14 days of rece'\n# Refunds -> 'Late claims are assessed individually by '\n# Appeals -> 'Appeals must be filed within 30 days.'", explanation: 'The Refunds section exceeds 80 characters, so it splits on the blank line — not mid-sentence.' },
           ],
         },
-        'Your team is building document search for a company with 40,000 documents across three departments, where staff may only see their own department\'s files. Write the retrieval design: what metadata you would store per chunk, exactly where the permission filter is applied and why, whether you would start with pgvector or a dedicated vector database and what specific limit would make you change your mind, and how you would measure whether the index is returning the right chunks at all.',
+        {
+          kind: 'code',
+          prompt: 'Vector search is cosine similarity plus a sort. Write both from scratch — no numpy — and prove the two properties that make cosine the right metric here: orthogonal vectors score 0, and a vector scaled by any positive factor scores 1 against the original.',
+          language: 'python',
+          starterCode: `import math
+
+DOCS = {
+    "refund policy": [0.9, 0.1, 0.0],
+    "password reset": [0.0, 0.9, 0.1],
+    "chargeback process": [0.8, 0.2, 0.1],
+    "api rate limits": [0.1, 0.0, 0.9],
+}
+
+
+def cosine(a, b):
+    # TODO: dot(a, b) / (norm(a) * norm(b)); return 0.0 if either norm is 0
+    return 0.0
+
+
+def top_k(query, docs, k):
+    # TODO: score every doc, round to 3 decimals, sort by score descending
+    # and by name ascending for ties, return the first k as (score, name)
+    return []
+
+
+for score, name in top_k([0.85, 0.15, 0.0], DOCS, 2):
+    print(f"{name}: {score}")
+
+print("orthogonal:", round(cosine([1, 0, 0], [0, 1, 0]), 3))
+print("same direction:", round(cosine([1, 2, 3], [2, 4, 6]), 3))`,
+          examples: [
+            { input: 'None', output: 'refund policy: 0.998\\nchargeback process: 0.99\\northogonal: 0.0\\nsame direction: 1.0', explanation: 'Cosine ignores magnitude — [1,2,3] and [2,4,6] point the same way, so they score 1.0.' },
+          ],
+        },
       ],
     },
   },
@@ -1748,7 +1931,34 @@ print(respond("anything at all?", []))`,
             { input: 'GOLDEN with k=2', output: "{'recall_at_k': 0.5, 'retrieval_failures': 2, 'generation_failures': 1, 'cases': [('refund window?', None), ('appeal deadline?', 'retrieval'), ('who approves?', 'generation'), ('carry-over cap?', 'retrieval')]}", explanation: 'c2 sits at position 3, so it drops out of the top 2.' },
           ],
         },
-        'A RAG assistant over an HR handbook is answering 70% of questions correctly, and the team wants to improve it. Write the investigation plan. State what you would measure first and why, how you would tell a retrieval problem from a generation problem, three specific changes you would try in priority order with your reasoning for that order, and what evidence would tell you each change actually worked rather than just felt better.',
+        {
+          kind: 'code',
+          prompt: 'Your RAG assistant answers 70% of questions correctly and the failures are all answers cut in half at a chunk boundary. Fix the chunker — add overlap — and then measure retrieval properly with recall@k, so the next change is judged on a number rather than a vibe.',
+          language: 'python',
+          starterCode: `def chunk(text, size, overlap):
+    # TODO: fixed-size windows stepping by (size - overlap).
+    # Raise ValueError("overlap must be smaller than size") if it is not —
+    # otherwise the loop never advances.
+    return []
+
+
+def recall_at_k(results, relevant, k):
+    # TODO: what fraction of the relevant docs appear in the top k?
+    # Round to 2 decimals.
+    return 0.0
+
+
+text = "abcdefghijklmnopqrst"
+chunks = chunk(text, 8, 3)
+print("chunks:", chunks)
+print("count:", len(chunks))
+
+print("recall@3:", recall_at_k(["d1", "d7", "d2", "d3"], ["d2", "d3"], 3))
+print("recall@4:", recall_at_k(["d1", "d7", "d2", "d3"], ["d2", "d3"], 4))`,
+          examples: [
+            { input: 'None', output: 'chunks: [\'abcdefgh\', \'fghijklm\', \'klmnopqr\', \'pqrst\']\\ncount: 4\\nrecall@3: 0.5\\nrecall@4: 1.0', explanation: 'The overlap is why \'fgh\' appears in two chunks — a sentence spanning the boundary survives.' },
+          ],
+        },
       ],
     },
   },
@@ -2081,7 +2291,35 @@ for line in audit:
             { input: 'customer_id missing', output: "(False, 'missing required argument: customer_id')" },
           ],
         },
-        'You are asked to build an agent that reads incoming customer emails, looks up the customer\'s order, and issues refunds under £50 automatically. Write the design review you would give before any code is written. Cover: which tools you would grant and which you would refuse, where the approval gate sits and what triggers it, how the indirect prompt injection risk from Module 4 applies given that the input is email written by strangers, and what you would log to make the system auditable afterwards.',
+        {
+          kind: 'code',
+          prompt: 'An agent that reads customer emails and calls tools needs two guards before it goes anywhere near production: an unknown tool must not crash the loop, and the loop must not run forever. Implement run_agent with both.',
+          language: 'python',
+          starterCode: `def search(query):
+    return f"results for {query}"
+
+
+def lookup(order_id):
+    return f"order {order_id} shipped"
+
+
+TOOLS = {"search": search, "lookup": lookup}
+
+
+def run_agent(steps, max_steps=3):
+    # TODO: walk the steps, calling the named tool with its argument.
+    # - past the step budget: append "halted: step budget exhausted" and stop
+    # - unknown tool: append "error: unknown tool <name>" and keep going
+    # Return the trace.
+    return []
+
+
+for line in run_agent([("lookup", "A-91"), ("nope", "x"), ("search", "refund policy"), ("search", "again")]):
+    print(line)`,
+          examples: [
+            { input: 'None', output: 'order A-91 shipped\\nerror: unknown tool nope\\nresults for refund policy\\nhalted: step budget exhausted', explanation: 'The bad step still consumes a step — that is what stops a confused agent looping on it.' },
+          ],
+        },
       ],
     },
   },
@@ -2318,7 +2556,24 @@ print(f"\\nover by {total - TARGET}ms — start at the top of that list, not the
             { input: 'text with no terminator at all', output: "['no terminator here']" },
           ],
         },
-        'A customer wants a voice assistant for warehouse staff who ask stock questions while wearing gloves in a noisy environment. Write the architecture proposal. Choose between a convert-to-text pipeline and a native multimodal model and justify it, lay out a latency budget across the stages with the numbers you would target, name the two failure modes you would expect this specific environment to cause, and say what you would log to detect them in production.',
+        {
+          kind: 'code',
+          prompt: 'Warehouse staff ask stock questions in gloves, in noise. Encode the choice between a cascade (transcribe, then LLM) and a native multimodal model as a function, so the decision is written down rather than argued. Word-level timings force a cascade; so does noise, but only when the latency budget can absorb the extra hop.',
+          language: 'python',
+          starterCode: `def choose_pipeline(latency_budget_ms, noisy, needs_word_timings):
+    # TODO: return "cascade" or "native-multimodal".
+    # - word-level timings are only available from a transcription step
+    # - noisy audio favours a dedicated ASR model, but the extra hop costs
+    #   latency, so only take it when the budget is 1500ms or more
+    return ""
+
+
+for case in [(800, True, False), (2000, True, False), (800, False, True), (600, False, False)]:
+    print(case, "->", choose_pipeline(*case))`,
+          examples: [
+            { input: 'None', output: '(800, True, False) -> native-multimodal\\n(2000, True, False) -> cascade\\n(800, False, True) -> cascade\\n(600, False, False) -> native-multimodal', explanation: 'The first case is the interesting one: too tight a budget to afford the better transcription.' },
+          ],
+        },
       ],
     },
   },
@@ -2558,7 +2813,33 @@ print("\\n+0.02 on target, -0.13 everywhere else, for weeks of work")`,
             { input: 'the same model at rank 64', output: "{'trainable': 67108864, 'percent_of_base': 0.959, 'megabytes': 134.2}", explanation: 'Rank is the main dial: 8x the rank, 8x the adapter.' },
           ],
         },
-        'A product manager has read that a competitor fine-tuned a model and wants you to fine-tune one on the company\'s 4,000 support articles so the assistant "knows our products". Write your response. Explain what fine-tuning on those articles would and would not achieve, what you would build instead, what evidence would change your mind, and — if you did eventually fine-tune — what baseline you would insist on measuring against before calling it a success.',
+        {
+          kind: 'code',
+          prompt: 'A PM wants to fine-tune on the company\\u2019s 4,000 support rows. Split and audit the set before spending anything: the same question appearing in both halves means your validation score is measuring memorisation, not learning.',
+          language: 'python',
+          starterCode: `def split(rows, val_fraction):
+    # TODO: the first (1 - val_fraction) share is train, the rest is val.
+    return [], []
+
+
+def audit(train, val, min_rows=1000):
+    # TODO: return {"train": n, "val": n, "leaked": sorted overlap,
+    #               "enough": train count >= min_rows}
+    return {}
+
+
+# 4,000 logged rows — but the same questions keep coming back.
+rows = [f"q{i % 900}" for i in range(4000)]
+train, val = split(rows, 0.2)
+report = audit(train, val)
+
+print(f"train={report['train']} val={report['val']} enough={report['enough']}")
+print("leaked questions:", len(report["leaked"]))
+print(f"unique questions: {len(set(rows))} of {len(rows)} rows")`,
+          examples: [
+            { input: 'None', output: 'train=3200 val=800 enough=True\\nleaked questions: 800\\nunique questions: 900 of 4000 rows', explanation: '4,000 rows, 900 real examples, and every validation question already seen in training.' },
+          ],
+        },
       ],
     },
   },
@@ -2817,7 +3098,36 @@ print(f"\\n{pending_batch:,} queued batch items cannot touch the {interactive} i
             { input: 'the 4 REQUESTS at 3.00/15.00 per million', output: "0.0996\n{'acme': {'usd': 0.0921, 'share': 0.92}, 'globex': {'usd': 0.0075, 'share': 0.08}}\n{'summary': {'usd': 0.084, 'share': 0.84}, 'chat': {'usd': 0.0156, 'share': 0.16}}", explanation: 'One tenant and one feature account for the overwhelming majority.' },
           ],
         },
-        'Your RAG assistant works well in testing and is about to serve 200 concurrent users, plus a nightly batch job that re-summarises 50,000 documents. Write the production readiness plan. Cover how you would keep the batch job from starving interactive traffic, what your retry and timeout policy would be and which failures it excludes, what you would do when the provider is fully unavailable, and the four things you would put on a dashboard before launch.',
+        {
+          kind: 'code',
+          prompt: 'The assistant is about to serve 200 concurrent users. Two numbers decide whether it survives: what you do when the request rate spikes, and what the bill is at steady state. Implement the token bucket and the cost model.',
+          language: 'python',
+          starterCode: `class TokenBucket:
+    def __init__(self, capacity, refill_per_sec):
+        self.capacity = capacity
+        self.tokens = capacity
+        self.refill = refill_per_sec
+
+    def allow(self, elapsed_sec, cost=1):
+        # TODO: refill by elapsed * refill (never above capacity),
+        # then spend \`cost\` and return True if there was enough.
+        return False
+
+
+def monthly_cost(rps, tokens_per_request, price_per_million):
+    # TODO: 30 days of requests at rps, rounded to 2 decimals
+    return 0.0
+
+
+bucket = TokenBucket(3, 1)
+print([bucket.allow(0) for _ in range(5)])
+print(bucket.allow(2))
+
+print("monthly:", monthly_cost(5, 1200, 3.0))`,
+          examples: [
+            { input: 'None', output: '[True, True, True, False, False]\\nTrue\\nmonthly: 46656.0', explanation: 'The burst of 3 is free, the next two are refused, and two seconds later there is budget again.' },
+          ],
+        },
       ],
     },
   },
@@ -3106,7 +3416,28 @@ print(f"\\n{sum(1 for v in LATENCIES if v > 3000)} of {len(LATENCIES)} requests 
             { input: 'a single value', output: "{'average': 100, 'p50': 100, 'p95': 100, 'p99': 100, 'max': 100, 'slow_count': 0}" },
           ],
         },
-        'Two weeks after launch, a customer reports that your RAG assistant "has got worse", but your dashboard shows no errors and normal latency. Nothing was deployed in that window except a prompt change and a batch of 3,000 new documents. Write the investigation: what you would look at first and why, which specific metrics would distinguish a retrieval regression from a generation regression, what the prompt-version tag on your traces lets you do here, and what you would add to monitoring afterwards so the next occurrence is caught before a customer notices.',
+        {
+          kind: 'code',
+          prompt: 'Two weeks after launch the answers are quietly getting worse and nobody has noticed. Write the detector: compare each day against the rolling baseline before it, and alert when the drop exceeds the threshold. A single bad day should fire; so should the sustained decline that follows.',
+          language: 'python',
+          starterCode: `def rolling_alert(values, window, threshold):
+    # TODO: for each index from \`window\` onwards, average the previous
+    # \`window\` values and alert when (baseline - current) > threshold.
+    # Return (index, rounded baseline, current) tuples.
+    return []
+
+
+# Daily answer-quality score since launch.
+scores = [0.82, 0.81, 0.83, 0.80, 0.79, 0.55, 0.54]
+
+for index, baseline, current in rolling_alert(scores, 3, 0.15):
+    print(f"alert at index {index}: baseline {baseline} -> {current}")
+
+print("alerts:", len(rolling_alert(scores, 3, 0.15)))`,
+          examples: [
+            { input: 'None', output: 'alert at index 5: baseline 0.807 -> 0.55\\nalert at index 6: baseline 0.713 -> 0.54\\nalerts: 2', explanation: 'The baseline drags down as the bad days enter the window — which is why a rolling window eventually stops alerting.' },
+          ],
+        },
       ],
     },
   },
@@ -3377,7 +3708,26 @@ print(f"  p95 latency {MEASURED['p95_latency_ms']}ms, {MEASURED['cost_per_1000_u
             { input: 'user in finance', output: "{'visible': ['d1', 'd2', 'd3'], 'unguarded': ['d4']}" },
           ],
         },
-        'Write a one-page scoping response to this customer request: "We have 10 million documents across SharePoint and a network drive, and we want employees to search them using AI." State the clarifying questions you would ask first, the smallest system you would ship to prove value, the three risks you would flag in the first meeting, and how you would measure success. Answer as if writing to the customer, not to a colleague.',
+        {
+          kind: 'code',
+          prompt: 'A customer says: 10 million documents across SharePoint and a network drive. Before you agree to anything, put numbers on it. Implement scope() and print what the index actually costs to build and to hold.',
+          language: 'python',
+          starterCode: `def scope(doc_count, avg_tokens, chunk_tokens, embed_price_per_million, dims):
+    # TODO:
+    #   chunks per doc = avg_tokens / chunk_tokens, rounded UP
+    #   embed_cost_usd = total chunk tokens priced per million, 2 decimals
+    #   index_gb       = chunks * dims * 4 bytes per float, in GB, 2 decimals
+    return {}
+
+
+report = scope(10_000_000, 1200, 400, 0.02, 1536)
+print("chunks:", report["chunks"])
+print("embedding cost usd:", report["embed_cost_usd"])
+print("index size gb:", report["index_gb"])`,
+          examples: [
+            { input: 'None', output: 'chunks: 30000000\\nembedding cost usd: 240.0\\nindex size gb: 184.32', explanation: '184 GB of vectors is an infrastructure conversation, not a laptop demo — which is the point of scoping first.' },
+          ],
+        },
       ],
     },
   },

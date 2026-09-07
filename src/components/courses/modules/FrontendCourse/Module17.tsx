@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -187,14 +188,9 @@ const endpoint = import.meta.env.VITE_API_URL;`} />
     case 8:
       return (
         <ModuleAssignment
+          moduleId="frontend-m17"
           title="Module 17 Assignment"
-          questions={[
-            'Contrast local development servers running logic with compiled production bundles.',
-            'Why are environment variable prefixes (e.g. VITE_) required in static host files?',
-            'Outline Vercel Git integration features and why it speeds up deployments pipelines.',
-            'How is a CNAME record used in registrar panels?',
-            'Detail 3 basic on-page SEO components.',
-          ]}
+          questions={frontendAssignments.m17}
         />
       );
 

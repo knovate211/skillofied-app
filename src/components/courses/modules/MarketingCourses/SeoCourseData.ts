@@ -538,47 +538,531 @@ export const seoContent: MarketingCourseContent = {
     'seo-m1-assignment': {
       title: 'Indexing Audit',
       questions: [
-        'Run a site: search for your chosen website. Roughly how many pages are indexed, and does that number look right compared with how many pages you believe exist?',
-        'Open Google Search Console and find one page that is excluded from the index. Record the exact reason given, and explain in your own words whether it is a crawling problem or an indexing problem.',
-        'Fetch your site\'s robots.txt. List anything it blocks and state whether each block is deliberate and correct.',
-        'Does the site have an XML sitemap? Check three URLs from it and confirm each returns 200, is canonical, and is indexable. Report anything that fails.',
+        {
+          kind: 'code',
+          prompt: 'Write the robots.txt for the site. Block the two areas crawlers have no business in, carve out the one subfolder inside them that should still be crawled, point at the sitemap, and add a comment on each rule. Remember what Disallow does not do — it does not remove a page from the index.',
+          language: 'shell',
+          runnable: false,
+          starterCode: `# robots.txt for https://example.com
+# One rule per line. Disallow controls crawling, not indexing —
+# a blocked URL can still rank from external links alone.
+
+User-agent: *
+# TODO: block the admin area
+# TODO: block internal search results (infinite crawl space)
+# TODO: allow the one public folder that lives under the admin path
+# TODO: point at the sitemap
+
+# TODO: in a comment — which directive would you need to actually
+# remove a page from the index, and why robots.txt cannot do it?`,
+        },
+        {
+          kind: 'code',
+          prompt: 'Write the sitemap for the four public URLs. Every entry needs a loc, a lastmod and a priority you can justify — and only canonical, indexable, 200-returning URLs belong here. Add a comment listing three kinds of URL that must never appear in a sitemap.',
+          language: 'xml',
+          runnable: false,
+          starterCode: `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://example.com/</loc>
+    <lastmod>2026-09-07</lastmod>
+    <priority>1.0</priority>
+  </url>
+  <!-- TODO: /courses, /courses/seo, /blog/search-intent -->
+</urlset>
+
+<!--
+  TODO: three kinds of URL that must never be listed here, and why:
+  1.
+  2.
+  3.
+-->`,
+        },
+        {
+          kind: 'code',
+          prompt: 'Implement the matcher that decides whether a URL is crawlable. Parse the robots.txt, keep only the rules under the * agent, and apply the real precedence: the longest matching path wins, and Allow beats Disallow on a tie.',
+          language: 'javascript',
+          starterCode: `const ROBOTS = \`User-agent: *
+Disallow: /admin/
+Disallow: /search
+Allow: /admin/public/
+Sitemap: https://example.com/sitemap.xml\`;
+
+function parseRobots(text) {
+  // TODO: return { rules: [{ allow, path }], sitemap }
+  // Only collect Allow/Disallow while the active User-agent is '*'.
+}
+
+function isAllowed(rules, url) {
+  // TODO: longest matching path wins; Allow wins a tie; no match means allowed.
+}
+
+const { rules, sitemap } = parseRobots(ROBOTS);
+for (const url of ['/', '/admin/settings', '/admin/public/faq', '/search?q=shoes']) {
+  console.log(url + ' -> ' + (isAllowed(rules, url) ? 'allowed' : 'blocked'));
+}
+console.log('sitemap: ' + sitemap);`,
+          examples: [
+            { input: 'None', output: '/ -> allowed\\n/admin/settings -> blocked\\n/admin/public/faq -> allowed\\n/search?q=shoes -> blocked\\nsitemap: https://example.com/sitemap.xml', explanation: 'The Allow is longer than the Disallow it sits inside, which is the only reason /admin/public/ survives.' },
+          ],
+        },
+        {
+          kind: 'code',
+          prompt: 'This is the index coverage report Search Console gives you, built by hand. Report why each URL is excluded, checking the reasons in the order that actually determines the outcome — a 404 is not a noindex problem.',
+          language: 'javascript',
+          starterCode: `const PAGES = [
+  { url: '/',       status: 200, canonical: '/',       robots: 'index,follow' },
+  { url: '/blog/a', status: 200, canonical: '/blog/a', robots: 'noindex' },
+  { url: '/old',    status: 301, canonical: '/new',    robots: 'index' },
+  { url: '/dup',    status: 200, canonical: '/',       robots: 'index' },
+  { url: '/gone',   status: 404, canonical: '/gone',   robots: 'index' },
+];
+
+function audit(page) {
+  // TODO: return 'indexable', or the first applicable exclusion:
+  //   'excluded: status <code>'
+  //   'excluded: noindex'
+  //   'excluded: canonical points to <url>'
+}
+
+let indexable = 0;
+for (const page of PAGES) {
+  const result = audit(page);
+  if (result === 'indexable') indexable += 1;
+  console.log(page.url + ' ' + result);
+}
+console.log('indexable: ' + indexable + ' of ' + PAGES.length);`,
+          examples: [
+            { input: 'None', output: '/ indexable\\n/blog/a excluded: noindex\\n/old excluded: status 301\\n/dup excluded: canonical points to /\\n/gone excluded: status 404\\nindexable: 1 of 5', explanation: 'Only one of five pages is actually eligible to rank — that gap is the finding.' },
+          ],
+        },
       ],
     },
     'seo-m2-assignment': {
       title: 'Keyword Research & Intent Mapping',
       questions: [
-        'Choose one page on your site. Search the keyword you believe it targets and describe the format of the top five results. Does your page match that format?',
-        'Build a list of ten candidate keywords. For each, record estimated volume, a difficulty estimate, the intent type, and a one-line note on business value.',
-        'Group your ten keywords into page targets. Which share intent and therefore belong on the same page?',
-        'Identify one competitor gap keyword you could realistically rank for within six months, and justify why it is winnable by describing what currently ranks.',
+        {
+          kind: 'code',
+          prompt: 'Intent decides the page format, so it has to be decided first. Write the classifier, and get the precedence right: a branded query is navigational even when it also contains a commercial word, and "price" outranks "best".',
+          language: 'javascript',
+          starterCode: `const BRANDS = ['skillofied'];
+
+function classifyIntent(query) {
+  // TODO: 'navigational' | 'transactional' | 'commercial' | 'informational'
+  //   navigational  — contains a brand name
+  //   transactional — buy, price, pricing, discount, near me, coupon
+  //   commercial    — best, top, vs, review, reviews, alternative
+  //   informational — everything else
+  // Check them in that order.
+}
+
+for (const q of [
+  'how to learn seo',
+  'best seo course',
+  'buy seo course',
+  'skillofied login',
+  'seo course price',
+  'seo vs sem',
+]) {
+  console.log(q + ' -> ' + classifyIntent(q));
+}`,
+          examples: [
+            { input: 'None', output: 'how to learn seo -> informational\\nbest seo course -> commercial\\nbuy seo course -> transactional\\nskillofied login -> navigational\\nseo course price -> transactional\\nseo vs sem -> commercial' },
+          ],
+        },
+        {
+          kind: 'code',
+          prompt: 'Volume alone picks the wrong keyword every time. Score each candidate by volume weighted for intent and divided by difficulty, then rank. Notice which keyword wins and whether you would actually have chosen it.',
+          language: 'javascript',
+          starterCode: `const INTENT_WEIGHT = {
+  transactional: 1.0,
+  commercial: 0.8,
+  informational: 0.4,
+  navigational: 0.1,
+};
+
+const KEYWORDS = [
+  { kw: 'seo course price', volume: 900,  difficulty: 18, intent: 'transactional' },
+  { kw: 'best seo course',  volume: 2400, difficulty: 46, intent: 'commercial' },
+  { kw: 'how to learn seo', volume: 8100, difficulty: 64, intent: 'informational' },
+  { kw: 'skillofied login', volume: 300,  difficulty: 4,  intent: 'navigational' },
+];
+
+// TODO: score = round(volume * weight / difficulty), sorted by score
+// descending, then keyword ascending. Print '<keyword>: <score>'.`,
+          examples: [
+            { input: 'None', output: 'how to learn seo: 51\\nseo course price: 50\\nbest seo course: 42\\nskillofied login: 8', explanation: 'The two leaders are one point apart — which is exactly when the weighting assumptions deserve arguing about.' },
+          ],
+        },
+        {
+          kind: 'code',
+          prompt: 'Two keywords with the same topic and the same intent are one page, not two — splitting them makes the pages compete with each other. Group the list into page targets and report how many pages you actually need.',
+          language: 'javascript',
+          starterCode: `const KEYWORDS = [
+  { kw: 'seo course price', topic: 'seo course', intent: 'transactional' },
+  { kw: 'seo course cost',  topic: 'seo course', intent: 'transactional' },
+  { kw: 'best seo course',  topic: 'seo course', intent: 'commercial' },
+  { kw: 'how to learn seo', topic: 'learn seo',  intent: 'informational' },
+  { kw: 'learn seo free',   topic: 'learn seo',  intent: 'informational' },
+];
+
+// TODO: group on topic + intent. Print 'pages: <n>', then one line per group,
+// sorted by 'topic|intent', formatted:
+//   <topic> (<intent>) <- kw, kw`,
+          examples: [
+            { input: 'None', output: 'pages: 3\\nlearn seo (informational) <- how to learn seo, learn seo free\\nseo course (commercial) <- best seo course\\nseo course (transactional) <- seo course price, seo course cost', explanation: 'Same topic, different intent, different page — one sells and one explains.' },
+          ],
+        },
+        {
+          kind: 'code',
+          prompt: 'Write the keyword map as the artifact the rest of the course builds on: one entry per target page, with its URL, primary keyword, secondary keywords, intent and the page format the SERP demands. This file is the deliverable, so it has to be complete enough for someone else to write the pages from.',
+          language: 'json',
+          runnable: false,
+          starterCode: `{
+  "site": "https://example.com",
+  "pages": [
+    {
+      "url": "/courses/seo",
+      "primary": "seo course price",
+      "secondary": ["seo course cost"],
+      "intent": "transactional",
+      "format": "product page with pricing above the fold",
+      "note": "TODO: why this format — what do the top five results look like?"
+    }
+  ]
+}
+
+// TODO: add the remaining target pages from your clustering, including at
+// least one informational page and one commercial-comparison page.`,
+        },
       ],
     },
     'seo-m3-assignment': {
       title: 'On-Page Optimisation Pass',
       questions: [
-        'Rewrite the title tag and meta description for one page. Give the before and after, and explain what each change is intended to achieve.',
-        'Map the current heading hierarchy of that page. Is there exactly one H1? Are any levels skipped? Provide a corrected structure.',
-        'Audit every image on the page: report filename, alt text, format and whether width and height are set. Fix the three worst offenders.',
-        'Add three internal links to this page from other pages on the site. State the source page, the anchor text, and why that anchor is appropriate.',
+        {
+          kind: 'code',
+          prompt: 'Write the on-page checker. Title 50-60 characters, description 50-160, exactly one H1, and the target keyword present in the title — report every failure at once rather than stopping at the first.',
+          language: 'javascript',
+          starterCode: `function auditOnPage({ title = '', description = '', h1s = [], target = '' }) {
+  // TODO: return an array of issue strings, in this order:
+  //   'title too short' / 'title too long'
+  //   'title missing target keyword'
+  //   'description too short' / 'description too long'
+  //   'expected exactly one h1, found <n>'
+}
+
+const good = {
+  title: 'SEO Fundamentals Course: Rank Pages That Actually Convert',
+  description: 'A practical SEO course covering crawling, keyword intent, on-page work and link building, with a full audit as the final deliverable.',
+  h1s: ['SEO Fundamentals'],
+  target: 'seo',
+};
+const bad = { title: 'Home', description: 'Welcome.', h1s: ['Home', 'Courses'], target: 'seo course' };
+
+console.log(JSON.stringify(auditOnPage(good)));
+console.log(JSON.stringify(auditOnPage(bad)));`,
+          examples: [
+            { input: 'None', output: '[]\\n["title too short","title missing target keyword","description too short","expected exactly one h1, found 2"]', explanation: 'The passing title is 57 characters and the description 133 — count before assuming.' },
+          ],
+        },
+        {
+          kind: 'code',
+          prompt: 'This page has two H1s, skips from H2 to H4, and uses a heading purely to make text big. Rewrite the outline so it reads as a document structure: exactly one H1, no skipped levels, and no heading used for styling. Add a comment beside each change saying which rule it fixes.',
+          language: 'html',
+          runnable: false,
+          starterCode: `<h1>Skillofied</h1>
+<h1>SEO Fundamentals Course</h1>
+
+<h2>What you will learn</h2>
+<h4>Crawling and indexing</h4>
+<h4>Keyword research</h4>
+
+<h3>Enrol today</h3>
+
+<h2>FAQ</h2>
+<h5>How long is the course?</h5>
+
+<!-- TODO: rewrite the outline above.
+     One H1. No skipped levels. Nothing that is only a heading because
+     it should look big — use CSS for that. -->`,
+        },
+        {
+          kind: 'code',
+          prompt: 'Audit the images the way a page-speed report does. Flag every problem on every image, not just the first, and report how many are clean.',
+          language: 'javascript',
+          starterCode: `const IMAGES = [
+  { src: '/hero.webp',    alt: 'Students working through an SEO audit', width: 1200, height: 630 },
+  { src: '/IMG_2049.JPG', alt: 'IMG_2049.JPG',                          width: 4032, height: 3024 },
+  { src: '/logo.png',     alt: '',                                      width: null, height: null },
+  { src: '/chart.svg',    alt: 'Traffic up 40% after the on-page pass',  width: 800,  height: 400 },
+];
+
+function auditImage(image) {
+  // TODO: collect problems in this order:
+  //   'legacy format'                        — not webp, avif or svg
+  //   'missing alt'                          — empty alt
+  //   'alt repeats the filename'             — alt equals the file name
+  //   'no dimensions (causes layout shift)'  — width or height missing
+  //   'oversized'                            — wider than 2000px
+}
+
+let clean = 0;
+for (const image of IMAGES) {
+  const problems = auditImage(image);
+  if (problems.length === 0) clean += 1;
+  console.log(image.src + ': ' + (problems.length ? problems.join('; ') : 'ok'));
+}
+console.log('clean: ' + clean + ' of ' + IMAGES.length);`,
+          examples: [
+            { input: 'None', output: '/hero.webp: ok\\n/IMG_2049.JPG: legacy format; alt repeats the filename; oversized\\n/logo.png: legacy format; missing alt; no dimensions (causes layout shift)\\n/chart.svg: ok\\nclean: 2 of 4', explanation: 'An alt that repeats the filename is worse than none — it reads the filename aloud.' },
+          ],
+        },
+        {
+          kind: 'code',
+          prompt: 'Internal links are the only ranking signal you fully control. Count inbound links per page and find the orphans — pages nothing links to, which crawlers reach only from the sitemap, if at all.',
+          language: 'javascript',
+          starterCode: `const PAGES = ['/', '/courses', '/courses/seo', '/blog/intent', '/blog/crawl'];
+
+const LINKS = [
+  ['/', '/courses'],
+  ['/', '/blog/intent'],
+  ['/courses', '/courses/seo'],
+  ['/blog/intent', '/courses/seo'],
+  ['/blog/crawl', '/'],
+];
+
+// TODO: print '<page>: <n> inbound' for every page in PAGES order,
+// then 'orphans: <comma list>' — pages with zero inbound links,
+// excluding the homepage. Print 'orphans: none' when there are none.`,
+          examples: [
+            { input: 'None', output: '/: 1 inbound\\n/courses: 1 inbound\\n/courses/seo: 2 inbound\\n/blog/intent: 1 inbound\\n/blog/crawl: 0 inbound\\norphans: /blog/crawl', explanation: '/blog/crawl links out but nothing links in — it is invisible to link-based discovery.' },
+          ],
+        },
       ],
     },
     'seo-m4-assignment': {
       title: 'Technical Audit',
       questions: [
-        'Run PageSpeed Insights on one page. Record LCP, INP and CLS from field data if available, and identify the single largest contributor to the worst metric.',
-        'Propose one fix for each failing Core Web Vital, and state whether the fix belongs on this page or on the template it uses.',
-        'Add structured data appropriate to the page type and validate it with the Rich Results Test. Paste the JSON-LD and the validation outcome.',
-        'Find one case on the site where a canonical tag, a redirect or a noindex is used. Is it the correct tool for the situation? If not, say what should be used instead and why.',
+        {
+          kind: 'code',
+          prompt: 'Score both pages against the Core Web Vitals thresholds — LCP 2500/4000ms, INP 200/500ms, CLS 0.1/0.25 — and name the metrics that are outright poor, because those are the ones that cost you.',
+          language: 'javascript',
+          starterCode: `const THRESHOLDS = {
+  lcp: [2500, 4000],
+  inp: [200, 500],
+  cls: [0.1, 0.25],
+};
+
+const PAGES = [
+  { url: '/',        lcp: 2100, inp: 150, cls: 0.05 },
+  { url: '/courses', lcp: 3800, inp: 240, cls: 0.31 },
+];
+
+function rate(metric, value) {
+  // TODO: 'good' at or below the first threshold, 'needs improvement' at or
+  // below the second, otherwise 'poor'
+}
+
+// TODO: for each page print
+//   <url>: lcp=<rating> inp=<rating> cls=<rating> | poor: <metrics or 'none'>`,
+          examples: [
+            { input: 'None', output: '/: lcp=good inp=good cls=good | poor: none\\n/courses: lcp=needs improvement inp=needs improvement cls=poor | poor: cls', explanation: 'CLS is the only poor metric, so it is the one to fix first — and it is almost always an image without dimensions.' },
+          ],
+        },
+        {
+          kind: 'code',
+          prompt: 'Write the JSON-LD for the course page. It needs the right @type, the provider, the offer with its currency, and an aggregateRating — and every claim in it must also be visible on the page itself, because structured data that contradicts the page is a manual action waiting to happen.',
+          language: 'json',
+          runnable: false,
+          starterCode: `{
+  "@context": "https://schema.org",
+  "@type": "Course",
+  "name": "SEO Fundamentals",
+  "description": "TODO"
+}
+
+// TODO: add provider (an Organization with a name and url), an offers object
+// (price, priceCurrency, availability, url), and hasCourseInstance with the
+// delivery mode. Then, in a comment: which of these values must also appear
+// as visible text on the page, and what happens if one does not?`,
+        },
+        {
+          kind: 'code',
+          prompt: 'Canonical, redirect and noindex solve three different problems and are constantly used for each other\\u2019s. Encode the decision so the rule is written down rather than argued each time.',
+          language: 'javascript',
+          starterCode: `function decide(page) {
+  // TODO: return one of
+  //   '301 redirect'          — the URL has moved for good
+  //   'canonical to <url>'    — a real duplicate that must stay reachable
+  //   'noindex'               — thin or private, should not be in the index
+  //   'leave as is'           — nothing wrong with it
+  // Check them in that order.
+}
+
+const CASES = [
+  { name: 'printer-friendly copy',  duplicateOf: '/article' },
+  { name: 'old url after rename',   movedPermanently: true },
+  { name: 'internal search results', thinOrPrivate: true },
+  { name: 'the canonical article' },
+];
+
+for (const page of CASES) {
+  console.log(page.name + ' -> ' + decide(page));
+}`,
+          examples: [
+            { input: 'None', output: 'printer-friendly copy -> canonical to /article\\nold url after rename -> 301 redirect\\ninternal search results -> noindex\\nthe canonical article -> leave as is', explanation: 'A canonical is a hint; a 301 is an instruction. Using the hint for a move is why old URLs linger.' },
+          ],
+        },
+        {
+          kind: 'code',
+          prompt: 'Redirect chains leak crawl budget and link equity, and redirect loops take the page down entirely. Resolve each start URL, classify it, and report the full hop path.',
+          language: 'javascript',
+          starterCode: `const REDIRECTS = {
+  '/a': '/b',
+  '/b': '/c',
+  '/c': '/d',
+  '/loop1': '/loop2',
+  '/loop2': '/loop1',
+};
+
+function resolve(start) {
+  // TODO: follow the redirects, returning { status, hops, chain }
+  //   'loop'  — a URL repeats
+  //   'chain' — more than one hop
+  //   'ok'    — one hop or none
+}
+
+for (const start of ['/a', '/c', '/loop1']) {
+  const result = resolve(start);
+  console.log(start + ' -> ' + result.status + ' (' + result.hops + ' hops): ' + result.chain.join(' > '));
+}`,
+          examples: [
+            { input: 'None', output: '/a -> chain (3 hops): /a > /b > /c > /d\\n/c -> ok (1 hops): /c > /d\\n/loop1 -> loop (2 hops): /loop1 > /loop2 > /loop1', explanation: 'Point /a straight at /d and the chain collapses to a single hop.' },
+          ],
+        },
       ],
     },
     'seo-m5-assignment': {
       title: 'Backlink Profile & Outreach Plan',
       questions: [
-        'Export the backlink data for your site from Google Search Console. Report the number of referring domains and your five most-linked pages.',
-        'Analyse the anchor text distribution. What proportion is branded, generic and exact-match commercial? Does the profile look natural?',
-        'Identify one genuinely linkable asset you could create, and explain who would have a reason to cite it.',
-        'Write one outreach email for a specific real prospect. It must reference something specific about their site and make the ask once.',
-        'Would you recommend using the disavow tool for this site? Justify your answer against the criteria from the lesson.',
+        {
+          kind: 'code',
+          prompt: 'Referring domains matter far more than raw link counts — fifty links from one site is one endorsement. Aggregate the export and report both numbers, plus the pages actually earning the links.',
+          language: 'javascript',
+          starterCode: `const LINKS = [
+  { from: 'https://blog.example.com/a', to: '/courses/seo' },
+  { from: 'https://blog.example.com/b', to: '/courses/seo' },
+  { from: 'https://news.site.org/x',    to: '/' },
+  { from: 'https://forum.dev.io/t/1',   to: '/courses/seo' },
+  { from: 'https://news.site.org/y',    to: '/blog/intent' },
+];
+
+// TODO: print
+//   'referring domains: <unique hostnames>'
+//   'total links: <n>'
+// then one '<page>: <n>' line per linked page, most-linked first,
+// ties broken alphabetically.`,
+          examples: [
+            { input: 'None', output: 'referring domains: 3\\ntotal links: 5\\n/courses/seo: 3\\n/: 1\\n/blog/intent: 1', explanation: 'Five links, three domains — the honest number is three.' },
+          ],
+        },
+        {
+          kind: 'code',
+          prompt: 'An anchor profile that is mostly exact-match commercial text is the signature of a link scheme. Classify the anchors and judge the distribution against the 30% rule.',
+          language: 'javascript',
+          starterCode: `const ANCHORS = [
+  'Skillofied', 'skillofied.com', 'click here', 'read more',
+  'best seo course', 'seo course online', 'Skillofied', 'https://skillofied.com',
+];
+
+const BRANDS = ['skillofied'];
+const GENERIC = ['click here', 'read more', 'here', 'this page', 'learn more'];
+
+function classify(anchor) {
+  // TODO: 'branded' (contains a brand), 'generic' (exactly a generic phrase),
+  // otherwise 'exact-match'. Check in that order.
+}
+
+// TODO: print '<kind>: <count> (<percent>%)' for branded, generic and
+// exact-match in that order, rounding the percentage.
+// Then print 'natural: <true|false>' — natural when exact-match is 30% or less.`,
+          examples: [
+            { input: 'None', output: 'branded: 4 (50%)\\ngeneric: 2 (25%)\\nexact-match: 2 (25%)\\nnatural: true', explanation: 'A naked URL counts as branded — it carries the brand and nothing commercial.' },
+          ],
+        },
+        {
+          kind: 'code',
+          prompt: 'Write one outreach email to a specific real prospect. It must name something particular about their page, say in one line why your asset is worth their reader\\u2019s time, make the ask exactly once, and be short enough to read on a phone. No merge-field flattery.',
+          language: 'markdown',
+          runnable: false,
+          starterCode: `**To:** editor@<their site>
+**Subject:** TODO — specific, not "Quick question"
+
+TODO: one line proving you read the specific page you are writing about.
+
+TODO: one line on what you have and why their reader benefits. Link it.
+
+TODO: the ask, once. Then stop.
+
+—
+TODO: your name and one line of who you are.
+
+<!--
+  Check before sending:
+  - Would you still send this if the link had to be nofollow?
+  - Is there anything here you could not say to their face?
+-->`,
+        },
+        {
+          kind: 'code',
+          prompt: 'Most sites should never touch the disavow tool. Encode when it is warranted: a documented manual action, and only for links that are paid or genuinely toxic. Then show what the same list produces with no manual action.',
+          language: 'javascript',
+          starterCode: `const LINKS = [
+  { domain: 'pbn-links.biz',        spamScore: 92, paid: true },
+  { domain: 'guest-post-farm.net',  spamScore: 71, paid: true },
+  { domain: 'realblog.dev',         spamScore: 8,  paid: false },
+  { domain: 'scraper-mirror.xyz',   spamScore: 88, paid: false },
+];
+
+function shouldDisavow(link, hasManualAction) {
+  // TODO: only under a manual action, and only when the link is paid
+  // or scores 80 or above.
+}
+
+console.log('under a manual action:');
+// TODO: print 'domain:<domain>' for each link to disavow
+
+// TODO: print 'without a manual action: <n> entries'
+console.log('without a manual action: 0 entries');`,
+          examples: [
+            { input: 'None', output: 'under a manual action:\\ndomain:pbn-links.biz\\ndomain:guest-post-farm.net\\ndomain:scraper-mirror.xyz\\nwithout a manual action: 0 entries', explanation: 'Zero without a manual action is the correct answer for almost every site that asks.' },
+          ],
+        },
+        {
+          kind: 'code',
+          prompt: 'Specify the linkable asset you would actually build. Name the audience who would cite it, the specific claim it lets them make, the data behind it, and how you would know within 90 days whether it worked. "A blog post" is not an asset.',
+          language: 'markdown',
+          runnable: false,
+          starterCode: `# Linkable asset brief
+
+## What it is
+TODO: one sentence. Be specific about the format — dataset, calculator, benchmark, original survey.
+
+## Who cites it, and in what sentence
+TODO: name the kind of page that would link to this, and write the sentence
+they would write around the link.
+
+## Where the data comes from
+TODO: your own data, a survey you run, or a public dataset you process.
+If you cannot answer this, it is not a linkable asset.
+
+## Why it does not exist already
+TODO:
+
+## Success test at 90 days
+TODO: a number — referring domains, or citations from a named tier of site.`,
+        },
       ],
     },
   },

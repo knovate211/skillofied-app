@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -334,14 +335,9 @@ const Module4: React.FC<Props> = ({ page }) => {
     case 10:
       return (
         <ModuleAssignment
+          moduleId="frontend-m4"
           title="Module 4 Assignment"
-          questions={[
-            'When would you choose Flexbox over Grid, and vice versa?',
-            'Write CSS for a navbar with logo, links, and button using Flexbox.',
-            'Create a 3-column, 2-row dashboard layout using CSS Grid named areas.',
-            'Explain flex: 1 1 300px — what does each value mean?',
-            'How do you center a div perfectly in the middle of the screen using Flexbox?',
-          ]}
+          questions={frontendAssignments.m4}
         />
       );
 

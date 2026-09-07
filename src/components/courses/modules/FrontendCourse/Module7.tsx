@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -368,14 +369,9 @@ const sessionVal = sessionStorage.getItem("sessionID");`} />
     case 11:
       return (
         <ModuleAssignment
+          moduleId="frontend-m7"
           title="Module 7 Assignment"
-          questions={[
-            'What is the DOM tree, and how does JavaScript interact with it?',
-            'Compare querySelector, querySelectorAll, and getElementById.',
-            'How do you dynamic create and append a new button item? Write the code.',
-            'Write an example of form submit listener with preventDefault.',
-            'Contrast local storage and session storage capacities and lifespans.',
-          ]}
+          questions={frontendAssignments.m7}
         />
       );
 

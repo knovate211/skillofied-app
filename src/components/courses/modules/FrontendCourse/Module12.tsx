@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -199,14 +200,9 @@ return (
     case 9:
       return (
         <ModuleAssignment
+          moduleId="frontend-m12"
           title="Module 12 Assignment"
-          questions={[
-            'Contrast state and props in React components.',
-            'What happens if you modify a state variable directly without calling setState?',
-            'Design a controlled text area input structure in React.',
-            'How does the && logical operator render content conditionally in JSX?',
-            'Why is using array indexes as list item keys discouraged in dynamic list structures?',
-          ]}
+          questions={frontendAssignments.m12}
         />
       );
 

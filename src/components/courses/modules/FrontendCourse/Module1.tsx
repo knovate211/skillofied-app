@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import ModuleQuiz from '../../shared/ModuleQuiz';
+import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import styles from '../../FrontendCoursePage.module.css';
 import { QuizQuestion } from '../../../../types';
 
@@ -31,8 +33,6 @@ const Module1: React.FC<Props> = ({ page }) => {
   const [checkedTools, setCheckedTools] = useState<Record<string, boolean>>({
     chrome: false, vscode: false, git: false, nodejs: false,
   });
-  const [assignmentText, setAssignmentText] = useState('');
-  const [assignmentSubmitted, setAssignmentSubmitted] = useState(false);
 
   const quizQuestions: QuizQuestion[] = [
     { id: 1, question: 'Q1: What does HTML stand for?', options: ['A. Hyper Transfer Markup Language', 'B. HyperText Markup Language', 'C. High Text Machine Language', 'D. Hyper Tool Markup Language'], correctAnswer: 'B. HyperText Markup Language' },
@@ -48,7 +48,6 @@ const Module1: React.FC<Props> = ({ page }) => {
     setSortItems((prev) => prev.map((item) => (item.id === itemId ? { ...item, selected: selectedType } : item)));
   };
   const toggleCheckTool = (key: string) => { setCheckedTools((prev) => ({ ...prev, [key]: !prev[key] })); };
-  const handleSubmitAssignment = () => { if (assignmentText.trim().length > 10) setAssignmentSubmitted(true); };
 
   switch (page) {
     case 1:
@@ -285,27 +284,11 @@ const Module1: React.FC<Props> = ({ page }) => {
 
     case 10:
       return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 1 Assignment</h2>
-          <p className={styles.paragraph}>Write down short answers for the following prompts to complete Module 1:</p>
-          <ol style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px' }}>
-            <li>1. What is Web Development in your own words?</li>
-            <li>2. What is the difference between Frontend and Backend?</li>
-            <li>3. Give 2 examples of dynamic websites.</li>
-            <li>4. List 3 key tools needed for Frontend Development.</li>
-            <li>5. What are your specific frontend learning goals?</li>
-          </ol>
-          {!assignmentSubmitted ? (
-            <div>
-              <textarea className={styles.assignmentBox} placeholder="Type your answers here..." value={assignmentText} onChange={(e) => setAssignmentText(e.target.value)} />
-              <button className={styles.saveBtn} onClick={handleSubmitAssignment} disabled={assignmentText.trim().length < 10}>Submit Assignment</button>
-            </div>
-          ) : (
-            <div className={styles.completeBadge} style={{ marginTop: '24px' }}>
-              <span>✓ Assignment Submitted successfully! A mentor will review your notes shortly. 🎉</span>
-            </div>
-          )}
-        </div>
+        <ModuleAssignment
+          moduleId="frontend-m1"
+          title="Module 1 Assignment"
+          questions={frontendAssignments.m1}
+        />
       );
 
     default:

@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -186,14 +187,9 @@ function ProtectedRoute({ isAuthenticated, children }) {
     case 8:
       return (
         <ModuleAssignment
+          moduleId="frontend-m14"
           title="Module 14 Assignment"
-          questions={[
-            'Describe single-page application (SPA) routing advantages over traditional multi-page setups.',
-            'Compare the use of Link and standard anchor (a) tags in React Router.',
-            'How are dynamic route parameters defined and retrieved inside React components?',
-            'What is nested routing? Why is Outlet required?',
-            'Explain the execution workflow of a ProtectedRoute wrapper component.',
-          ]}
+          questions={frontendAssignments.m14}
         />
       );
 

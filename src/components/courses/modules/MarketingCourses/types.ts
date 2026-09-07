@@ -1,4 +1,5 @@
 import { QuizQuestion } from '../../../../types';
+import { AssignmentQuestion } from '../../shared/ModuleAssignment';
 
 /**
  * Content model shared by the marketing courses (SEO Fundamentals and Digital
@@ -23,7 +24,13 @@ export interface MarketingLesson {
 
 export interface MarketingAssignment {
   title: string;
-  questions: string[];
+  /**
+   * Assignment tasks are IDE tasks like every other course's. The lessons are
+   * prose, but the deliverables a marketer actually produces — robots.txt,
+   * sitemaps, JSON-LD, keyword maps, budget and significance calculations —
+   * are artifacts and arithmetic, so they are written and run in the editor.
+   */
+  questions: AssignmentQuestion[];
 }
 
 export interface MarketingCourseContent {

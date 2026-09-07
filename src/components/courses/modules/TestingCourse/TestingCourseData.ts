@@ -1,4 +1,5 @@
 import { QuizQuestion } from '../../../../types';
+import { AssignmentQuestion } from '../../shared/ModuleAssignment';
 import type { LessonCallout, LessonSidePanel } from '../../shared/LessonLayout';
 
 export interface Lesson {
@@ -25,7 +26,7 @@ export interface ModuleData {
   lessons: Lesson[];
   quiz: QuizQuestion[];
   assignment: {
-    prompts: any[];
+    prompts: AssignmentQuestion[];
   };
 }
 

@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -289,14 +290,9 @@ img {
     case 9:
       return (
         <ModuleAssignment
+          moduleId="frontend-m5"
           title="Module 5 Assignment"
-          questions={[
-            'Explain mobile-first design and why it is the industry standard.',
-            'Write a media query that targets tablet screens (768px - 1023px).',
-            'How does srcset optimize image loading?',
-            'What is the purpose of the viewport meta tag?',
-            'Describe 3 common responsive design patterns (e.g., hamburger menu).',
-          ]}
+          questions={frontendAssignments.m5}
         />
       );
 

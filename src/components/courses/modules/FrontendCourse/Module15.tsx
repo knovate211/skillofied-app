@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -178,14 +179,9 @@ fetch("https://api.example.com/profile", {
     case 8:
       return (
         <ModuleAssignment
+          moduleId="frontend-m15"
           title="Module 15 Assignment"
-          questions={[
-            'Explain the step-by-step lifecycle flow of fetching remote API data on mount.',
-            'How do you implement a loading spinner while API requests are pending?',
-            'Why is try/catch error handling necessary in fetch requests?',
-            'Write down a fetch DELETE request configuration code template.',
-            'How is the Bearer token authorization header structured?',
-          ]}
+          questions={frontendAssignments.m15}
         />
       );
 

@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -250,14 +251,9 @@ git merge feature-login`} />
     case 10:
       return (
         <ModuleAssignment
+          moduleId="frontend-m10"
           title="Module 10 Assignment"
-          questions={[
-            'What is the difference between Git and GitHub?',
-            'Outline the steps to save local work to a git repository.',
-            'Why do developers use branches? How do you switch branches?',
-            'What causes a merge conflict, and how is it resolved?',
-            'Explain the role of a Pull Request in collaborative development.',
-          ]}
+          questions={frontendAssignments.m10}
         />
       );
 

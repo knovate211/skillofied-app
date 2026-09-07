@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 import { PlainEnglish, Analogy, Pitfall, Compare, Steps, Anatomy, Result } from '../../shared/LessonBits';
 
@@ -332,14 +333,9 @@ function useWindowSize() {
     case 8:
       return (
         <ModuleAssignment
+          moduleId="frontend-m13"
           title="Module 13 Assignment"
-          questions={[
-            'Explain the execution phases of useEffect and dependency parameters.',
-            'How is a cleanup function returned from useEffect and when is it executed?',
-            'In what scenarios would you choose useRef over useState?',
-            'Contrast useMemo and useCallback with examples.',
-            'Create a simple custom hook called useToggle that toggles a boolean state.',
-          ]}
+          questions={frontendAssignments.m13}
         />
       );
 

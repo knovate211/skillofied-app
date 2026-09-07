@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -166,14 +167,9 @@ function App() {
     case 8:
       return (
         <ModuleAssignment
+          moduleId="frontend-m16"
           title="Module 16 Assignment"
-          questions={[
-            'Outline how React Context prevents Prop Drilling issues.',
-            'Describe the parameters accepted by a reducer function.',
-            'Contrast Zustand global stores and Context Providers.',
-            'What is the role of selectors in Redux Toolkit?',
-            'Explain how React.lazy and Suspense boundaries reduce initial page load times.',
-          ]}
+          questions={frontendAssignments.m16}
         />
       );
 

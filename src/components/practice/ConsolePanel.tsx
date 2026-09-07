@@ -62,6 +62,11 @@ interface ConsolePanelProps {
   activeTab: 'testcases' | 'output' | 'custom';
   setActiveTab: (t: 'testcases' | 'output' | 'custom') => void;
   isAssignmentMode?: boolean;
+  /**
+   * False for tasks the sandbox cannot execute (HTML, CSS, JSX, shell). The Run
+   * button is hidden rather than shown as a control that quietly does nothing.
+   */
+  runnable?: boolean;
 }
 
 // ─── Tiny shared components ─────────────────────────────────────
@@ -94,6 +99,7 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
   activeTab,
   setActiveTab,
   isAssignmentMode,
+  runnable = true,
 }) => {
   const [caseIdx, setCaseIdx] = useState(0);
   const [resultIdx, setResultIdx] = useState(0);
@@ -177,6 +183,7 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
 
           {/* Run + Submit */}
           <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+            {runnable && (
             <button className="cp-run" onClick={onRunCode} disabled={isRunning || isSubmitting} style={{
               display: 'flex', alignItems: 'center', gap: 5,
               padding: '5px 12px', borderRadius: 8,
@@ -189,6 +196,7 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
               <svg width="11" height="11" viewBox="0 0 24 24" fill={T.green} stroke="none"><polygon points="5 3 19 12 5 21 5 3" /></svg>
               Run Code
             </button>
+            )}
             <button className="cp-submit" onClick={onSubmitCode} disabled={isRunning || isSubmitting} style={{
               padding: '5px 14px', borderRadius: 8,
               background: T.primary, border: 'none',
@@ -216,11 +224,17 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
                   </button>
                 ))}
               </div>
-              {examples[caseIdx] && (
+              {examples[caseIdx] ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontFamily: T.mono }}>
                   <div><IOLabel>Input Variable(s)</IOLabel><CodeBlock>{examples[caseIdx].input}</CodeBlock></div>
                   <div><IOLabel>Expected Output</IOLabel><CodeBlock color={T.green}>{examples[caseIdx].output}</CodeBlock></div>
                 </div>
+              ) : (
+                <p style={{ fontSize: 12, color: T.textMuted, margin: 0, lineHeight: 1.6 }}>
+                  {runnable
+                    ? 'This task has no sample cases — run your code and read the output tab.'
+                    : 'No test cases: this language does not run in the sandbox. Write your solution in the editor and submit it for mentor review.'}
+                </p>
               )}
             </div>
           )}
@@ -339,8 +353,17 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '48px 0', gap: 10, textAlign: 'center' }}>
                   <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke={T.textMuted} strokeWidth="1.5" opacity=".35"><polyline points="4 17 10 11 4 5" /><line x1="12" y1="19" x2="20" y2="19" /></svg>
-                  <p style={{ fontSize: 13, color: T.textMuted }}>Run your code to see output here.</p>
-                  <p style={{ fontSize: 12, color: T.textMuted, opacity: .7 }}>Click Run Code to execute test cases.</p>
+                  {runnable ? (
+                    <>
+                      <p style={{ fontSize: 13, color: T.textMuted }}>Run your code to see output here.</p>
+                      <p style={{ fontSize: 12, color: T.textMuted, opacity: .7 }}>Click Run Code to execute test cases.</p>
+                    </>
+                  ) : (
+                    <>
+                      <p style={{ fontSize: 13, color: T.textMuted }}>This language does not run in the sandbox.</p>
+                      <p style={{ fontSize: 12, color: T.textMuted, opacity: .7 }}>Write your solution in the editor, then submit it for mentor review.</p>
+                    </>
+                  )}
                 </div>
               )}
             </div>

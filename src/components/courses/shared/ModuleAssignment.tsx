@@ -7,11 +7,13 @@ import { useToast } from '../../../context/ToastContext';
 import { getQuizAttemptsCached, invalidateQuizAttempts } from './quizAttemptsCache';
 
 /**
- * An assignment question is either written (answered in a textarea) or a coding
- * task (answered in an embedded editor the learner can actually run).
+ * An assignment question is a coding task (answered in the embedded IDE) or an
+ * MCQ. Every course's assignments are IDE tasks.
  *
- * Plain strings are still accepted so existing course data keeps working; they
- * are treated as written questions.
+ * `kind: 'text'` still exists for a genuinely written answer, but it has to be
+ * asked for explicitly — a bare string is no longer accepted. Accepting one was
+ * how whole courses ended up as textareas: any prompt added to a `questions`
+ * array was silently coerced into a written question.
  */
 export interface AssignmentCodeQuestion {
   kind: 'code';
@@ -49,16 +51,13 @@ export interface AssignmentMcqQuestion {
   correctAnswer: string;
 }
 
-export type AssignmentQuestion = string | AssignmentTextQuestion | AssignmentCodeQuestion | AssignmentMcqQuestion;
+export type AssignmentQuestion = AssignmentTextQuestion | AssignmentCodeQuestion | AssignmentMcqQuestion;
 
 interface ModuleAssignmentProps {
   moduleId?: string;
   title?: string;
   questions: AssignmentQuestion[];
 }
-
-const normalise = (q: AssignmentQuestion): AssignmentTextQuestion | AssignmentCodeQuestion | AssignmentMcqQuestion =>
-  typeof q === 'string' ? { kind: 'text', prompt: q } : q;
 
 /**
  * Module assignment, presented one task at a time.
@@ -77,7 +76,7 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
   title = 'Module Assignment',
   questions,
 }) => {
-  const items = questions.map(normalise);
+  const items = questions;
 
   const [answers, setAnswers] = useState<string[]>(() =>
     items.map((q) => (q.kind === 'code' ? q.starterCode : ''))

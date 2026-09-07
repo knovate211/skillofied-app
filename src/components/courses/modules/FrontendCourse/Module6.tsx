@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -410,14 +411,9 @@ let y = 10;`} />
     case 14:
       return (
         <ModuleAssignment
+          moduleId="frontend-m6"
           title="Module 6 Assignment"
-          questions={[
-            'Compare let, const, and var with respect to scope and reassignment.',
-            'What are block scopes and temporal dead zones?',
-            'Write a small function that checks if a number is even or odd.',
-            'How is strict equality (===) different from loose equality (==)?',
-            'Explain the concept of Hoisting.',
-          ]}
+          questions={frontendAssignments.m6}
         />
       );
 

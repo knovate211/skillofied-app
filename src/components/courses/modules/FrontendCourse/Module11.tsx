@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -230,14 +231,9 @@ export default UserProfile;`} />
     case 10:
       return (
         <ModuleAssignment
+          moduleId="frontend-m11"
           title="Module 11 Assignment"
-          questions={[
-            'What is the Virtual DOM and how does React optimize rendering updates?',
-            'List 3 syntax differences between standard HTML tags and JSX attributes.',
-            'Why must custom React component names always start with a capital letter?',
-            'Explain the direction and mutability properties of React "props".',
-            'Write a simple functional component structure that accepts a "title" prop and renders it inside an h2 tag.',
-          ]}
+          questions={frontendAssignments.m11}
         />
       );
 

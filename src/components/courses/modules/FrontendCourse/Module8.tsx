@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -272,14 +273,9 @@ class Dog extends Animal {
     case 12:
       return (
         <ModuleAssignment
+          moduleId="frontend-m8"
           title="Module 8 Assignment"
-          questions={[
-            'Can properties of const arrays and objects be modified? Give an example.',
-            'How do you rewrite a standard function block into arrow function format?',
-            'Demonstrate object destructuring with default fallbacks.',
-            'Compare spread and rest parameters applications.',
-            'Explain the role of super() in constructor chains.',
-          ]}
+          questions={frontendAssignments.m8}
         />
       );
 

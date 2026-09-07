@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -510,14 +511,9 @@ const Module3: React.FC<Props> = ({ page }) => {
     case 14:
       return (
         <ModuleAssignment
+          moduleId="frontend-m3"
           title="Module 3 Assignment"
-          questions={[
-            'Explain the CSS Box Model with a diagram description.',
-            'What is the difference between margin and padding?',
-            'Write CSS to create a card with rounded corners, shadow, and a hover effect.',
-            'Explain CSS specificity with examples of each level.',
-            'How does Flexbox justify-content differ from align-items?',
-          ]}
+          questions={frontendAssignments.m3}
         />
       );
 

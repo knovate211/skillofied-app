@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -275,14 +276,9 @@ async function loadData() {
     case 10:
       return (
         <ModuleAssignment
+          moduleId="frontend-m9"
           title="Module 9 Assignment"
-          questions={[
-            'What is the single-threaded nature of JavaScript, and why is asynchronous code necessary?',
-            'What is "Callback Hell," and how do Promises solve this issue?',
-            'Explain the difference between then/catch and async/await syntax.',
-            'Write an async function that fetches items from an endpoint and catches network errors.',
-            'Why is checking response.ok crucial when working with Fetch API?',
-          ]}
+          questions={frontendAssignments.m9}
         />
       );
 
