@@ -65,6 +65,25 @@ const iconFor = (title: string) => {
       </svg>
     );
   }
+  if (t.includes('operating system')) {
+    return (
+      <svg {...props}>
+        <rect x="3" y="4" width="18" height="13" rx="2" />
+        <path d="M8 21h8M12 17v4" />
+        <path d="M7 8h4M7 11h2" />
+      </svg>
+    );
+  }
+  if (t.includes('computer network') || t.includes('networking')) {
+    return (
+      <svg {...props}>
+        <circle cx="12" cy="5" r="2" />
+        <circle cx="5" cy="18" r="2" />
+        <circle cx="19" cy="18" r="2" />
+        <path d="M12 7v4M12 11H5v5M12 11h7v5" />
+      </svg>
+    );
+  }
   if (t.includes('testing') || t.includes('qa')) {
     return (
       <svg {...props}>
@@ -107,6 +126,8 @@ const COURSE_ROUTES: Record<string, string> = {
   'Golang Engineering': '/courses/golang',
   'Full Stack Engineering': '/courses/fullstack',
   'GenAI & Forward Deployed Engineering': '/courses/genai',
+  'Operating Systems': '/courses/os',
+  'Computer Networks': '/courses/networking',
   'GenAI Engineering': '/courses/genai',
   'Software Testing': '/courses/testing',
   'SEO Fundamentals': '/courses/seo',

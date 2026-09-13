@@ -24,6 +24,12 @@ export function getCourseProgress(title: string): number {
   } else if (t.includes('full stack') || t.includes('fullstack')) {
     storageKey = 'maxFullStackIndexRead';
     totalItems = 7;
+  } else if (t.includes('operating system')) {
+    storageKey = 'maxOsIndexRead';
+    totalItems = 107;
+  } else if (t.includes('computer network') || t.includes('networking')) {
+    storageKey = 'maxNetworkingIndexRead';
+    totalItems = 105;
   } else if (t.includes('seo')) {
     storageKey = 'maxSeoIndexRead';
     totalItems = 27;

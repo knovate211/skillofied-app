@@ -32,6 +32,11 @@ const TestPlayer: React.FC = () => {
   const [state, setState] = useState<AttemptState | null>(null);
   const [questions, setQuestions] = useState<AttemptQuestion[]>([]);
   const [current, setCurrent] = useState(0);
+  // The forward edge of a sequential paper: the furthest question the candidate
+  // has actually opened. Answering does not move it — only pressing Next does,
+  // so the paper is revealed one deliberate step at a time rather than the next
+  // question appearing the instant an answer is picked.
+  const [frontier, setFrontier] = useState(0);
   const [serverSeconds, setServerSeconds] = useState<number | null>(null);
   const [loadError, setLoadError] = useState('');
   const [confirming, setConfirming] = useState(false);
@@ -105,6 +110,17 @@ const TestPlayer: React.FC = () => {
         setState(s);
         setQuestions(s.questions);
         setServerSeconds(s.secondsLeft);
+        // Resume where they were. The frontier is not stored server-side, so it
+        // is rebuilt from the answers: the first unanswered question is the one
+        // they had reached, and everything past it is still sealed. Only a
+        // sequential paper is repositioned — a freely navigable one has always
+        // opened on question 1 and there is no reason to change that.
+        if (s.lockForward) {
+          const resumeAt = s.questions.findIndex((q) => !isAnswered(q));
+          const at = resumeAt === -1 ? Math.max(s.questions.length - 1, 0) : resumeAt;
+          setFrontier(at);
+          setCurrent(at);
+        }
         if (s.status !== 'in_progress') {
           submittedRef.current = true;
           if (s.resultsWithheld) setSubmitted(true);
@@ -155,6 +171,13 @@ const TestPlayer: React.FC = () => {
 
   const unanswered = questions.filter((q) => !isAnswered(q)).length;
 
+  const lockForward = !!state?.lockForward;
+  // Answering the current question is what enables Next. A coding question
+  // counts as answered only once code has been submitted to the judge —
+  // writing it into the editor is not solving it.
+  const currentAnswered = question ? isAnswered(question) : false;
+  const canAdvance = current < questions.length - 1 && (!lockForward || current < frontier || currentAnswered);
+
   /** Applies a local edit and queues the autosave for it. */
   const updateQuestion = useCallback((patch: Partial<AttemptQuestion>, save = true) => {
     if (!question) return;
@@ -182,6 +205,19 @@ const TestPlayer: React.FC = () => {
   const goTo = (index: number) => {
     if (index < 0 || index >= questions.length) return;
     if (!state?.allowBacktrack && index < current) return;
+    // Never let the candidate open a question they have not reached yet. The
+    // one step past the frontier is reserved for the Next button.
+    if (state?.lockForward && index > frontier) return;
+    questionEnteredAt.current = Date.now();
+    setCurrent(index);
+  };
+
+  /** The Next button — the only thing that opens a question for the first time. */
+  const goNext = () => {
+    const index = current + 1;
+    if (index >= questions.length) return;
+    if (lockForward && index > frontier && !canAdvance) return;
+    setFrontier((f) => Math.max(f, index));
     questionEnteredAt.current = Date.now();
     setCurrent(index);
   };
@@ -268,13 +304,18 @@ const TestPlayer: React.FC = () => {
           {sections.map((s) => {
             const counts = sectionCounts[s.id];
             const firstIndex = questions.findIndex((q) => q.sectionId === s.id);
+            // A sequential paper's later section opens only once the candidate
+            // has worked their way into it.
+            const reachable = firstIndex >= 0 && (!lockForward || firstIndex <= frontier);
             return (
               <button
                 key={s.id}
                 className={`${styles.sectionTab} ${s.id === activeSectionId ? styles.sectionTabActive : ''}`}
-                onClick={() => firstIndex >= 0 && goTo(firstIndex)}
+                onClick={() => reachable && goTo(firstIndex)}
+                disabled={!reachable}
+                title={reachable ? s.title : 'Finish the questions before this section to unlock it'}
               >
-                {s.title}
+                {reachable ? '' : '🔒 '}{s.title}
                 {counts ? ` ${counts.done}/${counts.total}` : ''}
               </button>
             );
@@ -321,9 +362,12 @@ const TestPlayer: React.FC = () => {
         <aside className={styles.palettePane}>
           <QuestionPalette
             questions={questions}
+            sections={sections}
             currentIndex={current}
             onJump={goTo}
             allowBacktrack={state.allowBacktrack}
+            lockForward={lockForward}
+            frontier={frontier}
           />
         </aside>
       </div>
@@ -342,11 +386,18 @@ const TestPlayer: React.FC = () => {
         >
           {question.markedReview ? 'Unmark review' : 'Mark for review'}
         </button>
+        {lockForward && !canAdvance && current < questions.length - 1 ? (
+          <span className={styles.lockHint}>
+            {question.kind === 'coding'
+              ? 'Submit your code to unlock the next question.'
+              : 'Answer this question to unlock the next one.'}
+          </span>
+        ) : null}
         <div className={styles.spacer} />
         <button
           className={styles.primaryBtn}
-          onClick={() => goTo(current + 1)}
-          disabled={current === questions.length - 1}
+          onClick={goNext}
+          disabled={current === questions.length - 1 || !canAdvance}
         >
           Next
         </button>

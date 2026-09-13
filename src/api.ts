@@ -534,6 +534,13 @@ export interface AttemptState {
   title: string;
   status: 'in_progress' | 'submitted' | 'evaluating' | 'evaluated' | 'disqualified' | 'expired';
   allowBacktrack: boolean;
+  /**
+   * Sequential paper: the candidate may not move past a question until it is
+   * answered. Independent of allowBacktrack, which governs the other direction
+   * — a scholarship paper sets both, so questions are revealed one at a time
+   * but an answer already given can still be revised.
+   */
+  lockForward: boolean;
   proctoring: Proctoring;
   serverNow: string;
   expiresAt: string;
@@ -582,7 +589,7 @@ const ATTEMPT_QUESTION_FIELDS = `
 `;
 
 const ATTEMPT_STATE_FIELDS = `
-  attemptId assessmentId title status allowBacktrack
+  attemptId assessmentId title status allowBacktrack lockForward
   proctoring { requireFullscreen tabSwitchLimit blockCopyPaste webcam }
   serverNow expiresAt secondsLeft
   sections { id title kind orderIndex durationMinutes }

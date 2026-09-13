@@ -32,6 +32,36 @@ const CategoryRow: React.FC<{ title: string; eyebrow?: string; courses: any[] }>
   );
 };
 
+/**
+ * Self-paced courses. These are not enrolments: there is no mentor, no class
+ * time and no grant behind them, so they never come back from getMyCourses.
+ * They open for anyone on a development track, matching the same rule the
+ * sidebar applies — see isDevelopmentStudent in Sidebar.tsx.
+ */
+const SELF_PACED_COURSES = [
+  {
+    id: 'self-os',
+    title: 'Operating Systems',
+    mentor: 'Self-paced',
+    initial: 'OS',
+    color: '#0984e3',
+    classTime: 'Learn at your own pace',
+  },
+  {
+    id: 'self-networking',
+    title: 'Computer Networks',
+    mentor: 'Self-paced',
+    initial: 'CN',
+    color: '#00b894',
+    classTime: 'Learn at your own pace',
+  },
+];
+
+/** A development-track enrolment is what unlocks the CS Core courses. */
+const DEVELOPMENT_TITLES = [
+  'java', 'front-end', 'frontend', 'sql', 'golang', 'genai', 'generative ai', 'full stack', 'fullstack',
+];
+
 const CoursesSection: React.FC = () => {
   const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,13 +97,26 @@ const CoursesSection: React.FC = () => {
                 initial: 'M',
                 color: '#10ac84',
                 classTime: '11:30 – 12:45 PM',
+              },
+              {
+                id: 'genai',
+                title: 'GenAI & Forward Deployed Engineering',
+                mentor: 'AI Engineering Team',
+                initial: 'AI',
+                color: '#8e44ad',
+                classTime: '03:30 – 05:30 PM',
               }
             );
           } else {
             expanded.push(course);
           }
         });
-        setCourses(expanded);
+        // A learner can hold both the Full Stack entitlement and a standalone
+        // grant for one of its modules, so drop the duplicate cards.
+        const deduped = expanded.filter(
+          (c, i) => expanded.findIndex((o) => o.title === c.title) === i,
+        );
+        setCourses(deduped);
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
@@ -116,9 +159,22 @@ const CoursesSection: React.FC = () => {
     return t.includes('testing') || t.includes('qa');
   });
 
+  // Marketing- and QA-only students do not see the CS Core row: these are the
+  // fundamentals under the development track, not part of what they enrolled in.
+  const isDevelopmentStudent = courses.some(c => {
+    const t = c.title.toLowerCase();
+    return DEVELOPMENT_TITLES.some(d => t.includes(d));
+  });
+  const selfPaced = isDevelopmentStudent ? SELF_PACED_COURSES : [];
+
   return (
     <section className={styles.section}>
       <CategoryRow title="Development Courses" eyebrow="Pick up where you left off" courses={devCourses} />
+      <CategoryRow
+        title="Computer Science Core"
+        eyebrow="Self-paced · no schedule, start any time"
+        courses={selfPaced}
+      />
       <CategoryRow title="Marketing Courses" eyebrow="Grow your reach" courses={marketingCourses} />
       <CategoryRow title="QA & Software Testing" eyebrow="Sharpen your rigour" courses={testingCourses} />
     </section>

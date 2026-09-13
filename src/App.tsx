@@ -18,6 +18,8 @@ const SqlCoursePage = lazy(() => import('./components/courses/SqlCoursePage'));
 const GolangCoursePage = lazy(() => import('./components/courses/GolangCoursePage'));
 const GenAICoursePage = lazy(() => import('./components/courses/GenAICoursePage'));
 const FullStackCoursePage = lazy(() => import('./components/courses/FullStackCoursePage'));
+const OsCoursePage = lazy(() => import('./components/courses/OsCoursePage'));
+const NetworkingCoursePage = lazy(() => import('./components/courses/NetworkingCoursePage'));
 const TestingCoursePage = lazy(() => import('./components/courses/TestingCoursePage'));
 const CoursePlaceholderPage = lazy(() => import('./components/courses/CoursePlaceholderPage'));
 const SeoCoursePage = lazy(() => import('./components/courses/SeoCoursePage'));
@@ -265,6 +267,8 @@ const App: React.FC = () => {
                     <Route path="/courses/golang" element={<GolangCoursePage />} />
                     <Route path="/courses/genai" element={<GenAICoursePage />} />
                     <Route path="/courses/fullstack" element={<FullStackCoursePage />} />
+                    <Route path="/courses/os" element={<OsCoursePage />} />
+                    <Route path="/courses/networking" element={<NetworkingCoursePage />} />
                     <Route path="/courses/seo" element={<SeoCoursePage />} />
                     <Route path="/courses/digital-marketing" element={<DigitalMarketingCoursePage />} />
                     {/* Courses without content yet fall through to the syllabus landing page. */}

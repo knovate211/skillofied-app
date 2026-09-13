@@ -35,13 +35,21 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, enrolledCourses }) =
   }, [isOpen]);
 
   const isGolangUnlocked = enrolledCourses.some(c => c.title.includes('Golang'));
-  const isGenAIUnlocked = enrolledCourses.some(c => c.title.includes('GenAI') || c.title.includes('Generative AI'));
   const isFullStackUnlocked = enrolledCourses.some(c => c.title.includes('Full Stack') || c.title.includes('Fullstack'));
+  const isGenAIUnlocked = enrolledCourses.some(c => c.title.includes('GenAI') || c.title.includes('Generative AI')) || isFullStackUnlocked;
   const isFrontendUnlocked = enrolledCourses.some(c => c.title === 'Front-End Technologies') || isFullStackUnlocked;
   const isJavaUnlocked = enrolledCourses.some(c => c.title === 'Java Development' || c.title === 'Java') || isFullStackUnlocked;
   const isSqlUnlocked = enrolledCourses.some(c => c.title === 'Mastering SQL') || isFullStackUnlocked;
   const isDigitalMarketingUnlocked = enrolledCourses.some(c => c.title === 'SEO Fundamentals' || c.title === 'Digital Marketing Strategy');
   const isTestingUnlocked = enrolledCourses.some(c => c.title.toLowerCase().includes('testing'));
+
+  // Computer Science Core is self-paced: no separate enrolment, no schedule, no
+  // mentor. It opens for anyone on a development track — the fundamentals under
+  // every one of those courses — and stays shut for the marketing and QA tracks,
+  // where it is not part of what the student signed up to learn.
+  const isDevelopmentStudent =
+    isFullStackUnlocked || isFrontendUnlocked || isJavaUnlocked ||
+    isSqlUnlocked || isGolangUnlocked || isGenAIUnlocked;
 
   const courses: CourseEligibility[] = [
     {
@@ -59,8 +67,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, enrolledCourses }) =
       category: 'Development',
     },
     // Full Stack is an entitlement rather than a course of its own: enrolling in
-    // it unlocks Front-End, Java and SQL below, which is where the actual
-    // curriculum lives. It is deliberately not listed here.
+    // it unlocks GenAI above plus Front-End, Java and SQL below, which is where
+    // the actual curriculum lives. It is deliberately not listed here.
     {
       title: 'Front-End Technologies',
       path: '/courses/frontend',
@@ -81,6 +89,20 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, enrolledCourses }) =
       isUnlocked: isSqlUnlocked,
       icon: '💾',
       category: 'Development',
+    },
+    {
+      title: 'Operating Systems',
+      path: '/courses/os',
+      isUnlocked: isDevelopmentStudent,
+      icon: '💽',
+      category: 'Computer Science Core',
+    },
+    {
+      title: 'Computer Networks',
+      path: '/courses/networking',
+      isUnlocked: isDevelopmentStudent,
+      icon: '🌐',
+      category: 'Computer Science Core',
     },
     {
       title: 'SEO Fundamentals',
@@ -195,7 +217,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, enrolledCourses }) =
             <h3 className={styles.sectionTitle}>Course Pathways</h3>
             
             {/* Group courses by Category */}
-            {['Development', 'Marketing', 'QA & Testing'].map((cat) => {
+            {['Development', 'Computer Science Core', 'Marketing', 'QA & Testing'].map((cat) => {
               const catCourses = courses.filter((c) => c.category === cat);
               return (
                 <div key={cat} className={styles.categoryGroup}>
