@@ -209,67 +209,67 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
         id: 1,
         question: 'Who is recognized as the father of the Java programming language?',
         options: [
-          'A. Bjarne Stroustrup',
-          'B. Dennis Ritchie',
-          'C. Guido van Rossum',
-          'D. James Gosling'
+          "A. James Gosling",
+          "B. Bjarne Stroustrup",
+          "C. Dennis Ritchie",
+          "D. Guido van Rossum",
         ],
-        correctAnswer: 'D. James Gosling'
+        correctAnswer: "A. James Gosling"
       },
       {
         id: 2,
         question: 'What was the original name of the Java programming language when it was first developed?',
         options: [
-          'A. Coffee',
-          'B. Green',
-          'C. Oak',
-          'D. C+++'
+          "A. Coffee",
+          "B. Oak",
+          "C. Green",
+          "D. C+++",
         ],
-        correctAnswer: 'C. Oak'
+        correctAnswer: "B. Oak"
       },
       {
         id: 3,
         question: "Which of the following slogans best describes Java's key feature of platform independence?",
         options: [
-          'A. Write Once, Run Anywhere (WORA)',
-          'B. Run Once, Test Everywhere',
-          'C. Compile Anywhere, Debug Everywhere',
-          'D. Code Once, Interpret Always'
+          "A. Run Once, Test Everywhere",
+          "B. Compile Anywhere, Debug Everywhere",
+          "C. Write Once, Run Anywhere (WORA)",
+          "D. Code Once, Interpret Always",
         ],
-        correctAnswer: 'A. Write Once, Run Anywhere (WORA)'
+        correctAnswer: "C. Write Once, Run Anywhere (WORA)"
       },
       {
         id: 4,
         question: 'What components are included in the Java Development Kit (JDK)?',
         options: [
-          'A. Operating system libraries and JVM exclusively',
-          'B. JRE and development tools like \'javac\'',
-          'C. Only the Java Virtual Machine (JVM)',
-          'D. Only the Java Runtime Environment (JRE)'
+          "A. Operating system libraries and JVM exclusively",
+          "B. Only the Java Virtual Machine (JVM)",
+          "C. Only the Java Runtime Environment (JRE)",
+          "D. JRE and development tools like 'javac'",
         ],
-        correctAnswer: 'B. JRE and development tools like \'javac\''
+        correctAnswer: "D. JRE and development tools like 'javac'"
       },
       {
         id: 5,
         question: 'Which component is strictly responsible for executing Java bytecode directly on a host machine?',
         options: [
-          'A. Java Compiler (javac)',
-          'B. Java Virtual Machine (JVM)',
-          'C. Java Source File (.java)',
-          'D. Integrated Development Environment (IDE)'
+          "A. Java Virtual Machine (JVM)",
+          "B. Java Compiler (javac)",
+          "C. Java Source File (.java)",
+          "D. Integrated Development Environment (IDE)",
         ],
-        correctAnswer: 'B. Java Virtual Machine (JVM)'
+        correctAnswer: "A. Java Virtual Machine (JVM)"
       },
       {
         id: 6,
         question: 'What file extension does a compiled Java bytecode file have?',
         options: [
-          'A. .java',
-          'B. .exe',
-          'C. .class',
-          'D. .jar'
+          "A. .java",
+          "B. .class",
+          "C. .exe",
+          "D. .jar",
         ],
-        correctAnswer: 'C. .class'
+        correctAnswer: "B. .class"
       },
       {
         id: 7,
@@ -286,12 +286,12 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
         id: 8,
         question: 'What feature of Java automatically manages memory by reclaiming space occupied by objects that are no longer in use?',
         options: [
-          'A. Garbage Collection',
-          'B. Finalization Buffer',
-          'C. Manual Deconstructors',
-          'D. Memory Pointer Allocation'
+          "A. Finalization Buffer",
+          "B. Manual Deconstructors",
+          "C. Memory Pointer Allocation",
+          "D. Garbage Collection",
         ],
-        correctAnswer: 'A. Garbage Collection'
+        correctAnswer: "D. Garbage Collection"
       },
       {
         id: 9,
@@ -308,89 +308,89 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
         id: 10,
         question: "If a public class in a Java source file is named 'Welcome', what must the source code file be named?",
         options: [
-          'A. welcome.class',
-          'B. Main.java',
-          'C. Welcome.java',
-          'D. welcome.java'
+          "A. welcome.class",
+          "B. Welcome.java",
+          "C. Main.java",
+          "D. welcome.java",
         ],
-        correctAnswer: 'C. Welcome.java'
+        correctAnswer: "B. Welcome.java"
       },
       {
         id: 11,
         question: 'Which tool or feature is an Integrated Development Environment (IDE) primarily used for during Java setup?',
         options: [
-          'A. Hosting databases remotely',
-          'B. Providing an all-in-one text editor, build automation tool, and debugger',
-          'C. Replacing the local operating system',
-          'D. Exclusively executing bytecode without an underlying JVM'
+          "A. Hosting databases remotely",
+          "B. Replacing the local operating system",
+          "C. Providing an all-in-one text editor, build automation tool, and debugger",
+          "D. Exclusively executing bytecode without an underlying JVM",
         ],
-        correctAnswer: 'B. Providing an all-in-one text editor, build automation tool, and debugger'
+        correctAnswer: "C. Providing an all-in-one text editor, build automation tool, and debugger"
       },
       {
         id: 12,
         question: "What is the command line utility used to compile a Java file named 'Test.java'?",
         options: [
-          'A. javac Test.java',
-          'B. run javac Test',
-          'C. java Test.java',
-          'D. compile Test.class'
+          "A. run javac Test",
+          "B. java Test.java",
+          "C. compile Test.class",
+          "D. javac Test.java",
         ],
-        correctAnswer: 'A. javac Test.java'
+        correctAnswer: "D. javac Test.java"
       },
       {
         id: 13,
         question: "What does the 'void' keyword mean in the statement 'public static void main(String[] args)'?",
         options: [
-          'A. The method is empty and has no internal code logic.',
-          'B. The method does not return any value when it finishes executing.',
-          'C. The method takes no parameters.',
-          'D. The variables inside the method are null by default.'
+          "A. The method does not return any value when it finishes executing.",
+          "B. The method is empty and has no internal code logic.",
+          "C. The method takes no parameters.",
+          "D. The variables inside the method are null by default.",
         ],
-        correctAnswer: 'B. The method does not return any value when it finishes executing.'
+        correctAnswer: "A. The method does not return any value when it finishes executing."
       },
       {
         id: 14,
         question: "Java is described as a 'Robust' language. Which feature directly contributes to this characteristic?",
         options: [
-          'A. Strong type checking and exception handling mechanisms',
-          'B. Lightweight syntax copied directly from scripting languages',
-          'C. Support for platform-specific system pointers',
-          'D. Its dependence on a web browser to run basic desktop software'
+          "A. Lightweight syntax copied directly from scripting languages",
+          "B. Strong type checking and exception handling mechanisms",
+          "C. Support for platform-specific system pointers",
+          "D. Its dependence on a web browser to run basic desktop software",
         ],
-        correctAnswer: 'A. Strong type checking and exception handling mechanisms'
+        correctAnswer: "B. Strong type checking and exception handling mechanisms"
       },
       {
         id: 15,
         question: "Which command is used to run a compiled class file named 'Demo.class' from the terminal?",
         options: [
-          'A. java Demo',
-          'B. execute Demo',
-          'C. javac Demo',
-          'D. run Demo.class'
+          "A. execute Demo",
+          "B. javac Demo",
+          "C. java Demo",
+          "D. run Demo.class",
         ],
-        correctAnswer: 'A. java Demo'
+        correctAnswer: "C. java Demo"
       },
       {
         id: 16,
         question: 'What system environment variable must often be configured manually to let your computer discover standard Java developer utilities from any directory terminal?',
         options: [
-          'A. HOME_FOLDER',
-          'B. IDE_LINK',
-          'C. PATH',
-          'D. JAVA_VERSION'
+          "A. HOME_FOLDER",
+          "B. IDE_LINK",
+          "C. JAVA_VERSION",
+          "D. PATH",
         ],
-        correctAnswer: 'C. PATH'
+        correctAnswer: "D. PATH"
       },
       {
         id: 17,
         question: "Which of these lines uses correct syntax to display the message 'Hello World' on the user console screen?",
         options: [
-          'A. Print("Hello World");',
-          'B. system.out.printLn(\'Hello World\');',
-          'C. System.Output.Println(\'Hello World\');',
-          'D. System.out.println("Hello World");'
+          "A. System.out.println(\"Hello World\");",
+          "B. Print(\"Hello World\");",
+          "C. system.out.printLn('Hello World');",
+          "D. System.Output.Println('Hello World');",
         ],
-        correctAnswer: 'D. System.out.println("Hello World");'
+        correctAnswer: "A. System.out.println(\"Hello World\");"
       },
       {
         id: 18,
@@ -407,23 +407,23 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
         id: 19,
         question: 'Which statement accurately describes the core architectural relationship between the JDK and the JRE?',
         options: [
-          'A. They are completely independent systems with no overlapping tools.',
-          'B. The JDK is a superset that includes the complete JRE plus development tools.',
-          'C. The JRE contains the JDK along with separate design compilers.',
-          'D. The JDK manages hardware interfaces while the JRE handles text formatting.'
+          "A. They are completely independent systems with no overlapping tools.",
+          "B. The JRE contains the JDK along with separate design compilers.",
+          "C. The JDK is a superset that includes the complete JRE plus development tools.",
+          "D. The JDK manages hardware interfaces while the JRE handles text formatting.",
         ],
-        correctAnswer: 'B. The JDK is a superset that includes the complete JRE plus development tools.'
+        correctAnswer: "C. The JDK is a superset that includes the complete JRE plus development tools."
       },
       {
         id: 20,
         question: 'What role do double forward slashes (//) perform when written inside a Java source file?',
         options: [
-          'A. They mark the beginning of a single-line text comment.',
-          'B. They are required before importing external system modules.',
-          'C. They create a secure network link to external servers.',
-          'D. They represent integer mathematical division operations.'
+          "A. They are required before importing external system modules.",
+          "B. They create a secure network link to external servers.",
+          "C. They represent integer mathematical division operations.",
+          "D. They mark the beginning of a single-line text comment.",
         ],
-        correctAnswer: 'A. They mark the beginning of a single-line text comment.'
+        correctAnswer: "D. They mark the beginning of a single-line text comment."
       }
     ],
     assignment: {
@@ -432,12 +432,12 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'Which component of the Java environment contains the compiler (javac) and other development tools?',
           options: [
-            'A. Java Virtual Machine (JVM)',
-            'B. Java Runtime Environment (JRE)',
-            'C. Java Development Kit (JDK)',
-            'D. Java Class Loader'
+            "A. Java Development Kit (JDK)",
+            "B. Java Virtual Machine (JVM)",
+            "C. Java Runtime Environment (JRE)",
+            "D. Java Class Loader",
           ],
-          correctAnswer: 'C. Java Development Kit (JDK)'
+          correctAnswer: "A. Java Development Kit (JDK)"
         },
         {
           kind: 'mcq',
@@ -454,23 +454,23 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'Which statement correctly describes the platform dependency of the Java Virtual Machine (JVM)?',
           options: [
-            'A. The JVM is platform-independent; the same JVM runs on Linux, Mac, and Windows.',
-            'B. The JVM is platform-dependent; a specific version must be installed for each OS.',
-            'C. The JVM only runs on Windows systems.',
-            'D. The JVM is written entirely in Java and dynamically adapts to the host machine.'
+            "A. The JVM is platform-independent; the same JVM runs on Linux, Mac, and Windows.",
+            "B. The JVM only runs on Windows systems.",
+            "C. The JVM is platform-dependent; a specific version must be installed for each OS.",
+            "D. The JVM is written entirely in Java and dynamically adapts to the host machine.",
           ],
-          correctAnswer: 'B. The JVM is platform-dependent; a specific version must be installed for each OS.'
+          correctAnswer: "C. The JVM is platform-dependent; a specific version must be installed for each OS."
         },
         {
           kind: 'mcq',
           prompt: 'What is the correct command-line sequence to compile a Java file named App.java?',
           options: [
-            'A. java App.java',
-            'B. javac App.java',
-            'C. run App.class',
-            'D. compile App.java'
+            "A. java App.java",
+            "B. run App.class",
+            "C. compile App.java",
+            "D. javac App.java",
           ],
-          correctAnswer: 'B. javac App.java'
+          correctAnswer: "D. javac App.java"
         },
         {
           kind: 'mcq',
@@ -661,26 +661,26 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
       type: 'scanner_sim'
     },
     quiz: [
-      {id: 1, question: 'Which of the following is a valid variable identifier name in Java?', options: ['A. class', 'B. 2varName', 'C. variable name', 'D. _variable$5'], correctAnswer: 'D. _variable$5'},
-      {id: 2, question: 'Which of the following data types is NOT a primitive data type in Java?', options: ['A. String', 'B. boolean', 'C. char', 'D. int'], correctAnswer: 'A. String'},
-      {id: 3, question: 'What is the difference between widening type casting and narrowing type casting?', options: ['A. Narrowing casting happens automatically; widening casting must be done manually.', 'B. Both widening and narrowing type casting occur automatically at runtime.', 'C. Widening casting happens automatically; narrowing casting must be done manually.', 'D. Widening casting applies only to objects, while narrowing casting applies only to primitives.'], correctAnswer: 'C. Widening casting happens automatically; narrowing casting must be done manually.'},
+      {id: 1, question: 'Which of the following is a valid variable identifier name in Java?', options: ["A. class", "B. 2varName", "C. _variable$5", "D. variable name"], correctAnswer: "C. _variable$5"},
+      {id: 2, question: 'Which of the following data types is NOT a primitive data type in Java?', options: ["A. boolean", "B. char", "C. int", "D. String"], correctAnswer: "D. String"},
+      {id: 3, question: 'What is the difference between widening type casting and narrowing type casting?', options: ["A. Widening casting happens automatically; narrowing casting must be done manually.", "B. Narrowing casting happens automatically; widening casting must be done manually.", "C. Both widening and narrowing type casting occur automatically at runtime.", "D. Widening casting applies only to objects, while narrowing casting applies only to primitives."], correctAnswer: "A. Widening casting happens automatically; narrowing casting must be done manually."},
       {id: 4, question: 'Which type of comment in Java is specifically processed by documentation generation utilities to create API reference sheets?', options: ['A. // Single-line comment', 'B. /** Documentation comment */', 'C. Shell comment', 'D. /* Multi-line comment */'], correctAnswer: 'B. /** Documentation comment */'},
-      {id: 5, question: 'When collecting user console input using the Scanner class, what is the primary difference between using next() and nextLine()?', options: ['A. next() automatically converts inputs to uppercase characters.', 'B. next() reads input up to the next whitespace delimiter, while nextLine() reads the entire line until a newline character.', 'C. next() reads only numeric characters, while nextLine() reads text.', 'D. nextLine() handles numeric variables safer than next().'], correctAnswer: 'B. next() reads input up to the next whitespace delimiter, while nextLine() reads the entire line until a newline character.'},
-      {id: 6, question: 'In the format string syntax used by System.out.printf(), what placeholder flag is designated to structure decimal floating-point representation outputs?', options: ['A. %f', 'B. %d', 'C. %c', 'D. %s'], correctAnswer: 'A. %f'},
-      {id: 7, question: 'What is the behavior of short-circuit logical operators like && and || in Java expression evaluations?', options: ['A. They require execution paths to loop until variables change state.', 'B. They skip evaluating the second condition if the overall result is already determined by the first condition.', 'C. They always evaluate both sides of the expression to verify execution parity.', 'D. They invert the boolean answer automatically at the end of the evaluation statement.'], correctAnswer: 'B. They skip evaluating the second condition if the overall result is already determined by the first condition.'},
+      {id: 5, question: 'When collecting user console input using the Scanner class, what is the primary difference between using next() and nextLine()?', options: ["A. nextLine() reads only up to the next whitespace, while next() reads the whole line including the newline.", "B. next() reads only numeric characters, while nextLine() reads text.", "C. next() reads input up to the next whitespace delimiter, while nextLine() reads the entire line until a newline character.", "D. nextLine() handles numeric variables safer than next()."], correctAnswer: "C. next() reads input up to the next whitespace delimiter, while nextLine() reads the entire line until a newline character."},
+      {id: 6, question: 'In the format string syntax used by System.out.printf(), what placeholder flag is designated to structure decimal floating-point representation outputs?', options: ["A. %d", "B. %c", "C. %s", "D. %f"], correctAnswer: "D. %f"},
+      {id: 7, question: 'What is the behavior of short-circuit logical operators like && and || in Java expression evaluations?', options: ["A. They skip evaluating the second condition if the overall result is already determined by the first condition.", "B. They require execution paths to loop until variables change state.", "C. They always evaluate both sides of the expression to verify execution parity.", "D. They invert the boolean answer automatically at the end of the evaluation statement."], correctAnswer: "A. They skip evaluating the second condition if the overall result is already determined by the first condition."},
       {id: 8, question: 'Guess the output of the following Java code snippet:\n\nint a = 5;\nint b = a++ + ++a;\nSystem.out.println(\'a=\' + a + \', b=\' + b);', options: ['A. a=7, b=11', 'B. a=7, b=12', 'C. a=5, b=12', 'D. a=6, b=10'], correctAnswer: 'B. a=7, b=12'},
-      {id: 9, question: 'Guess the output of the following Java code snippet:\n\nint x = 5;\nint y = 2;\ndouble result = x / y;\nSystem.out.println(result);', options: ['A. 2.5', 'B. 2.0', 'C. 0.4', 'D. 3.0'], correctAnswer: 'B. 2.0'},
+      {id: 9, question: 'Guess the output of the following Java code snippet:\n\nint x = 5;\nint y = 2;\ndouble result = x / y;\nSystem.out.println(result);', options: ["A. 2.5", "B. 0.4", "C. 2.0", "D. 3.0"], correctAnswer: "C. 2.0"},
       {id: 10, question: 'Guess the output of the following Java code snippet:\n\ndouble value = 9.78;\nint numerical = (int) value;\nSystem.out.println(numerical);', options: ['A. 9.78', 'B. 0', 'C. 10', 'D. 9'], correctAnswer: 'D. 9'},
-      {id: 11, question: 'Guess the output of the following Java code snippet:\n\nSystem.out.println(\'Output: \' + 10 + 20);', options: ['A. 30 Output:', 'B. Compilation Error', 'C. Output: 1020', 'D. Output: 30'], correctAnswer: 'C. Output: 1020'},
-      {id: 12, question: 'Guess the output of the following Java code snippet:\n\nSystem.out.println(10 + 20 + \' Output\');', options: ['A. Output 1020', 'B. 1020 Output', 'C. 30 Output', 'D. Output 30'], correctAnswer: 'C. 30 Output'},
-      {id: 13, question: 'Guess the output of the following Java code snippet:\n\nint result = -5 % 2;\nSystem.out.println(result);', options: ['A. -1', 'B. 1', 'C. -2', 'D. 0'], correctAnswer: 'A. -1'},
-      {id: 14, question: 'Guess the output of the following Java code snippet:\n\nboolean flag = false;\nint val = 10;\nif (flag && (val++ > 5)) {\nval += 5;\n}\nSystem.out.println(val);', options: ['A. 11', 'B. 10', 'C. 15', 'D. 16'], correctAnswer: 'B. 10'},
-      {id: 15, question: 'Guess the output of the following Java code snippet:\n\nbyte b = 127;\nb++;\nSystem.out.println(b);', options: ['A. -1', 'B. Compilation Error', 'C. 128', 'D. -128'], correctAnswer: 'D. -128'},
-      {id: 16, question: 'Guess the output of the following Java code snippet:\n\ndouble values = 5.6789;\nSystem.out.printf(\'%.2f\', values);', options: ['A. 5.6789', 'B. 5.67', 'C. 5.7', 'D. 5.68'], correctAnswer: 'D. 5.68'},
-      {id: 17, question: 'Guess the output of the following Java code snippet:\n\nint n1 = 10;\nint n2 = 20;\nn1 = n1 + n2;\nn2 = n1 - n2;\nn1 = n1 - n2;\nSystem.out.println(\'n1=\' + n1 + \', n2=\' + n2);', options: ['A. n1=20, n2=10', 'B. n1=30, n2=10', 'C. n1=10, n2=20', 'D. n1=20, n2=20'], correctAnswer: 'A. n1=20, n2=10'},
+      {id: 11, question: 'Guess the output of the following Java code snippet:\n\nSystem.out.println(\'Output: \' + 10 + 20);', options: ["A. Output: 1020", "B. 30 Output:", "C. Compilation Error", "D. Output: 30"], correctAnswer: "A. Output: 1020"},
+      {id: 12, question: 'Guess the output of the following Java code snippet:\n\nSystem.out.println(10 + 20 + \' Output\');', options: ["A. Output 1020", "B. 30 Output", "C. 1020 Output", "D. Output 30"], correctAnswer: "B. 30 Output"},
+      {id: 13, question: 'Guess the output of the following Java code snippet:\n\nint result = -5 % 2;\nSystem.out.println(result);', options: ["A. 1", "B. -2", "C. -1", "D. 0"], correctAnswer: "C. -1"},
+      {id: 14, question: 'Guess the output of the following Java code snippet:\n\nboolean flag = false;\nint val = 10;\nif (flag && (val++ > 5)) {\nval += 5;\n}\nSystem.out.println(val);', options: ["A. 11", "B. 15", "C. 16", "D. 10"], correctAnswer: "D. 10"},
+      {id: 15, question: 'Guess the output of the following Java code snippet:\n\nbyte b = 127;\nb++;\nSystem.out.println(b);', options: ["A. -128", "B. -1", "C. Compilation Error", "D. 128"], correctAnswer: "A. -128"},
+      {id: 16, question: 'Guess the output of the following Java code snippet:\n\ndouble values = 5.6789;\nSystem.out.printf(\'%.2f\', values);', options: ["A. 5.6789", "B. 5.68", "C. 5.67", "D. 5.7"], correctAnswer: "B. 5.68"},
+      {id: 17, question: 'Guess the output of the following Java code snippet:\n\nint n1 = 10;\nint n2 = 20;\nn1 = n1 + n2;\nn2 = n1 - n2;\nn1 = n1 - n2;\nSystem.out.println(\'n1=\' + n1 + \', n2=\' + n2);', options: ["A. n1=30, n2=10", "B. n1=10, n2=20", "C. n1=20, n2=10", "D. n1=20, n2=20"], correctAnswer: "C. n1=20, n2=10"},
       {id: 18, question: 'Guess the output of the following Java code snippet:\n\nint val1 = 10;\nint val2 = 20;\nint res = val1 > val2 ? val1 : val2 > 15 ? 30 : 40;\nSystem.out.println(res);', options: ['A. 20', 'B. 10', 'C. 40', 'D. 30'], correctAnswer: 'D. 30'},
       {id: 19, question: 'Guess the output of the following Java code snippet:\n\nSystem.out.println(5 > 3 || 4 < 2 && 10 == 10);', options: ['A. true', 'B. Runtime Exception', 'C. false', 'D. Compilation Error'], correctAnswer: 'A. true'},
-      {id: 20, question: 'Guess the output of the following Java code snippet:\n\nchar letter = \\\'A\\\';\nletter++;\nSystem.out.println(letter);', options: ['A. B', 'B. 66', 'C. Compilation Error', 'D. A1'], correctAnswer: 'A. B'}
+      {id: 20, question: 'Guess the output of the following Java code snippet:\n\nchar letter = \\\'A\\\';\nletter++;\nSystem.out.println(letter);', options: ["A. 66", "B. B", "C. Compilation Error", "D. A1"], correctAnswer: "B. B"}
     ],
     assignment: {
       prompts: [
@@ -698,12 +698,12 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'What is the main difference between widening (implicit) and narrowing (explicit) casting in Java?',
           options: [
-            'A. Widening is done automatically when converting a smaller type to a larger type; narrowing must be done manually.',
-            'B. Narrowing is done automatically; widening must be done manually.',
-            'C. Widening casting can result in data loss; narrowing casting never results in data loss.',
-            'D. Widening is only applicable to reference types; narrowing is only applicable to primitive types.'
+            "A. Narrowing is done automatically; widening must be done manually.",
+            "B. Widening casting can result in data loss; narrowing casting never results in data loss.",
+            "C. Widening is done automatically when converting a smaller type to a larger type; narrowing must be done manually.",
+            "D. Widening is only applicable to reference types; narrowing is only applicable to primitive types.",
           ],
-          correctAnswer: 'A. Widening is done automatically when converting a smaller type to a larger type; narrowing must be done manually.'
+          correctAnswer: "C. Widening is done automatically when converting a smaller type to a larger type; narrowing must be done manually."
         }
       ]
     }
@@ -857,26 +857,26 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
       type: 'code_sandbox'
     },
     quiz: [
-      {id: 1, question: 'Which of the following data types CANNOT be used as the controlling expression in a standard Java switch-case statement?', options: ['A. char', 'B. int', 'C. double', 'D. String'], correctAnswer: 'C. double'},
-      {id: 2, question: 'What happens if a matching case block in a switch statement does not contain a \'break\' statement?', options: ['A. The program throws a compilation error immediately.', 'B. The switch statement terminates instantly without running anything.', 'C. The program falls through, executing subsequent case blocks sequentially until a break or the end of the switch is encountered.', 'D. Execution immediately jumps to the default block regardless of its position.'], correctAnswer: 'C. The program falls through, executing subsequent case blocks sequentially until a break or the end of the switch is encountered.'},
-      {id: 3, question: 'Which statement best describes the evaluation behavior of a conditional statement structured with nested if blocks?', options: ['A. The inner \'if\' condition is evaluated only if the outer \'if\' condition evaluates to true.', 'B. The inner \'if\' condition is evaluated regardless of whether the outer \'if\' condition is true or false.', 'C. The compiler combines them automatically into a single flat logical AND expression.', 'D. Both outer and inner conditions are checked simultaneously in parallel.'], correctAnswer: 'A. The inner \'if\' condition is evaluated only if the outer \'if\' condition evaluates to true.'},
-      {id: 4, question: 'How many operands are evaluated by a conditional ternary operator expression in Java?', options: ['A. 3', 'B. 1', 'C. 2', 'D. 4'], correctAnswer: 'A. 3'},
-      {id: 5, question: 'Guess the output of the following Java code snippet:\n\nint score = 75;\nif (score > 80)\nSystem.out.print(\'A \');\nSystem.out.print(\'Passed \');', options: ['A. No output is displayed', 'B. A Passed', 'C. Passed', 'D. A'], correctAnswer: 'C. Passed'},
-      {id: 6, question: 'Guess the output of the following Java code snippet:\n\nint x = 10;\nint y = 20;\nif (x > 5) {\nif (y < 15) {\nSystem.out.println(\'Block 1\');\n} else {\nSystem.out.println(\'Block 2\');\n}\n} else {\nSystem.out.println(\'Block 3\');\n}', options: ['A. Block 1', 'B. Block 3', 'C. Block 2', 'D. Block 2\nBlock 3'], correctAnswer: 'C. Block 2'},
+      {id: 1, question: 'Which of the following data types CANNOT be used as the controlling expression in a standard Java switch-case statement?', options: ["A. char", "B. int", "C. String", "D. double"], correctAnswer: "D. double"},
+      {id: 2, question: 'What happens if a matching case block in a switch statement does not contain a \'break\' statement?', options: ["A. The program falls through, executing subsequent case blocks sequentially until a break or the end of the switch is encountered.", "B. The compiler inserts an implicit break at the end of the matching case, so only that case block runs.", "C. The switch statement terminates instantly without running anything.", "D. Execution immediately jumps to the default block regardless of its position."], correctAnswer: "A. The program falls through, executing subsequent case blocks sequentially until a break or the end of the switch is encountered."},
+      {id: 3, question: 'Which statement best describes the evaluation behavior of a conditional statement structured with nested if blocks?', options: ["A. The inner 'if' condition is evaluated regardless of whether the outer 'if' condition is true or false.", "B. The inner 'if' condition is evaluated only if the outer 'if' condition evaluates to true.", "C. The compiler combines them automatically into a single flat logical AND expression.", "D. Both outer and inner conditions are checked simultaneously in parallel."], correctAnswer: "B. The inner 'if' condition is evaluated only if the outer 'if' condition evaluates to true."},
+      {id: 4, question: 'How many operands are evaluated by a conditional ternary operator expression in Java?', options: ["A. 1", "B. 2", "C. 3", "D. 4"], correctAnswer: "C. 3"},
+      {id: 5, question: 'Guess the output of the following Java code snippet:\n\nint score = 75;\nif (score > 80)\nSystem.out.print(\'A \');\nSystem.out.print(\'Passed \');', options: ["A. No output is displayed", "B. A Passed", "C. A", "D. Passed"], correctAnswer: "D. Passed"},
+      {id: 6, question: 'Guess the output of the following Java code snippet:\n\nint x = 10;\nint y = 20;\nif (x > 5) {\nif (y < 15) {\nSystem.out.println(\'Block 1\');\n} else {\nSystem.out.println(\'Block 2\');\n}\n} else {\nSystem.out.println(\'Block 3\');\n}', options: ["A. Block 2", "B. Block 1", "C. Block 3", "D. Block 2\nBlock 3"], correctAnswer: "A. Block 2"},
       {id: 7, question: 'Guess the output of the following Java code snippet:\n\nint status = 2;\nswitch (status) {\ncase 1:\nSystem.out.print(\'Ready \');\ncase 2:\nSystem.out.print(\'Set \');\ncase 3:\nSystem.out.print(\'Go \');\ndefault:\nSystem.out.print(\'Done \');\n}', options: ['A. Set', 'B. Set Go Done', 'C. Set Done', 'D. Ready Set Go Done'], correctAnswer: 'B. Set Go Done'},
-      {id: 8, question: 'Guess the output of the following Java code snippet:\n\nint a = 10, b = 5;\nString result = (a < b) ? \'Low\' : (a == b) ? \'Equal\' : \'High\';\nSystem.out.println(result);', options: ['A. Low', 'B. High', 'C. Compilation Error', 'D. Equal'], correctAnswer: 'B. High'},
-      {id: 9, question: 'Guess the output of the following Java code snippet:\n\nint number = 15;\nif (number % 3 == 0 || number % 5 == 0) {\nSystem.out.println(\'Divisible\');\n} else if (number % 15 == 0) {\nSystem.out.println(\'Divisible by 15\');\n}', options: ['A. Divisible by 15', 'B. Divisible', 'C. Divisible\nDivisible by 15', 'D. No output due to compilation conflict'], correctAnswer: 'B. Divisible'},
-      {id: 10, question: 'Guess the output of the following Java code snippet:\n\nint count = 10;\nboolean check = false;\nif (check && (count++ > 5)) {\nSystem.out.println(\'Inside\');\n}\nSystem.out.println(count);', options: ['A. Runtime Error', 'B. 11', 'C. Inside\n11', 'D. 10'], correctAnswer: 'D. 10'},
-      {id: 11, question: 'Guess the output of the following Java code snippet:\n\nint value = 5;\nif (value = 10) {\nSystem.out.println(\'True Block\');\n} else {\nSystem.out.println(\'False Block\');\n}', options: ['A. False Block', 'B. True Block', 'C. 5', 'D. Compilation Error'], correctAnswer: 'D. Compilation Error'},
+      {id: 8, question: 'Guess the output of the following Java code snippet:\n\nint a = 10, b = 5;\nString result = (a < b) ? \'Low\' : (a == b) ? \'Equal\' : \'High\';\nSystem.out.println(result);', options: ["A. Low", "B. Compilation Error", "C. High", "D. Equal"], correctAnswer: "C. High"},
+      {id: 9, question: 'Guess the output of the following Java code snippet:\n\nint number = 15;\nif (number % 3 == 0 || number % 5 == 0) {\nSystem.out.println(\'Divisible\');\n} else if (number % 15 == 0) {\nSystem.out.println(\'Divisible by 15\');\n}', options: ["A. Divisible by 15", "B. Divisible\nDivisible by 15", "C. No output due to compilation conflict", "D. Divisible"], correctAnswer: "D. Divisible"},
+      {id: 10, question: 'Guess the output of the following Java code snippet:\n\nint count = 10;\nboolean check = false;\nif (check && (count++ > 5)) {\nSystem.out.println(\'Inside\');\n}\nSystem.out.println(count);', options: ["A. 10", "B. Runtime Error", "C. 11", "D. Inside\n11"], correctAnswer: "A. 10"},
+      {id: 11, question: 'Guess the output of the following Java code snippet:\n\nint value = 5;\nif (value = 10) {\nSystem.out.println(\'True Block\');\n} else {\nSystem.out.println(\'False Block\');\n}', options: ["A. False Block", "B. Compilation Error", "C. True Block", "D. 5"], correctAnswer: "B. Compilation Error"},
       {id: 12, question: 'Guess the output of the following Java code snippet:\n\nboolean power = true;\nif (power = false) {\nSystem.out.println(\'On\');\n} else {\nSystem.out.println(\'Off\');\n}', options: ['A. No output', 'B. Compilation Error', 'C. Off', 'D. On'], correctAnswer: 'C. Off'},
-      {id: 13, question: 'Guess the output of the following Java code snippet:\n\nint code = 3;\nint adjustment = switch (code) {\ncase 1, 2 -> 10;\ncase 3, 4 -> 20;\ndefault -> 30;\n};\nSystem.out.println(adjustment);', options: ['A. 20', 'B. 30', 'C. 10', 'D. Compilation Error'], correctAnswer: 'A. 20'},
-      {id: 14, question: 'Guess the output of the following Java code snippet:\n\nint age = 18;\nboolean registration = true;\nSystem.out.println(age >= 18 || !registration ? \'Allowed\' : \'Denied\');', options: ['A. true', 'B. Compilation Error', 'C. Allowed', 'D. Denied'], correctAnswer: 'C. Allowed'},
+      {id: 13, question: 'Guess the output of the following Java code snippet:\n\nint code = 3;\nint adjustment = switch (code) {\ncase 1, 2 -> 10;\ncase 3, 4 -> 20;\ndefault -> 30;\n};\nSystem.out.println(adjustment);', options: ["A. 30", "B. 10", "C. Compilation Error", "D. 20"], correctAnswer: "D. 20"},
+      {id: 14, question: 'Guess the output of the following Java code snippet:\n\nint age = 18;\nboolean registration = true;\nSystem.out.println(age >= 18 || !registration ? \'Allowed\' : \'Denied\');', options: ["A. Allowed", "B. true", "C. Compilation Error", "D. Denied"], correctAnswer: "A. Allowed"},
       {id: 15, question: 'Guess the output of the following Java code snippet:\n\nint keys = 5;\nswitch (keys) {\ndefault:\nSystem.out.print(\'Unknown \');\ncase 1:\nSystem.out.print(\'One \');\nbreak;\ncase 5:\nSystem.out.print(\'Five \');\n}', options: ['A. Unknown One Five', 'B. Five', 'C. Five Unknown', 'D. Unknown One'], correctAnswer: 'B. Five'},
-      {id: 16, question: 'Guess the output of the following Java code snippet:\n\nint option = 0;\nswitch (option) {\ndefault:\nSystem.out.print(\'Default \');\ncase 1:\nSystem.out.print(\'One \');\nbreak;\ncase 2:\nSystem.out.print(\'Two \');\n}', options: ['A. Default', 'B. One', 'C. Default One Two', 'D. Default One'], correctAnswer: 'D. Default One'},
-      {id: 17, question: 'Guess the output of the following Java code snippet:\n\nint temperature = 32;\nif (temperature > 30)\nif (temperature < 25)\nSystem.out.println(\'Ideal\');\nelse\nSystem.out.println(\'Warm\');', options: ['A. Warm', 'B. Ideal', 'C. Compilation Error', 'D. No output is displayed'], correctAnswer: 'A. Warm'},
-      {id: 18, question: 'Guess the output of the following Java code snippet:\n\nint threshold = 5;\nboolean alert = true;\nif (!alert || (++threshold > 10)) {\nSystem.out.print(\'Active \');\n}\nSystem.out.println(threshold);', options: ['A. Active 6', 'B. 6', 'C. Active 5', 'D. 5'], correctAnswer: 'B. 6'},
+      {id: 16, question: 'Guess the output of the following Java code snippet:\n\nint option = 0;\nswitch (option) {\ndefault:\nSystem.out.print(\'Default \');\ncase 1:\nSystem.out.print(\'One \');\nbreak;\ncase 2:\nSystem.out.print(\'Two \');\n}', options: ["A. Default", "B. One", "C. Default One", "D. Default One Two"], correctAnswer: "C. Default One"},
+      {id: 17, question: 'Guess the output of the following Java code snippet:\n\nint temperature = 32;\nif (temperature > 30)\nif (temperature < 25)\nSystem.out.println(\'Ideal\');\nelse\nSystem.out.println(\'Warm\');', options: ["A. Ideal", "B. Compilation Error", "C. No output is displayed", "D. Warm"], correctAnswer: "D. Warm"},
+      {id: 18, question: 'Guess the output of the following Java code snippet:\n\nint threshold = 5;\nboolean alert = true;\nif (!alert || (++threshold > 10)) {\nSystem.out.print(\'Active \');\n}\nSystem.out.println(threshold);', options: ["A. 6", "B. Active 6", "C. Active 5", "D. 5"], correctAnswer: "A. 6"},
       {id: 19, question: 'Guess the output of the following Java code snippet:\n\nint x = 4;\nint result = (x % 2 == 0) ? (x * 2) : (x / 2);\nSystem.out.println(result);', options: ['A. 2', 'B. 8', 'C. 16', 'D. 4'], correctAnswer: 'B. 8'},
-      {id: 20, question: 'Guess the output of the following Java code snippet:\n\nint point = 2;\nswitch (point) {\ncase 1:\nSystem.out.print(\'Point 1 \');\nbreak;\ncase 2:\n// Empty Case\ncase 3:\nSystem.out.print(\'Point 3 \');\nbreak;\ndefault:\nSystem.out.print(\'End \');\n}', options: ['A. No output is displayed', 'B. Compilation Error', 'C. End', 'D. Point 3'], correctAnswer: 'D. Point 3'}
+      {id: 20, question: 'Guess the output of the following Java code snippet:\n\nint point = 2;\nswitch (point) {\ncase 1:\nSystem.out.print(\'Point 1 \');\nbreak;\ncase 2:\n// Empty Case\ncase 3:\nSystem.out.print(\'Point 3 \');\nbreak;\ndefault:\nSystem.out.print(\'End \');\n}', options: ["A. No output is displayed", "B. Compilation Error", "C. Point 3", "D. End"], correctAnswer: "C. Point 3"}
     ],
     assignment: {
       prompts: [
@@ -1024,26 +1024,26 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
       type: 'loop_stepper'
     },
     quiz: [
-      { id: 1, question: 'Which loop is guaranteed to execute at least once?', options: ['A. for loop', 'B. while loop', 'C. do-while loop', 'D. enhanced-for loop'], correctAnswer: 'C. do-while loop' },
-      { id: 2, question: 'Which statement skips remaining lines in a loop iteration and moves to the next iteration?', options: ['A. break', 'B. continue', 'C. exit', 'D. return'], correctAnswer: 'B. continue' },
+      { id: 1, question: 'Which loop is guaranteed to execute at least once?', options: ["A. for loop", "B. while loop", "C. enhanced-for loop", "D. do-while loop"], correctAnswer: "D. do-while loop" },
+      { id: 2, question: 'Which statement skips remaining lines in a loop iteration and moves to the next iteration?', options: ["A. continue", "B. break", "C. exit", "D. return"], correctAnswer: "A. continue" },
       { id: 3, question: 'What happens if a loop condition is always true and has no break?', options: ['A. Program completes', 'B. Infinite loop', 'C. Compiler crash', 'D. Syntax error'], correctAnswer: 'B. Infinite loop' },
       { id: 4, question: 'What is the runtime complexity of two nested loops matching bounds N?', options: ['A. O(N)', 'B. O(log N)', 'C. O(N^2)', 'D. O(1)'], correctAnswer: 'C. O(N^2)' },
-      { id: 5, question: 'What is required at the end of a do-while loop statement?', options: ['A. colon (:)', 'B. double colon (::)', 'C. semicolon (;)', 'D. nothing'], correctAnswer: 'C. semicolon (;)' },
-      { id: 6, question: 'Which loop is best when the number of iterations is known in advance?', options: ['A. while', 'B. for', 'C. do-while', 'D. infinite'], correctAnswer: 'B. for' },
-      { id: 7, question: 'What does the enhanced for loop (for-each) NOT allow you to do?', options: ['A. Read each element', 'B. Modify the array structure while iterating', 'C. Iterate a List', 'D. Iterate a String array'], correctAnswer: 'B. Modify the array structure while iterating' },
-      { id: 8, question: 'How many times does `for (int i = 0; i < 5; i++)` execute its body?', options: ['A. 4', 'B. 5', 'C. 6', 'D. 0'], correctAnswer: 'B. 5' },
-      { id: 9, question: 'What does `break` do inside a nested loop?', options: ['A. Exits all loops', 'B. Exits only the innermost loop', 'C. Skips one iteration', 'D. Restarts the loop'], correctAnswer: 'B. Exits only the innermost loop' },
+      { id: 5, question: 'What is required at the end of a do-while loop statement?', options: ["A. colon (:)", "B. double colon (::)", "C. nothing", "D. semicolon (;)"], correctAnswer: "D. semicolon (;)" },
+      { id: 6, question: 'Which loop is best when the number of iterations is known in advance?', options: ["A. for", "B. while", "C. do-while", "D. infinite"], correctAnswer: "A. for" },
+      { id: 7, question: 'What does the enhanced for loop (for-each) NOT allow you to do?', options: ["A. Read each element", "B. Modify the array structure while iterating", "C. Iterate over a List or Set", "D. Iterate arrays of primitive types such as int[]"], correctAnswer: 'B. Modify the array structure while iterating' },
+      { id: 8, question: 'How many times does `for (int i = 0; i < 5; i++)` execute its body?', options: ["A. 4", "B. 6", "C. 5", "D. 0"], correctAnswer: "C. 5" },
+      { id: 9, question: 'What does `break` do inside a nested loop?', options: ["A. Exits all loops", "B. Skips one iteration", "C. Restarts the loop", "D. Exits only the innermost loop"], correctAnswer: "D. Exits only the innermost loop" },
       { id: 10, question: 'Which construct lets `break` exit an outer loop directly?', options: ['A. A labelled break', 'B. break outer;', 'C. exit()', 'D. It is impossible'], correctAnswer: 'A. A labelled break' },
       { id: 11, question: 'What is printed by `for (int i = 0; i < 3; i++) { if (i == 1) continue; System.out.print(i); }`?', options: ['A. 012', 'B. 02', 'C. 12', 'D. 0'], correctAnswer: 'B. 02' },
-      { id: 12, question: 'Which part of a for loop is executed only once?', options: ['A. Condition', 'B. Initialization', 'C. Update', 'D. Body'], correctAnswer: 'B. Initialization' },
-      { id: 13, question: 'What happens with `for (;;)`?', options: ['A. Compile error', 'B. Runs zero times', 'C. Infinite loop', 'D. Runs once'], correctAnswer: 'C. Infinite loop' },
-      { id: 14, question: 'Where is a variable declared in a for loop initializer accessible?', options: ['A. Everywhere in the class', 'B. Only inside that loop', 'C. In the enclosing method after the loop', 'D. Only in the condition'], correctAnswer: 'B. Only inside that loop' },
-      { id: 15, question: 'Which loop checks its condition AFTER executing the body?', options: ['A. for', 'B. while', 'C. do-while', 'D. for-each'], correctAnswer: 'C. do-while' },
-      { id: 16, question: 'How many total iterations does a nested loop with outer 3 and inner 4 perform?', options: ['A. 7', 'B. 12', 'C. 34', 'D. 4'], correctAnswer: 'B. 12' },
-      { id: 17, question: 'What is the output of `int i = 0; while (i++ < 3) System.out.print(i);`?', options: ['A. 012', 'B. 123', 'C. 0123', 'D. 12'], correctAnswer: 'B. 123' },
-      { id: 18, question: 'Which statement immediately exits the enclosing method, not just the loop?', options: ['A. break', 'B. continue', 'C. return', 'D. exit'], correctAnswer: 'C. return' },
-      { id: 19, question: 'What is a common cause of an unintentional infinite while loop?', options: ['A. Forgetting to update the loop variable', 'B. Using braces', 'C. Declaring the variable as int', 'D. Using a condition'], correctAnswer: 'A. Forgetting to update the loop variable' },
-      { id: 20, question: 'Which loop type is most appropriate for iterating every element of a collection read-only?', options: ['A. do-while', 'B. enhanced for (for-each)', 'C. Labelled loop', 'D. Infinite loop'], correctAnswer: 'B. enhanced for (for-each)' }
+      { id: 12, question: 'Which part of a for loop is executed only once?', options: ["A. Condition", "B. Update", "C. Initialization", "D. Body"], correctAnswer: "C. Initialization" },
+      { id: 13, question: 'What happens with `for (;;)`?', options: ["A. Compile error", "B. Runs zero times", "C. Runs once", "D. Infinite loop"], correctAnswer: "D. Infinite loop" },
+      { id: 14, question: 'Where is a variable declared in a for loop initializer accessible?', options: ["A. Only inside that loop", "B. Everywhere in the class", "C. In the enclosing method after the loop", "D. Only in the condition"], correctAnswer: "A. Only inside that loop" },
+      { id: 15, question: 'Which loop checks its condition AFTER executing the body?', options: ["A. for", "B. do-while", "C. while", "D. for-each"], correctAnswer: "B. do-while" },
+      { id: 16, question: 'How many total iterations does a nested loop with outer 3 and inner 4 perform?', options: ["A. 7", "B. 34", "C. 12", "D. 4"], correctAnswer: "C. 12" },
+      { id: 17, question: 'What is the output of `int i = 0; while (i++ < 3) System.out.print(i);`?', options: ["A. 012", "B. 0123", "C. 12", "D. 123"], correctAnswer: "D. 123" },
+      { id: 18, question: 'Which statement immediately exits the enclosing method, not just the loop?', options: ["A. return", "B. break", "C. continue", "D. exit"], correctAnswer: "A. return" },
+      { id: 19, question: 'What is a common cause of an unintentional infinite while loop?', options: ["A. Using braces", "B. Forgetting to update the loop variable", "C. Declaring the variable as int", "D. Using a condition"], correctAnswer: "B. Forgetting to update the loop variable" },
+      { id: 20, question: 'Which loop type is most appropriate for iterating every element of a collection read-only?', options: ["A. do-while", "B. Labelled loop", "C. enhanced for (for-each)", "D. Infinite loop"], correctAnswer: "C. enhanced for (for-each)" }
     ],
     assignment: {
       prompts: [
@@ -1060,12 +1060,12 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'What is the functional difference between break and continue statements in loops?',
           options: [
-            'A. break terminates the loop entirely; continue skips the current iteration and moves to the next one.',
-            'B. continue terminates the loop entirely; break skips the current iteration.',
-            'C. break can only be used in while loops; continue can only be used in for loops.',
-            'D. both statements do the exact same thing but have different names.'
+            "A. continue terminates the loop entirely; break skips the current iteration.",
+            "B. break can only be used in while loops; continue can only be used in for loops.",
+            "C. both statements do the exact same thing but have different names.",
+            "D. break terminates the loop entirely; continue skips the current iteration and moves to the next one.",
           ],
-          correctAnswer: 'A. break terminates the loop entirely; continue skips the current iteration and moves to the next one.'
+          correctAnswer: "D. break terminates the loop entirely; continue skips the current iteration and moves to the next one."
         }
       ]
     }
@@ -1192,26 +1192,26 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
       type: 'code_sandbox'
     },
     quiz: [
-      { id: 1, question: 'What keyword denotes that a method returns nothing?', options: ['A. null', 'B. blank', 'C. void', 'D. static'], correctAnswer: 'C. void' },
+      { id: 1, question: 'What keyword denotes that a method returns nothing?', options: ["A. void", "B. null", "C. blank", "D. static"], correctAnswer: "A. void" },
       { id: 2, question: 'Which error happens if recursive calls have no terminating base case?', options: ['A. NullPointerException', 'B. StackOverflowError', 'C. ArithmeticException', 'D. OutOfMemoryError'], correctAnswer: 'B. StackOverflowError' },
-      { id: 3, question: 'Can you overload a method by changing only the return type?', options: ['A. Yes', 'B. No', 'C. Depends on JVM', 'D. Only in interfaces'], correctAnswer: 'B. No' },
-      { id: 4, question: 'How is data passed into Java methods?', options: ['A. Pass by reference', 'B. Pass by value', 'C. Pass by pointer', 'D. Pass by address'], correctAnswer: 'B. Pass by value' },
-      { id: 5, question: 'What is dynamic method binding?', options: ['A. Overloading resolution', 'B. Runtime recursion', 'C. Overriding resolution at runtime', 'D. Importing classes'], correctAnswer: 'C. Overriding resolution at runtime' },
-      { id: 6, question: 'What is method overloading?', options: ['A. Same name, different parameter lists', 'B. Same name and same parameters in a subclass', 'C. Calling a method twice', 'D. A method that is too long'], correctAnswer: 'A. Same name, different parameter lists' },
-      { id: 7, question: 'Can two methods be overloaded by return type alone?', options: ['A. Yes', 'B. No, it is a compile error', 'C. Only for static methods', 'D. Only for void'], correctAnswer: 'B. No, it is a compile error' },
-      { id: 8, question: 'What must every recursive method have to avoid StackOverflowError?', options: ['A. A loop', 'B. A base case', 'C. A return type of void', 'D. Two parameters'], correctAnswer: 'B. A base case' },
-      { id: 9, question: 'How are primitive arguments passed in Java?', options: ['A. By reference', 'B. By value (a copy)', 'C. By pointer', 'D. By name'], correctAnswer: 'B. By value (a copy)' },
+      { id: 3, question: 'Can you overload a method by changing only the return type?', options: ["A. Yes", "B. Depends on JVM", "C. No", "D. Only in interfaces"], correctAnswer: "C. No" },
+      { id: 4, question: 'How is data passed into Java methods?', options: ["A. Pass by reference", "B. Pass by pointer", "C. Pass by address", "D. Pass by value"], correctAnswer: "D. Pass by value" },
+      { id: 5, question: 'What is dynamic method binding?', options: ["A. Overriding resolution at runtime", "B. Overloading resolution", "C. Runtime recursion", "D. Importing classes"], correctAnswer: "A. Overriding resolution at runtime" },
+      { id: 6, question: 'What is method overloading?', options: ["A. Same name and same parameters in a subclass", "B. Same name, different parameter lists", "C. Calling a method twice", "D. A method that is too long"], correctAnswer: "B. Same name, different parameter lists" },
+      { id: 7, question: 'Can two methods be overloaded by return type alone?', options: ["A. Yes", "B. Only for static methods", "C. No, it is a compile error", "D. Only for void"], correctAnswer: "C. No, it is a compile error" },
+      { id: 8, question: 'What must every recursive method have to avoid StackOverflowError?', options: ["A. A loop", "B. A return type of void", "C. Two parameters", "D. A base case"], correctAnswer: "D. A base case" },
+      { id: 9, question: 'How are primitive arguments passed in Java?', options: ["A. By value (a copy)", "B. By reference", "C. By pointer", "D. By name"], correctAnswer: "A. By value (a copy)" },
       { id: 10, question: 'When you pass an object to a method, what is copied?', options: ['A. The whole object', 'B. The reference value', 'C. Nothing', 'D. Only the fields'], correctAnswer: 'B. The reference value' },
       { id: 11, question: 'What does a method with return type `void` return?', options: ['A. null', 'B. 0', 'C. Nothing', 'D. An empty object'], correctAnswer: 'C. Nothing' },
-      { id: 12, question: 'What keyword allows a method to be called without creating an object?', options: ['A. final', 'B. static', 'C. public', 'D. abstract'], correctAnswer: 'B. static' },
-      { id: 13, question: 'Can a static method directly access an instance variable?', options: ['A. Yes, always', 'B. No, it has no instance context', 'C. Only if the variable is public', 'D. Only in the constructor'], correctAnswer: 'B. No, it has no instance context' },
+      { id: 12, question: 'What keyword allows a method to be called without creating an object?', options: ["A. final", "B. public", "C. abstract", "D. static"], correctAnswer: "D. static" },
+      { id: 13, question: 'Can a static method directly access an instance variable?', options: ["A. No, it has no instance context", "B. Yes, always", "C. Only if the variable is public", "D. Only in the constructor"], correctAnswer: "A. No, it has no instance context" },
       { id: 14, question: 'What is the scope of a local variable declared inside a method?', options: ['A. The whole class', 'B. Only that method', 'C. The whole package', 'D. All subclasses'], correctAnswer: 'B. Only that method' },
-      { id: 15, question: 'What does varargs (`int... nums`) allow?', options: ['A. Zero or more arguments of that type', 'B. Exactly three arguments', 'C. Only arrays', 'D. Named arguments'], correctAnswer: 'A. Zero or more arguments of that type' },
-      { id: 16, question: 'Where must a varargs parameter appear in a parameter list?', options: ['A. First', 'B. Anywhere', 'C. Last', 'D. It cannot be combined with others'], correctAnswer: 'C. Last' },
-      { id: 17, question: 'What is the recursive definition of factorial(0)?', options: ['A. 0', 'B. 1', 'C. Undefined', 'D. -1'], correctAnswer: 'B. 1' },
+      { id: 15, question: 'What does varargs (`int... nums`) allow?', options: ["A. Exactly three arguments", "B. Only arrays", "C. Zero or more arguments of that type", "D. Named arguments"], correctAnswer: "C. Zero or more arguments of that type" },
+      { id: 16, question: 'Where must a varargs parameter appear in a parameter list?', options: ["A. First", "B. Anywhere", "C. It cannot be combined with others", "D. Last"], correctAnswer: "D. Last" },
+      { id: 17, question: 'What is the recursive definition of factorial(0)?', options: ["A. 1", "B. 0", "C. Undefined", "D. -1"], correctAnswer: "A. 1" },
       { id: 18, question: 'Which is generally more memory-efficient for simple repetition?', options: ['A. Recursion', 'B. Iteration', 'C. They are identical', 'D. Neither'], correctAnswer: 'B. Iteration' },
-      { id: 19, question: 'What happens when a local variable shadows an instance variable of the same name?', options: ['A. Compile error', 'B. The local variable wins inside that scope', 'C. The instance variable wins', 'D. Both are updated'], correctAnswer: 'B. The local variable wins inside that scope' },
-      { id: 20, question: 'Which access modifier makes a method visible only within its own class?', options: ['A. public', 'B. protected', 'C. private', 'D. default'], correctAnswer: 'C. private' }
+      { id: 19, question: 'What happens when a local variable shadows an instance variable of the same name?', options: ["A. Compile error", "B. The instance variable wins", "C. The local variable wins inside that scope", "D. Both are updated"], correctAnswer: "C. The local variable wins inside that scope" },
+      { id: 20, question: 'Which access modifier makes a method visible only within its own class?', options: ["A. public", "B. protected", "C. default", "D. private"], correctAnswer: "D. private" }
     ],
     assignment: {
       prompts: [
@@ -1359,26 +1359,26 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
       type: 'code_sandbox'
     },
     quiz: [
-      { id: 1, question: 'Which index represents the third element of a Java array?', options: ['A. 3', 'B. 2', 'C. 1', 'D. 4'], correctAnswer: 'B. 2' },
+      { id: 1, question: 'Which index represents the third element of a Java array?', options: ["A. 2", "B. 3", "C. 1", "D. 4"], correctAnswer: "A. 2" },
       { id: 2, question: 'What property gives the size of an array?', options: ['A. size()', 'B. length', 'C. length()', 'D. capacity'], correctAnswer: 'B. length' },
       { id: 3, question: 'What exception is thrown when accessing index -1?', options: ['A. NullPointerException', 'B. OutOfBoundsException', 'C. ArrayIndexOutOfBoundsException', 'D. InvalidIndexException'], correctAnswer: 'C. ArrayIndexOutOfBoundsException' },
-      { id: 4, question: 'Which sorting method is built into the Arrays utility class?', options: ['A. Arrays.order()', 'B. Arrays.sort()', 'C. Arrays.filter()', 'D. Arrays.binarySearch()'], correctAnswer: 'B. Arrays.sort()' },
-      { id: 5, question: 'Can you dynamically resize an array after creation?', options: ['A. Yes', 'B. No', 'C. Using size = newSize', 'D. Only in main method'], correctAnswer: 'B. No' },
+      { id: 4, question: 'Which sorting method is built into the Arrays utility class?', options: ["A. Arrays.order()", "B. Arrays.filter()", "C. Arrays.binarySearch()", "D. Arrays.sort()"], correctAnswer: "D. Arrays.sort()" },
+      { id: 5, question: 'Can you dynamically resize an array after creation?', options: ["A. No", "B. Yes", "C. Using size = newSize", "D. Only in main method"], correctAnswer: "A. No" },
       { id: 6, question: 'What is the default value of an element in a newly created `int[5]`?', options: ['A. null', 'B. 0', 'C. undefined', 'D. -1'], correctAnswer: 'B. 0' },
-      { id: 7, question: 'What is the default value in a new `String[3]`?', options: ['A. ""', 'B. null', 'C. "null"', 'D. 0'], correctAnswer: 'B. null' },
-      { id: 8, question: 'Which exception is thrown by accessing `arr[arr.length]`?', options: ['A. NullPointerException', 'B. ArrayIndexOutOfBoundsException', 'C. IllegalArgumentException', 'D. ArrayStoreException'], correctAnswer: 'B. ArrayIndexOutOfBoundsException' },
-      { id: 9, question: 'How do you get the size of an array named `data`?', options: ['A. data.size()', 'B. data.length()', 'C. data.length', 'D. length(data)'], correctAnswer: 'C. data.length' },
+      { id: 7, question: 'What is the default value in a new `String[3]`?', options: ["A. \"\"", "B. \"null\"", "C. null", "D. 0"], correctAnswer: "C. null" },
+      { id: 8, question: 'Which exception is thrown by accessing `arr[arr.length]`?', options: ["A. NullPointerException", "B. IllegalArgumentException", "C. ArrayStoreException", "D. ArrayIndexOutOfBoundsException"], correctAnswer: "D. ArrayIndexOutOfBoundsException" },
+      { id: 9, question: 'How do you get the size of an array named `data`?', options: ["A. data.length", "B. data.size()", "C. data.length()", "D. length(data)"], correctAnswer: "A. data.length" },
       { id: 10, question: 'Can the length of a Java array be changed after creation?', options: ['A. Yes, with resize()', 'B. No, it is fixed', 'C. Only for int arrays', 'D. Only if declared final'], correctAnswer: 'B. No, it is fixed' },
-      { id: 11, question: 'Which method sorts an int array in ascending order?', options: ['A. Arrays.sort()', 'B. Arrays.order()', 'C. Collections.sort()', 'D. array.sort()'], correctAnswer: 'A. Arrays.sort()' },
-      { id: 12, question: 'What does `Arrays.toString(arr)` do?', options: ['A. Converts elements to Strings', 'B. Returns a readable representation of the array', 'C. Sorts then prints', 'D. Returns the memory address'], correctAnswer: 'B. Returns a readable representation of the array' },
+      { id: 11, question: 'Which method sorts an int array in ascending order?', options: ["A. Arrays.order()", "B. Collections.sort()", "C. Arrays.sort()", "D. array.sort()"], correctAnswer: "C. Arrays.sort()" },
+      { id: 12, question: 'What does `Arrays.toString(arr)` do?', options: ["A. Converts elements to Strings", "B. Sorts then prints", "C. Returns the memory address", "D. Returns a readable representation of the array"], correctAnswer: "D. Returns a readable representation of the array" },
       { id: 13, question: 'What is the time complexity of accessing an array element by index?', options: ['A. O(1)', 'B. O(n)', 'C. O(log n)', 'D. O(n^2)'], correctAnswer: 'A. O(1)' },
-      { id: 14, question: 'How is a 2D array declared in Java?', options: ['A. int[][] grid = new int[3][4];', 'B. int grid[3][4];', 'C. array2d int grid;', 'D. int grid = new int[3,4];'], correctAnswer: 'A. int[][] grid = new int[3][4];' },
-      { id: 15, question: 'What is a jagged array?', options: ['A. An unsorted array', 'B. A 2D array whose rows have different lengths', 'C. An array with null elements', 'D. An array of objects'], correctAnswer: 'B. A 2D array whose rows have different lengths' },
-      { id: 16, question: 'Which precondition does `Arrays.binarySearch()` require?', options: ['A. The array must be sorted', 'B. The array must be non-empty', 'C. The array must be 2D', 'D. No precondition'], correctAnswer: 'A. The array must be sorted' },
-      { id: 17, question: 'What does `System.arraycopy()` do?', options: ['A. Copies a range of elements between arrays', 'B. Creates a deep clone', 'C. Sorts and copies', 'D. Prints the array'], correctAnswer: 'A. Copies a range of elements between arrays' },
+      { id: 14, question: 'How is a 2D array declared in Java?', options: ["A. int grid[3][4];", "B. int[][] grid = new int[3][4];", "C. array2d int grid;", "D. int grid = new int[3,4];"], correctAnswer: "B. int[][] grid = new int[3][4];" },
+      { id: 15, question: 'What is a jagged array?', options: ["A. An unsorted array", "B. An array with null elements", "C. A 2D array whose rows have different lengths", "D. An array of objects"], correctAnswer: "C. A 2D array whose rows have different lengths" },
+      { id: 16, question: 'Which precondition does `Arrays.binarySearch()` require?', options: ["A. The array must be non-empty", "B. The array must be 2D", "C. No precondition", "D. The array must be sorted"], correctAnswer: "D. The array must be sorted" },
+      { id: 17, question: 'What does `System.arraycopy()` do?', options: ["A. Copies a range of elements between arrays", "B. Creates a deep clone", "C. Sorts the source range, then copies it", "D. Prints the copied range to standard output"], correctAnswer: 'A. Copies a range of elements between arrays' },
       { id: 18, question: 'Is `arr.clone()` on an array of objects a deep copy?', options: ['A. Yes', 'B. No, it copies references (shallow)', 'C. Only for Strings', 'D. Only for primitives'], correctAnswer: 'B. No, it copies references (shallow)' },
-      { id: 19, question: 'What is the cost of inserting into the middle of an array?', options: ['A. O(1)', 'B. O(log n)', 'C. O(n) because elements must shift', 'D. Impossible'], correctAnswer: 'C. O(n) because elements must shift' },
-      { id: 20, question: 'Which class should you use when the number of elements is not known upfront?', options: ['A. int[]', 'B. ArrayList', 'C. String[]', 'D. Arrays'], correctAnswer: 'B. ArrayList' }
+      { id: 19, question: 'What is the cost of inserting into the middle of an array?', options: ["A. O(1), since arrays support index access", "B. O(log n)", "C. O(n) because elements must shift", "D. Impossible without converting to an ArrayList"], correctAnswer: 'C. O(n) because elements must shift' },
+      { id: 20, question: 'Which class should you use when the number of elements is not known upfront?', options: ["A. int[]", "B. String[]", "C. Arrays", "D. ArrayList"], correctAnswer: "D. ArrayList" }
     ],
     assignment: {
       prompts: [
@@ -1525,26 +1525,26 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
       type: 'code_sandbox'
     },
     quiz: [
-      { id: 1, question: 'Which memory structure caches unique string literals?', options: ['A. Heap pool', 'B. Stack frame', 'C. String Constant Pool (SCP)', 'D. Global registry'], correctAnswer: 'C. String Constant Pool (SCP)' },
+      { id: 1, question: 'Which memory structure caches unique string literals?', options: ["A. String Constant Pool (SCP)", "B. Heap pool", "C. Stack frame", "D. Global registry"], correctAnswer: "A. String Constant Pool (SCP)" },
       { id: 2, question: 'Which comparison matches actual content values of strings?', options: ['A. str1 == str2', 'B. str1.equals(str2)', 'C. str1.compare(str2)', 'D. str1 === str2'], correctAnswer: 'B. str1.equals(str2)' },
       { id: 3, question: 'Which string builder tool is mutable but not thread-safe?', options: ['A. String', 'B. StringBuffer', 'C. StringBuilder', 'D. ArrayBuilder'], correctAnswer: 'C. StringBuilder' },
-      { id: 4, question: 'What is the result of "abc".substring(1, 3)?', options: ['A. "ab"', 'B. "bc"', 'C. "b"', 'D. "c"'], correctAnswer: 'B. "bc"' },
+      { id: 4, question: 'What is the result of "abc".substring(1, 3)?', options: ["A. \"ab\"", "B. \"b\"", "C. \"c\"", "D. \"bc\""], correctAnswer: "D. \"bc\"" },
       { id: 5, question: 'Why are String objects immutable in Java?', options: ['A. For security, caching, and thread safety', 'B. Because compiler cannot modify them', 'C. To save storage spaces', 'D. By mistake'], correctAnswer: 'A. For security, caching, and thread safety' },
-      { id: 6, question: 'Why are Strings immutable in Java?', options: ['A. For caching, thread safety and security', 'B. To save disk space', 'C. Because they are primitives', 'D. To allow modification'], correctAnswer: 'A. For caching, thread safety and security' },
-      { id: 7, question: 'What does `==` compare for two String variables?', options: ['A. Their contents', 'B. Their reference addresses', 'C. Their lengths', 'D. Their hash codes'], correctAnswer: 'B. Their reference addresses' },
-      { id: 8, question: 'Which method correctly compares String contents?', options: ['A. ==', 'B. equals()', 'C. compare()', 'D. matches()'], correctAnswer: 'B. equals()' },
-      { id: 9, question: 'Which class is mutable AND synchronised?', options: ['A. String', 'B. StringBuilder', 'C. StringBuffer', 'D. CharSequence'], correctAnswer: 'C. StringBuffer' },
+      { id: 6, question: 'Why are Strings immutable in Java?', options: ["A. To save disk space", "B. For caching, thread safety and security", "C. Because they are primitives", "D. To allow modification"], correctAnswer: "B. For caching, thread safety and security" },
+      { id: 7, question: 'What does `==` compare for two String variables?', options: ["A. Their contents", "B. Their lengths", "C. Their reference addresses", "D. Their hash codes"], correctAnswer: "C. Their reference addresses" },
+      { id: 8, question: 'Which method correctly compares String contents?', options: ["A. ==", "B. compare()", "C. matches()", "D. equals()"], correctAnswer: "D. equals()" },
+      { id: 9, question: 'Which class is mutable AND synchronised?', options: ["A. StringBuffer", "B. String", "C. StringBuilder", "D. CharSequence"], correctAnswer: "A. StringBuffer" },
       { id: 10, question: 'Which is faster in single-threaded code?', options: ['A. StringBuffer', 'B. StringBuilder', 'C. They are identical', 'D. String'], correctAnswer: 'B. StringBuilder' },
-      { id: 11, question: 'What does `"Java".charAt(0)` return?', options: ['A. "J"', 'B. \'J\'', 'C. 0', 'D. "Java"'], correctAnswer: 'B. \'J\'' },
-      { id: 12, question: 'What does `"  hi  ".trim()` produce?', options: ['A. "hi"', 'B. "  hi"', 'C. "hi  "', 'D. "  hi  "'], correctAnswer: 'A. "hi"' },
-      { id: 13, question: 'What does `String.valueOf(42)` return?', options: ['A. 42', 'B. "42"', 'C. \'4\'', 'D. null'], correctAnswer: 'B. "42"' },
+      { id: 11, question: 'What does `"Java".charAt(0)` return?', options: ["A. \"J\"", "B. 0", "C. 'J'", "D. \"Java\""], correctAnswer: "C. 'J'" },
+      { id: 12, question: 'What does `"  hi  ".trim()` produce?', options: ["A. \"  hi\"", "B. \"hi  \"", "C. \"  hi  \"", "D. \"hi\""], correctAnswer: "D. \"hi\"" },
+      { id: 13, question: 'What does `String.valueOf(42)` return?', options: ["A. \"42\"", "B. 42", "C. '4'", "D. null"], correctAnswer: "A. \"42\"" },
       { id: 14, question: 'What does `"a,b,c".split(",")` return?', options: ['A. A String', 'B. A String array of length 3', 'C. A List', 'D. A char array'], correctAnswer: 'B. A String array of length 3' },
-      { id: 15, question: 'Where are String literals stored?', options: ['A. The String constant pool', 'B. The stack', 'C. Metaspace', 'D. A register'], correctAnswer: 'A. The String constant pool' },
-      { id: 16, question: 'What does `new String("hi")` guarantee?', options: ['A. Reuse of the pooled literal', 'B. A distinct object on the heap', 'C. A compile error', 'D. A null value'], correctAnswer: 'B. A distinct object on the heap' },
-      { id: 17, question: 'Which method ignores case when comparing?', options: ['A. equals()', 'B. equalsIgnoreCase()', 'C. compareTo()', 'D. contentEquals()'], correctAnswer: 'B. equalsIgnoreCase()' },
-      { id: 18, question: 'What does `"hello".substring(1, 3)` return?', options: ['A. "el"', 'B. "ell"', 'C. "he"', 'D. "llo"'], correctAnswer: 'A. "el"' },
-      { id: 19, question: 'Why is String concatenation in a large loop discouraged?', options: ['A. It is a syntax error', 'B. Each concatenation creates a new String object', 'C. It reverses the string', 'D. It uses too little memory'], correctAnswer: 'B. Each concatenation creates a new String object' },
-      { id: 20, question: 'What does `"Java".indexOf("v")` return?', options: ['A. 1', 'B. 2', 'C. 3', 'D. -1'], correctAnswer: 'B. 2' }
+      { id: 15, question: 'Where are String literals stored?', options: ["A. The stack", "B. Metaspace", "C. The String constant pool", "D. A register"], correctAnswer: "C. The String constant pool" },
+      { id: 16, question: 'What does `new String("hi")` guarantee?', options: ["A. Reuse of the pooled literal", "B. A compile error", "C. A null value", "D. A distinct object on the heap"], correctAnswer: "D. A distinct object on the heap" },
+      { id: 17, question: 'Which method ignores case when comparing?', options: ["A. equalsIgnoreCase()", "B. equals()", "C. compareTo()", "D. contentEquals()"], correctAnswer: "A. equalsIgnoreCase()" },
+      { id: 18, question: 'What does `"hello".substring(1, 3)` return?', options: ["A. \"ell\"", "B. \"el\"", "C. \"he\"", "D. \"llo\""], correctAnswer: "B. \"el\"" },
+      { id: 19, question: 'Why is String concatenation in a large loop discouraged?', options: ["A. The compiler rejects + on Strings inside loops", "B. It reverses the string", "C. Each concatenation creates a new String object", "D. It uses too little memory"], correctAnswer: "C. Each concatenation creates a new String object" },
+      { id: 20, question: 'What does `"Java".indexOf("v")` return?', options: ["A. 1", "B. 3", "C. -1", "D. 2"], correctAnswer: "D. 2" }
     ],
     assignment: {
       prompts: [
@@ -1553,12 +1553,12 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'Why does String comparison using the "==" operator return false when comparing two strings created with new String("test")?',
           options: [
-            'A. The "==" operator compares the content of the string objects, which is different.',
-            'B. The "==" operator compares memory references (addresses), not the actual contents.',
-            'C. The compiler automatically optimizes new String() objects to have random values.',
-            'D. The "==" operator is not allowed for String objects and will cause a compilation error.'
+            "A. The \"==\" operator compares memory references (addresses), not the actual contents.",
+            "B. The \"==\" operator compares the content of the string objects, which is different.",
+            "C. The compiler automatically optimizes new String() objects to have random values.",
+            "D. The \"==\" operator is not allowed for String objects and will cause a compilation error.",
           ],
-          correctAnswer: 'B. The "==" operator compares memory references (addresses), not the actual contents.'
+          correctAnswer: "A. The \"==\" operator compares memory references (addresses), not the actual contents."
         }
       ]
     }
@@ -1736,26 +1736,26 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
       type: 'code_sandbox'
     },
     quiz: [
-      { id: 1, question: 'Which pillar hides implementation details and exposes only functionality?', options: ['A. Encapsulation', 'B. Inheritance', 'C. Polymorphism', 'D. Abstraction'], correctAnswer: 'D. Abstraction' },
-      { id: 2, question: 'Which keyword points to the current object instance?', options: ['A. super', 'B. this', 'C. base', 'D. current'], correctAnswer: 'B. this' },
-      { id: 3, question: 'Can a Java class extend multiple parent classes?', options: ['A. Yes', 'B. No', 'C. Only abstract classes', 'D. Only in interfaces'], correctAnswer: 'B. No' },
-      { id: 4, question: 'Which keyword implements an interface contract?', options: ['A. extends', 'B. inherits', 'C. implements', 'D. uses'], correctAnswer: 'C. implements' },
+      { id: 1, question: 'Which pillar hides implementation details and exposes only functionality?', options: ["A. Encapsulation", "B. Abstraction", "C. Inheritance", "D. Polymorphism"], correctAnswer: "B. Abstraction" },
+      { id: 2, question: 'Which keyword points to the current object instance?', options: ["A. super", "B. base", "C. this", "D. current"], correctAnswer: "C. this" },
+      { id: 3, question: 'Can a Java class extend multiple parent classes?', options: ["A. Yes", "B. Only abstract classes", "C. Only in interfaces", "D. No"], correctAnswer: "D. No" },
+      { id: 4, question: 'Which keyword implements an interface contract?', options: ["A. implements", "B. extends", "C. inherits", "D. uses"], correctAnswer: "A. implements" },
       { id: 5, question: 'What is compile-time polymorphism?', options: ['A. Method Overriding', 'B. Method Overloading', 'C. Garbage Collection', 'D. Inheritance'], correctAnswer: 'B. Method Overloading' },
-      { id: 6, question: 'Which OOP pillar hides internal state behind methods?', options: ['A. Inheritance', 'B. Encapsulation', 'C. Polymorphism', 'D. Abstraction'], correctAnswer: 'B. Encapsulation' },
-      { id: 7, question: 'What is the purpose of a constructor?', options: ['A. To destroy objects', 'B. To initialise a new object', 'C. To return a value', 'D. To declare a class'], correctAnswer: 'B. To initialise a new object' },
-      { id: 8, question: 'What does a constructor return?', options: ['A. void', 'B. The class type', 'C. Nothing, it has no return type', 'D. null'], correctAnswer: 'C. Nothing, it has no return type' },
+      { id: 6, question: 'Which OOP pillar hides internal state behind methods?', options: ["A. Inheritance", "B. Polymorphism", "C. Encapsulation", "D. Abstraction"], correctAnswer: "C. Encapsulation" },
+      { id: 7, question: 'What is the purpose of a constructor?', options: ["A. To destroy objects", "B. To return a value", "C. To declare a class", "D. To initialise a new object"], correctAnswer: "D. To initialise a new object" },
+      { id: 8, question: 'What does a constructor return?', options: ["A. Nothing, it has no return type", "B. void", "C. The class type", "D. null"], correctAnswer: "A. Nothing, it has no return type" },
       { id: 9, question: 'What happens if you define no constructor at all?', options: ['A. Compile error', 'B. Java provides a default no-arg constructor', 'C. The class cannot be instantiated', 'D. All fields become final'], correctAnswer: 'B. Java provides a default no-arg constructor' },
-      { id: 10, question: 'What does the `this` keyword refer to?', options: ['A. The superclass', 'B. The current object instance', 'C. A static context', 'D. The class itself'], correctAnswer: 'B. The current object instance' },
-      { id: 11, question: 'Which keyword is used to inherit from a class?', options: ['A. implements', 'B. extends', 'C. inherits', 'D. super'], correctAnswer: 'B. extends' },
+      { id: 10, question: 'What does the `this` keyword refer to?', options: ["A. The superclass", "B. A static context", "C. The current object instance", "D. The class itself"], correctAnswer: "C. The current object instance" },
+      { id: 11, question: 'Which keyword is used to inherit from a class?', options: ["A. implements", "B. inherits", "C. super", "D. extends"], correctAnswer: "D. extends" },
       { id: 12, question: 'How many classes can a Java class extend directly?', options: ['A. One', 'B. Two', 'C. Unlimited', 'D. Zero'], correctAnswer: 'A. One' },
       { id: 13, question: 'Which enables multiple inheritance of type in Java?', options: ['A. Abstract classes', 'B. Interfaces', 'C. Inner classes', 'D. Static classes'], correctAnswer: 'B. Interfaces' },
-      { id: 14, question: 'Compile-time polymorphism is achieved through:', options: ['A. Overriding', 'B. Overloading', 'C. Inheritance', 'D. Encapsulation'], correctAnswer: 'B. Overloading' },
-      { id: 15, question: 'Runtime polymorphism is achieved through:', options: ['A. Overloading', 'B. Method overriding', 'C. Static methods', 'D. Constructors'], correctAnswer: 'B. Method overriding' },
+      { id: 14, question: 'Compile-time polymorphism is achieved through:', options: ["A. Overriding", "B. Inheritance", "C. Overloading", "D. Encapsulation"], correctAnswer: "C. Overloading" },
+      { id: 15, question: 'Runtime polymorphism is achieved through:', options: ["A. Overloading", "B. Static methods", "C. Constructors", "D. Method overriding"], correctAnswer: "D. Method overriding" },
       { id: 16, question: 'Can an abstract class have a constructor?', options: ['A. Yes', 'B. No', 'C. Only if it has no abstract methods', 'D. Only a private one'], correctAnswer: 'A. Yes' },
       { id: 17, question: 'Can you instantiate an abstract class directly?', options: ['A. Yes', 'B. No', 'C. Only with new', 'D. Only in the same package'], correctAnswer: 'B. No' },
-      { id: 18, question: 'Which access modifier allows access in subclasses and the same package?', options: ['A. private', 'B. protected', 'C. public', 'D. default'], correctAnswer: 'B. protected' },
-      { id: 19, question: 'What does `super()` do?', options: ['A. Calls the superclass constructor', 'B. Creates a new object', 'C. Calls a static method', 'D. Returns the parent class'], correctAnswer: 'A. Calls the superclass constructor' },
-      { id: 20, question: 'Since Java 8, what can an interface contain besides abstract methods?', options: ['A. Nothing else', 'B. default and static methods', 'C. Constructors', 'D. Instance fields'], correctAnswer: 'B. default and static methods' }
+      { id: 18, question: 'Which access modifier allows access in subclasses and the same package?', options: ["A. private", "B. public", "C. protected", "D. default"], correctAnswer: "C. protected" },
+      { id: 19, question: 'What does `super()` do?', options: ["A. Creates a new object", "B. Calls a static method", "C. Returns the parent class", "D. Calls the superclass constructor"], correctAnswer: "D. Calls the superclass constructor" },
+      { id: 20, question: 'Since Java 8, what can an interface contain besides abstract methods?', options: ["A. default and static methods", "B. Nothing else", "C. Constructors", "D. Instance fields"], correctAnswer: "A. default and static methods" }
     ],
     assignment: {
       prompts: [
@@ -1764,12 +1764,12 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'Which of the following is a key difference between abstract classes and interfaces in Java 8 and later?',
           options: [
-            'A. An interface can have instance fields; an abstract class cannot.',
-            'B. A class can extend multiple abstract classes but can implement only one interface.',
-            'C. An abstract class can have instance fields and constructors; an interface cannot have instance fields or constructors.',
-            'D. Interfaces cannot have any method implementations.'
+            "A. An interface can have instance fields; an abstract class cannot.",
+            "B. An abstract class can have instance fields and constructors; an interface cannot have instance fields or constructors.",
+            "C. A class can extend multiple abstract classes but can implement only one interface.",
+            "D. Interfaces cannot have any method implementations.",
           ],
-          correctAnswer: 'C. An abstract class can have instance fields and constructors; an interface cannot have instance fields or constructors.'
+          correctAnswer: "B. An abstract class can have instance fields and constructors; an interface cannot have instance fields or constructors."
         }
       ]
     }
@@ -1897,25 +1897,25 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     },
     quiz: [
       { id: 1, question: 'Which block always runs, even if an exception is thrown?', options: ['A. try', 'B. catch', 'C. finally', 'D. throws'], correctAnswer: 'C. finally' },
-      { id: 2, question: 'Which keyword declares exceptions in method headers?', options: ['A. throw', 'B. throws', 'C. try', 'D. declare'], correctAnswer: 'B. throws' },
+      { id: 2, question: 'Which keyword declares exceptions in method headers?', options: ["A. throw", "B. try", "C. declare", "D. throws"], correctAnswer: "D. throws" },
       { id: 3, question: 'Which class serves as the parent to all exceptions?', options: ['A. Throwable', 'B. Object', 'C. Error', 'D. Compiler'], correctAnswer: 'A. Throwable' },
       { id: 4, question: 'Is NullPointerException checked or unchecked?', options: ['A. Checked', 'B. Unchecked', 'C. Error', 'D. Warning'], correctAnswer: 'B. Unchecked' },
-      { id: 5, question: 'How do you create a custom checked exception?', options: ['A. Extend RuntimeException', 'B. Extend Exception', 'C. Extend Error', 'D. Implement Interface'], correctAnswer: 'B. Extend Exception' },
-      { id: 6, question: 'Which class is the parent of all errors and exceptions?', options: ['A. Exception', 'B. Throwable', 'C. Error', 'D. RuntimeException'], correctAnswer: 'B. Throwable' },
-      { id: 7, question: 'Which of these is a checked exception?', options: ['A. NullPointerException', 'B. IOException', 'C. ArithmeticException', 'D. ArrayIndexOutOfBoundsException'], correctAnswer: 'B. IOException' },
-      { id: 8, question: 'Which of these is unchecked?', options: ['A. IOException', 'B. SQLException', 'C. NullPointerException', 'D. FileNotFoundException'], correctAnswer: 'C. NullPointerException' },
-      { id: 9, question: 'When does a `finally` block execute?', options: ['A. Only on success', 'B. Only on exception', 'C. Almost always, whether or not an exception occurred', 'D. Never'], correctAnswer: 'C. Almost always, whether or not an exception occurred' },
-      { id: 10, question: 'What is the difference between `throw` and `throws`?', options: ['A. throw raises an exception; throws declares one', 'B. They are identical', 'C. throws raises; throw declares', 'D. throw is for errors only'], correctAnswer: 'A. throw raises an exception; throws declares one' },
-      { id: 11, question: 'In a multi-catch chain, which order is required?', options: ['A. Most general first', 'B. Most specific first', 'C. Any order', 'D. Alphabetical'], correctAnswer: 'B. Most specific first' },
-      { id: 12, question: 'What does try-with-resources guarantee?', options: ['A. No exceptions occur', 'B. Declared AutoCloseable resources are closed', 'C. The code runs twice', 'D. Faster execution'], correctAnswer: 'B. Declared AutoCloseable resources are closed' },
-      { id: 13, question: 'Which exception is thrown by dividing an int by zero?', options: ['A. ArithmeticException', 'B. NumberFormatException', 'C. NullPointerException', 'D. None, it returns Infinity'], correctAnswer: 'A. ArithmeticException' },
-      { id: 14, question: 'What does `1.0 / 0` produce for doubles?', options: ['A. ArithmeticException', 'B. Infinity', 'C. 0', 'D. NaN'], correctAnswer: 'B. Infinity' },
-      { id: 15, question: 'Which class should a custom business exception usually extend?', options: ['A. Error', 'B. Throwable', 'C. RuntimeException', 'D. Thread'], correctAnswer: 'C. RuntimeException' },
-      { id: 16, question: 'What is thrown by `Integer.parseInt("abc")`?', options: ['A. NumberFormatException', 'B. ClassCastException', 'C. IOException', 'D. ParseException'], correctAnswer: 'A. NumberFormatException' },
-      { id: 17, question: 'Should you catch `Error` (e.g. OutOfMemoryError)?', options: ['A. Yes, always', 'B. No, they signal unrecoverable JVM conditions', 'C. Only in main()', 'D. Only in finally'], correctAnswer: 'B. No, they signal unrecoverable JVM conditions' },
-      { id: 18, question: 'What is wrong with an empty catch block?', options: ['A. Nothing', 'B. It silently swallows failures', 'C. It is a compile error', 'D. It rethrows automatically'], correctAnswer: 'B. It silently swallows failures' },
-      { id: 19, question: 'Can a try block exist without catch?', options: ['A. No', 'B. Yes, if it has finally or is try-with-resources', 'C. Only in static methods', 'D. Only in interfaces'], correctAnswer: 'B. Yes, if it has finally or is try-with-resources' },
-      { id: 20, question: 'What does exception chaining preserve?', options: ['A. The original cause of the failure', 'B. The stack size', 'C. The thread name', 'D. The class loader'], correctAnswer: 'A. The original cause of the failure' }
+      { id: 5, question: 'How do you create a custom checked exception?', options: ["A. Extend RuntimeException", "B. Extend Error", "C. Extend Exception", "D. Implement Interface"], correctAnswer: "C. Extend Exception" },
+      { id: 6, question: 'Which class is the parent of all errors and exceptions?', options: ["A. Exception", "B. Error", "C. RuntimeException", "D. Throwable"], correctAnswer: "D. Throwable" },
+      { id: 7, question: 'Which of these is a checked exception?', options: ["A. IOException", "B. NullPointerException", "C. ArithmeticException", "D. ArrayIndexOutOfBoundsException"], correctAnswer: "A. IOException" },
+      { id: 8, question: 'Which of these is unchecked?', options: ["A. IOException", "B. NullPointerException", "C. SQLException", "D. FileNotFoundException"], correctAnswer: "B. NullPointerException" },
+      { id: 9, question: 'When does a `finally` block execute?', options: ["A. Only on success", "B. Only on exception", "C. Almost always, whether or not an exception occurred", "D. Only when the try block completes without an exception"], correctAnswer: 'C. Almost always, whether or not an exception occurred' },
+      { id: 10, question: 'What is the difference between `throw` and `throws`?', options: ["A. They are identical", "B. throws raises; throw declares", "C. throw is for errors only", "D. throw raises an exception; throws declares one"], correctAnswer: "D. throw raises an exception; throws declares one" },
+      { id: 11, question: 'In a multi-catch chain, which order is required?', options: ["A. Most specific first", "B. Most general first", "C. Any order", "D. Alphabetical"], correctAnswer: "A. Most specific first" },
+      { id: 12, question: 'What does try-with-resources guarantee?', options: ["A. No exceptions occur", "B. Declared AutoCloseable resources are closed", "C. The resources are reopened if an exception occurs", "D. Exceptions thrown inside the block are suppressed"], correctAnswer: 'B. Declared AutoCloseable resources are closed' },
+      { id: 13, question: 'Which exception is thrown by dividing an int by zero?', options: ["A. NumberFormatException", "B. NullPointerException", "C. ArithmeticException", "D. None, it returns Infinity"], correctAnswer: "C. ArithmeticException" },
+      { id: 14, question: 'What does `1.0 / 0` produce for doubles?', options: ["A. ArithmeticException", "B. 0", "C. NaN", "D. Infinity"], correctAnswer: "D. Infinity" },
+      { id: 15, question: 'Which class should a custom business exception usually extend?', options: ["A. RuntimeException", "B. Error", "C. Throwable", "D. Thread"], correctAnswer: "A. RuntimeException" },
+      { id: 16, question: 'What is thrown by `Integer.parseInt("abc")`?', options: ["A. ClassCastException", "B. NumberFormatException", "C. IOException", "D. ParseException"], correctAnswer: "B. NumberFormatException" },
+      { id: 17, question: 'Should you catch `Error` (e.g. OutOfMemoryError)?', options: ["A. Yes, so the application can recover and continue", "B. Only in main()", "C. No, they signal unrecoverable JVM conditions", "D. Only in finally"], correctAnswer: "C. No, they signal unrecoverable JVM conditions" },
+      { id: 18, question: 'What is wrong with an empty catch block?', options: ["A. Nothing", "B. It is a compile error", "C. It rethrows automatically", "D. It silently swallows failures"], correctAnswer: "D. It silently swallows failures" },
+      { id: 19, question: 'Can a try block exist without catch?', options: ["A. Yes, if it has finally or is try-with-resources", "B. No, every try needs at least one catch block", "C. Only in static methods", "D. Only in interfaces"], correctAnswer: "A. Yes, if it has finally or is try-with-resources" },
+      { id: 20, question: 'What does exception chaining preserve?', options: ["A. The stack size", "B. The original cause of the failure", "C. The thread name", "D. The class loader"], correctAnswer: "B. The original cause of the failure" }
     ],
     assignment: {
       prompts: [
@@ -1924,12 +1924,12 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'What is the difference between the throw and throws keywords in Java exception handling?',
           options: [
-            'A. throws is used to explicitly throw an exception; throw is used to declare exceptions in a method signature.',
-            'B. throw is used to explicitly throw a single exception instance; throws is used in method signatures to declare exceptions that might be thrown.',
-            'C. throw can only throw checked exceptions; throws can only throw unchecked exceptions.',
-            'D. there is no functional difference; they can be used interchangeably.'
+            "A. throws is used to explicitly throw an exception; throw is used to declare exceptions in a method signature.",
+            "B. throw can only throw checked exceptions; throws can only throw unchecked exceptions.",
+            "C. throw is used to explicitly throw a single exception instance; throws is used in method signatures to declare exceptions that might be thrown.",
+            "D. there is no functional difference; they can be used interchangeably.",
           ],
-          correctAnswer: 'B. throw is used to explicitly throw a single exception instance; throws is used in method signatures to declare exceptions that might be thrown.'
+          correctAnswer: "C. throw is used to explicitly throw a single exception instance; throws is used in method signatures to declare exceptions that might be thrown."
         }
       ]
     }
@@ -2090,26 +2090,26 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
       type: 'code_sandbox'
     },
     quiz: [
-      { id: 1, question: 'Which collection does not allow duplicate values?', options: ['A. ArrayList', 'B. LinkedList', 'C. HashSet', 'D. Vector'], correctAnswer: 'C. HashSet' },
-      { id: 2, question: 'Which class maps key-value pairs with O(1) lookup?', options: ['A. TreeSet', 'B. HashMap', 'C. ArrayList', 'D. TreeMap'], correctAnswer: 'B. HashMap' },
-      { id: 3, question: 'Which Set is sorted automatically?', options: ['A. HashSet', 'B. LinkedHashSet', 'C. TreeSet', 'D. VectorSet'], correctAnswer: 'C. TreeSet' },
-      { id: 4, question: 'How do you check if a map contains a key?', options: ['A. map.hasKey()', 'B. map.containsKey()', 'C. map.find()', 'D. map.get()'], correctAnswer: 'B. map.containsKey()' },
-      { id: 5, question: 'What exception is thrown when modifying collections during simple loop iteration?', options: ['A. NullPointerException', 'B. ConcurrentModificationException', 'C. IndexOutOfBoundsException', 'D. CollectionException'], correctAnswer: 'B. ConcurrentModificationException' },
-      { id: 6, question: 'Which interface does NOT allow duplicate elements?', options: ['A. List', 'B. Set', 'C. Queue', 'D. Collection'], correctAnswer: 'B. Set' },
+      { id: 1, question: 'Which collection does not allow duplicate values?', options: ["A. ArrayList", "B. LinkedList", "C. Vector", "D. HashSet"], correctAnswer: "D. HashSet" },
+      { id: 2, question: 'Which class maps key-value pairs with O(1) lookup?', options: ["A. HashMap", "B. TreeSet", "C. ArrayList", "D. TreeMap"], correctAnswer: "A. HashMap" },
+      { id: 3, question: 'Which Set is sorted automatically?', options: ["A. HashSet", "B. TreeSet", "C. LinkedHashSet", "D. VectorSet"], correctAnswer: "B. TreeSet" },
+      { id: 4, question: 'How do you check if a map contains a key?', options: ["A. map.hasKey()", "B. map.find()", "C. map.containsKey()", "D. map.get()"], correctAnswer: "C. map.containsKey()" },
+      { id: 5, question: 'What exception is thrown when modifying collections during simple loop iteration?', options: ["A. NullPointerException", "B. IndexOutOfBoundsException", "C. CollectionException", "D. ConcurrentModificationException"], correctAnswer: "D. ConcurrentModificationException" },
+      { id: 6, question: 'Which interface does NOT allow duplicate elements?', options: ["A. Set", "B. List", "C. Queue", "D. Collection"], correctAnswer: "A. Set" },
       { id: 7, question: 'Which implementation gives O(1) average lookup by key?', options: ['A. TreeMap', 'B. HashMap', 'C. LinkedList', 'D. ArrayList'], correctAnswer: 'B. HashMap' },
       { id: 8, question: 'Which Map implementation keeps keys sorted?', options: ['A. HashMap', 'B. LinkedHashMap', 'C. TreeMap', 'D. Hashtable'], correctAnswer: 'C. TreeMap' },
-      { id: 9, question: 'Which Map preserves insertion order?', options: ['A. HashMap', 'B. TreeMap', 'C. LinkedHashMap', 'D. Hashtable'], correctAnswer: 'C. LinkedHashMap' },
-      { id: 10, question: 'Does Map extend Collection?', options: ['A. Yes', 'B. No, it is a separate hierarchy', 'C. Only TreeMap does', 'D. Only in Java 8+'], correctAnswer: 'B. No, it is a separate hierarchy' },
-      { id: 11, question: 'What is the time complexity of ArrayList.get(i)?', options: ['A. O(1)', 'B. O(n)', 'C. O(log n)', 'D. O(n log n)'], correctAnswer: 'A. O(1)' },
-      { id: 12, question: 'What is the complexity of LinkedList.get(i)?', options: ['A. O(1)', 'B. O(n)', 'C. O(log n)', 'D. O(1) amortised'], correctAnswer: 'B. O(n)' },
-      { id: 13, question: 'Which two methods must you override together for correct HashMap behaviour?', options: ['A. toString() and equals()', 'B. equals() and hashCode()', 'C. compareTo() and equals()', 'D. clone() and hashCode()'], correctAnswer: 'B. equals() and hashCode()' },
-      { id: 14, question: 'What happens if you put a key with an equal hashCode but unequal equals()?', options: ['A. It replaces the existing entry', 'B. Both are stored in the same bucket', 'C. Compile error', 'D. The map is cleared'], correctAnswer: 'B. Both are stored in the same bucket' },
-      { id: 15, question: 'What exception is thrown by modifying a collection while iterating it with a for-each?', options: ['A. ConcurrentModificationException', 'B. IllegalStateException', 'C. UnsupportedOperationException', 'D. NoSuchElementException'], correctAnswer: 'A. ConcurrentModificationException' },
-      { id: 16, question: 'Which method safely removes during iteration?', options: ['A. list.remove()', 'B. iterator.remove()', 'C. list.clear()', 'D. collection.removeAll()'], correctAnswer: 'B. iterator.remove()' },
-      { id: 17, question: 'Which collection is a thread-safe Map for concurrent use?', options: ['A. HashMap', 'B. TreeMap', 'C. ConcurrentHashMap', 'D. LinkedHashMap'], correctAnswer: 'C. ConcurrentHashMap' },
-      { id: 18, question: 'What does `Arrays.asList()` return?', options: ['A. A fully mutable ArrayList', 'B. A fixed-size list backed by the array', 'C. An immutable copy', 'D. A Set'], correctAnswer: 'B. A fixed-size list backed by the array' },
+      { id: 9, question: 'Which Map preserves insertion order?', options: ["A. HashMap", "B. TreeMap", "C. Hashtable", "D. LinkedHashMap"], correctAnswer: "D. LinkedHashMap" },
+      { id: 10, question: 'Does Map extend Collection?', options: ["A. No, it is a separate hierarchy", "B. Yes", "C. Only TreeMap does", "D. Only in Java 8+"], correctAnswer: "A. No, it is a separate hierarchy" },
+      { id: 11, question: 'What is the time complexity of ArrayList.get(i)?', options: ["A. O(n)", "B. O(1)", "C. O(log n)", "D. O(n log n)"], correctAnswer: "B. O(1)" },
+      { id: 12, question: 'What is the complexity of LinkedList.get(i)?', options: ["A. O(1)", "B. O(log n)", "C. O(n)", "D. O(1) amortised"], correctAnswer: "C. O(n)" },
+      { id: 13, question: 'Which two methods must you override together for correct HashMap behaviour?', options: ["A. toString() and equals()", "B. compareTo() and equals()", "C. clone() and hashCode()", "D. equals() and hashCode()"], correctAnswer: "D. equals() and hashCode()" },
+      { id: 14, question: 'What happens if you put a key with an equal hashCode but unequal equals()?', options: ["A. Both are stored in the same bucket", "B. It replaces the existing entry", "C. Compile error", "D. The map is cleared"], correctAnswer: "A. Both are stored in the same bucket" },
+      { id: 15, question: 'What exception is thrown by modifying a collection while iterating it with a for-each?', options: ["A. IllegalStateException", "B. ConcurrentModificationException", "C. UnsupportedOperationException", "D. NoSuchElementException"], correctAnswer: "B. ConcurrentModificationException" },
+      { id: 16, question: 'Which method safely removes during iteration?', options: ["A. list.remove()", "B. list.clear()", "C. iterator.remove()", "D. collection.removeAll()"], correctAnswer: "C. iterator.remove()" },
+      { id: 17, question: 'Which collection is a thread-safe Map for concurrent use?', options: ["A. HashMap", "B. TreeMap", "C. LinkedHashMap", "D. ConcurrentHashMap"], correctAnswer: "D. ConcurrentHashMap" },
+      { id: 18, question: 'What does `Arrays.asList()` return?', options: ["A. A fixed-size list backed by the array", "B. A fully mutable ArrayList", "C. An immutable copy", "D. A Set"], correctAnswer: "A. A fixed-size list backed by the array" },
       { id: 19, question: 'Which interface must a class implement to define natural ordering?', options: ['A. Comparator', 'B. Comparable', 'C. Iterable', 'D. Cloneable'], correctAnswer: 'B. Comparable' },
-      { id: 20, question: 'What does a Set implementation use to detect duplicates?', options: ['A. toString()', 'B. equals() and hashCode()', 'C. The index', 'D. compareTo() only'], correctAnswer: 'B. equals() and hashCode()' }
+      { id: 20, question: 'What does a Set implementation use to detect duplicates?', options: ["A. toString()", "B. The index", "C. equals() and hashCode()", "D. compareTo() only"], correctAnswer: "C. equals() and hashCode()" }
     ],
     assignment: {
       prompts: [
@@ -2126,12 +2126,12 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'When would you choose a TreeMap over a HashMap in Java?',
           options: [
-            'A. When you need constant-time O(1) performance for basic operations.',
-            'B. When you need the keys to be maintained in a sorted order.',
-            'C. When you need to allow null keys and null values.',
-            'D. When memory footprint is your primary concern.'
+            "A. When you need constant-time O(1) performance for basic operations.",
+            "B. When you need to allow null keys and null values.",
+            "C. When memory footprint is your primary concern.",
+            "D. When you need the keys to be maintained in a sorted order.",
           ],
-          correctAnswer: 'B. When you need the keys to be maintained in a sorted order.'
+          correctAnswer: "D. When you need the keys to be maintained in a sorted order."
         }
       ]
     }
@@ -2268,26 +2268,26 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
       type: 'code_sandbox'
     },
     quiz: [
-      { id: 1, question: 'Which class reads files line by line?', options: ['A. FileReader', 'B. BufferedReader', 'C. Scanner', 'D. FileInputStream'], correctAnswer: 'B. BufferedReader' },
+      { id: 1, question: 'Which class reads files line by line?', options: ["A. BufferedReader", "B. FileReader", "C. Scanner", "D. FileInputStream"], correctAnswer: "A. BufferedReader" },
       { id: 2, question: 'Which construct automatically closes resources?', options: ['A. try catch finally', 'B. Try-with-resources', 'C. garbage collection', 'D. finalize()'], correctAnswer: 'B. Try-with-resources' },
-      { id: 3, question: 'How do you check if a file exists?', options: ['A. file.has()', 'B. file.exists()', 'C. file.check()', 'D. file.load()'], correctAnswer: 'B. file.exists()' },
-      { id: 4, question: 'Which FileWriter constructor appends text to an existing file?', options: ['A. new FileWriter("file.txt")', 'B. new FileWriter("file.txt", true)', 'C. new FileWriter("file.txt", "append")', 'D. new FileWriter(true)'], correctAnswer: 'B. new FileWriter("file.txt", true)' },
-      { id: 5, question: 'Which package contains File handling classes?', options: ['A. java.util', 'B. java.lang', 'C. java.io', 'D. java.net'], correctAnswer: 'C. java.io' },
+      { id: 3, question: 'How do you check if a file exists?', options: ["A. file.has()", "B. file.check()", "C. file.exists()", "D. file.load()"], correctAnswer: "C. file.exists()" },
+      { id: 4, question: 'Which FileWriter constructor appends text to an existing file?', options: ["A. new FileWriter(\"file.txt\")", "B. new FileWriter(\"file.txt\", \"append\")", "C. new FileWriter(true)", "D. new FileWriter(\"file.txt\", true)"], correctAnswer: "D. new FileWriter(\"file.txt\", true)" },
+      { id: 5, question: 'Which package contains File handling classes?', options: ["A. java.io", "B. java.util", "C. java.lang", "D. java.net"], correctAnswer: "A. java.io" },
       { id: 6, question: 'Which stream family should you use for binary data such as images?', options: ['A. Reader/Writer', 'B. InputStream/OutputStream', 'C. Scanner', 'D. BufferedReader'], correctAnswer: 'B. InputStream/OutputStream' },
       { id: 7, question: 'What does `FileReader.read()` return at end of file?', options: ['A. 0', 'B. null', 'C. -1', 'D. It throws EOFException'], correctAnswer: 'C. -1' },
-      { id: 8, question: 'What does `BufferedReader.readLine()` return at end of file?', options: ['A. -1', 'B. null', 'C. ""', 'D. It throws'], correctAnswer: 'B. null' },
-      { id: 9, question: 'Which FileWriter constructor appends instead of overwriting?', options: ['A. new FileWriter(path)', 'B. new FileWriter(path, true)', 'C. new FileWriter(path, "append")', 'D. FileWriter.append(path)'], correctAnswer: 'B. new FileWriter(path, true)' },
+      { id: 8, question: 'What does `BufferedReader.readLine()` return at end of file?', options: ["A. -1", "B. \"\"", "C. It throws", "D. null"], correctAnswer: "D. null" },
+      { id: 9, question: 'Which FileWriter constructor appends instead of overwriting?', options: ["A. new FileWriter(path, true)", "B. new FileWriter(path)", "C. new FileWriter(path, \"append\")", "D. FileWriter.append(path)"], correctAnswer: "A. new FileWriter(path, true)" },
       { id: 10, question: 'What does `new File("x.txt")` actually do?', options: ['A. Creates the file on disk', 'B. Creates only an object representing a path', 'C. Opens a stream', 'D. Deletes the file'], correctAnswer: 'B. Creates only an object representing a path' },
-      { id: 11, question: 'Which method actually creates an empty file on disk?', options: ['A. file.create()', 'B. file.createNewFile()', 'C. file.mkdir()', 'D. file.write()'], correctAnswer: 'B. file.createNewFile()' },
-      { id: 12, question: 'Why is BufferedWriter faster than a bare FileWriter?', options: ['A. It compresses data', 'B. It batches writes in memory before hitting disk', 'C. It uses multiple threads', 'D. It skips validation'], correctAnswer: 'B. It batches writes in memory before hitting disk' },
-      { id: 13, question: 'What does `BufferedWriter.newLine()` write?', options: ['A. Always \\n', 'B. The platform-specific line separator', 'C. Always \\r\\n', 'D. A space'], correctAnswer: 'B. The platform-specific line separator' },
+      { id: 11, question: 'Which method actually creates an empty file on disk?', options: ["A. file.create()", "B. file.mkdir()", "C. file.createNewFile()", "D. file.write()"], correctAnswer: "C. file.createNewFile()" },
+      { id: 12, question: 'Why is BufferedWriter faster than a bare FileWriter?', options: ["A. It compresses data before writing it to disk", "B. It uses multiple threads", "C. It skips validation", "D. It batches writes in memory before hitting disk"], correctAnswer: "D. It batches writes in memory before hitting disk" },
+      { id: 13, question: 'What does `BufferedWriter.newLine()` write?', options: ["A. The platform-specific line separator", "B. Always \\n", "C. Always \\r\\n", "D. A single space character between words"], correctAnswer: "A. The platform-specific line separator" },
       { id: 14, question: 'What happens if you never close a BufferedWriter?', options: ['A. Nothing', 'B. Buffered data may never reach disk', 'C. The file is deleted', 'D. It throws immediately'], correctAnswer: 'B. Buffered data may never reach disk' },
-      { id: 15, question: 'In what order does try-with-resources close resources?', options: ['A. Declaration order', 'B. Reverse declaration order', 'C. Random', 'D. Alphabetical'], correctAnswer: 'B. Reverse declaration order' },
-      { id: 16, question: 'What interface must a class implement to be used in try-with-resources?', options: ['A. Serializable', 'B. AutoCloseable', 'C. Runnable', 'D. Comparable'], correctAnswer: 'B. AutoCloseable' },
+      { id: 15, question: 'In what order does try-with-resources close resources?', options: ["A. Declaration order", "B. Random", "C. Reverse declaration order", "D. Alphabetical"], correctAnswer: "C. Reverse declaration order" },
+      { id: 16, question: 'What interface must a class implement to be used in try-with-resources?', options: ["A. Serializable", "B. Runnable", "C. Comparable", "D. AutoCloseable"], correctAnswer: "D. AutoCloseable" },
       { id: 17, question: 'Which checked exception do most java.io operations throw?', options: ['A. IOException', 'B. RuntimeException', 'C. SQLException', 'D. FileException'], correctAnswer: 'A. IOException' },
-      { id: 18, question: 'Why must the loop variable for `read()` be an `int` rather than a `char`?', options: ['A. Performance', 'B. So the -1 end-of-stream sentinel can be represented', 'C. Convention only', 'D. To support Unicode'], correctAnswer: 'B. So the -1 end-of-stream sentinel can be represented' },
-      { id: 19, question: 'Which is generally faster for reading many lines?', options: ['A. Scanner', 'B. BufferedReader', 'C. FileReader alone', 'D. They are identical'], correctAnswer: 'B. BufferedReader' },
-      { id: 20, question: 'Against what does a relative file path resolve?', options: ['A. The source folder', 'B. The JVM working directory', 'C. The user home directory', 'D. The classpath root'], correctAnswer: 'B. The JVM working directory' }
+      { id: 18, question: 'Why must the loop variable for `read()` be an `int` rather than a `char`?', options: ["A. char reads are slower for large streams", "B. So the -1 end-of-stream sentinel can be represented", "C. Convention only", "D. To support Unicode"], correctAnswer: 'B. So the -1 end-of-stream sentinel can be represented' },
+      { id: 19, question: 'Which is generally faster for reading many lines?', options: ["A. Scanner", "B. FileReader alone", "C. BufferedReader", "D. They are identical"], correctAnswer: "C. BufferedReader" },
+      { id: 20, question: 'Against what does a relative file path resolve?', options: ["A. The source folder", "B. The user home directory", "C. The classpath root", "D. The JVM working directory"], correctAnswer: "D. The JVM working directory" }
     ],
     assignment: {
       prompts: [
@@ -2296,12 +2296,12 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'What is the primary benefit of wrapping a FileReader inside a BufferedReader in Java I/O?',
           options: [
-            'A. It allows reading binary files (like images) instead of text files.',
-            'B. It automatically compresses the file content as it reads it.',
-            'C. It buffers input for efficient reading, reducing the number of costly system/disk read operations.',
-            'D. It encrypts the stream for secure file reading.'
+            "A. It buffers input for efficient reading, reducing the number of costly system/disk read operations.",
+            "B. It allows reading binary files (like images) instead of text files.",
+            "C. It automatically compresses the file content as it reads it.",
+            "D. It encrypts the stream for secure file reading.",
           ],
-          correctAnswer: 'C. It buffers input for efficient reading, reducing the number of costly system/disk read operations.'
+          correctAnswer: "A. It buffers input for efficient reading, reducing the number of costly system/disk read operations."
         }
       ]
     }
@@ -2462,24 +2462,24 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     quiz: [
       { id: 1, question: 'Which method starts thread execution?', options: ['A. run()', 'B. start()', 'C. init()', 'D. execute()'], correctAnswer: 'B. start()' },
       { id: 2, question: 'Which keyword prevents concurrent access to critical methods?', options: ['A. lock', 'B. private', 'C. synchronized', 'D. volatile'], correctAnswer: 'C. synchronized' },
-      { id: 3, question: 'Why is Runnable preferred over extending Thread?', options: ['A. Runnable is faster', 'B. Java supports multiple interface implementations but only single class inheritance', 'C. Runnable handles synchronized naturally', 'D. Thread is deprecated'], correctAnswer: 'B. Java supports multiple interface implementations but only single class inheritance' },
-      { id: 4, question: 'What state is a thread in after calling start()?', options: ['A. Running', 'B. Runnable', 'C. New', 'D. Terminated'], correctAnswer: 'B. Runnable' },
+      { id: 3, question: 'Why is Runnable preferred over extending Thread?', options: ["A. Runnable tasks start faster than Thread subclasses", "B. Runnable methods are synchronized automatically, so shared state needs no extra locking", "C. Extending Thread is deprecated in modern Java versions", "D. Java supports multiple interface implementations but only single class inheritance"], correctAnswer: "D. Java supports multiple interface implementations but only single class inheritance" },
+      { id: 4, question: 'What state is a thread in after calling start()?', options: ["A. Runnable", "B. Running", "C. New", "D. Terminated"], correctAnswer: "A. Runnable" },
       { id: 5, question: 'Which class creates built-in thread pools?', options: ['A. ThreadBuilder', 'B. Executors', 'C. PoolService', 'D. RunnableFactory'], correctAnswer: 'B. Executors' },
-      { id: 6, question: 'What does calling `run()` directly instead of `start()` do?', options: ['A. Starts a new thread', 'B. Executes synchronously on the current thread', 'C. Throws an exception', 'D. Nothing'], correctAnswer: 'B. Executes synchronously on the current thread' },
-      { id: 7, question: 'What happens if you call `start()` twice on the same Thread?', options: ['A. It runs twice', 'B. IllegalThreadStateException', 'C. Nothing', 'D. It restarts'], correctAnswer: 'B. IllegalThreadStateException' },
-      { id: 8, question: 'Why is implementing Runnable preferred over extending Thread?', options: ['A. It is faster', 'B. It leaves the single inheritance slot free', 'C. It is required by the JVM', 'D. It avoids exceptions'], correctAnswer: 'B. It leaves the single inheritance slot free' },
-      { id: 9, question: 'How many states can a Java thread be in?', options: ['A. Four', 'B. Five', 'C. Six', 'D. Three'], correctAnswer: 'C. Six' },
-      { id: 10, question: 'Which state means the thread is waiting to acquire a monitor lock?', options: ['A. WAITING', 'B. BLOCKED', 'C. TIMED_WAITING', 'D. RUNNABLE'], correctAnswer: 'B. BLOCKED' },
-      { id: 11, question: 'Which releases the monitor lock while waiting?', options: ['A. sleep()', 'B. wait()', 'C. join()', 'D. yield()'], correctAnswer: 'B. wait()' },
-      { id: 12, question: 'Why is `count++` not thread-safe?', options: ['A. It is a read-modify-write sequence, not atomic', 'B. It uses too much memory', 'C. It is a syntax error', 'D. It blocks threads'], correctAnswer: 'A. It is a read-modify-write sequence, not atomic' },
+      { id: 6, question: 'What does calling `run()` directly instead of `start()` do?', options: ["A. Starts a new thread", "B. Throws an exception", "C. Executes synchronously on the current thread", "D. Queues run() to execute after the current method returns"], correctAnswer: "C. Executes synchronously on the current thread" },
+      { id: 7, question: 'What happens if you call `start()` twice on the same Thread?', options: ["A. It runs twice", "B. Nothing", "C. It restarts", "D. IllegalThreadStateException"], correctAnswer: "D. IllegalThreadStateException" },
+      { id: 8, question: 'Why is implementing Runnable preferred over extending Thread?', options: ["A. It leaves the single inheritance slot free", "B. It is faster", "C. It is required by the JVM", "D. It avoids exceptions"], correctAnswer: "A. It leaves the single inheritance slot free" },
+      { id: 9, question: 'How many states can a Java thread be in?', options: ["A. Four", "B. Six", "C. Five", "D. Three"], correctAnswer: "B. Six" },
+      { id: 10, question: 'Which state means the thread is waiting to acquire a monitor lock?', options: ["A. WAITING", "B. TIMED_WAITING", "C. BLOCKED", "D. RUNNABLE"], correctAnswer: "C. BLOCKED" },
+      { id: 11, question: 'Which releases the monitor lock while waiting?', options: ["A. sleep()", "B. join()", "C. yield()", "D. wait()"], correctAnswer: "D. wait()" },
+      { id: 12, question: 'Why is `count++` not thread-safe?', options: ["A. It is a read-modify-write sequence, not atomic", "B. It uses too much memory", "C. It is a syntax error", "D. It blocks other threads while it runs, causing contention"], correctAnswer: 'A. It is a read-modify-write sequence, not atomic' },
       { id: 13, question: 'What does `volatile` guarantee?', options: ['A. Atomicity of compound operations', 'B. Visibility of reads and writes across threads', 'C. Mutual exclusion', 'D. Thread priority'], correctAnswer: 'B. Visibility of reads and writes across threads' },
-      { id: 14, question: 'Which class provides atomic increment without explicit locking?', options: ['A. Integer', 'B. AtomicInteger', 'C. volatile int', 'D. Long'], correctAnswer: 'B. AtomicInteger' },
-      { id: 15, question: 'What does `join()` do?', options: ['A. Merges two threads', 'B. Blocks the caller until the target thread finishes', 'C. Starts a thread', 'D. Releases a lock'], correctAnswer: 'B. Blocks the caller until the target thread finishes' },
-      { id: 16, question: 'What is a deadlock?', options: ['A. A thread that finished', 'B. Two threads each holding a lock the other needs', 'C. A slow thread', 'D. An unhandled exception'], correctAnswer: 'B. Two threads each holding a lock the other needs' },
-      { id: 17, question: 'What is the standard way to prevent deadlock with multiple locks?', options: ['A. Use more threads', 'B. Always acquire locks in the same global order', 'C. Remove synchronized', 'D. Use sleep()'], correctAnswer: 'B. Always acquire locks in the same global order' },
-      { id: 18, question: 'Why prefer a thread pool over creating a thread per task?', options: ['A. Threads are expensive to create and consume ~1MB stack each', 'B. Pools are required by Java', 'C. Pools use less CPU always', 'D. Threads cannot be reused otherwise'], correctAnswer: 'A. Threads are expensive to create and consume ~1MB stack each' },
-      { id: 19, question: 'Which interface should you use when a task must return a result?', options: ['A. Runnable', 'B. Callable', 'C. Thread', 'D. Executor'], correctAnswer: 'B. Callable' },
-      { id: 20, question: 'What happens if you never call `shutdown()` on an ExecutorService?', options: ['A. Nothing', 'B. Its non-daemon threads keep the JVM alive', 'C. Tasks are lost', 'D. It throws'], correctAnswer: 'B. Its non-daemon threads keep the JVM alive' }
+      { id: 14, question: 'Which class provides atomic increment without explicit locking?', options: ["A. Integer", "B. volatile int", "C. AtomicInteger", "D. Long"], correctAnswer: "C. AtomicInteger" },
+      { id: 15, question: 'What does `join()` do?', options: ["A. Merges two threads", "B. Starts the target thread and waits one second", "C. Releases a lock", "D. Blocks the caller until the target thread finishes"], correctAnswer: "D. Blocks the caller until the target thread finishes" },
+      { id: 16, question: 'What is a deadlock?', options: ["A. Two threads each holding a lock the other needs", "B. A thread that finished", "C. A thread that holds a lock for too long", "D. An unhandled exception"], correctAnswer: "A. Two threads each holding a lock the other needs" },
+      { id: 17, question: 'What is the standard way to prevent deadlock with multiple locks?', options: ["A. Use more threads", "B. Always acquire locks in the same global order", "C. Remove synchronized", "D. Add sleep() between acquisitions so threads interleave"], correctAnswer: 'B. Always acquire locks in the same global order' },
+      { id: 18, question: 'Why prefer a thread pool over creating a thread per task?', options: ["A. Pools are required by Java", "B. Pooled threads always use less CPU than new threads", "C. Threads are expensive to create and consume ~1MB stack each", "D. Threads cannot be reused otherwise"], correctAnswer: "C. Threads are expensive to create and consume ~1MB stack each" },
+      { id: 19, question: 'Which interface should you use when a task must return a result?', options: ["A. Runnable", "B. Thread", "C. Executor", "D. Callable"], correctAnswer: "D. Callable" },
+      { id: 20, question: 'What happens if you never call `shutdown()` on an ExecutorService?', options: ["A. Its non-daemon threads keep the JVM alive", "B. Nothing — the pool shuts down when main() returns", "C. Tasks are lost", "D. It throws"], correctAnswer: "A. Its non-daemon threads keep the JVM alive" }
     ],
     assignment: {
       prompts: [
@@ -2633,25 +2633,25 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
       type: 'code_sandbox'
     },
     quiz: [
-      { id: 1, question: 'Which annotation declares single-method functional interfaces?', options: ['A. @Interface', 'B. @FunctionalInterface', 'C. @Lambda', 'D. @Contract'], correctAnswer: 'B. @FunctionalInterface' },
-      { id: 2, question: 'Which operator denotes method references?', options: ['A. ->', 'B. .', 'C. ::', 'D. #'], correctAnswer: 'C. ::' },
-      { id: 3, question: 'Which Stream operation aggregates elements to a single result?', options: ['A. map()', 'B. filter()', 'C. reduce()', 'D. sorted()'], correctAnswer: 'C. reduce()' },
-      { id: 4, question: 'How do you create an empty Optional container?', options: ['A. Optional.empty()', 'B. new Optional()', 'C. Optional.of(null)', 'D. Optional.clear()'], correctAnswer: 'A. Optional.empty()' },
-      { id: 5, question: 'Is stream map() intermediate or terminal?', options: ['A. Intermediate', 'B. Terminal', 'C. Finalizer', 'D. Getter'], correctAnswer: 'A. Intermediate' },
-      { id: 6, question: 'What is a functional interface?', options: ['A. An interface with exactly one abstract method', 'B. Any interface', 'C. An interface with only static methods', 'D. A class with one method'], correctAnswer: 'A. An interface with exactly one abstract method' },
-      { id: 7, question: 'Which annotation enforces the functional-interface contract?', options: ['A. @Override', 'B. @FunctionalInterface', 'C. @Lambda', 'D. @Interface'], correctAnswer: 'B. @FunctionalInterface' },
-      { id: 8, question: 'What must a local variable be to be captured by a lambda?', options: ['A. static', 'B. public', 'C. final or effectively final', 'D. volatile'], correctAnswer: 'C. final or effectively final' },
-      { id: 9, question: 'Which functional interface represents `boolean test(T)`?', options: ['A. Function', 'B. Predicate', 'C. Consumer', 'D. Supplier'], correctAnswer: 'B. Predicate' },
-      { id: 10, question: 'Which represents `R apply(T)`?', options: ['A. Function', 'B. Predicate', 'C. Supplier', 'D. Consumer'], correctAnswer: 'A. Function' },
-      { id: 11, question: 'Which takes an argument and returns nothing?', options: ['A. Supplier', 'B. Function', 'C. Consumer', 'D. Predicate'], correctAnswer: 'C. Consumer' },
+      { id: 1, question: 'Which annotation declares single-method functional interfaces?', options: ["A. @Interface", "B. @Lambda", "C. @FunctionalInterface", "D. @Contract"], correctAnswer: "C. @FunctionalInterface" },
+      { id: 2, question: 'Which operator denotes method references?', options: ["A. ->", "B. .", "C. #", "D. ::"], correctAnswer: "D. ::" },
+      { id: 3, question: 'Which Stream operation aggregates elements to a single result?', options: ["A. reduce()", "B. map()", "C. filter()", "D. sorted()"], correctAnswer: "A. reduce()" },
+      { id: 4, question: 'How do you create an empty Optional container?', options: ["A. new Optional()", "B. Optional.empty()", "C. Optional.of(null)", "D. Optional.clear()"], correctAnswer: "B. Optional.empty()" },
+      { id: 5, question: 'Is stream map() intermediate or terminal?', options: ["A. Terminal", "B. Finalizer", "C. Intermediate", "D. Getter"], correctAnswer: "C. Intermediate" },
+      { id: 6, question: 'What is a functional interface?', options: ["A. Any interface", "B. An interface with only static methods", "C. A class with one method", "D. An interface with exactly one abstract method"], correctAnswer: "D. An interface with exactly one abstract method" },
+      { id: 7, question: 'Which annotation enforces the functional-interface contract?', options: ["A. @FunctionalInterface", "B. @Override", "C. @Lambda", "D. @Interface"], correctAnswer: "A. @FunctionalInterface" },
+      { id: 8, question: 'What must a local variable be to be captured by a lambda?', options: ["A. static", "B. final or effectively final", "C. public", "D. volatile"], correctAnswer: "B. final or effectively final" },
+      { id: 9, question: 'Which functional interface represents `boolean test(T)`?', options: ["A. Function", "B. Consumer", "C. Predicate", "D. Supplier"], correctAnswer: "C. Predicate" },
+      { id: 10, question: 'Which represents `R apply(T)`?', options: ["A. Predicate", "B. Supplier", "C. Consumer", "D. Function"], correctAnswer: "D. Function" },
+      { id: 11, question: 'Which takes an argument and returns nothing?', options: ["A. Consumer", "B. Supplier", "C. Function", "D. Predicate"], correctAnswer: "A. Consumer" },
       { id: 12, question: 'Which takes no argument and returns a value?', options: ['A. Consumer', 'B. Supplier', 'C. Predicate', 'D. Runnable'], correctAnswer: 'B. Supplier' },
-      { id: 13, question: 'What are the three parts of a stream pipeline?', options: ['A. Source, intermediate operations, terminal operation', 'B. Start, middle, end', 'C. Filter, map, sort', 'D. Input, process, print'], correctAnswer: 'A. Source, intermediate operations, terminal operation' },
-      { id: 14, question: 'What happens if a stream pipeline has no terminal operation?', options: ['A. It throws', 'B. Nothing executes', 'C. It runs anyway', 'D. Compile error'], correctAnswer: 'B. Nothing executes' },
-      { id: 15, question: 'Can a stream be consumed more than once?', options: ['A. Yes', 'B. No, it throws IllegalStateException', 'C. Only parallel streams', 'D. Only if collected first'], correctAnswer: 'B. No, it throws IllegalStateException' },
-      { id: 16, question: 'Which is a terminal operation?', options: ['A. filter', 'B. map', 'C. collect', 'D. sorted'], correctAnswer: 'C. collect' },
-      { id: 17, question: 'What does `String::length` represent?', options: ['A. A static method reference', 'B. An unbound instance method reference', 'C. A constructor reference', 'D. A field access'], correctAnswer: 'B. An unbound instance method reference' },
-      { id: 18, question: 'What does `ArrayList::new` represent?', options: ['A. A constructor reference', 'B. A static method reference', 'C. An instance method reference', 'D. Invalid syntax'], correctAnswer: 'A. A constructor reference' },
-      { id: 19, question: 'What is the key difference between `orElse` and `orElseGet`?', options: ['A. None', 'B. orElse always evaluates its argument; orElseGet is lazy', 'C. orElseGet throws', 'D. orElse is faster always'], correctAnswer: 'B. orElse always evaluates its argument; orElseGet is lazy' },
+      { id: 13, question: 'What are the three parts of a stream pipeline?', options: ["A. Start, middle, end", "B. Filter, map and collect, always in that order", "C. Source, intermediate operations, terminal operation", "D. Input, process, print"], correctAnswer: "C. Source, intermediate operations, terminal operation" },
+      { id: 14, question: 'What happens if a stream pipeline has no terminal operation?', options: ["A. It throws", "B. It runs anyway", "C. Compile error", "D. Nothing executes"], correctAnswer: "D. Nothing executes" },
+      { id: 15, question: 'Can a stream be consumed more than once?', options: ["A. No, it throws IllegalStateException", "B. Yes", "C. Only parallel streams", "D. Only if collected first"], correctAnswer: "A. No, it throws IllegalStateException" },
+      { id: 16, question: 'Which is a terminal operation?', options: ["A. filter", "B. collect", "C. map", "D. sorted"], correctAnswer: "B. collect" },
+      { id: 17, question: 'What does `String::length` represent?', options: ["A. A static method reference", "B. A constructor reference", "C. An unbound instance method reference", "D. A field access"], correctAnswer: "C. An unbound instance method reference" },
+      { id: 18, question: 'What does `ArrayList::new` represent?', options: ["A. A static method reference", "B. An instance method reference", "C. Invalid syntax", "D. A constructor reference"], correctAnswer: "D. A constructor reference" },
+      { id: 19, question: 'What is the key difference between `orElse` and `orElseGet`?', options: ["A. orElse always evaluates its argument; orElseGet is lazy", "B. None — both evaluate their argument lazily", "C. orElseGet throws", "D. orElse is faster always"], correctAnswer: "A. orElse always evaluates its argument; orElseGet is lazy" },
       { id: 20, question: 'Where is Optional intended to be used?', options: ['A. As a field type', 'B. As a return type', 'C. As a method parameter', 'D. As a collection element'], correctAnswer: 'B. As a return type' }
     ],
     assignment: {
@@ -2827,23 +2827,23 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     },
     quiz: [
       { id: 1, question: 'Which interface manages SQL results rows?', options: ['A. Connection', 'B. PreparedStatement', 'C. ResultSet', 'D. Statement'], correctAnswer: 'C. ResultSet' },
-      { id: 2, question: 'Why are PreparedStatements preferred over standard Statements?', options: ['A. They compile faster', 'B. They prevent SQL Injection and cache query execution plans', 'C. They do not require Connection objects', 'D. They use lower memory'], correctAnswer: 'B. They prevent SQL Injection and cache query execution plans' },
-      { id: 3, question: 'What method runs SELECT queries?', options: ['A. executeUpdate()', 'B. executeQuery()', 'C. runSQL()', 'D. getResults()'], correctAnswer: 'B. executeQuery()' },
+      { id: 2, question: 'Why are PreparedStatements preferred over standard Statements?', options: ["A. They compile faster because they skip the SQL parser", "B. They do not require Connection objects", "C. They use lower memory", "D. They prevent SQL Injection and cache query execution plans"], correctAnswer: "D. They prevent SQL Injection and cache query execution plans" },
+      { id: 3, question: 'What method runs SELECT queries?', options: ["A. executeQuery()", "B. executeUpdate()", "C. runSQL()", "D. getResults()"], correctAnswer: "A. executeQuery()" },
       { id: 4, question: 'Which JDBC url represents connection to MySQL?', options: ['A. jdbc:postgresql://...', 'B. jdbc:mysql://...', 'C. mysql:jdbc://...', 'D. db:mysql://...'], correctAnswer: 'B. jdbc:mysql://...' },
-      { id: 5, question: 'What is the starting index of ResultSet columns?', options: ['A. 0', 'B. 1', 'C. -1', 'D. depends on driver'], correctAnswer: 'B. 1' },
-      { id: 6, question: 'What is JDBC?', options: ['A. A database', 'B. A standard Java API for relational database access', 'C. An ORM framework', 'D. A driver'], correctAnswer: 'B. A standard Java API for relational database access' },
-      { id: 7, question: 'Which JDBC driver type is pure Java and speaks the native protocol?', options: ['A. Type 1', 'B. Type 2', 'C. Type 3', 'D. Type 4'], correctAnswer: 'D. Type 4' },
+      { id: 5, question: 'What is the starting index of ResultSet columns?', options: ["A. 0", "B. -1", "C. 1", "D. depends on driver"], correctAnswer: "C. 1" },
+      { id: 6, question: 'What is JDBC?', options: ["A. A database", "B. An ORM framework", "C. A database driver bundled with each vendor", "D. A standard Java API for relational database access"], correctAnswer: "D. A standard Java API for relational database access" },
+      { id: 7, question: 'Which JDBC driver type is pure Java and speaks the native protocol?', options: ["A. Type 4", "B. Type 1", "C. Type 2", "D. Type 3"], correctAnswer: "A. Type 4" },
       { id: 8, question: 'At what index do PreparedStatement parameters start?', options: ['A. 0', 'B. 1', 'C. -1', 'D. Depends on the driver'], correctAnswer: 'B. 1' },
-      { id: 9, question: 'Which class prevents SQL injection?', options: ['A. Statement', 'B. PreparedStatement', 'C. ResultSet', 'D. Connection'], correctAnswer: 'B. PreparedStatement' },
-      { id: 10, question: 'Why does PreparedStatement prevent injection?', options: ['A. It escapes quotes', 'B. The query structure is compiled before values are bound', 'C. It encrypts input', 'D. It blocks keywords'], correctAnswer: 'B. The query structure is compiled before values are bound' },
-      { id: 11, question: 'Which method is used for INSERT, UPDATE and DELETE?', options: ['A. executeQuery()', 'B. executeUpdate()', 'C. execute()', 'D. run()'], correctAnswer: 'B. executeUpdate()' },
+      { id: 9, question: 'Which class prevents SQL injection?', options: ["A. Statement", "B. ResultSet", "C. PreparedStatement", "D. Connection"], correctAnswer: "C. PreparedStatement" },
+      { id: 10, question: 'Why does PreparedStatement prevent injection?', options: ["A. It escapes quote characters in each input value", "B. It encrypts input", "C. It blocks keywords", "D. The query structure is compiled before values are bound"], correctAnswer: "D. The query structure is compiled before values are bound" },
+      { id: 11, question: 'Which method is used for INSERT, UPDATE and DELETE?', options: ["A. executeUpdate()", "B. executeQuery()", "C. execute()", "D. run()"], correctAnswer: "A. executeUpdate()" },
       { id: 12, question: 'What does executeUpdate() return?', options: ['A. A ResultSet', 'B. The number of affected rows', 'C. A boolean', 'D. void'], correctAnswer: 'B. The number of affected rows' },
-      { id: 13, question: 'Where does the ResultSet cursor start?', options: ['A. On the first row', 'B. Before the first row', 'C. On the last row', 'D. At index 0'], correctAnswer: 'B. Before the first row' },
-      { id: 14, question: 'How do you distinguish SQL NULL from 0 after `rs.getInt()`?', options: ['A. Compare to null', 'B. Call rs.wasNull()', 'C. Use getObject() only', 'D. It is impossible'], correctAnswer: 'B. Call rs.wasNull()' },
-      { id: 15, question: 'Is it safe to return a live ResultSet from a DAO method?', options: ['A. Yes', 'B. No, it dies when the statement closes', 'C. Only for SELECT', 'D. Only with try-with-resources'], correctAnswer: 'B. No, it dies when the statement closes' },
+      { id: 13, question: 'Where does the ResultSet cursor start?', options: ["A. On the first row", "B. On the last row", "C. Before the first row", "D. At index 0"], correctAnswer: "C. Before the first row" },
+      { id: 14, question: 'How do you distinguish SQL NULL from 0 after `rs.getInt()`?', options: ["A. Compare to null", "B. Use getObject() only", "C. It is impossible", "D. Call rs.wasNull()"], correctAnswer: "D. Call rs.wasNull()" },
+      { id: 15, question: 'Is it safe to return a live ResultSet from a DAO method?', options: ["A. No, it dies when the statement closes", "B. Yes", "C. Only for SELECT", "D. Only with try-with-resources"], correctAnswer: "A. No, it dies when the statement closes" },
       { id: 16, question: 'What is the default auto-commit setting on a new Connection?', options: ['A. false', 'B. true', 'C. Driver-dependent', 'D. Undefined'], correctAnswer: 'B. true' },
-      { id: 17, question: 'Which method undoes an uncommitted transaction?', options: ['A. commit()', 'B. rollback()', 'C. close()', 'D. reset()'], correctAnswer: 'B. rollback()' },
-      { id: 18, question: 'Which flag lets you retrieve an auto-increment ID after an insert?', options: ['A. RETURN_GENERATED_KEYS', 'B. FETCH_ID', 'C. AUTO_INCREMENT', 'D. GET_KEYS'], correctAnswer: 'A. RETURN_GENERATED_KEYS' },
+      { id: 17, question: 'Which method undoes an uncommitted transaction?', options: ["A. commit()", "B. close()", "C. rollback()", "D. reset()"], correctAnswer: "C. rollback()" },
+      { id: 18, question: 'Which flag lets you retrieve an auto-increment ID after an insert?', options: ["A. FETCH_ID", "B. AUTO_INCREMENT", "C. GET_KEYS", "D. RETURN_GENERATED_KEYS"], correctAnswer: "D. RETURN_GENERATED_KEYS" },
       { id: 19, question: 'Which pair of methods sends many statements in one round trip?', options: ['A. addBatch() and executeBatch()', 'B. bulkInsert() and flush()', 'C. addAll() and commit()', 'D. prepare() and send()'], correctAnswer: 'A. addBatch() and executeBatch()' },
       { id: 20, question: 'Is a JDBC Connection thread-safe for sharing across threads?', options: ['A. Yes', 'B. No, give each thread its own', 'C. Only for reads', 'D. Only with synchronized'], correctAnswer: 'B. No, give each thread its own' }
     ],
@@ -2854,10 +2854,10 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'What is the primary role of DriverManager in Java Database Connectivity (JDBC)?',
           options: [
-            'A. It compiles SQL queries to run on the database server.',
-            'B. It acts as the buffer pool manager for query results.',
-            'C. It manages the list of database drivers, matches connection requests with the appropriate driver, and establishes the connection.',
-            'D. It handles database user authentication and security roles.'
+            "A. It compiles SQL queries to run on the database server.",
+            "B. It pools open connections and hands out idle ones, closing any that exceed the pool limit.",
+            "C. It manages the list of database drivers, matches connection requests with the appropriate driver, and establishes the connection.",
+            "D. It handles database user authentication and security roles.",
           ],
           correctAnswer: 'C. It manages the list of database drivers, matches connection requests with the appropriate driver, and establishes the connection.'
         }
@@ -3108,26 +3108,26 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
       type: 'code_sandbox'
     },
     quiz: [
-      { id: 1, question: 'What is the search time complexity of Binary Search?', options: ['A. O(N)', 'B. O(log N)', 'C. O(N^2)', 'D. O(1)'], correctAnswer: 'B. O(log N)' },
-      { id: 2, question: 'Which data structure follows LIFO?', options: ['A. Queue', 'B. Stack', 'C. LinkedList', 'D. Matrix'], correctAnswer: 'B. Stack' },
+      { id: 1, question: 'What is the search time complexity of Binary Search?', options: ["A. O(N)", "B. O(N^2)", "C. O(1)", "D. O(log N)"], correctAnswer: "D. O(log N)" },
+      { id: 2, question: 'Which data structure follows LIFO?', options: ["A. Stack", "B. Queue", "C. LinkedList", "D. Matrix"], correctAnswer: "A. Stack" },
       { id: 3, question: 'What traversal algorithm uses queues?', options: ['A. Depth First Search (DFS)', 'B. Breadth First Search (BFS)', 'C. In-order traversal', 'D. Binary search'], correctAnswer: 'B. Breadth First Search (BFS)' },
       { id: 4, question: 'What is the worst-case sorting complexity of Bubble Sort?', options: ['A. O(N log N)', 'B. O(N)', 'C. O(N^2)', 'D. O(log N)'], correctAnswer: 'C. O(N^2)' },
-      { id: 5, question: 'What is the parent class interface for Queue implementations?', options: ['A. List', 'B. Queue', 'C. Deque', 'D. Set'], correctAnswer: 'B. Queue' },
-      { id: 6, question: 'What is the time complexity of binary search?', options: ['A. O(1)', 'B. O(log n)', 'C. O(n)', 'D. O(n log n)'], correctAnswer: 'B. O(log n)' },
-      { id: 7, question: 'What precondition does binary search require?', options: ['A. The data must be sorted', 'B. The data must be unique', 'C. The data must be numeric', 'D. None'], correctAnswer: 'A. The data must be sorted' },
-      { id: 8, question: 'Why write `low + (high - low) / 2` instead of `(low + high) / 2`?', options: ['A. It is faster', 'B. To avoid integer overflow', 'C. It is more readable', 'D. No reason'], correctAnswer: 'B. To avoid integer overflow' },
-      { id: 9, question: 'Which traversal of a BST produces sorted output?', options: ['A. Pre-order', 'B. In-order', 'C. Post-order', 'D. Level-order'], correctAnswer: 'B. In-order' },
-      { id: 10, question: 'What happens to a plain BST when you insert already-sorted data?', options: ['A. Nothing changes', 'B. It degenerates into a linked list with O(n) operations', 'C. It rebalances', 'D. It throws'], correctAnswer: 'B. It degenerates into a linked list with O(n) operations' },
+      { id: 5, question: 'What is the parent class interface for Queue implementations?', options: ["A. List", "B. Deque", "C. Set", "D. Queue"], correctAnswer: "D. Queue" },
+      { id: 6, question: 'What is the time complexity of binary search?', options: ["A. O(log n)", "B. O(1)", "C. O(n)", "D. O(n log n)"], correctAnswer: "A. O(log n)" },
+      { id: 7, question: 'What precondition does binary search require?', options: ["A. The data must be unique", "B. The data must be sorted", "C. The data must be numeric", "D. None"], correctAnswer: "B. The data must be sorted" },
+      { id: 8, question: 'Why write `low + (high - low) / 2` instead of `(low + high) / 2`?', options: ["A. It is faster", "B. It is more readable", "C. To avoid integer overflow", "D. No reason"], correctAnswer: "C. To avoid integer overflow" },
+      { id: 9, question: 'Which traversal of a BST produces sorted output?', options: ["A. Pre-order", "B. Post-order", "C. Level-order", "D. In-order"], correctAnswer: "D. In-order" },
+      { id: 10, question: 'What happens to a plain BST when you insert already-sorted data?', options: ["A. It degenerates into a linked list with O(n) operations", "B. Nothing changes", "C. It rebalances", "D. It throws once the tree becomes unbalanced"], correctAnswer: "A. It degenerates into a linked list with O(n) operations" },
       { id: 11, question: 'Which Java classes are implemented as red-black trees?', options: ['A. HashMap and HashSet', 'B. TreeMap and TreeSet', 'C. ArrayList and LinkedList', 'D. ArrayDeque'], correctAnswer: 'B. TreeMap and TreeSet' },
-      { id: 12, question: 'Which data structure does BFS use?', options: ['A. Stack', 'B. Queue', 'C. Heap', 'D. Tree'], correctAnswer: 'B. Queue' },
-      { id: 13, question: 'Which data structure does DFS use?', options: ['A. Queue', 'B. Stack (or recursion)', 'C. HashMap', 'D. Array'], correctAnswer: 'B. Stack (or recursion)' },
-      { id: 14, question: 'Which traversal guarantees the shortest path in an unweighted graph?', options: ['A. DFS', 'B. BFS', 'C. Either', 'D. Neither'], correctAnswer: 'B. BFS' },
-      { id: 15, question: 'Why is a visited set mandatory in graph traversal?', options: ['A. For speed', 'B. Cycles would cause an infinite loop', 'C. To sort nodes', 'D. It is optional'], correctAnswer: 'B. Cycles would cause an infinite loop' },
-      { id: 16, question: 'Which sorting algorithm is stable and guaranteed O(n log n)?', options: ['A. Quicksort', 'B. Merge sort', 'C. Selection sort', 'D. Heap sort'], correctAnswer: 'B. Merge sort' },
-      { id: 17, question: 'What is the worst-case complexity of quicksort?', options: ['A. O(n log n)', 'B. O(n^2)', 'C. O(n)', 'D. O(log n)'], correctAnswer: 'B. O(n^2)' },
-      { id: 18, question: 'What does sorting "stability" mean?', options: ['A. It never crashes', 'B. Equal elements keep their relative order', 'C. It uses constant memory', 'D. It is always fast'], correctAnswer: 'B. Equal elements keep their relative order' },
+      { id: 12, question: 'Which data structure does BFS use?', options: ["A. Stack", "B. Heap", "C. Queue", "D. Tree"], correctAnswer: "C. Queue" },
+      { id: 13, question: 'Which data structure does DFS use?', options: ["A. Queue", "B. HashMap", "C. Array", "D. Stack (or recursion)"], correctAnswer: "D. Stack (or recursion)" },
+      { id: 14, question: 'Which traversal guarantees the shortest path in an unweighted graph?', options: ["A. BFS", "B. DFS", "C. Either", "D. Neither"], correctAnswer: "A. BFS" },
+      { id: 15, question: 'Why is a visited set mandatory in graph traversal?', options: ["A. To speed up traversal by skipping leaf nodes", "B. Cycles would cause an infinite loop", "C. To sort nodes", "D. It is optional"], correctAnswer: 'B. Cycles would cause an infinite loop' },
+      { id: 16, question: 'Which sorting algorithm is stable and guaranteed O(n log n)?', options: ["A. Quicksort", "B. Selection sort", "C. Merge sort", "D. Heap sort"], correctAnswer: "C. Merge sort" },
+      { id: 17, question: 'What is the worst-case complexity of quicksort?', options: ["A. O(n log n)", "B. O(n)", "C. O(log n)", "D. O(n^2)"], correctAnswer: "D. O(n^2)" },
+      { id: 18, question: 'What does sorting "stability" mean?', options: ["A. Equal elements keep their relative order", "B. It never crashes", "C. It uses constant memory", "D. It is always fast"], correctAnswer: "A. Equal elements keep their relative order" },
       { id: 19, question: 'Which algorithm does `Arrays.sort()` use for object arrays?', options: ['A. Quicksort', 'B. TimSort', 'C. Bubble sort', 'D. Heap sort'], correctAnswer: 'B. TimSort' },
-      { id: 20, question: 'Which structure should you use for LIFO access?', options: ['A. Queue', 'B. ArrayDeque used as a stack', 'C. TreeMap', 'D. LinkedHashSet'], correctAnswer: 'B. ArrayDeque used as a stack' }
+      { id: 20, question: 'Which structure should you use for LIFO access?', options: ["A. Queue", "B. TreeMap", "C. ArrayDeque used as a stack", "D. LinkedHashSet"], correctAnswer: "C. ArrayDeque used as a stack" }
     ],
     assignment: {
       prompts: [
@@ -3356,26 +3356,26 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
       type: 'code_sandbox'
     },
     quiz: [
-      { id: 1, question: 'Which annotation declares a REST API controller class?', options: ['A. @Controller', 'B. @RestController', 'C. @API', 'D. @RequestMapping'], correctAnswer: 'B. @RestController' },
-      { id: 2, question: 'Which tool bootstraps Spring Boot starter projects?', options: ['A. Maven builder', 'B. Spring Initializr', 'C. NPM init', 'D. Gradle daemon'], correctAnswer: 'B. Spring Initializr' },
+      { id: 1, question: 'Which annotation declares a REST API controller class?', options: ["A. @Controller", "B. @API", "C. @RequestMapping", "D. @RestController"], correctAnswer: "D. @RestController" },
+      { id: 2, question: 'Which tool bootstraps Spring Boot starter projects?', options: ["A. Spring Initializr", "B. Maven builder", "C. NPM init", "D. Gradle daemon"], correctAnswer: "A. Spring Initializr" },
       { id: 3, question: 'Which annotation enables Dependency Injection in Spring?', options: ['A. @Inject', 'B. @Autowired', 'C. @Resource', 'D. @Bean'], correctAnswer: 'B. @Autowired' },
       { id: 4, question: 'What is the default embedded web server in Spring Boot?', options: ['A. Nginx', 'B. Jetty', 'C. Tomcat', 'D. GlassFish'], correctAnswer: 'C. Tomcat' },
-      { id: 5, question: 'Which interface is commonly extended for repositories?', options: ['A. CrudRepository', 'B. JpaRepository', 'C. MongoRepository', 'D. sqlRepository'], correctAnswer: 'B. JpaRepository' },
-      { id: 6, question: 'Which three annotations does @SpringBootApplication combine?', options: ['A. @Configuration, @EnableAutoConfiguration, @ComponentScan', 'B. @Service, @Repository, @Controller', 'C. @Bean, @Autowired, @Component', 'D. @Entity, @Table, @Id'], correctAnswer: 'A. @Configuration, @EnableAutoConfiguration, @ComponentScan' },
+      { id: 5, question: 'Which interface is commonly extended for repositories?', options: ["A. CrudRepository", "B. MongoRepository", "C. sqlRepository", "D. JpaRepository"], correctAnswer: "D. JpaRepository" },
+      { id: 6, question: 'Which three annotations does @SpringBootApplication combine?', options: ["A. @Configuration, @EnableAutoConfiguration, @ComponentScan", "B. @Service, @Repository, @Controller", "C. @Bean, @Autowired, @Component", "D. @Component, @Autowired, @EnableWebMvc"], correctAnswer: 'A. @Configuration, @EnableAutoConfiguration, @ComponentScan' },
       { id: 7, question: 'Where must the main class be placed for component scanning to work?', options: ['A. In any package', 'B. In the root package above your components', 'C. In a sub-package', 'D. In the default package only'], correctAnswer: 'B. In the root package above your components' },
-      { id: 8, question: 'What does @RestController add over @Controller?', options: ['A. @ResponseBody on every method', 'B. Transaction support', 'C. Security', 'D. Caching'], correctAnswer: 'A. @ResponseBody on every method' },
-      { id: 9, question: 'Which annotation binds a URL path segment to a parameter?', options: ['A. @RequestParam', 'B. @PathVariable', 'C. @RequestBody', 'D. @RequestHeader'], correctAnswer: 'B. @PathVariable' },
-      { id: 10, question: 'Which binds a query-string parameter?', options: ['A. @PathVariable', 'B. @RequestParam', 'C. @RequestBody', 'D. @ModelAttribute'], correctAnswer: 'B. @RequestParam' },
+      { id: 8, question: 'What does @RestController add over @Controller?', options: ["A. Transaction support", "B. Security", "C. @ResponseBody on every method", "D. Caching"], correctAnswer: "C. @ResponseBody on every method" },
+      { id: 9, question: 'Which annotation binds a URL path segment to a parameter?', options: ["A. @RequestParam", "B. @RequestBody", "C. @RequestHeader", "D. @PathVariable"], correctAnswer: "D. @PathVariable" },
+      { id: 10, question: 'Which binds a query-string parameter?', options: ["A. @RequestParam", "B. @PathVariable", "C. @RequestBody", "D. @ModelAttribute"], correctAnswer: "A. @RequestParam" },
       { id: 11, question: 'Which HTTP status should a successful POST that creates a resource return?', options: ['A. 200', 'B. 201', 'C. 204', 'D. 302'], correctAnswer: 'B. 201' },
       { id: 12, question: 'Which status is correct for a successful DELETE with no body?', options: ['A. 200', 'B. 201', 'C. 204', 'D. 404'], correctAnswer: 'C. 204' },
-      { id: 13, question: 'Which HTTP methods are idempotent?', options: ['A. GET, PUT, DELETE', 'B. POST only', 'C. POST and PATCH', 'D. None'], correctAnswer: 'A. GET, PUT, DELETE' },
-      { id: 14, question: 'Which injection style is recommended?', options: ['A. Field injection', 'B. Constructor injection', 'C. Setter injection', 'D. Static injection'], correctAnswer: 'B. Constructor injection' },
-      { id: 15, question: 'Why is field injection discouraged?', options: ['A. It is slower', 'B. Fields cannot be final and testing without the framework is hard', 'C. It is deprecated', 'D. It causes memory leaks'], correctAnswer: 'B. Fields cannot be final and testing without the framework is hard' },
-      { id: 16, question: 'What is the default bean scope?', options: ['A. prototype', 'B. singleton', 'C. request', 'D. session'], correctAnswer: 'B. singleton' },
-      { id: 17, question: 'What must be true of a singleton bean?', options: ['A. It should be stateless', 'B. It must be final', 'C. It must be public', 'D. It must implement Serializable'], correctAnswer: 'A. It should be stateless' },
-      { id: 18, question: 'Which annotation resolves ambiguity between two beans of the same type?', options: ['A. @Autowired', 'B. @Qualifier', 'C. @Bean', 'D. @Scope'], correctAnswer: 'B. @Qualifier' },
+      { id: 13, question: 'Which HTTP methods are idempotent?', options: ["A. POST only", "B. POST and PATCH", "C. None", "D. GET, PUT, DELETE"], correctAnswer: "D. GET, PUT, DELETE" },
+      { id: 14, question: 'Which injection style is recommended?', options: ["A. Constructor injection", "B. Field injection", "C. Setter injection", "D. Static injection"], correctAnswer: "A. Constructor injection" },
+      { id: 15, question: 'Why is field injection discouraged?', options: ["A. It is slower, because reflection runs on every access", "B. Fields cannot be final and testing without the framework is hard", "C. It is deprecated", "D. It causes memory leaks"], correctAnswer: 'B. Fields cannot be final and testing without the framework is hard' },
+      { id: 16, question: 'What is the default bean scope?', options: ["A. prototype", "B. request", "C. singleton", "D. session"], correctAnswer: "C. singleton" },
+      { id: 17, question: 'What must be true of a singleton bean?', options: ["A. It must be final", "B. It must be public", "C. It must implement Serializable", "D. It should be stateless"], correctAnswer: "D. It should be stateless" },
+      { id: 18, question: 'Which annotation resolves ambiguity between two beans of the same type?', options: ["A. @Qualifier", "B. @Autowired", "C. @Bean", "D. @Scope"], correctAnswer: "A. @Qualifier" },
       { id: 19, question: 'What does @Transactional roll back on by default?', options: ['A. All exceptions', 'B. Unchecked exceptions only', 'C. Checked exceptions only', 'D. Nothing'], correctAnswer: 'B. Unchecked exceptions only' },
-      { id: 20, question: 'Why does calling a @Transactional method from the same class fail to start a transaction?', options: ['A. The proxy is bypassed by self-invocation', 'B. It is a compile error', 'C. Transactions are disabled', 'D. It always works'], correctAnswer: 'A. The proxy is bypassed by self-invocation' }
+      { id: 20, question: 'Why does calling a @Transactional method from the same class fail to start a transaction?', options: ["A. It is a compile error", "B. Transactions are disabled", "C. The proxy is bypassed by self-invocation", "D. It always works"], correctAnswer: "C. The proxy is bypassed by self-invocation" }
     ],
     assignment: {
       prompts: [
@@ -3384,12 +3384,12 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'Why is constructor injection generally preferred over field injection with @Autowired in Spring Boot?',
           options: [
-            'A. Constructor injection is slower than field injection.',
-            'B. Constructor injection allows the class to declare dependencies as final (immutable), enforces required dependencies, and simplifies unit testing.',
-            'C. Field injection is deprecated in Java 17 and throws a runtime exception.',
-            'D. Constructor injection does not support lazy initialization.'
+            "A. Constructor injection is faster, because Spring skips reflection when creating the bean at startup.",
+            "B. Field injection is deprecated in Java 17 and throws a runtime exception.",
+            "C. Constructor injection does not support lazy initialization.",
+            "D. Constructor injection allows the class to declare dependencies as final (immutable), enforces required dependencies, and simplifies unit testing.",
           ],
-          correctAnswer: 'B. Constructor injection allows the class to declare dependencies as final (immutable), enforces required dependencies, and simplifies unit testing.'
+          correctAnswer: "D. Constructor injection allows the class to declare dependencies as final (immutable), enforces required dependencies, and simplifies unit testing."
         }
       ]
     }
@@ -3567,26 +3567,26 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
       type: 'code_sandbox'
     },
     quiz: [
-      { id: 1, question: 'Which JPA annotation marks primary keys?', options: ['A. @Column', 'B. @Id', 'C. @PrimaryKey', 'D. @GeneratedValue'], correctAnswer: 'B. @Id' },
+      { id: 1, question: 'Which JPA annotation marks primary keys?', options: ["A. @Id", "B. @Column", "C. @PrimaryKey", "D. @GeneratedValue"], correctAnswer: "A. @Id" },
       { id: 2, question: 'Which JPA annotation maps classes to SQL tables?', options: ['A. @Table', 'B. @Entity', 'C. @Model', 'D. @Database'], correctAnswer: 'B. @Entity' },
-      { id: 3, question: 'How do you trigger request validation inside controller mappings?', options: ['A. @Validate', 'B. @Valid', 'C. @NotNull', 'D. @Check'], correctAnswer: 'B. @Valid' },
-      { id: 4, question: 'Which annotation builds global REST API controllers handlers?', options: ['A. @Controller', 'B. @ExceptionHandler', 'C. @RestControllerAdvice', 'D. @ErrorInterceptor'], correctAnswer: 'C. @RestControllerAdvice' },
-      { id: 5, question: 'What property setting auto-updates databases tables schema changes?', options: ['A. spring.database.create', 'B. spring.jpa.hibernate.ddl-auto=update', 'C. spring.jpa.schema=renew', 'D. hibernate.sync'], correctAnswer: 'B. spring.jpa.hibernate.ddl-auto=update' },
-      { id: 6, question: 'What is the relationship between JPA and Hibernate?', options: ['A. JPA is the specification, Hibernate an implementation', 'B. Hibernate is the specification', 'C. They are unrelated', 'D. They are the same product'], correctAnswer: 'A. JPA is the specification, Hibernate an implementation' },
+      { id: 3, question: 'How do you trigger request validation inside controller mappings?', options: ["A. @Validate", "B. @NotNull", "C. @Valid", "D. @Check"], correctAnswer: "C. @Valid" },
+      { id: 4, question: 'Which annotation builds global REST API controllers handlers?', options: ["A. @Controller", "B. @ExceptionHandler", "C. @ErrorInterceptor", "D. @RestControllerAdvice"], correctAnswer: "D. @RestControllerAdvice" },
+      { id: 5, question: 'What property setting auto-updates databases tables schema changes?', options: ["A. spring.jpa.hibernate.ddl-auto=update", "B. spring.database.create", "C. spring.jpa.schema=renew", "D. hibernate.sync"], correctAnswer: "A. spring.jpa.hibernate.ddl-auto=update" },
+      { id: 6, question: 'What is the relationship between JPA and Hibernate?', options: ["A. Hibernate is the specification", "B. JPA is the specification, Hibernate an implementation", "C. They are unrelated projects that happen to share annotations", "D. They are the same product"], correctAnswer: "B. JPA is the specification, Hibernate an implementation" },
       { id: 7, question: 'Which ddl-auto value is safest for production?', options: ['A. update', 'B. create-drop', 'C. validate', 'D. create'], correctAnswer: 'C. validate' },
-      { id: 8, question: 'Which connection pool does Spring Boot configure by default?', options: ['A. C3P0', 'B. HikariCP', 'C. DBCP', 'D. Tomcat JDBC'], correctAnswer: 'B. HikariCP' },
-      { id: 9, question: 'Which annotation marks a class as a JPA entity?', options: ['A. @Table', 'B. @Entity', 'C. @Repository', 'D. @Component'], correctAnswer: 'B. @Entity' },
+      { id: 8, question: 'Which connection pool does Spring Boot configure by default?', options: ["A. C3P0", "B. DBCP", "C. Tomcat JDBC", "D. HikariCP"], correctAnswer: "D. HikariCP" },
+      { id: 9, question: 'Which annotation marks a class as a JPA entity?', options: ["A. @Entity", "B. @Table", "C. @Repository", "D. @Component"], correctAnswer: "A. @Entity" },
       { id: 10, question: 'Which EnumType should you use for persisted enums?', options: ['A. ORDINAL', 'B. STRING', 'C. INTEGER', 'D. AUTO'], correctAnswer: 'B. STRING' },
-      { id: 11, question: 'Why is EnumType.ORDINAL dangerous?', options: ['A. It is slower', 'B. Reordering the enum silently changes stored meanings', 'C. It uses more space', 'D. It is deprecated'], correctAnswer: 'B. Reordering the enum silently changes stored meanings' },
-      { id: 12, question: 'Which side of a relationship holds the foreign key?', options: ['A. The owning side', 'B. The mappedBy side', 'C. Both', 'D. Neither'], correctAnswer: 'A. The owning side' },
-      { id: 13, question: 'What is the default fetch type for @ManyToOne?', options: ['A. LAZY', 'B. EAGER', 'C. AUTO', 'D. None'], correctAnswer: 'B. EAGER' },
+      { id: 11, question: 'Why is EnumType.ORDINAL dangerous?', options: ["A. It is slower to query than storing the name", "B. It uses more space", "C. Reordering the enum silently changes stored meanings", "D. It is deprecated"], correctAnswer: "C. Reordering the enum silently changes stored meanings" },
+      { id: 12, question: 'Which side of a relationship holds the foreign key?', options: ["A. The mappedBy side", "B. Both", "C. Neither", "D. The owning side"], correctAnswer: "D. The owning side" },
+      { id: 13, question: 'What is the default fetch type for @ManyToOne?', options: ["A. EAGER", "B. LAZY", "C. AUTO", "D. None"], correctAnswer: "A. EAGER" },
       { id: 14, question: 'What is the default fetch type for @OneToMany?', options: ['A. EAGER', 'B. LAZY', 'C. AUTO', 'D. JOIN'], correctAnswer: 'B. LAZY' },
-      { id: 15, question: 'What causes LazyInitializationException?', options: ['A. Touching a lazy association on a detached entity', 'B. A null entity', 'C. A missing @Entity', 'D. A syntax error'], correctAnswer: 'A. Touching a lazy association on a detached entity' },
-      { id: 16, question: 'What is dirty checking?', options: ['A. Validating input', 'B. Hibernate flushing changed managed entities at commit', 'C. Checking for null', 'D. A security scan'], correctAnswer: 'B. Hibernate flushing changed managed entities at commit' },
-      { id: 17, question: 'Do you need to call save() on an entity loaded inside the same transaction?', options: ['A. Yes, always', 'B. No, dirty checking handles it', 'C. Only for updates', 'D. Only for deletes'], correctAnswer: 'B. No, dirty checking handles it' },
-      { id: 18, question: 'What is the N+1 select problem?', options: ['A. One query per collection element instead of one overall', 'B. Too many columns', 'C. A deadlock', 'D. A validation error'], correctAnswer: 'A. One query per collection element instead of one overall' },
-      { id: 19, question: 'What activates Bean Validation on a request body?', options: ['A. @Validated on the class only', 'B. @Valid on the @RequestBody parameter', 'C. Nothing, it is automatic', 'D. @NotNull alone'], correctAnswer: 'B. @Valid on the @RequestBody parameter' },
-      { id: 20, question: 'Which annotation centralises exception handling across all controllers?', options: ['A. @ExceptionHandler alone', 'B. @RestControllerAdvice', 'C. @ResponseStatus', 'D. @ErrorHandler'], correctAnswer: 'B. @RestControllerAdvice' }
+      { id: 15, question: 'What causes LazyInitializationException?', options: ["A. Saving an entity without an @Id value", "B. A missing @Entity", "C. Touching a lazy association on a detached entity", "D. A syntax error"], correctAnswer: "C. Touching a lazy association on a detached entity" },
+      { id: 16, question: 'What is dirty checking?', options: ["A. Validating input", "B. Checking for null", "C. Validating entity fields before each insert", "D. Hibernate flushing changed managed entities at commit"], correctAnswer: "D. Hibernate flushing changed managed entities at commit" },
+      { id: 17, question: 'Do you need to call save() on an entity loaded inside the same transaction?', options: ["A. No, dirty checking handles it", "B. Yes, always", "C. Only for updates", "D. Only for deletes"], correctAnswer: "A. No, dirty checking handles it" },
+      { id: 18, question: 'What is the N+1 select problem?', options: ["A. Too many columns", "B. One query per collection element instead of one overall", "C. A deadlock between N+1 concurrent transactions", "D. A validation error"], correctAnswer: "B. One query per collection element instead of one overall" },
+      { id: 19, question: 'What activates Bean Validation on a request body?', options: ["A. @Validated on the class only", "B. Nothing, it is automatic", "C. @Valid on the @RequestBody parameter", "D. @NotNull alone"], correctAnswer: "C. @Valid on the @RequestBody parameter" },
+      { id: 20, question: 'Which annotation centralises exception handling across all controllers?', options: ["A. @ExceptionHandler alone", "B. @ResponseStatus", "C. @ErrorHandler", "D. @RestControllerAdvice"], correctAnswer: "D. @RestControllerAdvice" }
     ],
     assignment: {
       prompts: [
@@ -3595,12 +3595,12 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'What is the relationship between JPA and Hibernate in Java?',
           options: [
-            'A. JPA is an ORM implementation; Hibernate is just a specification.',
-            'B. JPA is the specification (guidelines/interface); Hibernate is a concrete provider (implementation) of the JPA specification.',
-            'C. JPA is only used for SQL databases; Hibernate is only used for NoSQL databases.',
-            'D. JPA and Hibernate are identical and developed by the same open source team.'
+            "A. JPA is the specification (guidelines/interface); Hibernate is a concrete provider (implementation) of the JPA specification.",
+            "B. JPA and Hibernate are competing ORM specifications, and you choose one per project instead.",
+            "C. JPA is only used for SQL databases; Hibernate is only used for NoSQL databases.",
+            "D. JPA and Hibernate are identical and developed by the same open source team.",
           ],
-          correctAnswer: 'B. JPA is the specification (guidelines/interface); Hibernate is a concrete provider (implementation) of the JPA specification.'
+          correctAnswer: "A. JPA is the specification (guidelines/interface); Hibernate is a concrete provider (implementation) of the JPA specification."
         }
       ]
     }
@@ -3757,24 +3757,24 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     },
     quiz: [
       { id: 1, question: 'Which class hashes user passwords in Spring Boot?', options: ['A. MD5PasswordEncoder', 'B. BCryptPasswordEncoder', 'C. SHAEncoder', 'D. Cryptor'], correctAnswer: 'B. BCryptPasswordEncoder' },
-      { id: 2, question: 'What does JWT stand for?', options: ['A. Java Web Token', 'B. JSON Web Token', 'C. Joint Web Technology', 'D. Java Web Tool'], correctAnswer: 'B. JSON Web Token' },
-      { id: 3, question: 'Where is Bearer JWT tokens sent in API calls?', options: ['A. Query params', 'B. Authorization Header', 'C. Cookie value', 'D. Response body'], correctAnswer: 'B. Authorization Header' },
-      { id: 4, question: 'Which setting disables CSRF protection in Spring Security configs?', options: ['A. csrf.disable()', 'B. csrf().disable()', 'C. security.csrf(false)', 'D. disableCSRF()'], correctAnswer: 'B. csrf().disable()' },
+      { id: 2, question: 'What does JWT stand for?', options: ["A. Java Web Token", "B. Joint Web Technology", "C. JSON Web Token", "D. Java Web Tool"], correctAnswer: "C. JSON Web Token" },
+      { id: 3, question: 'Where is Bearer JWT tokens sent in API calls?', options: ["A. Query params", "B. Cookie value", "C. Response body", "D. Authorization Header"], correctAnswer: "D. Authorization Header" },
+      { id: 4, question: 'Which setting disables CSRF protection in Spring Security configs?', options: ["A. csrf().disable()", "B. csrf.disable()", "C. security.csrf(false)", "D. disableCSRF()"], correctAnswer: "A. csrf().disable()" },
       { id: 5, question: 'What verifies WHAT a user can access?', options: ['A. Authentication', 'B. Authorization', 'C. Registration', 'D. Verification'], correctAnswer: 'B. Authorization' },
-      { id: 6, question: 'What is the difference between authentication and authorization?', options: ['A. AuthN is who you are; AuthZ is what you may do', 'B. They are the same', 'C. AuthZ comes first', 'D. AuthN is only for admins'], correctAnswer: 'A. AuthN is who you are; AuthZ is what you may do' },
-      { id: 7, question: 'Which status means "not authenticated"?', options: ['A. 400', 'B. 401', 'C. 403', 'D. 404'], correctAnswer: 'B. 401' },
-      { id: 8, question: 'Which status means "authenticated but not permitted"?', options: ['A. 401', 'B. 403', 'C. 405', 'D. 409'], correctAnswer: 'B. 403' },
-      { id: 9, question: 'What are the three parts of a JWT?', options: ['A. header.payload.signature', 'B. key.value.hash', 'C. user.role.expiry', 'D. alg.data.secret'], correctAnswer: 'A. header.payload.signature' },
-      { id: 10, question: 'Is a JWT payload encrypted?', options: ['A. Yes', 'B. No, it is only Base64URL encoded and readable by anyone', 'C. Only the claims', 'D. Only with HTTPS'], correctAnswer: 'B. No, it is only Base64URL encoded and readable by anyone' },
-      { id: 11, question: 'What does the JWT signature guarantee?', options: ['A. Confidentiality', 'B. Integrity', 'C. Compression', 'D. Availability'], correctAnswer: 'B. Integrity' },
-      { id: 12, question: 'What is the main drawback of stateless JWTs?', options: ['A. They are slow', 'B. They cannot easily be revoked before expiry', 'C. They need a database', 'D. They only work on one server'], correctAnswer: 'B. They cannot easily be revoked before expiry' },
-      { id: 13, question: 'Why must passwords be hashed rather than encrypted?', options: ['A. Hashing is one-way; the system never needs the plaintext', 'B. Encryption is illegal', 'C. Hashing is faster', 'D. Encryption uses more disk'], correctAnswer: 'A. Hashing is one-way; the system never needs the plaintext' },
-      { id: 14, question: 'Why are MD5 and SHA-256 unsuitable for password hashing?', options: ['A. They are too slow', 'B. They are too fast, enabling rapid brute force', 'C. They are not available in Java', 'D. They produce short output'], correctAnswer: 'B. They are too fast, enabling rapid brute force' },
-      { id: 15, question: 'What does BCrypt do automatically that defeats rainbow tables?', options: ['A. Encryption', 'B. Generates a unique random salt per password', 'C. Compression', 'D. Key rotation'], correctAnswer: 'B. Generates a unique random salt per password' },
-      { id: 16, question: 'How do you verify a password against a BCrypt hash?', options: ['A. hash.equals(encoder.encode(raw))', 'B. encoder.matches(raw, hash)', 'C. raw.equals(hash)', 'D. Arrays.equals()'], correctAnswer: 'B. encoder.matches(raw, hash)' },
+      { id: 6, question: 'What is the difference between authentication and authorization?', options: ["A. AuthZ is who you are; AuthN is what you may do", "B. AuthZ comes first", "C. AuthN is who you are; AuthZ is what you may do", "D. AuthN is only for admins"], correctAnswer: "C. AuthN is who you are; AuthZ is what you may do" },
+      { id: 7, question: 'Which status means "not authenticated"?', options: ["A. 400", "B. 403", "C. 404", "D. 401"], correctAnswer: "D. 401" },
+      { id: 8, question: 'Which status means "authenticated but not permitted"?', options: ["A. 403", "B. 401", "C. 405", "D. 409"], correctAnswer: "A. 403" },
+      { id: 9, question: 'What are the three parts of a JWT?', options: ["A. key.value.hash", "B. header.payload.signature", "C. user.role.expiry", "D. alg.data.secret"], correctAnswer: "B. header.payload.signature" },
+      { id: 10, question: 'Is a JWT payload encrypted?', options: ["A. Yes, it is encrypted with the signing key", "B. Only the claims", "C. No, it is only Base64URL encoded and readable by anyone", "D. Only with HTTPS"], correctAnswer: "C. No, it is only Base64URL encoded and readable by anyone" },
+      { id: 11, question: 'What does the JWT signature guarantee?', options: ["A. Confidentiality", "B. Compression", "C. Availability", "D. Integrity"], correctAnswer: "D. Integrity" },
+      { id: 12, question: 'What is the main drawback of stateless JWTs?', options: ["A. They cannot easily be revoked before expiry", "B. They are slow", "C. They need a database", "D. They only work on one server"], correctAnswer: "A. They cannot easily be revoked before expiry" },
+      { id: 13, question: 'Why must passwords be hashed rather than encrypted?', options: ["A. Encryption keys must be rotated yearly, which breaks old logins", "B. Hashing is one-way; the system never needs the plaintext", "C. Hashing is faster to verify at login", "D. Encryption uses more disk"], correctAnswer: "B. Hashing is one-way; the system never needs the plaintext" },
+      { id: 14, question: 'Why are MD5 and SHA-256 unsuitable for password hashing?', options: ["A. They are too slow", "B. They are not available in Java", "C. They are too fast, enabling rapid brute force", "D. They produce short output"], correctAnswer: "C. They are too fast, enabling rapid brute force" },
+      { id: 15, question: 'What does BCrypt do automatically that defeats rainbow tables?', options: ["A. Encrypts each password with a rotating key", "B. Compression", "C. Key rotation", "D. Generates a unique random salt per password"], correctAnswer: "D. Generates a unique random salt per password" },
+      { id: 16, question: 'How do you verify a password against a BCrypt hash?', options: ["A. encoder.matches(raw, hash)", "B. hash.equals(encoder.encode(raw))", "C. raw.equals(hash)", "D. Arrays.equals()"], correctAnswer: "A. encoder.matches(raw, hash)" },
       { id: 17, question: 'Why does encoding the same password twice with BCrypt give different results?', options: ['A. A bug', 'B. Each call uses a new random salt', 'C. Time is included', 'D. It does not'], correctAnswer: 'B. Each call uses a new random salt' },
-      { id: 18, question: 'When is disabling CSRF protection acceptable?', options: ['A. Always', 'B. For a stateless API authenticated by an Authorization header', 'C. For cookie-based sessions', 'D. Never'], correctAnswer: 'B. For a stateless API authenticated by an Authorization header' },
-      { id: 19, question: 'What does hasRole("ADMIN") actually match?', options: ['A. ADMIN', 'B. ROLE_ADMIN', 'C. role_admin', 'D. Admin'], correctAnswer: 'B. ROLE_ADMIN' },
+      { id: 18, question: 'When is disabling CSRF protection acceptable?', options: ["A. For any browser app that already uses HTTPS and SameSite cookies", "B. For cookie-based sessions", "C. For a stateless API authenticated by an Authorization header", "D. For any app, as long as HTTPS is enabled"], correctAnswer: "C. For a stateless API authenticated by an Authorization header" },
+      { id: 19, question: 'What does hasRole("ADMIN") actually match?', options: ["A. ADMIN", "B. role_admin", "C. Admin", "D. ROLE_ADMIN"], correctAnswer: "D. ROLE_ADMIN" },
       { id: 20, question: 'In what order are URL authorization rules evaluated?', options: ['A. Top to bottom, first match wins', 'B. Bottom to top', 'C. Most specific automatically first', 'D. Random'], correctAnswer: 'A. Top to bottom, first match wins' }
     ],
     assignment: {
@@ -3783,23 +3783,23 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'In a JWT-based authentication flow for a Spring Boot application, where is the JWT usually retrieved from in subsequent requests?',
           options: [
-            'A. The Authorization header (using Bearer scheme).',
-            'B. The body of a POST request.',
-            'C. A custom query parameter named ?token.',
-            'D. The User-Agent header.'
+            "A. The body of a POST request.",
+            "B. The Authorization header (using Bearer scheme).",
+            "C. A custom query parameter named ?token.",
+            "D. The User-Agent header.",
           ],
-          correctAnswer: 'A. The Authorization header (using Bearer scheme).'
+          correctAnswer: "B. The Authorization header (using Bearer scheme)."
         },
         {
           kind: 'mcq',
           prompt: 'Why is BCrypt hashing preferred over SHA-256 for password hashing?',
           options: [
-            'A. SHA-256 is slow, making it vulnerable to denial of service attacks.',
-            'B. BCrypt is a slow, adaptive hashing algorithm that makes brute-force attacks much harder; SHA-256 is extremely fast and vulnerable to hardware-accelerated cracking.',
-            'C. BCrypt is built into Java standard library; SHA-256 requires third-party dependencies.',
-            'D. SHA-256 hashes are easily decrypted back to plain text.'
+            "A. SHA-256 is too slow for login endpoints under load, while BCrypt is optimised to verify thousands of hashes per second.",
+            "B. BCrypt is built into Java standard library; SHA-256 requires third-party dependencies.",
+            "C. BCrypt is a slow, adaptive hashing algorithm that makes brute-force attacks much harder; SHA-256 is extremely fast and vulnerable to hardware-accelerated cracking.",
+            "D. SHA-256 output can be decrypted with the original key, while BCrypt output is permanently irreversible.",
           ],
-          correctAnswer: 'B. BCrypt is a slow, adaptive hashing algorithm that makes brute-force attacks much harder; SHA-256 is extremely fast and vulnerable to hardware-accelerated cracking.'
+          correctAnswer: "C. BCrypt is a slow, adaptive hashing algorithm that makes brute-force attacks much harder; SHA-256 is extremely fast and vulnerable to hardware-accelerated cracking."
         }
       ]
     }
@@ -3956,26 +3956,26 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
       type: 'code_sandbox'
     },
     quiz: [
-      { id: 1, question: 'Which Maven command packages applications into executable JAR files?', options: ['A. mvn clean compile', 'B. mvn clean package', 'C. mvn execute', 'D. mvn build'], correctAnswer: 'B. mvn clean package' },
-      { id: 2, question: 'Which keyword executes compiled JAR files?', options: ['A. execute app.jar', 'B. java -jar app.jar', 'C. run app.jar', 'D. start java app.jar'], correctAnswer: 'B. java -jar app.jar' },
-      { id: 3, question: 'What docker command builds container images?', options: ['A. docker build', 'B. docker run', 'C. docker compile', 'D. docker images'], correctAnswer: 'A. docker build' },
-      { id: 4, question: 'Where does Maven build compiled outputs?', options: ['A. src/main/bin', 'B. target/', 'C. out/', 'D. dist/'], correctAnswer: 'B. target/' },
-      { id: 5, question: 'How are sensitive parameters passed to production environments?', options: ['A. Hardcoded inside classes', 'B. Committed in application.properties', 'C. Passed via Environment Variables', 'D. None of the above'], correctAnswer: 'C. Passed via Environment Variables' },
-      { id: 6, question: 'What does the Spring Boot Maven plugin produce?', options: ['A. A WAR file only', 'B. An executable fat JAR with dependencies and an embedded server', 'C. A Docker image only', 'D. Source archives'], correctAnswer: 'B. An executable fat JAR with dependencies and an embedded server' },
+      { id: 1, question: 'Which Maven command packages applications into executable JAR files?', options: ["A. mvn clean compile", "B. mvn execute", "C. mvn build", "D. mvn clean package"], correctAnswer: "D. mvn clean package" },
+      { id: 2, question: 'Which keyword executes compiled JAR files?', options: ["A. java -jar app.jar", "B. execute app.jar", "C. run app.jar", "D. start java app.jar"], correctAnswer: "A. java -jar app.jar" },
+      { id: 3, question: 'What docker command builds container images?', options: ["A. docker run", "B. docker build", "C. docker compile", "D. docker images"], correctAnswer: "B. docker build" },
+      { id: 4, question: 'Where does Maven build compiled outputs?', options: ["A. src/main/bin", "B. out/", "C. target/", "D. dist/"], correctAnswer: "C. target/" },
+      { id: 5, question: 'How are sensitive parameters passed to production environments?', options: ["A. Hardcoded inside classes", "B. Committed in application.properties", "C. Compiled into the JAR as constants", "D. Passed via Environment Variables"], correctAnswer: "D. Passed via Environment Variables" },
+      { id: 6, question: 'What does the Spring Boot Maven plugin produce?', options: ["A. An executable fat JAR with dependencies and an embedded server", "B. A WAR file only", "C. A Docker image only", "D. Source archives for publishing to Maven Central"], correctAnswer: "A. An executable fat JAR with dependencies and an embedded server" },
       { id: 7, question: 'What error appears if you run a JAR built without the Boot plugin?', options: ['A. ClassNotFoundException', 'B. no main manifest attribute', 'C. OutOfMemoryError', 'D. NoSuchMethodError'], correctAnswer: 'B. no main manifest attribute' },
-      { id: 8, question: 'Which command runs a Spring Boot JAR?', options: ['A. java -jar app.jar', 'B. java app.jar', 'C. run app.jar', 'D. mvn app.jar'], correctAnswer: 'A. java -jar app.jar' },
-      { id: 9, question: 'Which configuration source has the highest precedence?', options: ['A. application.properties', 'B. Command-line arguments', 'C. Environment variables', 'D. Code defaults'], correctAnswer: 'B. Command-line arguments' },
+      { id: 8, question: 'Which command runs a Spring Boot JAR?', options: ["A. java app.jar", "B. run app.jar", "C. java -jar app.jar", "D. mvn app.jar"], correctAnswer: "C. java -jar app.jar" },
+      { id: 9, question: 'Which configuration source has the highest precedence?', options: ["A. application.properties", "B. Environment variables", "C. Code defaults", "D. Command-line arguments"], correctAnswer: "D. Command-line arguments" },
       { id: 10, question: 'How does `spring.datasource.url` map to an environment variable?', options: ['A. SPRING_DATASOURCE_URL', 'B. spring-datasource-url', 'C. SPRING.DATASOURCE.URL', 'D. springDatasourceUrl'], correctAnswer: 'A. SPRING_DATASOURCE_URL' },
-      { id: 11, question: 'What does `${DB_URL:jdbc:h2:mem:test}` mean?', options: ['A. A syntax error', 'B. Use DB_URL, or the H2 URL as a fallback', 'C. Always use H2', 'D. Concatenate both'], correctAnswer: 'B. Use DB_URL, or the H2 URL as a fallback' },
-      { id: 12, question: 'How do you activate a Spring profile at launch?', options: ['A. --spring.profiles.active=prod', 'B. --profile=prod', 'C. -Dprofile=prod', 'D. --env=prod'], correctAnswer: 'A. --spring.profiles.active=prod' },
-      { id: 13, question: 'Which port does AWS Elastic Beanstalk expect a Java app to bind to?', options: ['A. 8080', 'B. 5000', 'C. 80', 'D. 3000'], correctAnswer: 'B. 5000' },
-      { id: 14, question: 'How does Render tell your app which port to use?', options: ['A. Always 8080', 'B. Through the PORT environment variable', 'C. In render.yaml only', 'D. It does not'], correctAnswer: 'B. Through the PORT environment variable' },
-      { id: 15, question: 'Why should the Render filesystem not be used for uploads?', options: ['A. It is read-only', 'B. It is ephemeral and wiped on redeploy', 'C. It is too small', 'D. It is encrypted'], correctAnswer: 'B. It is ephemeral and wiped on redeploy' },
-      { id: 16, question: 'What is the main benefit of a multi-stage Dockerfile?', options: ['A. Faster compilation', 'B. A much smaller runtime image containing only the JRE and JAR', 'C. Better security scanning', 'D. Automatic scaling'], correctAnswer: 'B. A much smaller runtime image containing only the JRE and JAR' },
-      { id: 17, question: 'Why copy pom.xml and resolve dependencies before copying src?', options: ['A. Maven requires it', 'B. So the dependency layer stays cached when only source changes', 'C. To reduce image size', 'D. No reason'], correctAnswer: 'B. So the dependency layer stays cached when only source changes' },
-      { id: 18, question: 'Why should a container not run as root?', options: ['A. It is slower', 'B. A compromise would inherit full privileges', 'C. Docker forbids it', 'D. It uses more memory'], correctAnswer: 'B. A compromise would inherit full privileges' },
-      { id: 19, question: 'Why must secrets never be set with ENV in a Dockerfile?', options: ['A. ENV does not work', 'B. They are permanently visible in the image history', 'C. They are too long', 'D. They get encrypted'], correctAnswer: 'B. They are permanently visible in the image history' },
-      { id: 20, question: 'In Docker Compose, how does the app container reach the database?', options: ['A. localhost', 'B. By the service name, e.g. jdbc:postgresql://db:5432/...', 'C. 127.0.0.1', 'D. The host IP'], correctAnswer: 'B. By the service name, e.g. jdbc:postgresql://db:5432/...' }
+      { id: 11, question: 'What does `${DB_URL:jdbc:h2:mem:test}` mean?', options: ["A. A syntax error", "B. Use DB_URL, or the H2 URL as a fallback", "C. Always use the H2 URL, ignoring DB_URL", "D. Concatenate both"], correctAnswer: 'B. Use DB_URL, or the H2 URL as a fallback' },
+      { id: 12, question: 'How do you activate a Spring profile at launch?', options: ["A. --profile=prod", "B. -Dprofile=prod", "C. --spring.profiles.active=prod", "D. --env=prod"], correctAnswer: "C. --spring.profiles.active=prod" },
+      { id: 13, question: 'Which port does AWS Elastic Beanstalk expect a Java app to bind to?', options: ["A. 8080", "B. 80", "C. 3000", "D. 5000"], correctAnswer: "D. 5000" },
+      { id: 14, question: 'How does Render tell your app which port to use?', options: ["A. Through the PORT environment variable", "B. Always 8080", "C. In render.yaml only", "D. It does not"], correctAnswer: "A. Through the PORT environment variable" },
+      { id: 15, question: 'Why should the Render filesystem not be used for uploads?', options: ["A. It is read-only for application processes", "B. It is ephemeral and wiped on redeploy", "C. It is too small", "D. It is encrypted"], correctAnswer: 'B. It is ephemeral and wiped on redeploy' },
+      { id: 16, question: 'What is the main benefit of a multi-stage Dockerfile?', options: ["A. Faster compilation", "B. Better security scanning", "C. A much smaller runtime image containing only the JRE and JAR", "D. Automatic scaling of the running containers"], correctAnswer: "C. A much smaller runtime image containing only the JRE and JAR" },
+      { id: 17, question: 'Why copy pom.xml and resolve dependencies before copying src?', options: ["A. Maven requires it", "B. To reduce image size", "C. No reason — layer order does not affect caching", "D. So the dependency layer stays cached when only source changes"], correctAnswer: "D. So the dependency layer stays cached when only source changes" },
+      { id: 18, question: 'Why should a container not run as root?', options: ["A. A compromise would inherit full privileges", "B. It is slower, since root bypasses the cgroup scheduler", "C. Docker forbids it", "D. It uses more memory"], correctAnswer: "A. A compromise would inherit full privileges" },
+      { id: 19, question: 'Why must secrets never be set with ENV in a Dockerfile?', options: ["A. ENV values are unavailable at runtime", "B. They are permanently visible in the image history", "C. They are too long", "D. They get encrypted"], correctAnswer: 'B. They are permanently visible in the image history' },
+      { id: 20, question: 'In Docker Compose, how does the app container reach the database?', options: ["A. localhost, since both containers share the host", "B. 127.0.0.1", "C. By the service name, e.g. jdbc:postgresql://db:5432/...", "D. The host IP"], correctAnswer: "C. By the service name, e.g. jdbc:postgresql://db:5432/..." }
     ],
     assignment: {
       prompts: [
@@ -3984,12 +3984,12 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'What is the role of the clean lifecycle phase in Apache Maven?',
           options: [
-            'A. It deletes unused source code files from the project directory.',
-            'B. It removes the target directory (compiled classes, packaged files) to ensure a fresh, full build.',
-            'C. It formats the source code according to style rules.',
-            'D. It purges the local Maven repository (~/.m2) of all dependencies.'
+            "A. It deletes unused source code files from the project directory.",
+            "B. It formats the source code according to style rules.",
+            "C. It purges the local Maven repository (~/.m2) of all dependencies.",
+            "D. It removes the target directory (compiled classes, packaged files) to ensure a fresh, full build.",
           ],
-          correctAnswer: 'B. It removes the target directory (compiled classes, packaged files) to ensure a fresh, full build.'
+          correctAnswer: "D. It removes the target directory (compiled classes, packaged files) to ensure a fresh, full build."
         }
       ]
     }

@@ -10,11 +10,11 @@ interface Props { page: number; }
 
 const Module4: React.FC<Props> = ({ page }) => {
   const quizQuestions: QuizQuestion[] = [
-    { id: 1, question: 'Q1: Which property makes a container a flex container?', options: ['A. flex: 1', 'B. display: flex', 'C. flexbox: true', 'D. flex-direction: row'], correctAnswer: 'B. display: flex' },
+    { id: 1, question: 'Q1: Which property makes a container a flex container?', options: ["A. display: flex", "B. flex: 1", "C. flexbox: true", "D. flex-direction: row"], correctAnswer: "A. display: flex" },
     { id: 2, question: 'Q2: What does justify-content control?', options: ['A. Vertical alignment', 'B. Horizontal alignment (main axis)', 'C. Font size', 'D. Item order'], correctAnswer: 'B. Horizontal alignment (main axis)' },
-    { id: 3, question: 'Q3: Which property creates columns in CSS Grid?', options: ['A. grid-columns', 'B. grid-template-columns', 'C. column-template', 'D. display: columns'], correctAnswer: 'B. grid-template-columns' },
-    { id: 4, question: 'Q4: What does flex-wrap: wrap do?', options: ['A. Prevents wrapping', 'B. Wraps items to next line when no space', 'C. Reverses items', 'D. Centers items'], correctAnswer: 'B. Wraps items to next line when no space' },
-    { id: 5, question: 'Q5: What does "fr" unit stand for in CSS Grid?', options: ['A. Frame', 'B. Fraction', 'C. Full Row', 'D. Flex Ratio'], correctAnswer: 'B. Fraction' },
+    { id: 3, question: 'Q3: Which property creates columns in CSS Grid?', options: ["A. grid-columns", "B. column-template", "C. grid-template-columns", "D. display: columns"], correctAnswer: "C. grid-template-columns" },
+    { id: 4, question: 'Q4: What does flex-wrap: wrap do?', options: ["A. Prevents wrapping", "B. Reverses items", "C. Centers items", "D. Wraps items to next line when no space"], correctAnswer: "D. Wraps items to next line when no space" },
+    { id: 5, question: 'Q5: What does "fr" unit stand for in CSS Grid?', options: ["A. Fraction", "B. Frame", "C. Full Row", "D. Flex Ratio"], correctAnswer: "A. Fraction" },
   ];
 
   switch (page) {

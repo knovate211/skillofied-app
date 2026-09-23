@@ -41,21 +41,24 @@ const COURSE_DATA: Record<string, CourseDetail> = {
     ]
   },
   seo: {
-    title: 'SEO Fundamentals',
+    title: 'AI SEO & Search Visibility',
     mentor: 'Marketing Team Specialist',
-    duration: '6 Weeks',
-    lectures: 36,
-    projects: 3,
-    description: 'Learn keyword research, on-page optimization, content strategies, technical site audits, link building, and advanced web search analysis to rank on Google\'s first page.',
+    duration: '8 Weeks',
+    lectures: 26,
+    projects: 8,
+    description: 'Learn how AI answer engines pick their sources, and optimise a real site to be found, understood and cited by ChatGPT, Google AI Overviews, Gemini, Perplexity and Claude — alongside classic search.',
     colorGrad: 'linear-gradient(135deg, #f39c12, #f1c40f)',
-    initial: 'SE',
+    initial: 'AI',
     startDate: 'July 22, 2026',
     syllabus: [
-      { id: 'seo-m1', title: 'Module 1: Search Engine Crawling & Indexing', lessons: ['How Google Search Works', 'Understanding Crawl Budgets & Indexability', 'Sitemaps and Robots.txt Best Practices'] },
-      { id: 'seo-m2', title: 'Module 2: Keyword Research & Competitor Analysis', lessons: ['Identifying Search Intent', 'Keyword Grouping & Selection Metrics', 'Competitor Gap & Opportunity Audits'] },
-      { id: 'seo-m3', title: 'Module 3: On-Page SEO Optimization', lessons: ['Title Tags, Meta Descriptions & Header Structures', 'SEO Copywriting & Image Optimization', 'URL Hierarchy and Internal Link Architecture'] },
-      { id: 'seo-m4', title: 'Module 4: Technical SEO & Speed Optimization', lessons: ['Core Web Vitals & Page Load Impact', 'Schema Markup & Rich Snippets Implementation', 'Handling Canonicalization & Redirects'] },
-      { id: 'seo-m5', title: 'Module 5: Link Building & Off-Page Authority', lessons: ['Evaluating Domain Authority', 'Ethical Guest Posting & Content Outreach', 'Backlink Auditing & Disavow Tool'] }
+      { id: 'seo-m1', title: 'Module 1: AI Search Foundations — GEO, LLM SEO & AEO', lessons: ['How AI Search Engines Answer Questions', 'GEO, LLM SEO and AEO Compared', 'Why Classic SEO Still Decides AI Visibility'] },
+      { id: 'seo-m2', title: 'Module 2: Optimising a Page for AI Answers', lessons: ['Answer-First Content Structure', 'Structured Content vs Structured Data', 'One Page for AEO, GEO and SEO'] },
+      { id: 'seo-m3', title: 'Module 3: Training AI to Find and Cite You', lessons: ['Auditing What AI Says About You', 'About, Contact and Source Pages AI Can Trust', 'How AI Models Actually Learn'] },
+      { id: 'seo-m4', title: 'Module 4: Crawlability for AI Crawlers', lessons: ['How Crawling Works for Search and AI Bots', 'robots.txt Mistakes That Block AI', 'llms.txt: Writing and Verifying It'] },
+      { id: 'seo-m5', title: 'Module 5: Reputation — E-E-A-T and Entity Authority', lessons: ['Google E-E-A-T Explained', 'Building a Consistent Entity Across the Web', 'Mentions in Databases, Forums and Communities'] },
+      { id: 'seo-m6', title: 'Module 6: Digital PR — Earning Mentions That Train AI', lessons: ['Why Mentions Move AI Answers', 'Writing a Press Release for Humans, Search and AI', 'Distribution, Follow-Up and Measuring Coverage'] },
+      { id: 'seo-m7', title: 'Module 7: AI-Assisted Technical SEO', lessons: ['Building an SEO-Ready Site with AI Tools', 'FAQ Schema, Interlinking and Long-Tail Coverage', 'Page Speed and Core Web Vitals with AI Help'] },
+      { id: 'seo-m8', title: 'Module 8: Measuring AI Visibility and Staying Ahead', lessons: ['Tracking Citations and Brand Mentions in AI Answers', 'Google AI Overviews and AI Mode', 'Ethics, Limits and What Comes Next'] }
     ]
   },
   'digital-marketing': {

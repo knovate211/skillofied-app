@@ -17,11 +17,11 @@ const Module15: React.FC<Props> = ({ page }) => {
   const [errorMsg, setErrorMsg] = useState('');
 
   const quizQuestions: QuizQuestion[] = [
-    { id: 1, question: 'Q1: In which lifecycle hook should REST API data fetching ordinarily take place?', options: ['A. useMemo', 'B. useEffect', 'C. useState', 'D. useLayoutEffect'], correctAnswer: 'B. useEffect' },
-    { id: 2, question: 'Q2: Why must you verify response.ok when using Fetch API inside React?', options: ['A. Fetch doesn\'t throw errors on 404 or 500 status codes', 'B. It compiles JSX code', 'C. To refresh the page', 'D. It is not needed'], correctAnswer: 'A. Fetch doesn\'t throw errors on 404 or 500 status codes' },
-    { id: 3, question: 'Q3: Which HTTP method is typically used to create new resources on a server?', options: ['A. GET', 'B. POST', 'C. PUT', 'D. DELETE'], correctAnswer: 'B. POST' },
-    { id: 4, question: 'Q4: Where are JWT authorization tokens usually stored in React applications to persist sessions?', options: ['A. Component State variables', 'B. LocalStorage or HTTP-only cookies', 'C. Virtual DOM', 'D. README.md file'], correctAnswer: 'B. LocalStorage or HTTP-only cookies' },
-    { id: 5, question: 'Q5: What is the main purpose of dynamic "loading states" in API integration?', options: ['A. Speeding up network speeds', 'B. Communicating request status to the user to improve UX', 'C. Compiling background scripts', 'D. Encrypting data parameters'], correctAnswer: 'B. Communicating request status to the user to improve UX' },
+    { id: 1, question: 'Q1: In which lifecycle hook should REST API data fetching ordinarily take place?', options: ["A. useEffect", "B. useMemo", "C. useState", "D. useLayoutEffect"], correctAnswer: "A. useEffect" },
+    { id: 2, question: 'Q2: Why must you verify response.ok when using Fetch API inside React?', options: ["A. It compiles JSX code", "B. Fetch doesn't throw errors on 404 or 500 status codes", "C. To refresh the page", "D. It is not needed"], correctAnswer: "B. Fetch doesn't throw errors on 404 or 500 status codes" },
+    { id: 3, question: 'Q3: Which HTTP method is typically used to create new resources on a server?', options: ["A. GET", "B. PUT", "C. POST", "D. DELETE"], correctAnswer: "C. POST" },
+    { id: 4, question: 'Q4: Where are JWT authorization tokens usually stored in React applications to persist sessions?', options: ["A. Component State variables", "B. Virtual DOM", "C. README.md file", "D. LocalStorage or HTTP-only cookies"], correctAnswer: "D. LocalStorage or HTTP-only cookies" },
+    { id: 5, question: 'Q5: What is the main purpose of dynamic "loading states" in API integration?', options: ["A. Communicating request status to the user to improve UX", "B. Speeding up network speeds", "C. Compiling background scripts", "D. Encrypting data parameters"], correctAnswer: "A. Communicating request status to the user to improve UX" },
   ];
 
   const handleSearchMovies = () => {

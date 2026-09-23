@@ -10,10 +10,10 @@ interface Props { page: number; }
 
 const Module5: React.FC<Props> = ({ page }) => {
   const quizQuestions: QuizQuestion[] = [
-    { id: 1, question: 'Q1: What does "mobile-first" design mean?', options: ['A. Only design for mobile', 'B. Design for mobile first, then scale up', 'C. Mobile apps only', 'D. Use mobile frameworks'], correctAnswer: 'B. Design for mobile first, then scale up' },
+    { id: 1, question: 'Q1: What does "mobile-first" design mean?', options: ["A. Design for mobile first, then scale up", "B. Only design for mobile", "C. Mobile apps only", "D. Use mobile frameworks"], correctAnswer: "A. Design for mobile first, then scale up" },
     { id: 2, question: 'Q2: Which CSS feature enables responsive design?', options: ['A. @import', 'B. @media', 'C. @responsive', 'D. @mobile'], correctAnswer: 'B. @media' },
-    { id: 3, question: 'Q3: What does the viewport meta tag do?', options: ['A. Sets page color', 'B. Controls how page scales on mobile devices', 'C. Adds navigation', 'D. Loads JavaScript'], correctAnswer: 'B. Controls how page scales on mobile devices' },
-    { id: 4, question: 'Q4: What unit is relative to viewport width?', options: ['A. px', 'B. em', 'C. vw', 'D. rem'], correctAnswer: 'C. vw' },
+    { id: 3, question: 'Q3: What does the viewport meta tag do?', options: ["A. Sets page color", "B. Adds navigation", "C. Controls how page scales on mobile devices", "D. Loads JavaScript"], correctAnswer: "C. Controls how page scales on mobile devices" },
+    { id: 4, question: 'Q4: What unit is relative to viewport width?', options: ["A. px", "B. em", "C. rem", "D. vw"], correctAnswer: "D. vw" },
   ];
 
   switch (page) {

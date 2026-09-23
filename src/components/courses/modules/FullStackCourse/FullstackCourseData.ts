@@ -160,7 +160,7 @@ console.log(JSON.stringify(toProjectList(raw)));`,
       }
     ],
     quiz: [
-      { id: 1, question: 'Which verb updates resources?', options: ['PUT', 'GET', 'POST', 'DELETE'], correctAnswer: 'PUT' }
+      { id: 1, question: 'Which verb updates resources?', options: ["GET", "PUT", "POST", "DELETE"], correctAnswer: "PUT" }
     ],
     assignment: {
       prompts: [

@@ -1,12 +1,24 @@
 import { QuizQuestion } from '../../../../types';
 import { AssignmentQuestion } from '../../shared/ModuleAssignment';
 import type { LessonCallout, LessonSidePanel } from '../../shared/LessonLayout';
+import type { LessonBlock } from '../../shared/LessonBlocks';
+import { overviewAndModule1Lessons } from './lessons/overviewAndModule1';
+import { modules2And4Lessons } from './lessons/modules2And4';
+import { modules3And5Lessons } from './lessons/modules3And5';
+import { modules6And7Lessons } from './lessons/modules6And7';
+import { modules8And11Lessons } from './lessons/modules8And11';
+import { modules9And13Lessons } from './lessons/modules9And13';
+import { modules10And12Lessons } from './lessons/modules10And12';
+import { modules14And15Lessons } from './lessons/modules14And15';
+import { interviewLessons } from './lessons/interview';
 
 export interface Lesson {
   id: string;
   title: string;
   objectives: string[];
   theory: string;
+  /** Rich lesson body; replaces `theory` in the prose slot when present. */
+  blocks?: LessonBlock[];
   syntax?: string;
   codeExample?: string;
   codeOutput?: string;
@@ -30,6 +42,19 @@ export interface ModuleData {
   };
 }
 
+/** Full lesson bodies, authored per module under ./lessons. */
+const EXPANDED_LESSONS: Record<string, Lesson> = {
+  ...overviewAndModule1Lessons,
+  ...modules2And4Lessons,
+  ...modules3And5Lessons,
+  ...modules6And7Lessons,
+  ...modules8And11Lessons,
+  ...modules9And13Lessons,
+  ...modules10And12Lessons,
+  ...modules14And15Lessons,
+  ...interviewLessons,
+};
+
 export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
   m1: {
     id: 'm1',
@@ -40,66 +65,22 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Differentiate between SDLC and STLC phases.'
     ],
     lessons: [
-      {
-        id: 'm1-l1',
-        title: 'Lesson 1.1 Welcome to Software Testing',
-        objectives: ['Understand course structure and goals.'],
-        theory: 'Welcome to Software Testing Mastery! Software testing ensures applications are reliable, secure, and deliver premium UX. This course will cover manual and automation frameworks.',
-        takeaways: ['Quality is a continuous process, not a final phase.']
-      },
-      {
-        id: 'm1-l2',
-        title: 'Lesson 1.2 What is Software Testing?',
-        objectives: ['Define software testing terminology.'],
-        theory: 'Software testing is the process of executing a program with the intent of finding errors and verifying that it matches expected behavior.',
-        takeaways: ['Testing verifies correctness, completeness, and quality.']
-      },
-      {
-        id: 'm1-l3',
-        title: 'Lesson 1.3 Why Software Testing is Important',
-        objectives: ['Analyze historical software bugs and impact.'],
-        theory: 'Software errors can cost millions of dollars, damage brand reputations, and even cause loss of life in critical systems.',
-        takeaways: ['Early testing dramatically reduces overall project costs.']
-      },
-      {
-        id: 'm1-l4',
-        title: 'Lesson 1.4 Software Development Life Cycle (SDLC)',
-        objectives: ['Trace requirements from design to deployment.'],
-        theory: 'SDLC includes Requirements, Design, Implementation, Testing, Deployment, and Maintenance.',
-        takeaways: ['Testing is a core phase in all development models.']
-      },
-      {
-        id: 'm1-l5',
-        title: 'Lesson 1.5 Software Testing Life Cycle (STLC)',
-        objectives: ['Outline STLC phases.'],
-        theory: 'STLC consists of Requirements Analysis, Test Planning, Test Case Development, Environment Setup, Test Execution, and Test Closure.',
-        takeaways: ['Each STLC phase has distinct entry and exit criteria.']
-      },
-      {
-        id: 'm1-l6',
-        title: 'Lesson 1.6 Roles and Responsibilities of a QA Engineer',
-        objectives: ['Understand QA roles.'],
-        theory: 'QA engineers design test cases, execute tests, report bugs, verify fixes, and collaborate with developers to maintain quality standards.',
-        takeaways: ['QA is responsible for quality processes, not just testing.']
-      },
-      {
-        id: 'm1-l7',
-        title: 'Lesson 1.7 Types of Software Testing',
-        objectives: ['Distinguish functional and non-functional tests.'],
-        theory: 'Testing is broadly divided into functional (e.g. sanity, regression, integration) and non-functional (e.g. load, security, usability) testing.',
-        takeaways: ['A balanced test suite covers both functional and non-functional aspects.']
-      },
-      {
-        id: 'm1-l8',
-        title: 'Lesson 1.8 Career Roadmap for QA Engineers',
-        objectives: ['Plan career progression.'],
-        theory: 'QA professionals can progress from Manual QA to Automation Engineer, QA Lead, QA Manager, or specialize in Performance and Security.',
-        takeaways: ['Automation and technical skills accelerate career growth.']
-      }
+      EXPANDED_LESSONS['m1-l1'],
+      EXPANDED_LESSONS['m1-l2'],
+      EXPANDED_LESSONS['m1-l3'],
+      EXPANDED_LESSONS['m1-l4'],
+      EXPANDED_LESSONS['m1-l5'],
+      EXPANDED_LESSONS['m1-l6'],
+      EXPANDED_LESSONS['m1-l7'],
+      EXPANDED_LESSONS['m1-l8'],
     ],
     quiz: [
-      { id: 1, question: 'Which phase of STLC involves identifying testing scope and resources?', options: ['A. Test Case Development', 'B. Test Planning', 'C. Test Closure', 'D. Environment Setup'], correctAnswer: 'B. Test Planning' },
-      { id: 2, question: 'What is the primary goal of software testing?', options: ['A. To prove the program has zero bugs', 'B. To find defects and verify expected behavior', 'C. To write code', 'D. To design user interfaces'], correctAnswer: 'B. To find defects and verify expected behavior' }
+      { id: 1, question: 'Which phase of STLC involves identifying testing scope and resources?', options: ["A. Test Planning", "B. Test Case Development", "C. Test Closure", "D. Environment Setup"], correctAnswer: "A. Test Planning" },
+      { id: 2, question: 'What is the primary goal of software testing?', options: ['A. To prove the program has zero bugs', 'B. To find defects and verify expected behavior', 'C. To write code', 'D. To design user interfaces'], correctAnswer: 'B. To find defects and verify expected behavior' },
+      { id: 3, question: "Which SDLC model runs development in short iterations with frequent feedback?", options: ["A. Waterfall", "B. Big Bang", "C. V-Model only", "D. Agile"], correctAnswer: "D. Agile" },
+      { id: 4, question: "Why is it cheaper to find a defect during requirements than in production?", options: ["A. Fewer artefacts have been built on the wrong assumption", "B. Testers are paid less at the requirements stage", "C. Production bugs cannot be fixed", "D. Requirements documents are shorter"], correctAnswer: "A. Fewer artefacts have been built on the wrong assumption" },
+      { id: 5, question: "Which STLC phase produces the test cases?", options: ["A. Test Closure", "B. Test Case Development", "C. Environment Setup", "D. Requirement Analysis"], correctAnswer: "B. Test Case Development" },
+      { id: 6, question: "What does a QA engineer own besides finding bugs?", options: ["A. Writing all production code", "B. Setting the product roadmap", "C. Assessing quality risk and advocating for the user", "D. Approving every design before development begins"], correctAnswer: "C. Assessing quality risk and advocating for the user" },
     ],
     assignment: {
       prompts: [
@@ -107,12 +88,12 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'Which of the following describes the correct order of STLC phases?',
           options: [
-            'A. Test Planning -> Requirements Analysis -> Test Execution -> Test Case Development',
-            'B. Requirements Analysis -> Test Planning -> Test Case Development -> Environment Setup -> Test Execution -> Test Closure',
-            'C. Test Execution -> Test Case Development -> Test Planning -> Test Closure',
-            'D. Environment Setup -> Test Execution -> Requirements Analysis -> Test Planning'
+            "A. Test Planning -> Requirements Analysis -> Test Execution -> Test Case Development",
+            "B. Test Execution -> Test Case Development -> Test Planning -> Test Closure",
+            "C. Requirements Analysis -> Test Planning -> Test Case Development -> Environment Setup -> Test Execution -> Test Closure",
+            "D. Environment Setup -> Test Execution -> Requirements Analysis -> Test Planning",
           ],
-          correctAnswer: 'B. Requirements Analysis -> Test Planning -> Test Case Development -> Environment Setup -> Test Execution -> Test Closure'
+          correctAnswer: "C. Requirements Analysis -> Test Planning -> Test Case Development -> Environment Setup -> Test Execution -> Test Closure"
         }
       ]
     }
@@ -126,66 +107,22 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Explain the difference between verification and validation.'
     ],
     lessons: [
-      {
-        id: 'm2-l1',
-        title: 'Lesson 2.1 Testing Principles',
-        objectives: ['Master the 7 software testing principles.'],
-        theory: 'The 7 principles are: 1. Testing shows presence of defects, 2. Exhaustive testing is impossible, 3. Early testing, 4. Defect clustering, 5. Pesticide paradox, 6. Testing is context dependent, 7. Absence-of-errors fallacy.',
-        takeaways: ['Understand that testing can never prove a system is entirely bug-free.']
-      },
-      {
-        id: 'm2-l2',
-        title: 'Lesson 2.2 Test Levels',
-        objectives: ['Distinguish Unit, Integration, System, and Acceptance testing.'],
-        theory: 'Test levels define the target of testing: Unit (individual units/functions), Integration (combined units), System (complete integrated application), and Acceptance (user verification).',
-        takeaways: ['Each test level targets a different scope and objective.']
-      },
-      {
-        id: 'm2-l3',
-        title: 'Lesson 2.3 Functional Testing',
-        objectives: ['Design functional test flows.'],
-        theory: 'Functional testing evaluates system behaviors against functional specifications. Examples include smoke testing, sanity testing, and regression testing.',
-        takeaways: ['Functional tests verify what the system does.']
-      },
-      {
-        id: 'm2-l4',
-        title: 'Lesson 2.4 Non-Functional Testing',
-        objectives: ['Identify non-functional requirements.'],
-        theory: 'Non-functional testing evaluates aspects like performance, load, security, reliability, scalability, and usability.',
-        takeaways: ['Non-functional testing verifies how the system performs.']
-      },
-      {
-        id: 'm2-l5',
-        title: 'Lesson 2.5 Black Box Testing',
-        objectives: ['Implement black box testing techniques.'],
-        theory: 'Black box testing examines system behavior without knowing its internal code structure or implementation details.',
-        takeaways: ['Focuses on input parameters and expected output values.']
-      },
-      {
-        id: 'm2-l6',
-        title: 'Lesson 2.6 White Box Testing',
-        objectives: ['Explain code coverage metrics.'],
-        theory: 'White box testing verifies internal paths, logic, loops, statements, and code flows. It requires complete visibility into the source code.',
-        takeaways: ['Commonly performed by developers during unit testing.']
-      },
-      {
-        id: 'm2-l7',
-        title: 'Lesson 2.7 Grey Box Testing',
-        objectives: ['Combine black and white box techniques.'],
-        theory: 'Grey box testing combines black box user-level testing with limited knowledge of database structures or API endpoints.',
-        takeaways: ['Great for web services, integration testing, and database-driven apps.']
-      },
-      {
-        id: 'm2-l8',
-        title: 'Lesson 2.8 Verification vs Validation',
-        objectives: ['Distinguish verification from validation.'],
-        theory: 'Verification asks: "Are we building the product right?" (reviews, walkthroughs). Validation asks: "Are we building the right product?" (executing code).',
-        takeaways: ['Verification focuses on documentation/design; validation focuses on code execution.']
-      }
+      EXPANDED_LESSONS['m2-l1'],
+      EXPANDED_LESSONS['m2-l2'],
+      EXPANDED_LESSONS['m2-l3'],
+      EXPANDED_LESSONS['m2-l4'],
+      EXPANDED_LESSONS['m2-l5'],
+      EXPANDED_LESSONS['m2-l6'],
+      EXPANDED_LESSONS['m2-l7'],
+      EXPANDED_LESSONS['m2-l8'],
     ],
     quiz: [
-      { id: 1, question: 'Which principle states that testing is context dependent?', options: ['A. Pesticide Paradox', 'B. Testing is context dependent', 'C. Exhaustive testing is impossible', 'D. Defect clustering'], correctAnswer: 'B. Testing is context dependent' },
-      { id: 2, question: 'Which test level is closest to the business user?', options: ['A. Unit Testing', 'B. Integration Testing', 'C. Acceptance Testing', 'D. System Testing'], correctAnswer: 'C. Acceptance Testing' }
+      { id: 1, question: 'Running the same regression tests every release finds fewer and fewer new bugs. Which testing principle describes this?', options: ["A. Defect clustering", "B. Exhaustive testing is impossible", "C. Early testing saves time", "D. Pesticide paradox"], correctAnswer: "D. Pesticide paradox" },
+      { id: 2, question: 'Which test level is closest to the business user?', options: ["A. Acceptance Testing", "B. Unit Testing", "C. Integration Testing", "D. System Testing"], correctAnswer: "A. Acceptance Testing" },
+      { id: 3, question: "\"Exhaustive testing is impossible\" means...", options: ["A. Every input should still be tried", "B. Automation can test everything", "C. Testing is not worth doing", "D. Testing must be prioritised by risk"], correctAnswer: "D. Testing must be prioritised by risk" },
+      { id: 4, question: "Which is non-functional testing?", options: ["A. Load testing", "B. Login validation", "C. Form submission", "D. Checkout calculation"], correctAnswer: "A. Load testing" },
+      { id: 5, question: "White box testing is designed from...", options: ["A. The user interface only", "B. The internal code structure", "C. Business requirements only", "D. User reviews"], correctAnswer: "B. The internal code structure" },
+      { id: 6, question: "Verification versus validation?", options: ["A. Building the right thing versus building it right", "B. Unit versus system testing", "C. Building it right versus building the right thing", "D. Manual versus automated"], correctAnswer: "C. Building it right versus building the right thing" },
     ],
     assignment: {
       prompts: [
@@ -193,10 +130,10 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'What is the main difference between Verification and Validation?',
           options: [
-            'A. Verification involves executing the software; Validation does not.',
-            'B. Verification evaluates static documents (reviews/walkthroughs); Validation executes the active code to verify system behavior.',
-            'C. Verification is done by users; Validation is done by developers.',
-            'D. There is no difference; they are synonyms.'
+            "A. Verification involves executing the software; Validation does not.",
+            "B. Verification evaluates static documents (reviews/walkthroughs); Validation executes the active code to verify system behavior.",
+            "C. Verification checks the finished product with real users, while Validation reviews the requirement documents before any code is written.",
+            "D. There is no difference; the terms are used interchangeably in ISTQB.",
           ],
           correctAnswer: 'B. Verification evaluates static documents (reviews/walkthroughs); Validation executes the active code to verify system behavior.'
         }
@@ -212,80 +149,24 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Apply Boundary Value Analysis and Equivalence Partitioning.'
     ],
     lessons: [
-      {
-        id: 'm3-l1',
-        title: 'Lesson 3.1 What is a Test Case?',
-        objectives: ['Identify key components of a test case.'],
-        theory: 'A test case is a set of conditions, steps, inputs, and expected results designed to verify a specific software feature.',
-        takeaways: ['A good test case is atomic, reusable, and clear.']
-      },
-      {
-        id: 'm3-l2',
-        title: 'Lesson 3.2 Test Scenario vs Test Case',
-        objectives: ['Derive test cases from test scenarios.'],
-        theory: 'A test scenario is a high-level functionality to test (e.g. Verify payment gateway). A test case is a specific verification path (e.g. Verify payment with expired visa).',
-        takeaways: ['One test scenario can map to multiple test cases.']
-      },
-      {
-        id: 'm3-l3',
-        title: 'Lesson 3.3 Test Plan',
-        objectives: ['Understand components of a Test Plan.'],
-        theory: 'A Test Plan describes test scope, resources, schedule, features to test, and risk mitigation strategies.',
-        takeaways: ['A Test Plan is a dynamic document updated as requirements change.']
-      },
-      {
-        id: 'm3-l4',
-        title: 'Lesson 3.4 Test Strategy',
-        objectives: ['Differentiate Test Plan from Test Strategy.'],
-        theory: 'A Test Strategy is a high-level, static organizational policy document defining testing approaches and tools across the organization.',
-        takeaways: ['Test Strategy is generally defined at the program or company level.']
-      },
-      {
-        id: 'm3-l5',
-        title: 'Lesson 3.5 Test Data Preparation',
-        objectives: ['Generate test data sets.'],
-        theory: 'Test data preparation involves creating valid, invalid, boundary, and database inputs required to execute test cases.',
-        takeaways: ['Realistic test data is essential for effective integration testing.']
-      },
-      {
-        id: 'm3-l6',
-        title: 'Lesson 3.6 Boundary Value Analysis',
-        objectives: ['Apply BVA limits.'],
-        theory: 'BVA tests values at boundaries (min, min-1, min+1, max, max-1, max+1). If range is 1-100, boundaries are 0, 1, 2, 99, 100, 101.',
-        takeaways: ['Defects frequently cluster at boundaries.']
-      },
-      {
-        id: 'm3-l7',
-        title: 'Lesson 3.7 Equivalence Partitioning',
-        objectives: ['Partition input domains.'],
-        theory: 'EP divides input data into equivalence classes where all members are expected to behave the same way. If age range is 18-60, partitions are: invalid (<18), valid (18-60), invalid (>60).',
-        takeaways: ['EP reduces the number of test cases required while maintaining high coverage.']
-      },
-      {
-        id: 'm3-l8',
-        title: 'Lesson 3.8 Decision Table Testing',
-        objectives: ['Construct decision tables for complex logic.'],
-        theory: 'Decision tables map boolean combinations of input conditions to expected system actions.',
-        takeaways: ['Excellent for testing complex business rules.']
-      },
-      {
-        id: 'm3-l9',
-        title: 'Lesson 3.9 State Transition Testing',
-        objectives: ['Design tests for state-dependent systems.'],
-        theory: 'State transition testing verifies behavior changes as system state transitions (e.g. ATM state transitions from Idle to Card Inserted to Authenticated).',
-        takeaways: ['Perfect for sequence-dependent transactional workflows.']
-      },
-      {
-        id: 'm3-l10',
-        title: 'Lesson 3.10 Error Guessing',
-        objectives: ['Leverage heuristic test design.'],
-        theory: 'Error guessing relies on tester experience to anticipate likely coding slip-ups (e.g. division by zero, empty inputs, null fields).',
-        takeaways: ['Complements structured design techniques.']
-      }
+      EXPANDED_LESSONS['m3-l1'],
+      EXPANDED_LESSONS['m3-l2'],
+      EXPANDED_LESSONS['m3-l3'],
+      EXPANDED_LESSONS['m3-l4'],
+      EXPANDED_LESSONS['m3-l5'],
+      EXPANDED_LESSONS['m3-l6'],
+      EXPANDED_LESSONS['m3-l7'],
+      EXPANDED_LESSONS['m3-l8'],
+      EXPANDED_LESSONS['m3-l9'],
+      EXPANDED_LESSONS['m3-l10'],
     ],
     quiz: [
-      { id: 1, question: 'If a text field accepts a password between 6 and 12 characters, what are the boundaries to test using BVA?', options: ['A. 5, 6, 7, 11, 12, 13', 'B. 6, 12', 'C. 1, 5, 10, 15', 'D. 0, 6, 12, 20'], correctAnswer: 'A. 5, 6, 7, 11, 12, 13' },
-      { id: 2, question: 'What is a Test Strategy?', options: ['A. A temporary task list', 'B. A high-level, static project or organizational policy document defining testing approaches', 'C. A list of code bugs', 'D. A database schema definition'], correctAnswer: 'B. A high-level, static project or organizational policy document defining testing approaches' }
+      { id: 1, question: 'If a text field accepts a password between 6 and 12 characters, what are the boundaries to test using BVA?', options: ["A. 6, 12", "B. 1, 5, 10, 15", "C. 5, 6, 7, 11, 12, 13", "D. 0, 6, 12, 20"], correctAnswer: "C. 5, 6, 7, 11, 12, 13" },
+      { id: 2, question: 'What is a Test Strategy?', options: ["A. A day-by-day execution schedule listing which tester runs each test case", "B. A detailed, step-by-step list of test cases for one sprint", "C. A database schema definition", "D. A high-level, static project or organizational policy document defining testing approaches"], correctAnswer: "D. A high-level, static project or organizational policy document defining testing approaches" },
+      { id: 3, question: "An age field accepts 18–60. Which set is a valid equivalence partition example?", options: ["A. Only 18 and 60", "B. Every value from 18 to 60", "C. Only negative numbers", "D. One value below 18, one within, one above 60"], correctAnswer: "D. One value below 18, one within, one above 60" },
+      { id: 4, question: "Which technique suits rules with combinations of conditions?", options: ["A. Decision table testing", "B. Error guessing", "C. Boundary value analysis", "D. Smoke testing"], correctAnswer: "A. Decision table testing" },
+      { id: 5, question: "State transition testing is most useful for...", options: ["A. Static text pages", "B. Systems whose behaviour depends on prior events", "C. Rendering fonts consistently across browsers", "D. One-off calculations"], correctAnswer: "B. Systems whose behaviour depends on prior events" },
+      { id: 6, question: "What distinguishes a test scenario from a test case?", options: ["A. A case is broader than a scenario", "B. A case lists what to test; a scenario gives the exact steps", "C. A scenario is what to test; a case gives steps and expected results", "D. A scenario always has test data"], correctAnswer: "C. A scenario is what to test; a case gives steps and expected results" },
     ],
     assignment: {
       prompts: [
@@ -293,12 +174,12 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'You are testing an input field that accepts an integer between 10 and 50 (inclusive). Which set of values represents the boundary cases according to Boundary Value Analysis (BVA)?',
           options: [
-            'A. 10, 30, 50',
-            'B. 9, 10, 11, 49, 50, 51',
-            'C. 0, 10, 50, 100',
-            'D. 8, 9, 51, 52'
+            "A. 9, 10, 11, 49, 50, 51",
+            "B. 10, 30, 50",
+            "C. 0, 10, 50, 100",
+            "D. 8, 9, 51, 52",
           ],
-          correctAnswer: 'B. 9, 10, 11, 49, 50, 51'
+          correctAnswer: "A. 9, 10, 11, 49, 50, 51"
         }
       ]
     }
@@ -312,52 +193,20 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Explain the difference between severity and priority.'
     ],
     lessons: [
-      {
-        id: 'm4-l1',
-        title: 'Lesson 4.1 What is a Bug?',
-        objectives: ['Define defect, bug, failure, and error.'],
-        theory: 'An error is a human mistake. A defect/bug is a flaw in code. A failure is the visible manifestation of a defect during execution.',
-        takeaways: ['Errors lead to defects, which lead to failures during execution.']
-      },
-      {
-        id: 'm4-l2',
-        title: 'Lesson 4.2 Bug Life Cycle',
-        objectives: ['Trace bug states from New to Closed.'],
-        theory: 'Bug lifecycle states: New -> Assigned -> Open -> Fixed -> Pending Retest -> Verified -> Closed (or Reopened).',
-        takeaways: ['A bug must be retested in the target environment before being closed.']
-      },
-      {
-        id: 'm4-l3',
-        title: 'Lesson 4.3 Severity vs Priority',
-        objectives: ['Classify defects by impact and urgency.'],
-        theory: 'Severity is the technical impact (e.g. system crashes - High Severity). Priority is the business urgency to fix (e.g. misspelled logo - High Priority, Low Severity).',
-        takeaways: ['Developers resolve defects based on priority, not just severity.']
-      },
-      {
-        id: 'm4-l4',
-        title: 'Lesson 4.4 Writing Bug Reports',
-        objectives: ['Draft professional bug reports.'],
-        theory: 'A bug report must contain: Title, Description, Steps to Reproduce, Expected vs Actual Behavior, Environment, Severity, Priority, and Screenshots/Logs.',
-        takeaways: ['Good reproduction steps prevent back-and-forth between QA and Dev.']
-      },
-      {
-        id: 'm4-l5',
-        title: 'Lesson 4.5 Defect Tracking Tools',
-        objectives: ['Introduction to tracking suites.'],
-        theory: 'Tools like Jira, Bugzilla, and Redmine track defects, manage scrum boards, and maintain trace matrices.',
-        takeaways: ['Jira is the industry standard for agile bug tracking.']
-      },
-      {
-        id: 'm4-l6',
-        title: 'Lesson 4.6 Bug Reporting Best Practices',
-        objectives: ['Apply clean reporting habits.'],
-        theory: 'Always verify duplicates before logging, isolate variables to find the root cause, and keep tone professional and objective.',
-        takeaways: ['Clear evidence (logs, video recordings) speeds up resolution.']
-      }
+      EXPANDED_LESSONS['m4-l1'],
+      EXPANDED_LESSONS['m4-l2'],
+      EXPANDED_LESSONS['m4-l3'],
+      EXPANDED_LESSONS['m4-l4'],
+      EXPANDED_LESSONS['m4-l5'],
+      EXPANDED_LESSONS['m4-l6'],
     ],
     quiz: [
       { id: 1, question: 'What is the state of a bug when it is rejected by developers as not being a defect?', options: ['A. Deferred', 'B. Invalid/Rejected', 'C. Closed', 'D. Fixed'], correctAnswer: 'B. Invalid/Rejected' },
-      { id: 2, question: 'Misspelled company logo on the homepage has which classification?', options: ['A. Low Severity, Low Priority', 'B. Low Severity, High Priority', 'C. High Severity, Low Priority', 'D. High Severity, High Priority'], correctAnswer: 'B. Low Severity, High Priority' }
+      { id: 2, question: 'Misspelled company logo on the homepage has which classification?', options: ["A. Low Severity, Low Priority", "B. High Severity, Low Priority", "C. Low Severity, High Priority", "D. High Severity, High Priority"], correctAnswer: "C. Low Severity, High Priority" },
+      { id: 3, question: "Severity describes...", options: ["A. How soon it must be fixed", "B. Who reported it", "C. How long it took to find", "D. The technical impact of the defect"], correctAnswer: "D. The technical impact of the defect" },
+      { id: 4, question: "What makes a bug report reproducible?", options: ["A. Exact steps, environment, and expected versus actual results", "B. A detailed opinion on the cause", "C. A severity of Critical", "D. A screenshot plus the developer's guess at the cause"], correctAnswer: "A. Exact steps, environment, and expected versus actual results" },
+      { id: 5, question: "After a developer fixes a bug, what does the tester do?", options: ["A. Close it immediately", "B. Retest it and run regression on related areas", "C. Mark it Deferred until the next release", "D. Reopen it automatically"], correctAnswer: "B. Retest it and run regression on related areas" },
+      { id: 6, question: "Which tool is widely used for defect tracking?", options: ["A. Postman", "B. JMeter", "C. Jira", "D. Appium"], correctAnswer: "C. Jira" },
     ],
     assignment: {
       prompts: [
@@ -365,12 +214,12 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'Which state in the Bug Life Cycle indicates that the tester is confirming if a fixed defect has actually been resolved?',
           options: [
-            'A. Deferred',
-            'B. Reopened',
-            'C. Retesting (or Pending Retest)',
-            'D. New'
+            "A. Deferred",
+            "B. Reopened",
+            "C. Deferred (awaiting the next build)",
+            "D. Retesting (or Pending Retest)",
           ],
-          correctAnswer: 'C. Retesting (or Pending Retest)'
+          correctAnswer: "D. Retesting (or Pending Retest)"
         }
       ]
     }
@@ -384,59 +233,21 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Estimate story points and define acceptance criteria.'
     ],
     lessons: [
-      {
-        id: 'm5-l1',
-        title: 'Lesson 5.1 Introduction to Agile',
-        objectives: ['Master Agile values.'],
-        theory: 'Agile is an iterative software development methodology emphasizing customer collaboration, responding to change, and self-organizing cross-functional teams.',
-        takeaways: ['Agile values working software over comprehensive documentation.']
-      },
-      {
-        id: 'm5-l2',
-        title: 'Lesson 5.2 Scrum Framework',
-        objectives: ['Explain Scrum roles.'],
-        theory: 'Scrum contains three main roles: Product Owner (PO), Scrum Master (SM), and the Development/QA Team.',
-        takeaways: ['Scrum team is self-contained and cross-functional.']
-      },
-      {
-        id: 'm5-l3',
-        title: 'Lesson 5.3 Sprint Planning',
-        objectives: ['Estimate user stories.'],
-        theory: 'Sprint planning defines what backlog items will be built in the next sprint (usually 2 weeks) and creates a Sprint Backlog.',
-        takeaways: ['QA inputs are critical for sizing and scope definitions.']
-      },
-      {
-        id: 'm5-l4',
-        title: 'Lesson 5.4 Daily Stand-up',
-        objectives: ['Provide QA updates.'],
-        theory: 'A daily 15-minute sync answering: What did I do yesterday? What will I do today? Are there any blockers?',
-        takeaways: ['Stand-ups keep the team aligned on sprint goals.']
-      },
-      {
-        id: 'm5-l5',
-        title: 'Lesson 5.5 Sprint Review',
-        objectives: ['Participate in demos.'],
-        theory: 'The sprint review demonstrates working software to stakeholders to collect feedback.',
-        takeaways: ['Only complete, tested items meeting Definition of Done are demoed.']
-      },
-      {
-        id: 'm5-l6',
-        title: 'Lesson 5.6 Sprint Retrospective',
-        objectives: ['Identify continuous improvements.'],
-        theory: 'The retro evaluates what went well, what failed, and lists actions for improvement.',
-        takeaways: ['Retrospectives focus on team improvements, not finger-pointing.']
-      },
-      {
-        id: 'm5-l7',
-        title: 'Lesson 5.7 QA in Agile Teams',
-        objectives: ['Understand continuous quality.'],
-        theory: 'Agile QA tests continuously throughout the sprint rather than waiting for the end of development.',
-        takeaways: ['Prevents bottle-necks at the end of sprints.']
-      }
+      EXPANDED_LESSONS['m5-l1'],
+      EXPANDED_LESSONS['m5-l2'],
+      EXPANDED_LESSONS['m5-l3'],
+      EXPANDED_LESSONS['m5-l4'],
+      EXPANDED_LESSONS['m5-l5'],
+      EXPANDED_LESSONS['m5-l6'],
+      EXPANDED_LESSONS['m5-l7'],
     ],
     quiz: [
-      { id: 1, question: 'Who owns the product backlog prioritization in Scrum?', options: ['A. Scrum Master', 'B. QA Lead', 'C. Product Owner', 'D. Tech Lead'], correctAnswer: 'C. Product Owner' },
-      { id: 2, question: 'What is the duration of a standard daily stand-up meeting?', options: ['A. 1 hour', 'B. 15 minutes', 'C. 30 minutes', 'D. 5 minutes'], correctAnswer: 'B. 15 minutes' }
+      { id: 1, question: 'Who owns the product backlog prioritization in Scrum?', options: ["A. Product Owner", "B. Scrum Master", "C. QA Lead", "D. Tech Lead"], correctAnswer: "A. Product Owner" },
+      { id: 2, question: 'What is the duration of a standard daily stand-up meeting?', options: ['A. 1 hour', 'B. 15 minutes', 'C. 30 minutes', 'D. 5 minutes'], correctAnswer: 'B. 15 minutes' },
+      { id: 3, question: "When should testers join sprint planning?", options: ["A. Only after development ends", "B. Only during the review", "C. Never; planning is for developers", "D. From the start, to shape acceptance criteria"], correctAnswer: "D. From the start, to shape acceptance criteria" },
+      { id: 4, question: "What is the purpose of a sprint retrospective?", options: ["A. To improve how the team works", "B. To demo features to stakeholders", "C. To assign bugs", "D. To plan the next release"], correctAnswer: "A. To improve how the team works" },
+      { id: 5, question: "What does \"Definition of Done\" typically include for QA?", options: ["A. The product launched to all users", "B. Tests written and passing for the story", "C. Zero bugs anywhere in the product", "D. Manager sign-off only"], correctAnswer: "B. Tests written and passing for the story" },
+      { id: 6, question: "Who attends the sprint review?", options: ["A. Developers only", "B. Testers only", "C. The team and stakeholders", "D. The Scrum Master alone"], correctAnswer: "C. The team and stakeholders" },
     ],
     assignment: {
       prompts: [
@@ -444,12 +255,12 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
           kind: 'mcq',
           prompt: 'What ceremony is held at the end of a sprint to reflect on the process and identify improvements?',
           options: [
-            'A. Sprint Review',
-            'B. Sprint Retrospective',
-            'C. Sprint Planning',
-            'D. Daily Stand-up'
+            "A. Sprint Review",
+            "B. Sprint Planning",
+            "C. Sprint Retrospective",
+            "D. Daily Stand-up",
           ],
-          correctAnswer: 'B. Sprint Retrospective'
+          correctAnswer: "C. Sprint Retrospective"
         }
       ]
     }
@@ -463,80 +274,23 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Automate API test runs using Postman collections.'
     ],
     lessons: [
-      {
-        id: 'm6-l1',
-        title: 'Lesson 6.1 What is an API?',
-        objectives: ['Define API concepts.'],
-        theory: 'Application Programming Interface (API) is a software intermediary that allows two applications to communicate with each other.',
-        takeaways: ['APIs decouple backend services from client applications.']
-      },
-      {
-        id: 'm6-l2',
-        title: 'Lesson 6.2 REST APIs',
-        objectives: ['Explain REST architectural style.'],
-        theory: 'REST (Representational State Transfer) relies on stateless client-server communication using HTTP resources.',
-        takeaways: ['REST endpoints represent system resources.']
-      },
-      {
-        id: 'm6-l3',
-        title: 'Lesson 6.3 HTTP Methods',
-        objectives: ['Map CRUD operations to HTTP methods.'],
-        theory: 'GET (Retrieve), POST (Create), PUT (Update full), PATCH (Update partial), DELETE (Remove).',
-        takeaways: ['Methods should match their designated semantic actions.']
-      },
-      {
-        id: 'm6-l4',
-        title: 'Lesson 6.4 Status Codes',
-        objectives: ['Categorize status codes.'],
-        theory: '1xx (Info), 2xx (Success, e.g. 200 OK, 201 Created), 3xx (Redirect), 4xx (Client Error, e.g. 400 Bad Request, 401 Unauth, 404 Not Found), 5xx (Server Error, e.g. 500 Internal).',
-        takeaways: ['Proper HTTP status codes are essential for API integration.']
-      },
-      {
-        id: 'm6-l5',
-        title: 'Lesson 6.5 JSON Basics',
-        objectives: ['Parse JSON objects.'],
-        theory: 'JavaScript Object Notation (JSON) is a lightweight data-interchange format composed of key-value pairs and arrays.',
-        takeaways: ['JSON is the standard payload format for REST services.']
-      },
-      {
-        id: 'm6-l6',
-        title: 'Lesson 6.6 API Testing using Postman',
-        objectives: ['Send REST requests.'],
-        theory: 'Postman is a popular GUI client to execute API calls, set request headers, and inspect response bodies.',
-        takeaways: ['Postman allows rapid manual and automated API checking.']
-      },
-      {
-        id: 'm6-l7',
-        title: 'Lesson 6.7 Environment Variables',
-        objectives: ['Differentiate local, dev, and prod environments.'],
-        theory: 'Environment variables prevent hardcoding credentials and hostnames (e.g. {{baseUrl}}).',
-        takeaways: ['Allows executing the same test suite across staging and production.']
-      },
-      {
-        id: 'm6-l8',
-        title: 'Lesson 6.8 API Collections',
-        objectives: ['Group endpoints.'],
-        theory: 'Collections group related API endpoints for modular execution and automated regression testing.',
-        takeaways: ['Collections help organize complex multi-stage business workflows.']
-      },
-      {
-        id: 'm6-l9',
-        title: 'Lesson 6.9 API Automation Basics',
-        objectives: ['Write Postman JS assertions.'],
-        syntax: `pm.test("Status code is 200", function () {
-    pm.response.to.have.status(200);
-});
-pm.test("JSON field check", function () {
-    var jsonData = pm.response.json();
-    pm.expect(jsonData.id).to.eql(123);
-});`,
-        theory: 'Postman contains a JS execution sandbox to assert status codes, response headers, and fields after each request.',
-        takeaways: ['Assertions are executed automatically after receiving the response.']
-      }
+      EXPANDED_LESSONS['m6-l1'],
+      EXPANDED_LESSONS['m6-l2'],
+      EXPANDED_LESSONS['m6-l3'],
+      EXPANDED_LESSONS['m6-l4'],
+      EXPANDED_LESSONS['m6-l5'],
+      EXPANDED_LESSONS['m6-l6'],
+      EXPANDED_LESSONS['m6-l7'],
+      EXPANDED_LESSONS['m6-l8'],
+      EXPANDED_LESSONS['m6-l9'],
     ],
     quiz: [
-      { id: 1, question: 'Which HTTP method should be used to create a new resource?', options: ['A. GET', 'B. POST', 'C. PUT', 'D. DELETE'], correctAnswer: 'B. POST' },
-      { id: 2, question: 'What does a 401 status code signify?', options: ['A. Internal Server Error', 'B. Unauthorized (Authentication failed)', 'C. Page Not Found', 'D. Success'], correctAnswer: 'B. Unauthorized (Authentication failed)' }
+      { id: 1, question: 'Which HTTP method should be used to create a new resource?', options: ["A. GET", "B. PUT", "C. DELETE", "D. POST"], correctAnswer: "D. POST" },
+      { id: 2, question: 'What does a 401 status code signify?', options: ["A. Unauthorized (Authentication failed)", "B. Internal Server Error", "C. Page Not Found", "D. Success"], correctAnswer: "A. Unauthorized (Authentication failed)" },
+      { id: 3, question: "Which method should be idempotent when updating a whole resource?", options: ["A. POST", "B. PATCH always", "C. CONNECT", "D. PUT"], correctAnswer: "D. PUT" },
+      { id: 4, question: "A 404 status code means...", options: ["A. The resource was not found", "B. The server crashed", "C. The user is not logged in", "D. The request was accepted"], correctAnswer: "A. The resource was not found" },
+      { id: 5, question: "Why use environment variables in Postman?", options: ["A. To cache responses so repeated requests run faster", "B. To run the same requests against dev, staging and prod", "C. To hide the response body", "D. To replace assertions"], correctAnswer: "B. To run the same requests against dev, staging and prod" },
+      { id: 6, question: "A 500 status code points to a problem on...", options: ["A. The client's network", "B. The request format", "C. The server side", "D. The user's permissions"], correctAnswer: "C. The server side" },
     ],
     assignment: {
       prompts: [
@@ -544,10 +298,10 @@ pm.test("JSON field check", function () {
           kind: 'mcq',
           prompt: 'Which Postman JavaScript assertion correctly verifies that the response status code is 201 Created?',
           options: [
-            'A. pm.status(201);',
-            'B. pm.test("Status is 201", () => { pm.response.to.have.status(201); });',
-            'C. assert.equal(response.code, 201);',
-            'D. verify.status = 201;'
+            "A. pm.test(\"Status is 201\", () => { pm.expect(pm.status).to.eql(201); });",
+            "B. pm.test(\"Status is 201\", () => { pm.response.to.have.status(201); });",
+            "C. assert.equal(response.code, 201);",
+            "D. verify.status = 201;",
           ],
           correctAnswer: 'B. pm.test("Status is 201", () => { pm.response.to.have.status(201); });'
         }
@@ -563,69 +317,21 @@ pm.test("JSON field check", function () {
       'Verify database state updates matching API triggers.'
     ],
     lessons: [
-      {
-        id: 'm7-l1',
-        title: 'Lesson 7.1 Introduction to Databases',
-        objectives: ['Explain relational database models.'],
-        theory: 'A database (DB) is an organized collection of structured data. Relational databases use tables, columns, rows, and relationships.',
-        takeaways: ['Relational systems enforce schemas and relationships using keys.']
-      },
-      {
-        id: 'm7-l2',
-        title: 'Lesson 7.2 SQL Basics',
-        objectives: ['Understand Structured Query Language.'],
-        theory: 'SQL is the standard language to query and modify relational databases.',
-        takeaways: ['SQL queries are essential to verify backend updates.']
-      },
-      {
-        id: 'm7-l3',
-        title: 'Lesson 7.3 SELECT Queries',
-        objectives: ['Query tables with filters.'],
-        syntax: `SELECT first_name, last_name 
-FROM employees 
-WHERE department = 'QA' 
-ORDER BY hire_date DESC;`,
-        theory: 'SELECT queries retrieve rows. Filters are applied with the WHERE clause.',
-        takeaways: ['ORDER BY and LIMIT clauses help organize retrieved records.']
-      },
-      {
-        id: 'm7-l4',
-        title: 'Lesson 7.4 INSERT, UPDATE & DELETE',
-        objectives: ['Modify database records.'],
-        syntax: `INSERT INTO users (id, email) VALUES (1, 'qa@test.com');
-UPDATE users SET active = true WHERE id = 1;
-DELETE FROM users WHERE id = 1;`,
-        theory: 'INSERT adds records, UPDATE modifies existing records, and DELETE removes rows.',
-        takeaways: ['Always verify updates with SELECT queries immediately after modification.']
-      },
-      {
-        id: 'm7-l5',
-        title: 'Lesson 7.5 JOIN Operations',
-        objectives: ['Combine rows from multiple tables.'],
-        syntax: `SELECT orders.id, customers.name 
-FROM orders 
-INNER JOIN customers ON orders.customer_id = customers.id;`,
-        theory: 'JOIN operations combine data from two or more tables using shared keys.',
-        takeaways: ['INNER, LEFT, and RIGHT joins satisfy different reporting requirements.']
-      },
-      {
-        id: 'm7-l6',
-        title: 'Lesson 7.6 Database Validation',
-        objectives: ['Assert DB states.'],
-        theory: 'Database validation checks if front-end transactions correctly persist in tables and reflect accurate values.',
-        takeaways: ['Verify that no data truncation or schema errors occur during writes.']
-      },
-      {
-        id: 'm7-l7',
-        title: 'Lesson 7.7 Data Integrity Testing',
-        objectives: ['Enforce integrity rules.'],
-        theory: 'Verifies constraints like primary keys (uniqueness), foreign keys (referential integrity), and non-null column rules.',
-        takeaways: ['Prevents orphan records and inconsistent states.']
-      }
+      EXPANDED_LESSONS['m7-l1'],
+      EXPANDED_LESSONS['m7-l2'],
+      EXPANDED_LESSONS['m7-l3'],
+      EXPANDED_LESSONS['m7-l4'],
+      EXPANDED_LESSONS['m7-l5'],
+      EXPANDED_LESSONS['m7-l6'],
+      EXPANDED_LESSONS['m7-l7'],
     ],
     quiz: [
-      { id: 1, question: 'Which JOIN returns all rows from the left table and matched rows from the right table?', options: ['A. INNER JOIN', 'B. LEFT JOIN', 'C. RIGHT JOIN', 'D. FULL JOIN'], correctAnswer: 'B. LEFT JOIN' },
-      { id: 2, question: 'Which command modifies existing records in a table?', options: ['A. SELECT', 'B. INSERT', 'C. UPDATE', 'D. DELETE'], correctAnswer: 'C. UPDATE' }
+      { id: 1, question: 'Which JOIN returns all rows from the left table and matched rows from the right table?', options: ["A. INNER JOIN", "B. RIGHT JOIN", "C. LEFT JOIN", "D. FULL JOIN"], correctAnswer: "C. LEFT JOIN" },
+      { id: 2, question: 'Which command modifies existing records in a table?', options: ["A. SELECT", "B. INSERT", "C. DELETE", "D. UPDATE"], correctAnswer: "D. UPDATE" },
+      { id: 3, question: "What is the goal of data integrity testing?", options: ["A. Measuring query speed", "B. Measuring how quickly queries run under load", "C. Backing up the database", "D. Confirming data stays accurate and consistent across operations"], correctAnswer: "D. Confirming data stays accurate and consistent across operations" },
+      { id: 4, question: "Which SQL clause filters grouped results?", options: ["A. HAVING", "B. WHERE", "C. ORDER BY", "D. LIMIT"], correctAnswer: "A. HAVING" },
+      { id: 5, question: "After a UI form saves a record, how do you validate it in the database?", options: ["A. Refresh the page and check the value is still shown", "B. Query the table and compare stored values to the input", "C. Check the browser console", "D. Read the server logs only"], correctAnswer: "B. Query the table and compare stored values to the input" },
+      { id: 6, question: "An INNER JOIN returns...", options: ["A. All rows from both tables", "B. All left rows only", "C. Only rows with matches in both tables", "D. Rows with no matches"], correctAnswer: "C. Only rows with matches in both tables" },
     ],
     assignment: {
       prompts: [
@@ -633,12 +339,12 @@ INNER JOIN customers ON orders.customer_id = customers.id;`,
           kind: 'mcq',
           prompt: 'What SQL query should you run to select all employees whose salary is greater than 50000, sorted by their last name?',
           options: [
-            'A. SELECT * FROM employees SORT BY last_name WHERE salary > 50000;',
-            'B. SELECT * FROM employees WHERE salary > 50000 ORDER BY last_name;',
-            'C. SELECT * FROM employees GROUP BY last_name HAVING salary > 50000;',
-            'D. GET employees IF salary > 50000;'
+            "A. SELECT * FROM employees WHERE salary > 50000 ORDER BY last_name;",
+            "B. SELECT * FROM employees SORT BY last_name WHERE salary > 50000;",
+            "C. SELECT * FROM employees GROUP BY last_name HAVING salary > 50000;",
+            "D. GET employees IF salary > 50000;",
           ],
-          correctAnswer: 'B. SELECT * FROM employees WHERE salary > 50000 ORDER BY last_name;'
+          correctAnswer: "A. SELECT * FROM employees WHERE salary > 50000 ORDER BY last_name;"
         }
       ]
     }
@@ -652,98 +358,24 @@ INNER JOIN customers ON orders.customer_id = customers.id;`,
       'Apply explicit and implicit waits to reduce test instability.'
     ],
     lessons: [
-      {
-        id: 'm8-l1',
-        title: 'Lesson 8.1 Introduction to Selenium',
-        objectives: ['Understand automation ecosystems.'],
-        theory: 'Selenium automates web browsers. It consists of Selenium IDE, WebDriver, and Grid.',
-        takeaways: ['WebDriver communicates natively with browser drivers.']
-      },
-      {
-        id: 'm8-l2',
-        title: 'Lesson 8.2 Selenium WebDriver',
-        objectives: ['Configure drivers.'],
-        theory: 'Configuring system paths to locate browser binaries (GeckoDriver, ChromeDriver) allows WebDriver to spawn browser instances.',
-        takeaways: ['WebDriver acts as the interface to control browser engines.']
-      },
-      {
-        id: 'm8-l3',
-        title: 'Lesson 8.3 Locators',
-        objectives: ['Master DOM selections.'],
-        syntax: `driver.findElement(By.id("username"));
-driver.findElement(By.xpath("//button[@type='submit']"));`,
-        theory: 'Locators target DOM elements. Selectors include ID, Name, ClassName, LinkText, CSS Selector, and XPath.',
-        takeaways: ['Use unique, static IDs where possible; fall back to CSS selectors or relative XPaths.']
-      },
-      {
-        id: 'm8-l4',
-        title: 'Lesson 8.4 Browser Commands',
-        objectives: ['Navigate browser histories.'],
-        syntax: `driver.get("https://test.com");
-driver.navigate().back();
-driver.close();`,
-        theory: 'Basic navigation commands let testers open URLs, refresh pages, traverse history, and close windows.',
-        takeaways: ['close() closes the active window; quit() terminates the driver process entirely.']
-      },
-      {
-        id: 'm8-l5',
-        title: 'Lesson 8.5 Handling Forms',
-        objectives: ['Input text and click buttons.'],
-        syntax: `WebElement email = driver.findElement(By.id("email"));
-email.sendKeys("test@qa.com");
-email.submit();`,
-        theory: 'Automating standard web forms requires locating inputs, typing data, checking boxes, and submitting.',
-        takeaways: ['Use clear() before sendKeys() to ensure no pre-filled text remains in input fields.']
-      },
-      {
-        id: 'm8-l6',
-        title: 'Lesson 8.6 Waits',
-        objectives: ['Understand Implicit, Explicit, and Fluent waits.'],
-        syntax: `WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-WebElement btn = wait.until(ExpectedConditions.elementToBeClickable(By.id("submit")));`,
-        theory: 'Waits prevent race conditions caused by network latency. Implicit waits apply globally. Explicit waits target specific conditions.',
-        takeaways: ['Avoid Thread.sleep() as it blocks test execution unconditionally.']
-      },
-      {
-        id: 'm8-l7',
-        title: 'Lesson 8.7 Alerts & Windows',
-        objectives: ['Handle browser alerts.'],
-        syntax: `Alert alert = driver.switchTo().alert();
-alert.accept();`,
-        theory: 'Interacting with native browser modal dialogs requires switching context to the active Alert.',
-        takeaways: ['Alerts must be accepted or dismissed before continuing browser interactions.']
-      },
-      {
-        id: 'm8-l8',
-        title: 'Lesson 8.8 Frames & iFrames',
-        objectives: ['Switch DOM scopes.'],
-        syntax: `driver.switchTo().frame("payment-frame");
-// Perform actions inside frame
-driver.switchTo().defaultContent();`,
-        theory: 'iFrames embed documents inside webpages. WebDriver must switch focus to the frame to access nested elements.',
-        takeaways: ['Always return to default content after completing actions in a frame.']
-      },
-      {
-        id: 'm8-l9',
-        title: 'Lesson 8.9 Dropdowns',
-        objectives: ['Select dropdown values.'],
-        syntax: `Select select = new Select(driver.findElement(By.id("country")));
-select.selectByVisibleText("Canada");`,
-        theory: 'Selenium Select class makes it easy to select options inside HTML dropdowns.',
-        takeaways: ['Only works on standard <select> tags.']
-      },
-      {
-        id: 'm8-l10',
-        title: 'Lesson 8.10 File Upload & Download',
-        objectives: ['Automate file transfers.'],
-        syntax: `driver.findElement(By.id("upload")).sendKeys("/absolute/path/file.txt");`,
-        theory: 'Files can be uploaded by targeting file inputs directly and writing absolute paths.',
-        takeaways: ['Avoid attempting to click the upload button itself, as native os windows block webdriver.']
-      }
+      EXPANDED_LESSONS['m8-l1'],
+      EXPANDED_LESSONS['m8-l2'],
+      EXPANDED_LESSONS['m8-l3'],
+      EXPANDED_LESSONS['m8-l4'],
+      EXPANDED_LESSONS['m8-l5'],
+      EXPANDED_LESSONS['m8-l6'],
+      EXPANDED_LESSONS['m8-l7'],
+      EXPANDED_LESSONS['m8-l8'],
+      EXPANDED_LESSONS['m8-l9'],
+      EXPANDED_LESSONS['m8-l10'],
     ],
     quiz: [
       { id: 1, question: 'Which command closes all open browser windows and terminates the driver session?', options: ['A. close()', 'B. quit()', 'C. terminate()', 'D. exit()'], correctAnswer: 'B. quit()' },
-      { id: 2, question: 'Why is Thread.sleep() discouraged in Selenium tests?', options: ['A. It causes test failures', 'B. It blocks execution for a fixed duration, slowing down tests unnecessarily', 'C. It is deprecated', 'D. It does not work in Java'], correctAnswer: 'B. blocks execution for a fixed duration, slowing down tests unnecessarily' }
+      { id: 2, question: 'Why is Thread.sleep() discouraged in Selenium tests?', options: ["A. It fails on browsers that load pages asynchronously", "B. It is deprecated and removed in Selenium 4", "C. It blocks execution for a fixed duration, slowing down tests unnecessarily", "D. It does not work in Java"], correctAnswer: "C. It blocks execution for a fixed duration, slowing down tests unnecessarily" },
+      { id: 3, question: "Which locator is generally the most stable?", options: ["A. An absolute XPath", "B. The element's screen position", "C. A long CSS path of nested divs", "D. A unique id attribute"], correctAnswer: "D. A unique id attribute" },
+      { id: 4, question: "What does an explicit wait do?", options: ["A. Waits for a specific condition up to a timeout", "B. Pauses for a fixed time", "C. Waits for every page load forever", "D. Disables implicit waits"], correctAnswer: "A. Waits for a specific condition up to a timeout" },
+      { id: 5, question: "How do you interact with an element inside an iframe?", options: ["A. Use a longer XPath", "B. Switch to the frame first", "C. Refresh the page", "D. Maximise the window"], correctAnswer: "B. Switch to the frame first" },
+      { id: 6, question: "Which class selects an option from a <select> dropdown?", options: ["A. Dropdown", "B. Options", "C. Select", "D. Picker"], correctAnswer: "C. Select" },
     ],
     assignment: {
       prompts: [
@@ -751,12 +383,12 @@ select.selectByVisibleText("Canada");`,
           kind: 'mcq',
           prompt: 'How do you configure an explicit wait in Selenium WebDriver for an element to become clickable?',
           options: [
-            'A. driver.wait(10);',
-            'B. WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10)); wait.until(ExpectedConditions.elementToBeClickable(locator));',
-            'C. driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);',
-            'D. Thread.sleep(10000);'
+            "A. WebDriverWait wait = new WebDriverWait(driver, 10); wait.until(driver.findElement(locator).isDisplayed());",
+            "B. driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);",
+            "C. Thread.sleep(10000);",
+            "D. WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10)); wait.until(ExpectedConditions.elementToBeClickable(locator));",
           ],
-          correctAnswer: 'B. WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10)); wait.until(ExpectedConditions.elementToBeClickable(locator));'
+          correctAnswer: "D. WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10)); wait.until(ExpectedConditions.elementToBeClickable(locator));"
         }
       ]
     }
@@ -770,61 +402,21 @@ select.selectByVisibleText("Canada");`,
       'Organize parallel executions using TestNG.'
     ],
     lessons: [
-      {
-        id: 'm9-l1',
-        title: 'Lesson 9.1 TestNG',
-        objectives: ['Organize test suites.'],
-        syntax: `@Test(priority = 1)
-public void loginTest() { ... }`,
-        theory: 'TestNG is a testing framework that simplifies grouping, parameterization, and prioritization of tests using annotations.',
-        takeaways: ['Provides clean XML configuration files for test suite suites.']
-      },
-      {
-        id: 'm9-l2',
-        title: 'Lesson 9.2 JUnit Basics',
-        objectives: ['Write unit assertions.'],
-        theory: 'JUnit is the standard unit testing framework for Java, widely used in test automation and developer unit testing.',
-        takeaways: ['Simple assertions like assertEquals() verify expectations.']
-      },
-      {
-        id: 'm9-l3',
-        title: 'Lesson 9.3 Maven',
-        objectives: ['Manage project build dependencies.'],
-        theory: 'Maven is a build automation tool that resolves imports and libraries declared in pom.xml.',
-        takeaways: ['Maven central repository automatically downloads webdriver packages.']
-      },
-      {
-        id: 'm9-l4',
-        title: 'Lesson 9.4 Page Object Model (POM)',
-        objectives: ['Decouple test scripts from webpage selectors.'],
-        theory: 'POM stores page selectors and action methods inside dedicated Page Classes, keeping test scripts clean.',
-        takeaways: ['Increases code reusability and simplifies UI change refactoring.']
-      },
-      {
-        id: 'm9-l5',
-        title: 'Lesson 9.5 Data-Driven Framework',
-        objectives: ['Parameterize test cases.'],
-        theory: 'Data-driven frameworks read input sets from Excel spreadsheets or CSV files to execute identical assertions over multiple users.',
-        takeaways: ['Decouples test scripts from input values.']
-      },
-      {
-        id: 'm9-l6',
-        title: 'Lesson 9.6 Hybrid Framework',
-        objectives: ['Combine POM and data-driven patterns.'],
-        theory: 'A hybrid framework combines POM structure, data-driven parameterization, logging tools, and report modules.',
-        takeaways: ['The industry standard for large enterprise applications.']
-      },
-      {
-        id: 'm9-l7',
-        title: 'Lesson 9.7 Logging & Reporting',
-        objectives: ['Generate execution reports.'],
-        theory: 'Integrating log4j and ExtentReports records detailed execution logs and generates visual HTML dashboards.',
-        takeaways: ['Helps developers debug failures rapidly from visual logs.']
-      }
+      EXPANDED_LESSONS['m9-l1'],
+      EXPANDED_LESSONS['m9-l2'],
+      EXPANDED_LESSONS['m9-l3'],
+      EXPANDED_LESSONS['m9-l4'],
+      EXPANDED_LESSONS['m9-l5'],
+      EXPANDED_LESSONS['m9-l6'],
+      EXPANDED_LESSONS['m9-l7'],
     ],
     quiz: [
-      { id: 1, question: 'Which file manages dependencies and build lifecycle in a Maven project?', options: ['A. package.json', 'B. pom.xml', 'C. build.gradle', 'D. testng.xml'], correctAnswer: 'B. pom.xml' },
-      { id: 2, question: 'What is the primary benefit of the Page Object Model?', options: ['A. Faster execution speed', 'B. Decoupling test code from webpage UI selectors, reducing maintenance costs', 'C. Automatic bug reporting', 'D. Eliminates the need for browser drivers'], correctAnswer: 'B. Decoupling test code from webpage UI selectors, reducing maintenance costs' }
+      { id: 1, question: 'Which file manages dependencies and build lifecycle in a Maven project?', options: ["A. pom.xml", "B. package.json", "C. build.gradle", "D. testng.xml"], correctAnswer: "A. pom.xml" },
+      { id: 2, question: 'What is the primary benefit of the Page Object Model?', options: ["A. Faster test execution by caching page elements in memory", "B. Decoupling test code from webpage UI selectors, reducing maintenance costs", "C. Automatic bug reporting", "D. Eliminates the need for browser drivers"], correctAnswer: 'B. Decoupling test code from webpage UI selectors, reducing maintenance costs' },
+      { id: 3, question: "Which TestNG feature supplies multiple data sets to one test?", options: ["A. @BeforeClass", "B. @Listeners", "C. @Ignore", "D. @DataProvider"], correctAnswer: "D. @DataProvider" },
+      { id: 4, question: "What does a hybrid framework combine?", options: ["A. Data-driven and keyword-driven approaches", "B. Manual and exploratory testing", "C. Java and Python", "D. Unit and UI tests only"], correctAnswer: "A. Data-driven and keyword-driven approaches" },
+      { id: 5, question: "Why generate test reports automatically?", options: ["A. Reports make tests pass", "B. Results are visible and traceable after every run", "C. Reports replace the need for detailed logging", "D. They reduce test count"], correctAnswer: "B. Results are visible and traceable after every run" },
+      { id: 6, question: "In POM, where do page locators live?", options: ["A. In each test method", "B. In the pom.xml", "C. In the page class", "D. In the database"], correctAnswer: "C. In the page class" },
     ],
     assignment: {
       prompts: [
@@ -832,12 +424,12 @@ public void loginTest() { ... }`,
           kind: 'mcq',
           prompt: 'What annotation in TestNG is used to supply multiple test data sets to a test method?',
           options: [
-            'A. @Parameters',
-            'B. @DataProvider',
-            'C. @Test(data)',
-            'D. @ValueSource'
+            "A. @Parameters",
+            "B. @Test(data)",
+            "C. @DataProvider",
+            "D. @ValueSource",
           ],
-          correctAnswer: 'B. @DataProvider'
+          correctAnswer: "C. @DataProvider"
         }
       ]
     }
@@ -851,52 +443,20 @@ public void loginTest() { ... }`,
       'Simulate concurrent virtual users using Apache JMeter.'
     ],
     lessons: [
-      {
-        id: 'm10-l1',
-        title: 'Lesson 10.1 Performance Testing Basics',
-        objectives: ['Explain latency and throughput.'],
-        theory: 'Performance testing evaluates application responsiveness, speed, scalability, stability, and resource usage under load.',
-        takeaways: ['Ensures system does not degrade below service level agreements.']
-      },
-      {
-        id: 'm10-l2',
-        title: 'Lesson 10.2 Load Testing',
-        objectives: ['Validate system behavior under standard loads.'],
-        theory: 'Load testing measures system response times under normal and peak expected user levels.',
-        takeaways: ['Checks if page loads satisfy limits under ordinary concurrent traffic.']
-      },
-      {
-        id: 'm10-l3',
-        title: 'Lesson 10.3 Stress Testing',
-        objectives: ['Find system breakdown limits.'],
-        theory: 'Stress testing tests system thresholds by applying loads beyond expected peak capacities to observe how the application fails and recovers.',
-        takeaways: ['Checks error handling and database resilience at maximum capacities.']
-      },
-      {
-        id: 'm10-l4',
-        title: 'Lesson 10.4 Spike Testing',
-        objectives: ['Handle sudden traffic spikes.'],
-        theory: 'Spike testing evaluates stability during sudden, massive traffic increases (e.g. ticket sales launching).',
-        takeaways: ['Verifies if autoscale groups spin up new nodes quickly enough.']
-      },
-      {
-        id: 'm10-l5',
-        title: 'Lesson 10.5 Endurance Testing',
-        objectives: ['Identify memory leaks.'],
-        theory: 'Also called soak testing, it runs expected loads continuously for hours/days to identify slow memory leaks and resource exhaustion.',
-        takeaways: ['Critical for verifying garbage collection behaviors.']
-      },
-      {
-        id: 'm10-l6',
-        title: 'Lesson 10.6 Apache JMeter',
-        objectives: ['Script thread groups.'],
-        theory: 'JMeter simulates thousands of concurrent virtual HTTP requests, collecting performance graphs and throughput metrics.',
-        takeaways: ['Avoid using heavy GUI mode during actual test execution.']
-      }
+      EXPANDED_LESSONS['m10-l1'],
+      EXPANDED_LESSONS['m10-l2'],
+      EXPANDED_LESSONS['m10-l3'],
+      EXPANDED_LESSONS['m10-l4'],
+      EXPANDED_LESSONS['m10-l5'],
+      EXPANDED_LESSONS['m10-l6'],
     ],
     quiz: [
-      { id: 1, question: 'Which type of testing evaluates performance over an extended period of time to spot memory leaks?', options: ['A. Load Testing', 'B. Stress Testing', 'C. Endurance (Soak) Testing', 'D. Spike Testing'], correctAnswer: 'C. Endurance (Soak) Testing' },
-      { id: 2, question: 'What does latency measure in API performance reports?', options: ['A. Total network bytes transferred', 'B. Time taken for a request to travel from client to server and return the first byte', 'C. CPU usage', 'D. Transactions per second'], correctAnswer: 'B. Time taken for a request to travel from client to server and return the first byte' }
+      { id: 1, question: 'Which type of testing evaluates performance over an extended period of time to spot memory leaks?', options: ["A. Load Testing", "B. Stress Testing", "C. Spike Testing", "D. Endurance (Soak) Testing"], correctAnswer: "D. Endurance (Soak) Testing" },
+      { id: 2, question: 'What does latency measure in API performance reports?', options: ["A. Time taken for a request to travel from client to server and return the first byte", "B. Total network bytes transferred", "C. Average CPU usage on the server during the test", "D. The number of transactions the server completes per second under load"], correctAnswer: "A. Time taken for a request to travel from client to server and return the first byte" },
+      { id: 3, question: "What does stress testing aim to find?", options: ["A. Behaviour at typical load", "B. UI layout issues", "C. Spelling mistakes", "D. The breaking point beyond normal load"], correctAnswer: "D. The breaking point beyond normal load" },
+      { id: 4, question: "Spike testing checks how a system handles...", options: ["A. A sudden sharp jump in users", "B. A slow steady increase", "C. Hours of normal load", "D. A single user"], correctAnswer: "A. A sudden sharp jump in users" },
+      { id: 5, question: "Why report the 95th percentile response time?", options: ["A. It is always lower than the average", "B. It shows the slow experience the average hides", "C. It counts errors", "D. It measures bandwidth"], correctAnswer: "B. It shows the slow experience the average hides" },
+      { id: 6, question: "Which open-source tool is widely used for load testing?", options: ["A. Selenium", "B. Jira", "C. Apache JMeter", "D. ADB"], correctAnswer: "C. Apache JMeter" },
     ],
     assignment: {
       prompts: [
@@ -923,48 +483,19 @@ public void loginTest() { ... }`,
       'Configure Appium desired capabilities.'
     ],
     lessons: [
-      {
-        id: 'm11-l1',
-        title: 'Lesson 11.1 Mobile Testing Basics',
-        objectives: ['Understand mobile platform specifics.'],
-        theory: 'Mobile testing covers device fragmentation, screen resolutions, battery consumption, network interrupts (calls, SMS), and app types (native, hybrid, web).',
-        takeaways: ['Interrupt testing (e.g. low battery triggers) is vital for mobile apps.']
-      },
-      {
-        id: 'm11-l2',
-        title: 'Lesson 11.2 Android Testing',
-        objectives: ['Test Android applications.'],
-        theory: 'Android testing targets APK packages, using Emulators or real devices connected via Android Debug Bridge (ADB).',
-        takeaways: ['ADB command line utility controls and installs apps on targets.']
-      },
-      {
-        id: 'm11-l3',
-        title: 'Lesson 11.3 iOS Testing',
-        objectives: ['Test iOS applications.'],
-        theory: 'iOS testing targets IPA packages. Requires Xcode, Simulator runs on macOS, and test signing configuration.',
-        takeaways: ['Simulators mimic iOS interfaces without duplicating hardware behaviors.']
-      },
-      {
-        id: 'm11-l4',
-        title: 'Lesson 11.4 Appium Introduction',
-        objectives: ['Configure Appium servers.'],
-        theory: 'Appium extends Selenium WebDriver protocols to mobile OS actions (clicks, swipes, keyboard input).',
-        takeaways: ['Appium works across Android and iOS platforms without code rewrites.']
-      },
-      {
-        id: 'm11-l5',
-        title: 'Lesson 11.5 Mobile Automation',
-        objectives: ['Write basic swipe and click commands.'],
-        syntax: `DesiredCapabilities caps = new DesiredCapabilities();
-caps.setCapability("platformName", "Android");
-caps.setCapability("deviceName", "emulator-5554");`,
-        theory: 'Automation scripts send capabilities to initialize device controllers before targeting elements.',
-        takeaways: ['Desired capabilities establish connection profiles between script and device.']
-      }
+      EXPANDED_LESSONS['m11-l1'],
+      EXPANDED_LESSONS['m11-l2'],
+      EXPANDED_LESSONS['m11-l3'],
+      EXPANDED_LESSONS['m11-l4'],
+      EXPANDED_LESSONS['m11-l5'],
     ],
     quiz: [
-      { id: 1, question: 'Which tool connects and manages Android devices from the command line?', options: ['A. Xcode', 'B. ADB (Android Debug Bridge)', 'C. Appium Inspector', 'D. SDK Manager'], correctAnswer: 'B. ADB (Android Debug Bridge)' },
-      { id: 2, question: 'What is the main advantage of Appium?', options: ['A. It only works on Windows', 'B. It is cross-platform, letting you use the same API for Android and iOS tests', 'C. It does not require test devices', 'D. It compiles source code'], correctAnswer: 'B. It is cross-platform, letting you use the same API for Android and iOS tests' }
+      { id: 1, question: 'Which tool connects and manages Android devices from the command line?', options: ["A. Xcode", "B. Appium Inspector", "C. ADB (Android Debug Bridge)", "D. SDK Manager"], correctAnswer: "C. ADB (Android Debug Bridge)" },
+      { id: 2, question: 'What is the main advantage of Appium?', options: ["A. It only works on Windows", "B. It does not require test devices", "C. It runs tests on devices without needing an installed app", "D. It is cross-platform, letting you use the same API for Android and iOS tests"], correctAnswer: "D. It is cross-platform, letting you use the same API for Android and iOS tests" },
+      { id: 3, question: "Why test on real devices as well as emulators?", options: ["A. Emulators cannot install apps", "B. Real devices are always cheaper", "C. Emulators do not support Android", "D. Real hardware reveals issues emulators miss"], correctAnswer: "D. Real hardware reveals issues emulators miss" },
+      { id: 4, question: "What must mobile testing check that desktop web testing rarely does?", options: ["A. Interruptions like calls and network changes", "B. Keyboard shortcuts", "C. Mouse hover effects", "D. Printer output and print layouts"], correctAnswer: "A. Interruptions like calls and network changes" },
+      { id: 5, question: "Which language does Appium require for tests?", options: ["A. Only Java, through the Appium Java client", "B. Any language with a WebDriver client", "C. Only Kotlin", "D. Only JavaScript"], correctAnswer: "B. Any language with a WebDriver client" },
+      { id: 6, question: "What tool is commonly used to inspect iOS app elements?", options: ["A. ADB with the Android Layout Inspector", "B. Postman", "C. Xcode with Appium Inspector", "D. JMeter"], correctAnswer: "C. Xcode with Appium Inspector" },
     ],
     assignment: {
       prompts: [
@@ -972,12 +503,12 @@ caps.setCapability("deviceName", "emulator-5554");`,
           kind: 'mcq',
           prompt: 'What mobile app type is built using standard web technologies (HTML, CSS, JS) but runs inside a native wrapper container on the device?',
           options: [
-            'A. Native App',
-            'B. Web App',
-            'C. Hybrid App',
-            'D. Desktop App'
+            "A. Hybrid App",
+            "B. Native App",
+            "C. Web App",
+            "D. Desktop App",
           ],
-          correctAnswer: 'C. Hybrid App'
+          correctAnswer: "A. Hybrid App"
         }
       ]
     }
@@ -991,45 +522,19 @@ caps.setCapability("deviceName", "emulator-5554");`,
       'Test authentication and authorization mechanisms.'
     ],
     lessons: [
-      {
-        id: 'm12-l1',
-        title: 'Lesson 12.1 Security Fundamentals',
-        objectives: ['Identify security goals.'],
-        theory: 'Security testing verifies integrity, confidentiality, authentication, authorization, availability, and non-repudiation.',
-        takeaways: ['Protects critical customer data from malicious actors.']
-      },
-      {
-        id: 'm12-l2',
-        title: 'Lesson 12.2 Authentication Testing',
-        objectives: ['Test authentication weaknesses.'],
-        theory: 'Verifies brute-force protections, credential validation, token expirations, and secure password reset links.',
-        takeaways: ['Always enforce strong password validation policies.']
-      },
-      {
-        id: 'm12-l3',
-        title: 'Lesson 12.3 Authorization Testing',
-        objectives: ['Test access controls.'],
-        theory: 'Verifies user role boundaries. Ensures standard users cannot reach admin paths (e.g. Broken Object Level Authorization).',
-        takeaways: ['Ensure access keys validate backend permissions, not just frontend visibility.']
-      },
-      {
-        id: 'm12-l4',
-        title: 'Lesson 12.4 OWASP Top 10',
-        objectives: ['Analyze standard vulnerabilities.'],
-        theory: 'OWASP lists critical web risks, including SQL injection, cross-site scripting (XSS), broken authentication, and security misconfigurations.',
-        takeaways: ['The standard benchmark for secure application design.']
-      },
-      {
-        id: 'm12-l5',
-        title: 'Lesson 12.5 Basic Vulnerability Testing',
-        objectives: ['Check input sanitation.'],
-        theory: 'Input sanitation prevents malicious payload execution. Example: typing SQL tags into login inputs to bypass checks.',
-        takeaways: ['Always parameterize database queries to avoid SQL Injection vulnerabilities.']
-      }
+      EXPANDED_LESSONS['m12-l1'],
+      EXPANDED_LESSONS['m12-l2'],
+      EXPANDED_LESSONS['m12-l3'],
+      EXPANDED_LESSONS['m12-l4'],
+      EXPANDED_LESSONS['m12-l5'],
     ],
     quiz: [
-      { id: 1, question: 'What does OWASP stand for?', options: ['A. Open Web Application Security Project', 'B. Online Web Alert System Protocol', 'C. Open Windows Access Security Plan', 'D. Object Web Architecture Standards Program'], correctAnswer: 'A. Open Web Application Security Project' },
-      { id: 2, question: 'Which vulnerability allows attackers to inject malicious SQL scripts into database inputs?', options: ['A. XSS', 'B. SQL Injection', 'C. CSRF', 'D. Broken Authentication'], correctAnswer: 'B. SQL Injection' }
+      { id: 1, question: 'What does OWASP stand for?', options: ["A. Online Web Alert System Protocol", "B. Open Web Application Security Project", "C. Open Windows Access Security Plan", "D. Object Web Architecture Standards Program"], correctAnswer: "B. Open Web Application Security Project" },
+      { id: 2, question: 'Which vulnerability allows attackers to inject malicious SQL scripts into database inputs?', options: ["A. XSS", "B. CSRF", "C. SQL Injection", "D. Broken Authentication"], correctAnswer: "C. SQL Injection" },
+      { id: 3, question: "What is Cross-Site Scripting (XSS)?", options: ["A. Guessing passwords repeatedly", "B. Flooding a server with traffic", "C. Stealing session devices through Bluetooth", "D. Injecting scripts that run in other users' browsers"], correctAnswer: "D. Injecting scripts that run in other users' browsers" },
+      { id: 4, question: "An authorization test checks that...", options: ["A. Users cannot reach resources they are not permitted to", "B. Passwords are long enough", "C. Login pages load quickly", "D. Users must log in before seeing any page"], correctAnswer: "A. Users cannot reach resources they are not permitted to" },
+      { id: 5, question: "Why should repeated failed logins be limited?", options: ["A. To reduce server load only", "B. To slow down brute-force attacks", "C. To improve password strength", "D. To speed up login"], correctAnswer: "B. To slow down brute-force attacks" },
+      { id: 6, question: "Which is the best way to prevent SQL injection?", options: ["A. Hiding error messages", "B. Longer passwords", "C. Parameterised queries", "D. Client-side validation only"], correctAnswer: "C. Parameterised queries" },
     ],
     assignment: {
       prompts: [
@@ -1037,12 +542,12 @@ caps.setCapability("deviceName", "emulator-5554");`,
           kind: 'mcq',
           prompt: 'Which security vulnerability occurs when an application includes untrusted data in a web page without proper validation or escaping, allowing browser script execution?',
           options: [
-            'A. SQL Injection',
-            'B. Cross-Site Scripting (XSS)',
-            'C. Cross-Site Request Forgery (CSRF)',
-            'D. Buffer Overflow'
+            "A. SQL Injection",
+            "B. Cross-Site Request Forgery (CSRF)",
+            "C. Buffer Overflow",
+            "D. Cross-Site Scripting (XSS)",
           ],
-          correctAnswer: 'B. Cross-Site Scripting (XSS)'
+          correctAnswer: "D. Cross-Site Scripting (XSS)"
         }
       ]
     }
@@ -1056,66 +561,20 @@ caps.setCapability("deviceName", "emulator-5554");`,
       'Configure automated test triggers inside a Jenkins pipeline.'
     ],
     lessons: [
-      {
-        id: 'm13-l1',
-        title: 'Lesson 13.1 Introduction to CI/CD',
-        objectives: ['Explain build pipeline principles.'],
-        theory: 'Continuous Integration compiles and validates commits automatically. Continuous Delivery deploys builds to test environments.',
-        takeaways: ['Enables rapid quality checks on code changes.']
-      },
-      {
-        id: 'm13-l2',
-        title: 'Lesson 13.2 Git for Testers',
-        objectives: ['Use branching workflows.'],
-        syntax: `git checkout -b feature/test-suite
-git add .
-git commit -m "add test cases"
-git push origin feature/test-suite`,
-        theory: 'Git tracks code history. Branching isolates test development from main source codes.',
-        takeaways: ['Pull requests coordinate code review before merges.']
-      },
-      {
-        id: 'm13-l3',
-        title: 'Lesson 13.3 Jenkins Basics',
-        objectives: ['Build jobs.'],
-        theory: 'Jenkins orchestrates build stages, running tests whenever source changes are merged.',
-        takeaways: ['Webhooks trigger pipelines automatically upon git pushes.']
-      },
-      {
-        id: 'm13-l4',
-        title: 'Lesson 13.4 Running Automated Tests',
-        objectives: ['Run automation suites in pipelines.'],
-        syntax: `pipeline {
-    agent any
-    stages {
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-    }
-}`,
-        theory: 'Jenkinsfiles define build lifecycles, invoking Maven test runners inside clean container layers.',
-        takeaways: ['Pipeline stages report status and build health.']
-      },
-      {
-        id: 'm13-l5',
-        title: 'Lesson 13.5 Test Reports',
-        objectives: ['Collect pipeline test outputs.'],
-        theory: 'Jenkins plugins capture Surefire and ExtentReports XML outputs to display test failure trends directly in dashboard metrics.',
-        takeaways: ['Makes pipeline diagnostics accessible to dev teams.']
-      },
-      {
-        id: 'm13-l6',
-        title: 'Lesson 13.6 Continuous Testing',
-        objectives: ['Shift-left security and performance checks.'],
-        theory: 'Continuous testing executes unit, integration, and security sweeps throughout build cycles.',
-        takeaways: ['Reduces production risk by validating builds constantly.']
-      }
+      EXPANDED_LESSONS['m13-l1'],
+      EXPANDED_LESSONS['m13-l2'],
+      EXPANDED_LESSONS['m13-l3'],
+      EXPANDED_LESSONS['m13-l4'],
+      EXPANDED_LESSONS['m13-l5'],
+      EXPANDED_LESSONS['m13-l6'],
     ],
     quiz: [
-      { id: 1, question: 'Which command creates and switches to a new Git branch?', options: ['A. git branch', 'B. git checkout -b', 'C. git commit', 'D. git merge'], correctAnswer: 'B. git checkout -b' },
-      { id: 2, question: 'What is the standard configuration file used to build pipelines in Jenkins?', options: ['A. pom.xml', 'B. Jenkinsfile', 'C. package.json', 'D. testng.xml'], correctAnswer: 'B. Jenkinsfile' }
+      { id: 1, question: 'Which command creates and switches to a new Git branch?', options: ["A. git checkout -b", "B. git branch", "C. git commit", "D. git merge"], correctAnswer: "A. git checkout -b" },
+      { id: 2, question: 'What is the standard configuration file used to build pipelines in Jenkins?', options: ['A. pom.xml', 'B. Jenkinsfile', 'C. package.json', 'D. testng.xml'], correctAnswer: 'B. Jenkinsfile' },
+      { id: 3, question: "What is continuous integration?", options: ["A. Merging branches monthly after a full manual test", "B. Testing only before release", "C. Manual code review only", "D. Merging changes often with automated builds and tests"], correctAnswer: "D. Merging changes often with automated builds and tests" },
+      { id: 4, question: "Why run automated tests on every pull request?", options: ["A. Regressions are caught before merging", "B. It makes code compile faster", "C. It replaces code review", "D. It reduces repository size"], correctAnswer: "A. Regressions are caught before merging" },
+      { id: 5, question: "Which command stages all changed files in Git?", options: ["A. git commit -a only", "B. git add .", "C. git push", "D. git stage --all-files"], correctAnswer: "B. git add ." },
+      { id: 6, question: "What does continuous testing add to a pipeline?", options: ["A. A final manual test only", "B. Faster deployments without tests", "C. Quality feedback at every stage", "D. Automatic bug fixes"], correctAnswer: "C. Quality feedback at every stage" },
     ],
     assignment: {
       prompts: [
@@ -1123,12 +582,12 @@ git push origin feature/test-suite`,
           kind: 'mcq',
           prompt: 'Which Git command merges branch updates from a remote server into your local working branch?',
           options: [
-            'A. git push',
-            'B. git pull',
-            'C. git commit',
-            'D. git status'
+            "A. git push",
+            "B. git commit",
+            "C. git pull",
+            "D. git status",
           ],
-          correctAnswer: 'B. git pull'
+          correctAnswer: "C. git pull"
         }
       ]
     }
@@ -1142,52 +601,20 @@ git push origin feature/test-suite`,
       'Configure self-healing locator strategies.'
     ],
     lessons: [
-      {
-        id: 'm14-l1',
-        title: 'Lesson 14.1 AI in Testing',
-        objectives: ['Identify AI testing trends.'],
-        theory: 'Generative AI assists in drafting test cases, analyzing code coverage, and automating regression configurations.',
-        takeaways: ['AI increases productivity and speeds up test design.']
-      },
-      {
-        id: 'm14-l2',
-        title: 'Lesson 14.2 AI Test Case Generation',
-        objectives: ['Use LLMs for test cases.'],
-        theory: 'Prompting LLMs with code snippets generates comprehensive boundary and validation tests in seconds.',
-        takeaways: ['Speeds up manual test documentation.']
-      },
-      {
-        id: 'm14-l3',
-        title: 'Lesson 14.3 AI Bug Analysis',
-        objectives: ['Diagnose log errors.'],
-        theory: 'AI analyzers inspect stack traces to isolate defects and propose source fixes.',
-        takeaways: ['Saves debugging time for developers.']
-      },
-      {
-        id: 'm14-l4',
-        title: 'Lesson 14.4 Self-Healing Automation',
-        objectives: ['Minimize selector brittleness.'],
-        theory: 'Self-healing tools update broken DOM selectors automatically by analyzing alternative element attributes during runtimes.',
-        takeaways: ['Reduces manual test maintenance costs when UI changes.']
-      },
-      {
-        id: 'm14-l5',
-        title: 'Lesson 14.5 AI Testing Tools',
-        objectives: ['Explore AI test suites.'],
-        theory: 'Tools like Applitools (visual testing) and Mabl use ML models to audit layouts and behaviors.',
-        takeaways: ['Visual regressions are handled natively by visual AI models.']
-      },
-      {
-        id: 'm14-l6',
-        title: 'Lesson 14.6 Future of QA',
-        objectives: ['Evolve the QA role.'],
-        theory: 'The future QA role shifts toward auditing AI models, training test generators, and managing automation orchestrations.',
-        takeaways: ['Continuous upskilling in AI tools guarantees career longevity.']
-      }
+      EXPANDED_LESSONS['m14-l1'],
+      EXPANDED_LESSONS['m14-l2'],
+      EXPANDED_LESSONS['m14-l3'],
+      EXPANDED_LESSONS['m14-l4'],
+      EXPANDED_LESSONS['m14-l5'],
+      EXPANDED_LESSONS['m14-l6'],
     ],
     quiz: [
-      { id: 1, question: 'What is the primary benefit of self-healing locators in test automation?', options: ['A. Faster execution speeds', 'B. Automatically updating selectors when DOM elements change, reducing maintenance', 'C. Complete removal of locators', 'D. Resolving syntax bugs'], correctAnswer: 'B. Automatically updating selectors when DOM elements change, reducing maintenance' },
-      { id: 2, question: 'How does AI visual regression testing differ from standard HTML assertions?', options: ['A. It does not check code', 'B. It compares screenshots using machine learning to detect visual deviations, regardless of HTML changes', 'C. It is slower', 'D. It requires compilation'], correctAnswer: 'B. It compares screenshots using machine learning to detect visual deviations, regardless of HTML changes' }
+      { id: 1, question: 'What is the primary benefit of self-healing locators in test automation?', options: ["A. Faster execution, because locators are cached between test runs", "B. Complete removal of locators", "C. Rewriting failing assertions so the test run passes", "D. Automatically updating selectors when DOM elements change, reducing maintenance"], correctAnswer: "D. Automatically updating selectors when DOM elements change, reducing maintenance" },
+      { id: 2, question: 'How does AI visual regression testing differ from standard HTML assertions?', options: ["A. It compares screenshots using machine learning to detect visual deviations, regardless of HTML changes", "B. It does not check code", "C. It checks the HTML source for style changes, then renders only the changed elements", "D. It requires compilation"], correctAnswer: "A. It compares screenshots using machine learning to detect visual deviations, regardless of HTML changes" },
+      { id: 3, question: "What is a key risk of AI-generated test cases?", options: ["A. They never compile without manual edits", "B. They always slow the pipeline", "C. They cannot be automated", "D. They can miss business context and must be reviewed"], correctAnswer: "D. They can miss business context and must be reviewed" },
+      { id: 4, question: "How can AI help with bug analysis?", options: ["A. Clustering similar failures and suggesting likely causes", "B. Fixing all bugs automatically", "C. Removing the need for logs", "D. Replacing bug reports with automatic tickets"], correctAnswer: "A. Clustering similar failures and suggesting likely causes" },
+      { id: 5, question: "What remains a human responsibility with AI testing tools?", options: ["A. Clicking every button", "B. Judging whether results are correct and meaningful", "C. Typing every locator", "D. Nothing, since AI tools validate their own output"], correctAnswer: "B. Judging whether results are correct and meaningful" },
+      { id: 6, question: "What can make self-healing locators dangerous?", options: ["A. They run too fast", "B. They require no DOM", "C. Silently binding to the wrong element", "D. They only work offline"], correctAnswer: "C. Silently binding to the wrong element" },
     ],
     assignment: {
       prompts: [
@@ -1214,69 +641,34 @@ git push origin feature/test-suite`,
       'Generate professional test closures and reports.'
     ],
     lessons: [
-      {
-        id: 'm15-p1',
-        title: 'Project 1: E-Commerce Website Testing',
-        objectives: ['Validate cart actions.'],
-        theory: 'Includes writing manual test cases and automated scripts for login, search, product selection, checkout, and receipt confirmation.',
-        takeaways: ['Focus on edge cases like coupon expirations and validation failures.']
-      },
-      {
-        id: 'm15-p2',
-        title: 'Project 2: Banking Application Testing',
-        objectives: ['Validate transactions.'],
-        theory: 'Includes testing money transfers, balance statements, unauthorized access, and database validation.',
-        takeaways: ['Focus on transaction integrity and rollbacks.']
-      },
-      {
-        id: 'm15-p3',
-        title: 'Project 3: LMS Website Testing',
-        objectives: ['Validate enrollment flows.'],
-        theory: 'Includes testing course listings, video players, quizzes, and certificates.',
-        takeaways: ['Verify enrollment status updates in real-time.']
-      },
-      {
-        id: 'm15-p4',
-        title: 'Project 4: HMS Website Testing',
-        objectives: ['Validate patient bookings.'],
-        theory: 'Includes appointment bookings, scheduling checks, doctor slots, and data integrity.',
-        takeaways: ['Confirm patient records are secure and GDPR compliant.']
-      },
-      {
-        id: 'm15-p5',
-        title: 'Project 5: API Testing Suite',
-        objectives: ['Validate REST APIs.'],
-        theory: 'Includes building a complete Postman collection with chained inputs and assertions.',
-        takeaways: ['Enforce correct authorization and status responses.']
-      },
-      {
-        id: 'm15-p6',
-        title: 'Project 6: Selenium Automation Framework',
-        objectives: ['Build a hybrid framework.'],
-        theory: 'Includes building a complete Maven Java project with POM, TestNG, log4j, and HTML reports.',
-        takeaways: ['Structure code for parallel executions.']
-      },
-      {
-        id: 'm15-final',
-        title: 'Final Industry Capstone Project',
-        objectives: ['Build the final portfolio project.'],
-        theory: 'Integrates all manual test cases, API suites, and web automation pipelines into a single portfolio project.',
-        takeaways: ['Demonstrates complete mastery of software QA.']
-      }
+      EXPANDED_LESSONS['m15-p1'],
+      EXPANDED_LESSONS['m15-p2'],
+      EXPANDED_LESSONS['m15-p3'],
+      EXPANDED_LESSONS['m15-p4'],
+      EXPANDED_LESSONS['m15-p5'],
+      EXPANDED_LESSONS['m15-p6'],
+      EXPANDED_LESSONS['m15-final'],
     ],
-    quiz: [],
+    quiz: [
+      { id: 1, question: "For an e-commerce site, which flow should be tested first?", options: ["A. The About Us page", "B. Checkout and payment", "C. Footer links", "D. Blog comments"], correctAnswer: "B. Checkout and payment" },
+      { id: 2, question: "What is essential when testing a banking transfer?", options: ["A. The page colour scheme", "B. Animation smoothness", "C. Balances stay consistent even when a step fails", "D. The page loads within one second on mobile"], correctAnswer: "C. Balances stay consistent even when a step fails" },
+      { id: 3, question: "An API testing suite should verify...", options: ["A. Only that the server responds", "B. Only response time", "C. Only the happy path", "D. Status codes, response schema and error handling"], correctAnswer: "D. Status codes, response schema and error handling" },
+      { id: 4, question: "A maintainable Selenium framework for the capstone should use...", options: ["A. Page Object Model with data-driven tests", "B. Hard-coded XPaths in each test", "C. Thread.sleep for every wait", "D. One giant test method"], correctAnswer: "A. Page Object Model with data-driven tests" },
+      { id: 5, question: "What should a capstone test summary report include?", options: ["A. Only the number of passed tests", "B. Coverage, defects found, and open risks", "C. Screenshots of every page", "D. The developers' names"], correctAnswer: "B. Coverage, defects found, and open risks" },
+      { id: 6, question: "Why include negative test cases in a capstone project?", options: ["A. They increase the pass rate", "B. They are faster to write than positive cases", "C. They prove the system handles invalid input safely", "D. They replace positive tests"], correctAnswer: "C. They prove the system handles invalid input safely" },
+    ],
     assignment: {
       prompts: [
         {
           kind: 'mcq',
           prompt: 'What is the main goal of a hybrid automation framework constructed in Project 6?',
           options: [
-            'A. To run tests without using any browsers.',
-            'B. To combine POM, Data-Driven testing, custom logging, and visual HTML reporting into an extensible, reusable test engine.',
-            'C. To write applications instead of tests.',
-            'D. To eliminate coding requirements entirely.'
+            "A. To run tests without using any browsers.",
+            "B. To run the same test in every browser at once without any page objects or data files.",
+            "C. To combine POM, Data-Driven testing, custom logging, and visual HTML reporting into an extensible, reusable test engine.",
+            "D. To eliminate coding requirements entirely.",
           ],
-          correctAnswer: 'B. To combine POM, Data-Driven testing, custom logging, and visual HTML reporting into an extensible, reusable test engine.'
+          correctAnswer: "C. To combine POM, Data-Driven testing, custom logging, and visual HTML reporting into an extensible, reusable test engine."
         }
       ]
     }
@@ -1287,55 +679,13 @@ git push origin feature/test-suite`,
     overview: 'Get introduced to the Software Testing course, learning outcomes, career roadmaps, and resources.',
     outcomes: ['Understand the course roadmap', 'Identify career options in QA'],
     lessons: [
-      {
-        id: 'overview-welcome',
-        title: 'Welcome Message',
-        objectives: ['Course introduction.'],
-        theory: 'Welcome to Software Testing Mastery. This program is designed to take you from absolute zero to a professional software quality assurance engineer.',
-        takeaways: ['Quality is a mindset.']
-      },
-      {
-        id: 'overview-intro',
-        title: 'Course Introduction Video',
-        objectives: ['Watch syllabus breakdown.'],
-        theory: 'Review our complete program video outlining manual testing, API validation, Selenium WebDrivers, and advanced continuous integration workflows.',
-        takeaways: ['Watch all modules sequentially for best learning retention.']
-      },
-      {
-        id: 'overview-outcomes',
-        title: 'Learning Outcomes',
-        objectives: ['Define learning milestones.'],
-        theory: 'By the end of this course, you will be able to design comprehensive test suites, write automated web and API regression scripts, run performance tests, and configure Jenkins pipelines.',
-        takeaways: ['Focus on building hands-on portfolio capstone projects.']
-      },
-      {
-        id: 'overview-roadmap',
-        title: 'Software Testing Roadmap',
-        objectives: ['Understand course sequence.'],
-        theory: 'Our roadmap is structured as: Manual Testing -> Test Case Design -> Databases/APIs -> Selenium WebDrivers -> Frameworks -> Advanced Performance/Security -> Capstones.',
-        takeaways: ['Consolidate manual fundamentals before jumping into automation scripts.']
-      },
-      {
-        id: 'overview-career',
-        title: 'Career Opportunities',
-        objectives: ['Explore employment markets.'],
-        theory: 'Graduates can apply for roles like QA Analyst, Automation Engineer, SDET (Software Development Engineer in Test), and QA Team Lead.',
-        takeaways: ['SDET is currently one of the highest-paying technical developer trajectories.']
-      },
-      {
-        id: 'overview-prereq',
-        title: 'Prerequisites',
-        objectives: ['Verify entry requirements.'],
-        theory: 'No prior coding experience is required! We start from basic computer concepts and build up to advanced Java/Selenium programming.',
-        takeaways: ['Basic logical thinking and attention to detail are your best assets.']
-      },
-      {
-        id: 'overview-resources',
-        title: 'Course Resources',
-        objectives: ['Access templates and cheat sheets.'],
-        theory: 'Download our standard Bug Report templates, test plan templates, Selenium locators cheat sheets, and SQL query guides under the resources tab.',
-        takeaways: ['Use these templates in your capstone exercises.']
-      }
+      EXPANDED_LESSONS['overview-welcome'],
+      EXPANDED_LESSONS['overview-intro'],
+      EXPANDED_LESSONS['overview-outcomes'],
+      EXPANDED_LESSONS['overview-roadmap'],
+      EXPANDED_LESSONS['overview-career'],
+      EXPANDED_LESSONS['overview-prereq'],
+      EXPANDED_LESSONS['overview-resources'],
     ],
     quiz: [],
     assignment: { prompts: [] }
@@ -1346,76 +696,16 @@ git push origin feature/test-suite`,
     overview: 'Master manual, automation, API, and SQL interview questionnaires.',
     outcomes: ['Succeed in QA technical interviews'],
     lessons: [
-      {
-        id: 'interview-manual',
-        title: 'Manual Testing Interview Questions',
-        objectives: ['Review core QA questions.'],
-        theory: 'Understand common questions: What is regression testing? What is a test matrix? How do you choose between BVA and EP? Explain the bug lifecycle.',
-        takeaways: ['Review standard answers before your interviews.']
-      },
-      {
-        id: 'interview-selenium',
-        title: 'Selenium Interview Questions',
-        objectives: ['Master Selenium WebDriver questions.'],
-        theory: 'Review selectors, explicit vs implicit waits, handling windows, driver.close() vs quit(), Page Factory, and stale element exceptions.',
-        takeaways: ['Practice coding locator strings on whiteboard exercises.']
-      },
-      {
-        id: 'interview-api',
-        title: 'API Testing Interview Questions',
-        objectives: ['Master REST API questionnaires.'],
-        theory: 'Review HTTP verbs, status codes, header configurations, authentication keys, and Postman assertion scripts.',
-        takeaways: ['Be ready to design a basic request pipeline verbally.']
-      },
-      {
-        id: 'interview-sql',
-        title: 'SQL Interview Questions',
-        objectives: ['Master database questions.'],
-        theory: 'Review INNER/LEFT joins, aggregate functions (GROUP BY, HAVING), database keys, and primary vs unique constraints.',
-        takeaways: ['Practice writing mock SQL queries on paper.']
-      },
-      {
-        id: 'interview-agile',
-        title: 'Agile Interview Questions',
-        objectives: ['Explain agile methodologies.'],
-        theory: 'Review Scrum ceremonies, role definitions, Definition of Done (DoD), and handling sprint scope increases.',
-        takeaways: ['Emphasize collaboration and shift-left quality processes.']
-      },
-      {
-        id: 'interview-framework',
-        title: 'Automation Framework Questions',
-        objectives: ['Design extensible frameworks.'],
-        theory: 'Review POM architectures, data providers, log structures, parallel run grids, and CI pipeline webhooks.',
-        takeaways: ['Highlight how you minimize test maintenance overhead.']
-      },
-      {
-        id: 'interview-hr',
-        title: 'HR Interview Questions',
-        objectives: ['Review behavior questions.'],
-        theory: 'Master conflict resolution stories, handling deadline pressure, and explaining why you chose a career in software QA.',
-        takeaways: ['Use the STAR method (Situation, Task, Action, Result) for behavioral answers.']
-      },
-      {
-        id: 'interview-resume',
-        title: 'Resume Building',
-        objectives: ['Construct a premium QA resume.'],
-        theory: 'List technical skills prominently. Showcase your Selenium, Postman, and Jenkins projects with Github repository links.',
-        takeaways: ['Quantify metrics (e.g. "reduced manual testing time by 40%").']
-      },
-      {
-        id: 'interview-mock',
-        title: 'Mock Interviews',
-        objectives: ['Simulate interviews.'],
-        theory: 'Participate in peer-to-peer mock interviews, screen recordings, and timer-based practice questions.',
-        takeaways: ['Familiarity reduces anxiety during actual hiring loops.']
-      },
-      {
-        id: 'interview-coding',
-        title: 'Coding & Practical Assessments',
-        objectives: ['Solve coding tests.'],
-        theory: 'Practice solving simple coding structures in Java/JavaScript (e.g. reverse string, find duplicates, check prime).',
-        takeaways: ['Write clean, legible, self-documenting code.']
-      }
+      EXPANDED_LESSONS['interview-manual'],
+      EXPANDED_LESSONS['interview-selenium'],
+      EXPANDED_LESSONS['interview-api'],
+      EXPANDED_LESSONS['interview-sql'],
+      EXPANDED_LESSONS['interview-agile'],
+      EXPANDED_LESSONS['interview-framework'],
+      EXPANDED_LESSONS['interview-hr'],
+      EXPANDED_LESSONS['interview-resume'],
+      EXPANDED_LESSONS['interview-mock'],
+      EXPANDED_LESSONS['interview-coding'],
     ],
     quiz: [],
     assignment: { prompts: [] }

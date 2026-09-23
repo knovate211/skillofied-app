@@ -14,11 +14,11 @@ const Module16: React.FC<Props> = ({ page }) => {
   const [themeMode, setThemeMode] = useState<'light' | 'dark'>('dark');
 
   const quizQuestions: QuizQuestion[] = [
-    { id: 1, question: 'Q1: What is "Prop Drilling" in React development?', options: ['A. Fetching parameters from server databases', 'B. Passing props through multiple nested components that don\'t need them, just to reach a deep child component', 'C. Compiling JSX into variables', 'D. Reassigning local state variables'], correctAnswer: 'B. Passing props through multiple nested components that don\'t need them, just to reach a deep child component' },
+    { id: 1, question: 'Q1: What is "Prop Drilling" in React development?', options: ["A. Passing props through multiple nested components that don't need them, just to reach a deep child component", "B. Fetching parameters from server databases", "C. Compiling JSX into variables", "D. Reassigning local state variables"], correctAnswer: "A. Passing props through multiple nested components that don't need them, just to reach a deep child component" },
     { id: 2, question: 'Q2: In useReducer, what triggers a state transition?', options: ['A. Mutating state directly', 'B. Dispatching an action object', 'C. Re-rendering the layout page', 'D. Changing props inputs'], correctAnswer: 'B. Dispatching an action object' },
-    { id: 3, question: 'Q3: How does Zustand differ from Redux Toolkit?', options: ['A. Zustand requires huge boilerplate code templates', 'B. Zustand is lightweight and does not require Provider wrapper setups', 'C. Zustand is written in Java', 'D. There is no difference'], correctAnswer: 'B. Zustand is lightweight and does not require Provider wrapper setups' },
-    { id: 4, question: 'Q4: Which React features enable lazy-loading of components?', options: ['A. useMemo & useCallback', 'B. React.lazy() & Suspense', 'C. useEffect & useState', 'D. Context API & Providers'], correctAnswer: 'B. React.lazy() & Suspense' },
-    { id: 5, question: 'Q5: What are the two main parts returned by a Context object?', options: ['A. dispatch & actions', 'B. Provider & Consumer', 'C. state & setState', 'D. get & set'], correctAnswer: 'B. Provider & Consumer' },
+    { id: 3, question: 'Q3: How does Zustand differ from Redux Toolkit?', options: ["A. Zustand requires huge boilerplate code templates", "B. Zustand is written in Java", "C. Zustand is lightweight and does not require Provider wrapper setups", "D. There is no difference"], correctAnswer: "C. Zustand is lightweight and does not require Provider wrapper setups" },
+    { id: 4, question: 'Q4: Which React features enable lazy-loading of components?', options: ["A. useMemo & useCallback", "B. useEffect & useState", "C. Context API & Providers", "D. React.lazy() & Suspense"], correctAnswer: "D. React.lazy() & Suspense" },
+    { id: 5, question: 'Q5: What are the two main parts returned by a Context object?', options: ["A. Provider & Consumer", "B. dispatch & actions", "C. state & setState", "D. get & set"], correctAnswer: "A. Provider & Consumer" },
   ];
 
   switch (page) {

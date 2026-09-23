@@ -1127,3 +1127,66 @@ export async function getScholarshipOutcomeApi(attemptId: string): Promise<Schol
   if (!resp.ok) return { isScholarship: false };
   return resp.json();
 }
+
+// ── Live-class attendance ─────────────────────────────────────────────────────
+
+export type SessionStatus = 'upcoming' | 'live' | 'present' | 'absent';
+
+export interface ClassSession {
+  schedule_id: string;
+  course_id: string;
+  title: string;
+  instructor: string;
+  meeting_url: string;
+  date: string;
+  starts_at: string;
+  ends_at: string;
+  status: SessionStatus;
+  marked_at?: string;
+}
+
+export interface AttendanceHistory {
+  from: string;
+  to: string;
+  present: number;
+  absent: number;
+  courses: { course_id: string; title: string; present: number; absent: number }[];
+  sessions: ClassSession[];
+}
+
+async function authedRequest<T>(method: string, path: string, body?: unknown): Promise<T> {
+  const token = localStorage.getItem('token');
+  const headers: Record<string, string> = {};
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  if (body !== undefined) headers['Content-Type'] = 'application/json';
+
+  const resp = await fetch(`${API_BASE}${path}`, {
+    method,
+    headers,
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+  });
+  // A dev server without a proxy for this path answers with index.html and a
+  // 200 — treat anything that is not JSON as a failure, not as an empty result.
+  if (!(resp.headers.get('content-type') || '').includes('application/json')) {
+    throw new Error(`Unexpected response from ${path} (${resp.status})`);
+  }
+  const data = await resp.json().catch(() => ({}));
+  if (!resp.ok) throw new Error(data.error || `Request failed (${resp.status})`);
+  return data as T;
+}
+
+/** Today's classes for the signed-in student, with the server's clock. */
+export const getTodayClassesApi = () =>
+  authedRequest<{ sessions: ClassSession[]; server_time: string }>('GET', '/api/attendance/today');
+
+/** Marks the class running right now. Safe to call twice — the first mark stands. */
+export const markAttendanceApi = (scheduleId: string) =>
+  authedRequest<{ success: boolean; marked_at: string }>('POST', '/api/attendance/mark', { schedule_id: scheduleId });
+
+export const getAttendanceHistoryApi = (from?: string, to?: string) => {
+  const q = new URLSearchParams();
+  if (from) q.set('from', from);
+  if (to) q.set('to', to);
+  const qs = q.toString();
+  return authedRequest<AttendanceHistory>('GET', `/api/attendance/history${qs ? `?${qs}` : ''}`);
+};

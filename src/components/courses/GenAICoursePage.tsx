@@ -25,7 +25,7 @@ export const SYLLABUS: SyllabusModule[] = [
       { id: 'm1-l6', title: 'Lesson 1.6 Async Python and HTTP' },
       { id: 'm1-l7', title: 'Lesson 1.7 JSON and REST Fundamentals' },
       { id: 'm1-quiz', title: 'Module Quiz' },
-      { id: 'm1-assignment', title: 'Practice: Defensive Parsing' },
+      { id: 'm1-assignment', title: 'Practice: Python & AI Foundations' },
     ],
   },
   {
@@ -38,7 +38,7 @@ export const SYLLABUS: SyllabusModule[] = [
       { id: 'm2-l4', title: 'Lesson 2.4 Features, Labels, Text as Numbers' },
       { id: 'm2-l5', title: 'Lesson 2.5 Measuring Quality' },
       { id: 'm2-quiz', title: 'Module Quiz' },
-      { id: 'm2-assignment', title: 'Practice: Precision, Recall, F1' },
+      { id: 'm2-assignment', title: 'Practice: Machine Learning Essentials' },
     ],
   },
   {
@@ -52,7 +52,7 @@ export const SYLLABUS: SyllabusModule[] = [
       { id: 'm3-l5', title: 'Lesson 3.5 Hallucination' },
       { id: 'm3-l6', title: 'Lesson 3.6 Calling a Model API' },
       { id: 'm3-quiz', title: 'Module Quiz' },
-      { id: 'm3-assignment', title: 'Practice: Context Budget' },
+      { id: 'm3-assignment', title: 'Practice: LLM Fundamentals' },
     ],
   },
   {
@@ -66,7 +66,7 @@ export const SYLLABUS: SyllabusModule[] = [
       { id: 'm4-l5', title: 'Lesson 4.5 Templates and Versioning' },
       { id: 'm4-l6', title: 'Lesson 4.6 Prompt Injection' },
       { id: 'm4-quiz', title: 'Module Quiz' },
-      { id: 'm4-assignment', title: 'Practice: Safe Prompt Templating' },
+      { id: 'm4-assignment', title: 'Practice: Prompt Engineering' },
     ],
   },
   {
@@ -79,7 +79,7 @@ export const SYLLABUS: SyllabusModule[] = [
       { id: 'm5-l4', title: 'Lesson 5.4 Metadata and Filtering' },
       { id: 'm5-l5', title: 'Lesson 5.5 Vector Databases' },
       { id: 'm5-quiz', title: 'Module Quiz' },
-      { id: 'm5-assignment', title: 'Practice: Cosine Search with Filtering' },
+      { id: 'm5-assignment', title: 'Practice: Embeddings & Vector Search' },
     ],
   },
   {
@@ -93,7 +93,7 @@ export const SYLLABUS: SyllabusModule[] = [
       { id: 'm6-l5', title: 'Lesson 6.5 Evaluating RAG' },
       { id: 'm6-l6', title: 'Lesson 6.6 Reducing Hallucination' },
       { id: 'm6-quiz', title: 'Module Quiz' },
-      { id: 'm6-assignment', title: 'Practice: Grounding and Citations' },
+      { id: 'm6-assignment', title: 'Practice: Retrieval-Augmented Generation' },
     ],
   },
   {
@@ -107,7 +107,7 @@ export const SYLLABUS: SyllabusModule[] = [
       { id: 'm7-l5', title: 'Lesson 7.5 Multi-Agent Systems' },
       { id: 'm7-l6', title: 'Lesson 7.6 Safety and Human-in-the-Loop' },
       { id: 'm7-quiz', title: 'Module Quiz' },
-      { id: 'm7-assignment', title: 'Practice: Build an Agent Loop' },
+      { id: 'm7-assignment', title: 'Practice: AI Agents' },
     ],
   },
   {
@@ -120,7 +120,7 @@ export const SYLLABUS: SyllabusModule[] = [
       { id: 'm8-l4', title: 'Lesson 8.4 Vision' },
       { id: 'm8-l5', title: 'Lesson 8.5 Voice Agent Architecture' },
       { id: 'm8-quiz', title: 'Module Quiz' },
-      { id: 'm8-assignment', title: 'Practice: Latency Budget' },
+      { id: 'm8-assignment', title: 'Practice: Multimodal GenAI' },
     ],
   },
   {
@@ -133,7 +133,7 @@ export const SYLLABUS: SyllabusModule[] = [
       { id: 'm9-l4', title: 'Lesson 9.4 LoRA, QLoRA and PEFT' },
       { id: 'm9-l5', title: 'Lesson 9.5 Evaluating and When Not To' },
       { id: 'm9-quiz', title: 'Module Quiz' },
-      { id: 'm9-assignment', title: 'Practice: Validate a Training Set' },
+      { id: 'm9-assignment', title: 'Practice: Fine-Tuning' },
     ],
   },
   {
@@ -147,7 +147,7 @@ export const SYLLABUS: SyllabusModule[] = [
       { id: 'm10-l5', title: 'Lesson 10.5 Retries, Timeouts, Fallback' },
       { id: 'm10-l6', title: 'Lesson 10.6 Rate Limits and Concurrency' },
       { id: 'm10-quiz', title: 'Module Quiz' },
-      { id: 'm10-assignment', title: 'Practice: Retry Policy' },
+      { id: 'm10-assignment', title: 'Practice: Production GenAI' },
     ],
   },
   {
@@ -161,7 +161,7 @@ export const SYLLABUS: SyllabusModule[] = [
       { id: 'm11-l5', title: 'Lesson 11.5 Guardrails and Security' },
       { id: 'm11-l6', title: 'Lesson 11.6 Monitoring in Production' },
       { id: 'm11-quiz', title: 'Module Quiz' },
-      { id: 'm11-assignment', title: 'Practice: Evaluation Harness' },
+      { id: 'm11-assignment', title: 'Practice: LLMOps' },
     ],
   },
   {
@@ -175,7 +175,7 @@ export const SYLLABUS: SyllabusModule[] = [
       { id: 'm12-l5', title: 'Lesson 12.5 Customer Environments' },
       { id: 'm12-l6', title: 'Lesson 12.6 Communicating Trade-offs' },
       { id: 'm12-quiz', title: 'Module Quiz' },
-      { id: 'm12-assignment', title: 'Practice: Sizing and Scoping' },
+      { id: 'm12-assignment', title: 'Practice: Forward Deployed Engineering' },
     ],
   },
   {

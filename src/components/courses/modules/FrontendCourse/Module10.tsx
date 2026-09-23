@@ -20,11 +20,11 @@ const Module10: React.FC<Props> = ({ page }) => {
   ]);
 
   const quizQuestions: QuizQuestion[] = [
-    { id: 1, question: 'Q1: Which command initializes a new local Git repository?', options: ['A. git clone', 'B. git init', 'C. git start', 'D. git create'], correctAnswer: 'B. git init' },
-    { id: 2, question: 'Q2: How do you stage specific changes in file "index.html" to be committed?', options: ['A. git add index.html', 'B. git stage index.html', 'C. git commit index.html', 'D. git save index.html'], correctAnswer: 'A. git add index.html' },
-    { id: 3, question: 'Q3: What is the main purpose of GitHub compared to Git?', options: ['A. GitHub compiles Git code', 'B. GitHub is a hosting service for Git repositories', 'C. GitHub is the backend of Git', 'D. GitHub is local only'], correctAnswer: 'B. GitHub is a hosting service for Git repositories' },
-    { id: 4, question: 'Q4: Which command switches to a branch named "feature-login"?', options: ['A. git branch feature-login', 'B. git checkout feature-login', 'C. git merge feature-login', 'D. git push feature-login'], correctAnswer: 'B. git checkout feature-login' },
-    { id: 5, question: 'Q5: What Git command displays the history of commits?', options: ['A. git history', 'B. git status', 'C. git log', 'D. git diff'], correctAnswer: 'C. git log' },
+    { id: 1, question: 'Q1: Which command initializes a new local Git repository?', options: ["A. git init", "B. git clone", "C. git start", "D. git create"], correctAnswer: "A. git init" },
+    { id: 2, question: 'Q2: How do you stage specific changes in file "index.html" to be committed?', options: ["A. git stage index.html", "B. git add index.html", "C. git commit index.html", "D. git save index.html"], correctAnswer: "B. git add index.html" },
+    { id: 3, question: 'Q3: What is the main purpose of GitHub compared to Git?', options: ["A. GitHub compiles Git code", "B. GitHub is the backend of Git", "C. GitHub is a hosting service for Git repositories", "D. GitHub is local only"], correctAnswer: "C. GitHub is a hosting service for Git repositories" },
+    { id: 4, question: 'Q4: Which command switches to a branch named "feature-login"?', options: ["A. git branch feature-login", "B. git merge feature-login", "C. git push feature-login", "D. git checkout feature-login"], correctAnswer: "D. git checkout feature-login" },
+    { id: 5, question: 'Q5: What Git command displays the history of commits?', options: ["A. git log", "B. git history", "C. git status", "D. git diff"], correctAnswer: "A. git log" },
   ];
 
   const handleAddCommit = (br: 'main' | 'feature') => {

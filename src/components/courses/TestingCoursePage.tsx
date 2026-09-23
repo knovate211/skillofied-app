@@ -2,7 +2,6 @@ import React from 'react';
 import CoursePageShell from './shared/CoursePageShell';
 import { SyllabusModule } from '../../types';
 
-import CourseOverview from './modules/TestingCourse/CourseOverview';
 import TestingModuleRenderer from './modules/TestingCourse/TestingModuleRenderer';
 
 export const SYLLABUS: SyllabusModule[] = [
@@ -295,15 +294,14 @@ const TestingCoursePage: React.FC = () => {
     <CoursePageShell
       syllabus={SYLLABUS}
       courseTitle="Software Testing & QA"
-      courseSubtitle="Manual test cases design and Cypress automation scripts"
+      courseSubtitle="Manual testing, API testing and Selenium automation"
       sidebarSubtitle="Testing Specialization"
       storageKey="maxTestingIndexRead"
       unlockAfterModuleId="m1"
       unlockModuleName="Module 1: Manual Testing"
-      renderContent={(moduleId: string, page: number) => {
-        if (moduleId === 'overview' && page === 1) return <CourseOverview />;
-        return <TestingModuleRenderer moduleId={moduleId} page={page} />;
-      }}
+      renderContent={(moduleId: string, page: number) => (
+        <TestingModuleRenderer moduleId={moduleId} page={page} />
+      )}
     />
   );
 };

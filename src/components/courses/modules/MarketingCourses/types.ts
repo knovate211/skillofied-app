@@ -12,7 +12,16 @@ export type MarketingBlock =
   | { type: 'list'; items: string[]; ordered?: boolean }
   | { type: 'alert'; value: string }
   | { type: 'example'; title: string; value: string }
-  | { type: 'table'; headers: string[]; rows: string[][] };
+  | { type: 'table'; headers: string[]; rows: string[][] }
+  /** A "watch out" callout for common mistakes. */
+  | { type: 'warning'; value: string }
+  /** Side-by-side cards, e.g. a weak versus a strong title tag. */
+  | {
+      type: 'compare';
+      columns: { title: string; subtitle?: string; tone?: 'rose' | 'olive' | 'honey'; items: string[] }[];
+    }
+  /** An ordered walkthrough, e.g. the steps of an indexing check. */
+  | { type: 'steps'; title?: string; steps: { label: string; text?: string }[] };
 
 export interface MarketingLesson {
   title: string;

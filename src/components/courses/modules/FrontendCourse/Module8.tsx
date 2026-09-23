@@ -22,11 +22,11 @@ const Module8: React.FC<Props> = ({ page }) => {
   const [spreadArray2] = useState<string[]>(['Node', 'Express']);
 
   const quizQuestions: QuizQuestion[] = [
-    { id: 1, question: 'Q1: What happens if you reassign a const variable?', options: ['A. It works perfectly', 'B. It silently fails', 'C. It throws a TypeError', 'D. It logs undefined'], correctAnswer: 'C. It throws a TypeError' },
+    { id: 1, question: 'Q1: What happens if you reassign a const variable?', options: ["A. It throws a TypeError", "B. It works perfectly", "C. It silently fails", "D. It logs undefined"], correctAnswer: "A. It throws a TypeError" },
     { id: 2, question: 'Q2: How do arrow functions differ from regular functions regarding the "this" keyword?', options: ['A. Arrow functions have their own "this"', 'B. Arrow functions inherit "this" from the parent scope', 'C. Arrow functions don\'t support "this"', 'D. Regular functions cannot use "this"'], correctAnswer: 'B. Arrow functions inherit "this" from the parent scope' },
     { id: 3, question: 'Q3: Which character wraps template literals?', options: ['A. Double quotes ""', 'B. Single quotes \'\'', 'C. Backticks ``', 'D. Parentheses ()'], correctAnswer: 'C. Backticks ``' },
-    { id: 4, question: 'Q4: What syntax copies all elements from array A into array B using the spread operator?', options: ['A. B = [A]', 'B. B = [...A]', 'C. B = rest(A)', 'D. B = copy(A)'], correctAnswer: 'B. B = [...A]' },
-    { id: 5, question: 'Q5: Which keyword allows a class to inherit properties from another class?', options: ['A. inherits', 'B. extends', 'C. super', 'D. class'], correctAnswer: 'B. extends' },
+    { id: 4, question: 'Q4: What syntax copies all elements from array A into array B using the spread operator?', options: ["A. B = [A]", "B. B = rest(A)", "C. B = copy(A)", "D. B = [...A]"], correctAnswer: "D. B = [...A]" },
+    { id: 5, question: 'Q5: Which keyword allows a class to inherit properties from another class?', options: ["A. extends", "B. inherits", "C. super", "D. class"], correctAnswer: "A. extends" },
   ];
 
   const checkArrowConvert = () => {

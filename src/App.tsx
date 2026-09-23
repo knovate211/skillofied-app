@@ -10,6 +10,7 @@ import { isApplicantSession } from './lib/session';
 import { useNavigatePending } from './hooks/useNavigatePending';
 import styles from './App.module.css';
 import TodaySchedule from './components/dashboard/TodaySchedule';
+import AttendancePrompt from './components/attendance/AttendancePrompt';
 
 // Lazy loaded route components
 const FrontendCoursePage = lazy(() => import('./components/courses/FrontendCoursePage'));
@@ -283,6 +284,9 @@ const App: React.FC = () => {
                   </Routes>
                 </Suspense>
               </main>
+              {/* Lives in the shell, not the test player or IDE, so a live
+                  assessment is never interrupted by a class reminder. */}
+              {!isApplicantSession() && <AttendancePrompt />}
               {!isCourseDetailPage && (
                 <BottomNav active={activeTab} onChange={handleTabChange} pendingTab={pendingTab} />
               )}

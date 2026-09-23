@@ -10,11 +10,11 @@ interface Props { page: number; }
 
 const Module3: React.FC<Props> = ({ page }) => {
   const quizQuestions: QuizQuestion[] = [
-    { id: 1, question: 'Q1: What does CSS stand for?', options: ['A. Computer Style Sheets', 'B. Cascading Style Sheets', 'C. Creative Style Syntax', 'D. Colorful Style Sheets'], correctAnswer: 'B. Cascading Style Sheets' },
-    { id: 2, question: 'Q2: Which property changes text color?', options: ['A. font-color', 'B. text-color', 'C. color', 'D. foreground'], correctAnswer: 'C. color' },
-    { id: 3, question: 'Q3: Which CSS property controls the space between content and border?', options: ['A. margin', 'B. padding', 'C. spacing', 'D. gap'], correctAnswer: 'B. padding' },
-    { id: 4, question: 'Q4: What does "display: none" do?', options: ['A. Makes element invisible but keeps space', 'B. Removes element from the page completely', 'C. Shows the element', 'D. Fades out the element'], correctAnswer: 'B. Removes element from the page completely' },
-    { id: 5, question: 'Q5: Which selector has the highest specificity?', options: ['A. Element (p)', 'B. Class (.box)', 'C. ID (#main)', 'D. Universal (*)'], correctAnswer: 'C. ID (#main)' },
+    { id: 1, question: 'Q1: What does CSS stand for?', options: ["A. Cascading Style Sheets", "B. Computer Style Sheets", "C. Creative Style Syntax", "D. Colorful Style Sheets"], correctAnswer: "A. Cascading Style Sheets" },
+    { id: 2, question: 'Q2: Which property changes text color?', options: ["A. font-color", "B. color", "C. text-color", "D. foreground"], correctAnswer: "B. color" },
+    { id: 3, question: 'Q3: Which CSS property controls the space between content and border?', options: ["A. margin", "B. spacing", "C. padding", "D. gap"], correctAnswer: "C. padding" },
+    { id: 4, question: 'Q4: What does "display: none" do?', options: ["A. Makes element invisible but keeps space", "B. Shows the element", "C. Fades out the element", "D. Removes element from the page completely"], correctAnswer: "D. Removes element from the page completely" },
+    { id: 5, question: 'Q5: Which selector has the highest specificity?', options: ["A. ID (#main)", "B. Element (p)", "C. Class (.box)", "D. Universal (*)"], correctAnswer: "A. ID (#main)" },
   ];
 
   switch (page) {

@@ -452,7 +452,8 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
       <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 12px' }}>
         Task {index + 1} of {items.length} · written
       </p>
-      <p style={{ fontSize: 14.5, lineHeight: 1.65, color: 'var(--text-primary)', margin: '0 0 16px' }}>
+      {/* pre-wrap so a case-study brief keeps the line breaks it was written with. */}
+      <p style={{ fontSize: 14.5, lineHeight: 1.65, color: 'var(--text-primary)', margin: '0 0 16px', whiteSpace: 'pre-wrap' }}>
         {active.prompt}
       </p>
       <textarea

@@ -435,10 +435,10 @@ BOOT_IMAGE=/vmlinuz-6.8.0-45-generic root=UUID=1f3c-...-9ab2 ro quiet splash
         id: 1,
         question: 'What is the primary purpose of the CPU privilege bit (kernel mode vs user mode)?',
         options: [
-          'To enforce, in hardware, that ordinary processes cannot execute privileged instructions or touch kernel memory',
-          'To make kernel code run faster than user code',
-          'To decide which process the scheduler runs next',
-          'To separate 32-bit programs from 64-bit programs',
+          "To enforce, in hardware, that ordinary processes cannot execute privileged instructions or touch kernel memory",
+          "To let the kernel run faster by skipping the memory checks that user code must pass",
+          "To decide which process the scheduler runs next",
+          "To separate 32-bit and 64-bit programs so each uses the correct instruction set",
         ],
         correctAnswer:
           'To enforce, in hardware, that ordinary processes cannot execute privileged instructions or touch kernel memory',
@@ -447,10 +447,10 @@ BOOT_IMAGE=/vmlinuz-6.8.0-45-generic root=UUID=1f3c-...-9ab2 ro quiet splash
         id: 2,
         question: 'Why does the initramfs exist?',
         options: [
-          'The driver needed to read the root filesystem may itself live on the root filesystem, so a temporary in-memory root breaks the circular dependency',
-          'It makes the system boot faster by caching the kernel',
-          'It holds the bootloader configuration that GRUB reads',
-          'It provides swap space before the swap partition is mounted',
+          "It caches the compressed kernel image in RAM so later boots skip reading the disk entirely",
+          "The driver needed to read the root filesystem may itself live on the root filesystem, so a temporary in-memory root breaks the circular dependency",
+          "It stores the GRUB configuration so the bootloader can find the kernel on an unmounted disk",
+          "It provides temporary swap space so the kernel can decompress itself before the real swap partition is mounted",
         ],
         correctAnswer:
           'The driver needed to read the root filesystem may itself live on the root filesystem, so a temporary in-memory root breaks the circular dependency',
@@ -459,10 +459,10 @@ BOOT_IMAGE=/vmlinuz-6.8.0-45-generic root=UUID=1f3c-...-9ab2 ro quiet splash
         id: 3,
         question: 'A system call is best described as:',
         options: [
-          'A controlled entry into kernel mode at a fixed entry point, used to request privileged work',
-          'A context switch from one process to another',
-          'An ordinary function call into a shared library',
-          'An interrupt raised by a hardware device',
+          "A context switch from one process to another",
+          "An ordinary function call into libc, which runs the work in user mode",
+          "A controlled entry into kernel mode at a fixed entry point, used to request privileged work",
+          "An asynchronous interrupt raised by a hardware device when it needs the CPU",
         ],
         correctAnswer: 'A controlled entry into kernel mode at a fixed entry point, used to request privileged work',
       },
@@ -470,10 +470,10 @@ BOOT_IMAGE=/vmlinuz-6.8.0-45-generic root=UUID=1f3c-...-9ab2 ro quiet splash
         id: 4,
         question: 'Which statement about monolithic and microkernel designs is accurate?',
         options: [
-          'Monolithic kernels are faster because subsystems call each other directly; microkernels isolate failures at the cost of IPC overhead',
-          'Microkernels are faster because they are smaller',
-          'Monolithic kernels cannot load drivers without rebooting',
-          'Microkernels run device drivers in kernel mode for speed',
+          "Microkernels are faster, because a smaller kernel fits in cache and avoids the overhead of loading large drivers",
+          "Monolithic kernels must be rebuilt and rebooted to add drivers, while microkernels load them live",
+          "Microkernels run device drivers in kernel mode for speed",
+          "Monolithic kernels are faster because subsystems call each other directly; microkernels isolate failures at the cost of IPC overhead",
         ],
         correctAnswer:
           'Monolithic kernels are faster because subsystems call each other directly; microkernels isolate failures at the cost of IPC overhead',
@@ -482,10 +482,10 @@ BOOT_IMAGE=/vmlinuz-6.8.0-45-generic root=UUID=1f3c-...-9ab2 ro quiet splash
         id: 5,
         question: 'A process dereferences an invalid pointer and receives SIGSEGV. What happened?',
         options: [
-          'The MMU detected an access the page permissions forbid and faulted; the kernel terminated the process',
-          'Physical memory has become corrupted and must be replaced',
-          'The kernel ran out of memory and killed the process to reclaim it',
-          'The scheduler preempted the process while it held a lock',
+          "The MMU detected an access the page permissions forbid and faulted; the kernel terminated the process",
+          "Physical memory at that address is corrupted, so the kernel stops the process to protect other data",
+          "The kernel ran out of memory and killed the process to reclaim it",
+          "The scheduler preempted the process while it held a lock, leaving the pointer invalid",
         ],
         correctAnswer: 'The MMU detected an access the page permissions forbid and faulted; the kernel terminated the process',
       },
@@ -493,8 +493,8 @@ BOOT_IMAGE=/vmlinuz-6.8.0-45-generic root=UUID=1f3c-...-9ab2 ro quiet splash
         id: 6,
         question: 'How many processes does the Linux kernel start directly at the end of boot?',
         options: [
-          'Exactly one — PID 1 — which then starts everything else',
           'One per CPU core',
+          'Exactly one — PID 1 — which then starts everything else',
           'All services listed in the default systemd target',
           'None; the bootloader starts the first process',
         ],
@@ -508,9 +508,9 @@ BOOT_IMAGE=/vmlinuz-6.8.0-45-generic root=UUID=1f3c-...-9ab2 ro quiet splash
           prompt:
             'A program writes 100,000 bytes one byte at a time with no buffering, then the same 100,000 bytes through a 4096-byte buffer. How many write() system calls does each make?',
           options: [
-            '100,000 unbuffered and 25 buffered — the buffer flushes only when full',
             '100,000 for both — buffering does not change the number of syscalls',
             '1 unbuffered and 25 buffered',
+            '100,000 unbuffered and 25 buffered — the buffer flushes only when full',
             '25 for both — the kernel merges adjacent writes automatically',
           ],
           correctAnswer: '100,000 unbuffered and 25 buffered — the buffer flushes only when full',
@@ -520,10 +520,10 @@ BOOT_IMAGE=/vmlinuz-6.8.0-45-generic root=UUID=1f3c-...-9ab2 ro quiet splash
           prompt:
             'A program is failing with "config not found" but the file clearly exists. Which tool tells you fastest what path it is actually opening?',
           options: [
-            'strace, which prints every syscall with its arguments and return value',
-            'top, which shows CPU usage per process',
-            'free, which shows memory availability',
-            'lsmod, which lists loaded kernel modules',
+            "top, which shows CPU usage per process",
+            "lsof, which lists every file the process currently has open",
+            "lsmod, which lists loaded kernel modules",
+            "strace, which prints every syscall with its arguments and return value",
           ],
           correctAnswer: 'strace, which prints every syscall with its arguments and return value',
         },
@@ -531,10 +531,10 @@ BOOT_IMAGE=/vmlinuz-6.8.0-45-generic root=UUID=1f3c-...-9ab2 ro quiet splash
           kind: 'mcq',
           prompt: 'The machine shows no firmware splash and no GRUB menu at power-on. Which stage is implicated?',
           options: [
-            'Firmware or hardware — nothing has got as far as the bootloader',
-            'The initramfs is missing a storage driver',
-            'systemd failed to reach the default target',
-            'The root filesystem is corrupt',
+            "Firmware or hardware — nothing has got as far as the bootloader",
+            "The initramfs is missing a storage driver",
+            "systemd failed to reach the default target",
+            "The root filesystem is corrupt, so the bootloader has nothing to hand to",
           ],
           correctAnswer: 'Firmware or hardware — nothing has got as far as the bootloader',
         },
@@ -543,10 +543,10 @@ BOOT_IMAGE=/vmlinuz-6.8.0-45-generic root=UUID=1f3c-...-9ab2 ro quiet splash
           prompt:
             'A process dereferences a pointer into kernel address space. What stops it, and at what point?',
           options: [
-            'The MMU refuses the access at execution time and raises a fault; the kernel then delivers SIGSEGV',
-            'The compiler rejects the program at build time',
-            'The C library checks the pointer before dereferencing it',
-            'Nothing stops it — the read succeeds but returns zeroes',
+            "The compiler detects the kernel address and rejects the program at build time",
+            "The MMU refuses the access at execution time and raises a fault; the kernel then delivers SIGSEGV",
+            "The C library validates every pointer before dereferencing and aborts the process",
+            "Nothing stops it — the read succeeds but returns zeroes",
           ],
           correctAnswer:
             'The MMU refuses the access at execution time and raises a fault; the kernel then delivers SIGSEGV',
@@ -556,9 +556,9 @@ BOOT_IMAGE=/vmlinuz-6.8.0-45-generic root=UUID=1f3c-...-9ab2 ro quiet splash
           prompt:
             'On a healthy Linux server, free -h reports very little free memory but a large buff/cache figure. What should you conclude?',
           options: [
-            'Nothing is wrong — page cache is reclaimable, so look at the available column rather than free',
             'The machine is out of memory and will start swapping imminently',
             'A process is leaking memory and should be restarted',
+            'Nothing is wrong — page cache is reclaimable, so look at the available column rather than free',
             'The kernel has failed to release memory from exited processes',
           ],
           correctAnswer:
@@ -569,10 +569,10 @@ BOOT_IMAGE=/vmlinuz-6.8.0-45-generic root=UUID=1f3c-...-9ab2 ro quiet splash
           prompt:
             'Linux loads device drivers as modules at runtime. Does that make it a microkernel?',
           options: [
-            'No — modules still run in kernel mode with full privileges; only the loading is dynamic',
             'Yes — loadable drivers are the defining property of a microkernel',
             'Yes, but only when the module is unloaded again',
             'No — microkernels cannot load drivers at all',
+            'No — modules still run in kernel mode with full privileges; only the loading is dynamic',
           ],
           correctAnswer: 'No — modules still run in kernel mode with full privileges; only the loading is dynamic',
         },

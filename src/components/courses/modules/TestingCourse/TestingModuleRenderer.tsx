@@ -40,21 +40,25 @@ const TestingModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   let pageType: 'lesson' | 'quiz' | 'assignment' | 'missing' = 'lesson';
   let activeLesson: any = null;
 
+  // Authored lesson content wins over id-pattern routing: the capstone
+  // projects (m15-p1), interview prep and "overview-prereq" all have lesson
+  // bodies, and a loose "-p" match used to send them to the assignment view.
+  const authoredLesson = moduleData.lessons?.find((l: any) => l.id === itemId) ?? null;
+
   if (itemId.endsWith('-quiz')) {
     pageType = 'quiz';
+  } else if (authoredLesson) {
+    activeLesson = authoredLesson;
+    pageType = 'lesson';
   } else if (
-    itemId.endsWith('-assignment') || 
-    itemId.endsWith('-proj') || 
-    itemId.includes('-p') || 
-    itemId.endsWith('-final') ||
-    itemId.startsWith('interview-') ||
+    itemId.endsWith('-assignment') ||
+    itemId.endsWith('-proj') ||
     itemId.startsWith('assessment-') ||
     itemId.startsWith('cert-')
   ) {
     pageType = 'assignment';
   } else {
-    activeLesson = moduleData.lessons?.find((l: any) => l.id === itemId) ?? null;
-    pageType = activeLesson ? 'lesson' : 'missing';
+    pageType = 'missing';
   }
 
   /** Shown for any item whose content has not been authored yet. */
@@ -92,7 +96,7 @@ const TestingModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
 
   // 3. Lessons
   if (pageType === 'lesson' && activeLesson) {
-    return <StandardLessonView lesson={activeLesson} language="javascript" snippetTitle="example.spec.js" />;
+    return <StandardLessonView lesson={activeLesson} language="java" snippetTitle="Example" />;
   }
 
   return <div className={styles.contentArea}>Content not available.</div>;

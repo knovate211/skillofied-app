@@ -11,7 +11,7 @@ const FinalAssessment: React.FC<Props> = ({ page }) => {
   const [expandedViva, setExpandedViva] = useState<number | null>(null);
 
   const theoryQuestions = [
-    { id: 1, question: 'Q1: What does CSS Box Model consist of, from outside to inside?', options: ['A. Padding, Border, Margin, Content', 'B. Margin, Border, Padding, Content', 'C. Content, Padding, Border, Margin', 'D. Border, Margin, Content, Padding'], correctAnswer: 'B. Margin, Border, Padding, Content' },
+    { id: 1, question: 'Q1: What does CSS Box Model consist of, from outside to inside?', options: ["A. Margin, Border, Padding, Content", "B. Padding, Border, Margin, Content", "C. Content, Padding, Border, Margin", "D. Border, Margin, Content, Padding"], correctAnswer: "A. Margin, Border, Padding, Content" },
     { id: 2, question: 'Q2: What is the main difference between LocalStorage and SessionStorage?', options: ['A. Storage size limits', 'B. Data deletion timeline', 'C. Encryption types', 'D. None of the above'], correctAnswer: 'B. Data deletion timeline' },
     { id: 3, question: 'Q3: Why is React state mutation directly discouraged?', options: ['A. It compiles slowly', 'B. It blocks type checks', 'C. It skips rendering updates', 'D. It throws syntax errors'], correctAnswer: 'C. It skips rendering updates' },
     { id: 4, question: 'Q4: What is the main utility of git remote repository origin references?', options: ['A. Storing backup config settings', 'B. Mapping local folders to cloud databases', 'C. Hosting assets lists', 'D. Linking local repositories to remote GitHub locations'], correctAnswer: 'D. Linking local repositories to remote GitHub locations' },

@@ -23,9 +23,9 @@ const Module17: React.FC<Props> = ({ page }) => {
   const quizQuestions: QuizQuestion[] = [
     { id: 1, question: 'Q1: What does the build step do to source files for production release?', options: ['A. Transpiles, minifies, and tree-shakes code files into a compact build bundle', 'B. Uploads files directly to GitHub', 'C. Runs local unit tests', 'D. Re-scaffolds the application'], correctAnswer: 'A. Transpiles, minifies, and tree-shakes code files into a compact build bundle' },
     { id: 2, question: 'Q2: How must environment variables be prefixed in Vite applications to expose them to the client?', options: ['A. REACT_APP_', 'B. VITE_', 'C. ENV_', 'D. CLIENT_'], correctAnswer: 'B. VITE_' },
-    { id: 3, question: 'Q3: Which DNS records are commonly modified to point a custom domain to a cloud host?', options: ['A. TXT & MX', 'B. A & CNAME', 'C. SRV & NS', 'D. None of the above'], correctAnswer: 'B. A & CNAME' },
-    { id: 4, question: 'Q4: What is the optimal length of an SEO Meta Description tag?', options: ['A. Under 20 characters', 'B. Between 50 to 160 characters', 'C. Over 500 characters', 'D. Length does not matter'], correctAnswer: 'B. Between 50 to 160 characters' },
-    { id: 5, question: 'Q5: Which hosting service is best known for seamless integration with Next.js/React frameworks via Git push hooks?', options: ['A. GoDaddy', 'B. Vercel', 'C. WordPress', 'D. MySQL'], correctAnswer: 'B. Vercel' },
+    { id: 3, question: 'Q3: Which DNS records are commonly modified to point a custom domain to a cloud host?', options: ["A. TXT & MX", "B. SRV & NS", "C. A & CNAME", "D. AAAA & PTR"], correctAnswer: "C. A & CNAME" },
+    { id: 4, question: 'Q4: What is the optimal length of an SEO Meta Description tag?', options: ["A. Under 20 characters", "B. Over 500 characters", "C. Length does not matter", "D. Between 50 to 160 characters"], correctAnswer: "D. Between 50 to 160 characters" },
+    { id: 5, question: 'Q5: Which hosting service is best known for seamless integration with Next.js/React frameworks via Git push hooks?', options: ["A. Vercel", "B. GoDaddy", "C. WordPress", "D. MySQL"], correctAnswer: "A. Vercel" },
   ];
 
   const handleAddEnv = () => {

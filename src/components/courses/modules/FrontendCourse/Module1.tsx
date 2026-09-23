@@ -35,10 +35,10 @@ const Module1: React.FC<Props> = ({ page }) => {
   });
 
   const quizQuestions: QuizQuestion[] = [
-    { id: 1, question: 'Q1: What does HTML stand for?', options: ['A. Hyper Transfer Markup Language', 'B. HyperText Markup Language', 'C. High Text Machine Language', 'D. Hyper Tool Markup Language'], correctAnswer: 'B. HyperText Markup Language' },
+    { id: 1, question: 'Q1: What does HTML stand for?', options: ["A. HyperText Markup Language", "B. Hyper Transfer Markup Language", "C. High Text Machine Language", "D. Hyper Tool Markup Language"], correctAnswer: "A. HyperText Markup Language" },
     { id: 2, question: 'Q2: Which technology adds styling?', options: ['A. HTML', 'B. CSS', 'C. Java', 'D. SQL'], correctAnswer: 'B. CSS' },
     { id: 3, question: 'Q3: Which technology adds interactivity?', options: ['A. CSS', 'B. HTML', 'C. JavaScript', 'D. MySQL'], correctAnswer: 'C. JavaScript' },
-    { id: 4, question: 'Q4: Which part stores data?', options: ['A. Frontend', 'B. Backend', 'C. Database', 'D. Browser'], correctAnswer: 'C. Database' },
+    { id: 4, question: 'Q4: Which part stores data?', options: ["A. Frontend", "B. Backend", "C. Browser", "D. Database"], correctAnswer: "D. Database" },
   ];
 
   const handleWebsiteChange = (index: number, val: string) => {

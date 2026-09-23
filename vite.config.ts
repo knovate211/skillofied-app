@@ -36,6 +36,11 @@ export default defineConfig(({ mode }) => {
           target: apiTarget,
           changeOrigin: true,
         },
+        // Live-class attendance: the pop-up and the profile Attendance tab.
+        '/api/attendance': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
         '/api/anthropic': {
           target: 'https://api.anthropic.com',
           changeOrigin: true,

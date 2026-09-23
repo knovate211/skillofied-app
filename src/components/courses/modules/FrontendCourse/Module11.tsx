@@ -22,11 +22,11 @@ const Module11: React.FC<Props> = ({ page }) => {
   const [newDesc, setNewDesc] = useState('');
 
   const quizQuestions: QuizQuestion[] = [
-    { id: 1, question: 'Q1: What is a key benefit of React\'s Virtual DOM?', options: ['A. It deletes regular DOM', 'B. It updates only changed parts of the UI, improving performance', 'C. It lets you write HTML only', 'D. It prevents any CSS loading errors'], correctAnswer: 'B. It updates only changed parts of the UI, improving performance' },
+    { id: 1, question: 'Q1: What is a key benefit of React\'s Virtual DOM?', options: ["A. It updates only changed parts of the UI, improving performance", "B. It deletes regular DOM", "C. It lets you write HTML only", "D. It prevents any CSS loading errors"], correctAnswer: "A. It updates only changed parts of the UI, improving performance" },
     { id: 2, question: 'Q2: Which HTML attribute is written as "className" in JSX?', options: ['A. style', 'B. class', 'C. id', 'D. value'], correctAnswer: 'B. class' },
-    { id: 3, question: 'Q3: How must JSX expressions be wrapped if they contain multiple sibling elements?', options: ['A. Inside square brackets []', 'B. Inside a single parent container (e.g. <div> or Fragment)', 'C. inside template literals', 'D. Inside function blocks'], correctAnswer: 'B. Inside a single parent container (e.g. <div> or Fragment)' },
-    { id: 4, question: 'Q4: What is the nature of React "props"?', options: ['A. Mutable inside components', 'B. Read-only (immutable) from inside the receiving component', 'C. Stored in databases', 'D. Loaded asynchronously'], correctAnswer: 'B. Read-only (immutable) from inside the receiving component' },
-    { id: 5, question: 'Q5: What command scaffolds a React project using Vite?', options: ['A. npm install react', 'B. npm create vite@latest', 'C. create-react-app', 'D. npm run dev'], correctAnswer: 'B. npm create vite@latest' },
+    { id: 3, question: 'Q3: How must JSX expressions be wrapped if they contain multiple sibling elements?', options: ["A. Inside square brackets []", "B. inside template literals", "C. Inside a single parent container (e.g. <div> or Fragment)", "D. Inside function blocks"], correctAnswer: "C. Inside a single parent container (e.g. <div> or Fragment)" },
+    { id: 4, question: 'Q4: What is the nature of React "props"?', options: ["A. Mutable inside components", "B. Stored in databases", "C. Loaded asynchronously", "D. Read-only (immutable) from inside the receiving component"], correctAnswer: "D. Read-only (immutable) from inside the receiving component" },
+    { id: 5, question: 'Q5: What command scaffolds a React project using Vite?', options: ["A. npm create vite@latest", "B. npm install react", "C. create-react-app", "D. npm run dev"], correctAnswer: "A. npm create vite@latest" },
   ];
 
   const handleAddCard = () => {

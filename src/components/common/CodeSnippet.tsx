@@ -4,7 +4,10 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
 import css from 'react-syntax-highlighter/dist/esm/languages/prism/css';
 import docker from 'react-syntax-highlighter/dist/esm/languages/prism/docker';
+import gherkin from 'react-syntax-highlighter/dist/esm/languages/prism/gherkin';
 import go from 'react-syntax-highlighter/dist/esm/languages/prism/go';
+import groovy from 'react-syntax-highlighter/dist/esm/languages/prism/groovy';
+import http from 'react-syntax-highlighter/dist/esm/languages/prism/http';
 import java from 'react-syntax-highlighter/dist/esm/languages/prism/java';
 import javascript from 'react-syntax-highlighter/dist/esm/languages/prism/javascript';
 import json from 'react-syntax-highlighter/dist/esm/languages/prism/json';
@@ -28,7 +31,7 @@ import yaml from 'react-syntax-highlighter/dist/esm/languages/prism/yaml';
  * language renders as plain text rather than failing.
  */
 const LANGUAGES: Record<string, unknown> = {
-  bash, css, docker, go, java, javascript, json, jsx,
+  bash, css, docker, gherkin, go, groovy, http, java, javascript, json, jsx,
   markup, protobuf, python, sql, tsx, typescript, yaml,
 };
 Object.entries(LANGUAGES).forEach(([name, grammar]) => {
@@ -48,6 +51,7 @@ const ALIASES: Record<string, string> = {
   shell: 'bash',
   sh: 'bash',
   yml: 'yaml',
+  jenkinsfile: 'groovy',
 };
 
 /** Normalise the authored language to a registered grammar name. */
