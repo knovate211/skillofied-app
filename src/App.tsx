@@ -6,7 +6,7 @@ import Sidebar from './components/layout/Sidebar';
 import CoursesSection from './components/courses/CoursesSection';
 import Login from './components/auth/Login';
 import { getMyCoursesApi } from './api';
-import { isApplicantSession } from './lib/session';
+import { isApplicantSession, isCandidateSession } from './lib/session';
 import { useNavigatePending } from './hooks/useNavigatePending';
 import styles from './App.module.css';
 import TodaySchedule from './components/dashboard/TodaySchedule';
@@ -35,6 +35,8 @@ const ProfilePage = lazy(() => import('./components/profile/ProfilePage'));
 const ScholarshipEntry = lazy(() => import('./components/scholarship/ScholarshipEntry'));
 const ScholarshipInstructions = lazy(() => import('./components/scholarship/ScholarshipInstructions'));
 const ScholarshipSessionNotice = lazy(() => import('./components/scholarship/ScholarshipSessionNotice'));
+const HiringEntry = lazy(() => import('./components/hiring/HiringEntry'));
+const HiringSessionNotice = lazy(() => import('./components/hiring/HiringSessionNotice'));
 
 // A clean simple loading indicator to show during code-split chunk loading
 const LoadingScreen: React.FC = () => (
@@ -137,7 +139,8 @@ const App: React.FC = () => {
   // token for one. Redirecting them to the login form would strand them at a
   // password they were never given.
   const isPublicPath =
-    location.pathname === '/login' || location.pathname.startsWith('/scholarship/');
+    location.pathname === '/login' || location.pathname.startsWith('/scholarship/') ||
+    location.pathname.startsWith('/hiring/');
 
   useEffect(() => {
     if (!isLoggedIn && !isPublicPath) {
@@ -165,6 +168,15 @@ const App: React.FC = () => {
     if (!allowed) navigate('/scholarship/session', { replace: true });
   }, [isLoggedIn, location.pathname, navigate]);
 
+  // The same confinement for a hiring candidate: their emailed link signs them
+  // in to sit one company test, not to browse the student portal.
+  useEffect(() => {
+    if (!isLoggedIn || !isCandidateSession()) return;
+    const p = location.pathname;
+    const allowed = p.startsWith('/hiring/') || p.startsWith('/placement/tests/attempt/');
+    if (!allowed) navigate('/hiring/session', { replace: true });
+  }, [isLoggedIn, location.pathname, navigate]);
+
   const isCourseDetailPage = location.pathname.startsWith('/courses/') && location.pathname !== '/courses';
 
   return (
@@ -181,6 +193,36 @@ const App: React.FC = () => {
           <Suspense fallback={<LoadingScreen />}>
             <ScholarshipEntry onSession={handleSessionEstablished} />
           </Suspense>
+        }
+      />
+      {/* Hiring invitations: the same hand-off, started from the email the
+          hiring team's "Add candidates" sends. */}
+      <Route
+        path="/hiring/start"
+        element={
+          <Suspense fallback={<LoadingScreen />}>
+            <HiringEntry onSession={handleSessionEstablished} />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/hiring/session"
+        element={
+          <Suspense fallback={<LoadingScreen />}>
+            <HiringSessionNotice />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/hiring/instructions/:assessmentId"
+        element={
+          isLoggedIn ? (
+            <Suspense fallback={<LoadingScreen />}>
+              <ScholarshipInstructions kind="hiring" />
+            </Suspense>
+          ) : (
+            <Navigate to="/login" replace />
+          )
         }
       />
       <Route

@@ -59,9 +59,9 @@ const languageOptions = (p: ProblemDetail | null): { id: string; label: string }
 
 const toPanelResults = (testResults: TestCaseResult[]) =>
   testResults.map((tr) => ({
-    input: tr.input,
-    expected: tr.expectedOutput,
-    actual: tr.actualOutput,
+    input: tr.isHidden ? 'Hidden test case' : tr.input,
+    expected: tr.isHidden ? '—' : tr.expectedOutput,
+    actual: tr.isHidden ? '—' : tr.actualOutput,
     passed: tr.status === 'Accepted',
     stdout: tr.error,
   }));

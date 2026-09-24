@@ -35,8 +35,12 @@ function parseSections(summary: string): { label: string; count: string }[] {
     });
 }
 
-const ScholarshipInstructions: React.FC = () => {
+// Shared by the scholarship funnel and hiring invitations: both hand a
+// candidate a link-based session for one invite-only test. `kind` picks the
+// wording and the sessionStorage key the entry screen left the invite under.
+const ScholarshipInstructions: React.FC<{ kind?: 'scholarship' | 'hiring' }> = ({ kind = 'scholarship' }) => {
   const { assessmentId = '' } = useParams<{ assessmentId: string }>();
+  const inviteKey = `${kind}.invite.${assessmentId}`;
   const navigate = useNavigate();
 
   const [assessment, setAssessment] = useState<AssessmentSummaryItem | null>(null);
@@ -166,9 +170,9 @@ const ScholarshipInstructions: React.FC = () => {
       } catch {
         /* the player asks again, visibly, if it is still needed */
       }
-      const inviteToken = sessionStorage.getItem(`scholarship.invite.${assessmentId}`) ?? '';
+      const inviteToken = sessionStorage.getItem(inviteKey) ?? '';
       const state = await startAttemptApi(assessmentId, inviteToken);
-      sessionStorage.removeItem(`scholarship.invite.${assessmentId}`);
+      sessionStorage.removeItem(inviteKey);
       navigate(`/placement/tests/attempt/${state.attemptId}`, { replace: true });
     } catch (e) {
       setStartError(e instanceof Error ? e.message : 'We could not start your test.');
@@ -180,12 +184,17 @@ const ScholarshipInstructions: React.FC = () => {
     return (
       <div className={styles.screen}>
         <div className={`${styles.card} ${styles.centered}`}>
-          <p className={styles.eyebrow}>Scholarship</p>
+          <p className={styles.eyebrow}>{kind === 'hiring' ? 'Online assessment' : 'Scholarship'}</p>
           <h1 className={styles.title}>We could not open your test</h1>
           <p className={styles.lede}>{loadError}</p>
-          <button className={styles.ghostBtn} onClick={() => navigate('/placement')}>
-            Go to my dashboard
-          </button>
+          {kind === 'hiring' ? (
+            // A candidate has no portal to go back to; the email link is their way in.
+            <p className={styles.footnote}>Please use the link in your invitation email, or contact the hiring team.</p>
+          ) : (
+            <button className={styles.ghostBtn} onClick={() => navigate('/placement')}>
+              Go to my dashboard
+            </button>
+          )}
         </div>
       </div>
     );
@@ -218,6 +227,9 @@ const ScholarshipInstructions: React.FC = () => {
       {/* ── what the test is ─────────────────────────────────────────────── */}
       <aside className={styles.brief}>
         <img src={knovateLogo} alt="Knovate" className={styles.briefLogo} />
+        {kind === 'hiring' && assessment.companyName ? (
+          <p className={styles.eyebrow}>{assessment.companyName}</p>
+        ) : null}
         <h1 className={styles.briefTitle}>{assessment.title}</h1>
         {assessment.description ? (
           <p className={styles.briefDesc}>{assessment.description}</p>

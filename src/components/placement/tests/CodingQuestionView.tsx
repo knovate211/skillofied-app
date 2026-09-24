@@ -99,14 +99,14 @@ const CodingQuestionView: React.FC<Props> = ({
     (async () => {
       try {
         const data = await graphqlRequest<{ getProblem: ProblemDetail }>(`
-          query GetProblem($id: String!) {
-            getProblem(id: $id) {
+          query GetProblem($id: String!, $attemptId: String) {
+            getProblem(id: $id, attemptId: $attemptId) {
               title statement constraints
               examples { input output explanation }
               starterCodes { javascript python java cpp go }
             }
           }
-        `, { id: question.problemId });
+        `, { id: question.problemId, attemptId });
         if (cancelled) return;
         setProblem(data.getProblem);
         if (!question.code && data.getProblem?.starterCodes) {

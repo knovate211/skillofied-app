@@ -31,6 +31,11 @@ export default defineConfig(({ mode }) => {
           target: apiTarget,
           changeOrigin: true,
         },
+        // Hiring invitations: /claim turns the emailed link into a session.
+        '/api/hiring': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
         // Public endpoints behind the login page's "Forgot password?" flow.
         '/api/password-reset': {
           target: apiTarget,

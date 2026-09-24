@@ -64,10 +64,10 @@ const COURSE_DATA: Record<string, CourseDetail> = {
   'digital-marketing': {
     title: 'Digital Marketing Strategy',
     mentor: 'Marketing Team Lead',
-    duration: '10 Weeks',
-    lectures: 60,
-    projects: 5,
-    description: 'Formulate end-to-end digital growth funnels. Master Pay-Per-Click search ads, social media campaigns, email marketing automation, conversion optimization, and tracking analytics.',
+    duration: '12 Weeks',
+    lectures: 29,
+    projects: 9,
+    description: 'Formulate end-to-end digital growth funnels. Master paid search and social ads, organic social, email automation, conversion optimisation, analytics and attribution, content and video, AI-assisted marketing, and a full capstone campaign plan.',
     colorGrad: 'linear-gradient(135deg, #e67e22, #f39c12)',
     initial: 'DM',
     startDate: 'July 18, 2026',
@@ -76,7 +76,11 @@ const COURSE_DATA: Record<string, CourseDetail> = {
       { id: 'dm-m2', title: 'Module 2: Social Media Marketing & Organic Growth', lessons: ['Content Pillars and Scheduling Strategies', 'Algorithm Optimization (LinkedIn, Instagram)', 'Community Management & Engagement'] },
       { id: 'dm-m3', title: 'Module 3: Pay-Per-Click (PPC) Advertising', lessons: ['Google Search Ads Campaign Setup', 'Meta (Facebook/Instagram) Ads Manager', 'Bidding Strategies, Budgets, and Retargeting'] },
       { id: 'dm-m4', title: 'Module 4: Email Marketing Automation', lessons: ['Lead Magnet Design & List Growth', 'Writing High-Open-Rate Sequences', 'Setting up Behavioral Triggers & Workflows'] },
-      { id: 'dm-m5', title: 'Module 5: Conversion Rate Optimization (CRO)', lessons: ['Landing Page Best Practices', 'A/B Testing Frameworks & Tools', 'Analyzing User Heatmaps and Sessions'] }
+      { id: 'dm-m5', title: 'Module 5: Conversion Rate Optimization (CRO)', lessons: ['Landing Page Best Practices', 'A/B Testing Frameworks & Tools', 'Analyzing User Heatmaps and Sessions'] },
+      { id: 'dm-m6', title: 'Module 6: Measurement, Analytics & Attribution', lessons: ['Reading GA4 Without Getting Lost', 'UTM Tracking & Clean Campaign Data', 'Attribution & the Monthly Report'] },
+      { id: 'dm-m7', title: 'Module 7: Content, Video & Partnerships', lessons: ['Content Marketing That Feeds Every Channel', 'Short-Form Video & Creative Testing', 'Influencers, Affiliates & Messaging Channels'] },
+      { id: 'dm-m8', title: 'Module 8: AI in Digital Marketing', lessons: ['Where AI Helps and Where It Fails', 'AI for Research, Copy & Creative', 'AI for Analysis, Reporting & Its Limits'] },
+      { id: 'dm-m9', title: 'Module 9: Capstone & Career', lessons: ['The Capstone Campaign Plan', 'Presenting Results & Building a Portfolio', 'Career Paths & Interview Preparation'] }
     ]
   },
   testing: {

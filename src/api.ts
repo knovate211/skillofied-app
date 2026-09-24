@@ -868,6 +868,8 @@ export interface TestCaseResult {
   status: string;
   executionMs: number;
   error: string;
+  /** Hidden cases come back with input and outputs blanked by the server. */
+  isHidden?: boolean;
 }
 
 export interface RunCodeResult {
@@ -924,6 +926,7 @@ const TEST_RESULT_FIELDS = `
   status
   executionMs
   error
+  isHidden
 `;
 
 export async function listPracticeSetsApi(): Promise<PracticeSetSummary[]> {
@@ -1084,6 +1087,27 @@ export async function claimScholarshipApi(token: string): Promise<ScholarshipCla
     '/api/scholarship/claim',
     { token },
     'This link is no longer valid. Please apply again or sign in.',
+  );
+}
+
+export interface HiringClaim {
+  token: string;
+  user: { id: string; email: string; name: string; role: string };
+  assessmentId: string;
+  inviteToken: string;
+  title: string;
+  companyName: string;
+}
+
+/**
+ * Exchanges the token from a hiring invitation email for a session. The link
+ * is emailed only to the candidate, so holding it is what proves who they are.
+ */
+export async function claimHiringApi(token: string): Promise<HiringClaim> {
+  return postPublic(
+    '/api/hiring/claim',
+    { token },
+    'This link is no longer valid. Please ask the hiring team for a new one.',
   );
 }
 

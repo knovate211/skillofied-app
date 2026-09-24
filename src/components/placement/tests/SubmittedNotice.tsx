@@ -26,6 +26,12 @@ const SubmittedNotice: React.FC<{
 }> = ({ attemptId, title, submittedAt, standalone = false }) => {
   const [email, setEmail] = useState('');
   const [courseName, setCourseName] = useState('');
+  // Results are withheld for scholarship and hiring papers. The outcome call
+  // says which; until it answers, the neutral wording below is shown.
+  const [kind, setKind] = useState<'unknown' | 'scholarship' | 'hiring'>('unknown');
+  const company = (() => {
+    try { return sessionStorage.getItem('hiring.company') ?? ''; } catch { return ''; }
+  })();
 
   // Only for the address to write to and the course name — the endpoint no
   // longer returns a score to leak.
@@ -34,7 +40,12 @@ const SubmittedNotice: React.FC<{
     (async () => {
       try {
         const res = await getScholarshipOutcomeApi(attemptId);
-        if (cancelled || !res.isScholarship) return;
+        if (cancelled) return;
+        if (!res.isScholarship) {
+          setKind('hiring');
+          return;
+        }
+        setKind('scholarship');
         setEmail(res.email ?? '');
         setCourseName(res.courseName ?? '');
       } catch {
@@ -52,9 +63,24 @@ const SubmittedNotice: React.FC<{
 
       <p className={styles.submittedLead}>
         {title ? <>Every answer you gave on <strong>{title}</strong> has been recorded.</> : 'Every answer you gave has been recorded.'}
-        {' '}You will get an email with your result soon.
+        {' '}{kind === 'hiring'
+          ? <>{company ? <><strong>{company}</strong>&apos;s hiring team</> : 'The hiring team'} will get in touch about the next steps.</>
+          : 'You will get an email with your result soon.'}
       </p>
 
+      {kind === 'hiring' ? (
+        <div className={styles.submittedNext}>
+          <h2 className={styles.submittedNextHead}>What happens next</h2>
+          <ol className={styles.submittedSteps}>
+            <li>{company || 'The company'} reviews your answers, including the coding questions.</li>
+            <li>If you are shortlisted, the hiring team contacts you directly.</li>
+          </ol>
+          <p className={styles.submittedFinePrint}>
+            Scores are not shown here. There is no need to retake the test — keep an eye on your
+            inbox, and your spam folder.
+          </p>
+        </div>
+      ) : (
       <div className={styles.submittedNext}>
         <h2 className={styles.submittedNextHead}>What happens next</h2>
         <ol className={styles.submittedSteps}>
@@ -70,6 +96,7 @@ const SubmittedNotice: React.FC<{
           inbox, and your spam folder, over the next few working days.
         </p>
       </div>
+      )}
 
       {submittedAt ? (
         <p className={styles.submittedStamp}>Received {submittedAt}</p>
