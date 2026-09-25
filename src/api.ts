@@ -1214,3 +1214,38 @@ export const getAttendanceHistoryApi = (from?: string, to?: string) => {
   const qs = q.toString();
   return authedRequest<AttendanceHistory>('GET', `/api/attendance/history${qs ? `?${qs}` : ''}`);
 };
+
+// ─── Integrity (test player) ─────────────────────────────────────────────────
+// Evidence for the reviewer's integrity report. Both calls are fire-and-forget
+// from the player's point of view: a dropped heartbeat or snapshot must never
+// interrupt a candidate's test, so failures are swallowed by the callers.
+
+async function postIntegrity(path: string, body: unknown, keepalive = false): Promise<void> {
+  const token = localStorage.getItem('token');
+  const resp = await fetch(`${API_BASE}/api/integrity/${path}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify(body),
+    // Lets the last batch of snapshots leave even as the page unloads.
+    keepalive,
+  });
+  if (!resp.ok) throw new Error(`integrity ${path} failed (${resp.status})`);
+}
+
+/** Which browser session is sitting the attempt — the server spots a second one. */
+export const integrityHeartbeatApi = (attemptId: string, sessionId: string, screen: string) =>
+  postIntegrity('heartbeat', { attemptId, sessionId, screen });
+
+export interface CodeSnapshot {
+  at: number;
+  language: string;
+  code: string;
+  reason: 'start' | 'edit' | 'language' | 'run' | 'submit';
+}
+
+/** Editor history for code playback in the reviewer's report. */
+export const integritySnapshotsApi = (attemptId: string, questionId: string, snapshots: CodeSnapshot[], keepalive = false) =>
+  postIntegrity('snapshots', { attemptId, questionId, snapshots }, keepalive);

@@ -31,6 +31,11 @@ export default defineConfig(({ mode }) => {
           target: apiTarget,
           changeOrigin: true,
         },
+        // Integrity evidence from the test player: heartbeats and code snapshots.
+        '/api/integrity': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
         // Hiring invitations: /claim turns the emailed link into a session.
         '/api/hiring': {
           target: apiTarget,

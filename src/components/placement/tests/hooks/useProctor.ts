@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Proctoring, recordProctorEventApi } from '../../../../api';
+import { Proctoring, integrityHeartbeatApi, recordProctorEventApi } from '../../../../api';
 
 /**
  * Client-side integrity signals for a live attempt.
@@ -33,18 +33,144 @@ export function useProctor(
     }
   }, [attemptId, onTerminated]);
 
-  // Leaving the tab or window.
+  // One action, one breach. Switching tabs fires "page hidden" and "window
+  // lost focus" together, and doing it in full screen fires "full screen
+  // exited" as well. Counted separately, one Ctrl+Tab used up three of the
+  // candidate's allowed switches and the limit of 5 ended the test after two.
+  // Breaches within 1.5 s of each other are the same action.
+  const lastBreach = useRef(0);
+  const breach = useCallback((kind: string, detail = '') => {
+    const now = Date.now();
+    if (now - lastBreach.current < 1500) return;
+    lastBreach.current = now;
+    void report(kind, detail);
+  }, [report]);
+
+  // Leaving the tab or window. `away` makes it one report per departure, not
+  // one per browser event; coming back resets it.
   useEffect(() => {
     if (!active) return;
-    const onVisibility = () => { if (document.hidden) void report('tab_blur'); };
-    const onBlur = () => void report('tab_blur', 'window blur');
+    let away = false;
+    const leave = (detail: string) => {
+      if (away) return;
+      away = true;
+      breach('tab_blur', detail);
+    };
+    const back = () => { away = false; };
+    const onVisibility = () => (document.hidden ? leave('tab hidden') : back());
+    const onBlur = () => leave('window lost focus');
     document.addEventListener('visibilitychange', onVisibility);
     window.addEventListener('blur', onBlur);
+    window.addEventListener('focus', back);
     return () => {
       document.removeEventListener('visibilitychange', onVisibility);
       window.removeEventListener('blur', onBlur);
+      window.removeEventListener('focus', back);
     };
-  }, [active, report]);
+  }, [active, breach]);
+
+  // Signals that need no configuration: they are recorded on every test and
+  // weighed by the reviewer, never acted on automatically.
+  useEffect(() => {
+    if (!active) return;
+    const cleanups: (() => void)[] = [];
+
+    // Developer tools, docked: the viewport suddenly loses a panel's worth of
+    // space while the zoom level stays put. Measured against the gap at the
+    // start, so a zoomed browser or a thick toolbar is not a false alarm.
+    const gap = () => Math.max(window.outerWidth - window.innerWidth, window.outerHeight - window.innerHeight);
+    const baseGap = gap();
+    const baseDpr = window.devicePixelRatio;
+    let devtoolsOpen = false;
+    const devtoolsTimer = window.setInterval(() => {
+      if (document.fullscreenElement || window.devicePixelRatio !== baseDpr) return;
+      const open = gap() - baseGap > 160;
+      if (open && !devtoolsOpen) void report('devtools', 'viewport shrank by a docked panel');
+      devtoolsOpen = open;
+    }, 2000);
+    cleanups.push(() => window.clearInterval(devtoolsTimer));
+
+    // A second monitor (Chromium browsers report this directly).
+    // Older TS DOM typings lack Screen's EventTarget methods; the runtime has them in Chromium.
+    const scr = window.screen as Screen & { isExtended?: boolean } & Partial<EventTarget>;
+    const checkScreens = () => { if (scr.isExtended) void report('multi_monitor', 'extended display detected'); };
+    checkScreens();
+    if (typeof scr.addEventListener === 'function' && typeof scr.removeEventListener === 'function') {
+      scr.addEventListener('change', checkScreens);
+      cleanups.push(() => scr.removeEventListener?.('change', checkScreens));
+    }
+
+    // A window shrunk to sit something beside the test. Only when full screen
+    // is not required — if it is, leaving full screen is already recorded.
+    let smallSince = 0;
+    let lastResizeReport = 0;
+    const resizeTimer = window.setInterval(() => {
+      if (config?.requireFullscreen || document.fullscreenElement) return;
+      const small = window.innerWidth < window.screen.availWidth * 0.6;
+      if (!small) { smallSince = 0; return; }
+      if (!smallSince) smallSince = Date.now();
+      if (Date.now() - smallSince > 3000 && Date.now() - lastResizeReport > 60000) {
+        lastResizeReport = Date.now();
+        void report('window_resized', `${window.innerWidth}px of ${window.screen.availWidth}px`);
+      }
+    }, 1500);
+    cleanups.push(() => window.clearInterval(resizeTimer));
+
+    // Screenshots: Print Screen, and macOS's ⌘⇧3 / ⌘⇧4 / ⌘⇧5.
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'PrintScreen') void report('screenshot', 'Print Screen');
+      else if (e.metaKey && e.shiftKey && ['3', '4', '5'].includes(e.key)) void report('screenshot', `⌘⇧${e.key}`);
+    };
+    window.addEventListener('keyup', onKey);
+    window.addEventListener('keydown', onKey);
+    cleanups.push(() => {
+      window.removeEventListener('keyup', onKey);
+      window.removeEventListener('keydown', onKey);
+    });
+
+    // Going offline. Nothing can be sent while offline, so it is reported on
+    // reconnection, with how long the candidate was gone.
+    let offlineAt = 0;
+    const onOffline = () => { offlineAt = Date.now(); };
+    const onOnline = () => {
+      if (!offlineAt) return;
+      const secs = Math.round((Date.now() - offlineAt) / 1000);
+      offlineAt = 0;
+      void report('disconnect', `offline for ${secs}s`);
+    };
+    window.addEventListener('offline', onOffline);
+    window.addEventListener('online', onOnline);
+    cleanups.push(() => {
+      window.removeEventListener('offline', onOffline);
+      window.removeEventListener('online', onOnline);
+    });
+
+    return () => cleanups.forEach((c) => c());
+  }, [active, config?.requireFullscreen, report]);
+
+  // Heartbeat: tells the server which browser session is sitting the test and
+  // from which network, so a second device or tab on the same attempt shows up.
+  // The session id lives in sessionStorage, which is per tab.
+  useEffect(() => {
+    if (!active || !attemptId) return;
+    const key = `test.session.${attemptId}`;
+    let sid = '';
+    try {
+      sid = sessionStorage.getItem(key) || '';
+      if (!sid) {
+        sid = (crypto.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`);
+        sessionStorage.setItem(key, sid);
+      }
+    } catch {
+      sid = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    }
+    const scr = window.screen as Screen & { isExtended?: boolean };
+    const screenInfo = `${scr.width}x${scr.height}${scr.isExtended ? ' +extended' : ''}`;
+    const beat = () => { integrityHeartbeatApi(attemptId, sid, screenInfo).catch(() => undefined); };
+    beat();
+    const t = window.setInterval(beat, 30000);
+    return () => window.clearInterval(t);
+  }, [active, attemptId]);
 
   // Fullscreen enforcement.
   useEffect(() => {
@@ -57,11 +183,11 @@ export function useProctor(
         intentionalExit.current = false;
         return;
       }
-      void report('fullscreen_exit');
+      breach('fullscreen_exit');
     };
     document.addEventListener('fullscreenchange', onChange);
     return () => document.removeEventListener('fullscreenchange', onChange);
-  }, [active, config?.requireFullscreen, report]);
+  }, [active, config?.requireFullscreen, breach]);
 
   // Copy/paste. Blocking is best-effort — the point is the audit trail.
   useEffect(() => {
