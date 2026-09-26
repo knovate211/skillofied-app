@@ -46,6 +46,17 @@ export default defineConfig(({ mode }) => {
           target: apiTarget,
           changeOrigin: true,
         },
+        // The referral programme: the learner's own link and progress.
+        '/api/referral': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
+        // Certification exams: the claim hand-off, the result and the
+        // learner's certificates.
+        '/api/certification': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
         // Live-class attendance: the pop-up and the profile Attendance tab.
         '/api/attendance': {
           target: apiTarget,

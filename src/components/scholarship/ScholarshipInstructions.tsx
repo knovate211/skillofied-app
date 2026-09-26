@@ -38,7 +38,14 @@ function parseSections(summary: string): { label: string; count: string }[] {
 // Shared by the scholarship funnel and hiring invitations: both hand a
 // candidate a link-based session for one invite-only test. `kind` picks the
 // wording and the sessionStorage key the entry screen left the invite under.
-const ScholarshipInstructions: React.FC<{ kind?: 'scholarship' | 'hiring' }> = ({ kind = 'scholarship' }) => {
+/** The label above the test title, per exam kind. */
+const EYEBROW: Record<'scholarship' | 'hiring' | 'certification', string> = {
+  scholarship: 'Scholarship',
+  hiring: 'Online assessment',
+  certification: 'Certification exam',
+};
+
+const ScholarshipInstructions: React.FC<{ kind?: 'scholarship' | 'hiring' | 'certification' }> = ({ kind = 'scholarship' }) => {
   const { assessmentId = '' } = useParams<{ assessmentId: string }>();
   const inviteKey = `${kind}.invite.${assessmentId}`;
   const navigate = useNavigate();
@@ -184,10 +191,16 @@ const ScholarshipInstructions: React.FC<{ kind?: 'scholarship' | 'hiring' }> = (
     return (
       <div className={styles.screen}>
         <div className={`${styles.card} ${styles.centered}`}>
-          <p className={styles.eyebrow}>{kind === 'hiring' ? 'Online assessment' : 'Scholarship'}</p>
+          <p className={styles.eyebrow}>{EYEBROW[kind]}</p>
           <h1 className={styles.title}>We could not open your test</h1>
           <p className={styles.lede}>{loadError}</p>
-          {kind === 'hiring' ? (
+          {kind === 'certification' ? (
+            // They paid for this exam, so never leave them without a next step.
+            <p className={styles.footnote}>
+              Please use the link in your confirmation email, or contact us and we will send a fresh
+              one. Your registration is safe.
+            </p>
+          ) : kind === 'hiring' ? (
             // A candidate has no portal to go back to; the email link is their way in.
             <p className={styles.footnote}>Please use the link in your invitation email, or contact the hiring team.</p>
           ) : (
@@ -227,6 +240,7 @@ const ScholarshipInstructions: React.FC<{ kind?: 'scholarship' | 'hiring' }> = (
       {/* ── what the test is ─────────────────────────────────────────────── */}
       <aside className={styles.brief}>
         <img src={knovateLogo} alt="Knovate" className={styles.briefLogo} />
+        {kind === 'certification' ? <p className={styles.eyebrow}>{EYEBROW.certification}</p> : null}
         {kind === 'hiring' && assessment.companyName ? (
           <p className={styles.eyebrow}>{assessment.companyName}</p>
         ) : null}

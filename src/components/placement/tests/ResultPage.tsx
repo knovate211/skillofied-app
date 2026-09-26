@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { AttemptQuestion, AttemptResult, getAttemptResultApi } from '../../../api';
 import ScholarshipResultBanner from '../../scholarship/ScholarshipResultBanner';
+import CertificationResultBanner from '../../certification/CertificationResultBanner';
 import SubmittedNotice from './SubmittedNotice';
 import styles from './Tests.module.css';
 
@@ -126,6 +127,10 @@ const ResultPage: React.FC = () => {
           untouched. It leads because "40% off your course" is the answer the
           candidate came for; the score breakdown below is the working. */}
       <ScholarshipResultBanner attemptId={attemptId} evaluating={evaluating} />
+      {/* Same contract: renders nothing unless this attempt is a certification
+          exam. A paid candidate is told whether they passed and, if they did,
+          where their credential is. */}
+      <CertificationResultBanner attemptId={attemptId} evaluating={evaluating} />
 
       <section className={styles.scoreCard}>
         <div className={styles.scoreTop}>

@@ -130,63 +130,69 @@ export async function getMyCoursesApi(): Promise<any[]> {
 	return data.getMyCourses;
 }
 
-export async function getReferralsApi(): Promise<any[]> {
-  const query = `
-    query GetReferrals {
-      getReferrals {
-        id
-        name
-        date
-        status
-      }
-    }
-  `;
+export interface MyReferrals {
+  /** False when the programme is paused — the tab says so rather than showing a dead code. */
+  active: boolean;
+  name?: string;
+  code?: string;
+  link?: string;
+  clicks?: number;
+  conversions?: number;
+  earnedRupees?: number;
+  paidRupees?: number;
+  pendingRupees?: number;
+  courseRewardRupees?: number;
+  examRewardRupees?: number;
+  friendDiscountPercent?: number;
+  referrals?: {
+    friend: string;
+    item: string;
+    kind: string;
+    rewardRupees: number;
+    status: string;
+    at: string;
+    paidAt?: string;
+  }[];
+}
+
+/**
+ * The signed-in learner's referral link and progress.
+ *
+ * The code is issued and stored by the server; the browser no longer invents
+ * one. A code made up on the client could never be credited, which is what the
+ * old version did while promising a reward for it.
+ */
+export async function getMyReferralsApi(): Promise<MyReferrals> {
+  return authedRequest<MyReferrals>('GET', '/api/referral/me');
+}
+
+/**
+ * The learner's certificates, newest first.
+ *
+ * Certificates are issued by the certification service when an exam is passed.
+ * An error here returns an empty list on purpose: the empty state ("no
+ * certificates yet") is honest, where inventing placeholder credentials — as
+ * this once did — put credential ids in front of learners who had earned none.
+ */
+export interface CertificateRecord {
+  credentialId: string;
+  title: string;
+  scorePercent: number;
+  issuedAt: string;
+  revoked: boolean;
+  source: string;
+  verifyUrl: string;
+}
+
+export async function getCertificatesApi(): Promise<CertificateRecord[]> {
   try {
-    const data = await graphqlRequest<{ getReferrals: any[] }>(query);
-    return data.getReferrals || [];
+    const data = await authedRequest<{ certificates: CertificateRecord[] }>('GET', '/api/certification/mine');
+    return data.certificates ?? [];
   } catch (err) {
-    console.error("Referrals API not fully implemented yet:", err);
+    console.error('Could not load certificates:', err);
     return [];
   }
 }
-
-export async function getCertificatesApi(): Promise<any[]> {
-  const query = `
-    query GetCertificates {
-      getCertificates {
-        id
-        courseName
-        issueDate
-        credentialId
-        pdfUrl
-      }
-    }
-  `;
-  try {
-    const data = await graphqlRequest<{ getCertificates: any[] }>(query);
-    return data.getCertificates || [];
-  } catch (err) {
-    console.error("Certificates API not fully implemented yet:", err);
-    return [
-      {
-        id: 'cert-1',
-        courseName: 'Full Stack Web Development',
-        issueDate: '2023-08-12',
-        credentialId: 'SKLO-FSWD-9X2P',
-        pdfUrl: '#',
-      },
-      {
-        id: 'cert-2',
-        courseName: 'Advanced Data Structures in Java',
-        issueDate: '2023-11-05',
-        credentialId: 'SKLO-ADJ-4M7L',
-        pdfUrl: '#',
-      }
-    ];
-  }
-}
-
-// ── Auth / GraphQL ─────────────────────────────────────────────────────────────
 
 export async function loginApi(email: string, password: string): Promise<LoginResponse> {
   const resp = await fetch(`${API_BASE}/api/login`, {
@@ -1108,6 +1114,49 @@ export async function claimHiringApi(token: string): Promise<HiringClaim> {
     '/api/hiring/claim',
     { token },
     'This link is no longer valid. Please ask the hiring team for a new one.',
+  );
+}
+
+export interface CertificationClaim {
+  token: string;
+  user: { id: string; email: string; name: string; role: string };
+  assessmentId: string;
+  inviteToken: string;
+  examTitle: string;
+  registrationId: string;
+}
+
+/**
+ * Exchanges the token from a certification exam link for a session. The
+ * candidate paid for this exam; the link is the only thing they hold, so the
+ * errors it can return are all shown to them verbatim.
+ */
+export async function claimCertificationApi(token: string): Promise<CertificationClaim> {
+  return postPublic(
+    '/api/certification/claim',
+    { token },
+    'This exam link is no longer valid. Please contact us if you have paid for this exam.',
+  );
+}
+
+export interface CertificationOutcome {
+  /** False for any attempt that is not a certification exam. */
+  isCertification: boolean;
+  examTitle?: string;
+  /** Coding answers grade asynchronously, so a result can be pending. */
+  evaluating?: boolean;
+  passed?: boolean;
+  scorePercent?: number;
+  passPercent?: number;
+  credentialId?: string;
+  verifyUrl?: string;
+  issuedAt?: string;
+}
+
+export async function getCertificationOutcomeApi(attemptId: string): Promise<CertificationOutcome> {
+  return authedRequest<CertificationOutcome>(
+    'GET',
+    `/api/certification/outcome?attemptId=${encodeURIComponent(attemptId)}`,
   );
 }
 

@@ -61,12 +61,25 @@ const AttendanceSection: React.FC = () => {
   useEffect(() => {
     void load();
     window.addEventListener(ATTENDANCE_EVENT, load);
-    const poll = window.setInterval(load, 60_000);
-    return () => {
-      window.removeEventListener(ATTENDANCE_EVENT, load);
-      window.clearInterval(poll);
-    };
+    return () => window.removeEventListener(ATTENDANCE_EVENT, load);
   }, [load]);
+
+  // Today's statuses move on as classes open and close, so they are re-checked
+  // each minute — but only while one is still to come or running. History only
+  // changes when the student marks, which ATTENDANCE_EVENT already covers.
+  const classesPending = today.some((s) => s.status === 'upcoming' || s.status === 'live');
+  useEffect(() => {
+    if (!classesPending) return;
+    const poll = window.setInterval(async () => {
+      try {
+        const t = await getTodayClassesApi();
+        setToday(Array.isArray(t.sessions) ? t.sessions : []);
+      } catch {
+        // Keep the last known state; the next tick retries.
+      }
+    }, 60_000);
+    return () => window.clearInterval(poll);
+  }, [classesPending]);
 
   const mark = async (s: ClassSession) => {
     setMarking(s.schedule_id);

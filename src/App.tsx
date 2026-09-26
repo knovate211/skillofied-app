@@ -36,6 +36,8 @@ const ScholarshipEntry = lazy(() => import('./components/scholarship/Scholarship
 const ScholarshipInstructions = lazy(() => import('./components/scholarship/ScholarshipInstructions'));
 const ScholarshipSessionNotice = lazy(() => import('./components/scholarship/ScholarshipSessionNotice'));
 const HiringEntry = lazy(() => import('./components/hiring/HiringEntry'));
+const CertificationEntry = lazy(() => import('./components/certification/CertificationEntry'));
+const CertificationSessionNotice = lazy(() => import('./components/certification/CertificationSessionNotice'));
 const HiringSessionNotice = lazy(() => import('./components/hiring/HiringSessionNotice'));
 
 // A clean simple loading indicator to show during code-split chunk loading
@@ -140,7 +142,8 @@ const App: React.FC = () => {
   // password they were never given.
   const isPublicPath =
     location.pathname === '/login' || location.pathname.startsWith('/scholarship/') ||
-    location.pathname.startsWith('/hiring/');
+    location.pathname.startsWith('/hiring/') ||
+    location.pathname.startsWith('/certification/');
 
   useEffect(() => {
     if (!isLoggedIn && !isPublicPath) {
@@ -164,8 +167,13 @@ const App: React.FC = () => {
     const p = location.pathname;
     const allowed =
       p.startsWith('/scholarship/') ||
+      // A paid certification candidate is provisioned with the same
+      // 'applicant' role, and is confined the same way — to their own exam.
+      p.startsWith('/certification/') ||
       p.startsWith('/placement/tests/attempt/');
-    if (!allowed) navigate('/scholarship/session', { replace: true });
+    if (!allowed) {
+      navigate(p.startsWith('/certification/') ? '/certification/session' : '/scholarship/session', { replace: true });
+    }
   }, [isLoggedIn, location.pathname, navigate]);
 
   // The same confinement for a hiring candidate: their emailed link signs them
@@ -193,6 +201,36 @@ const App: React.FC = () => {
           <Suspense fallback={<LoadingScreen />}>
             <ScholarshipEntry onSession={handleSessionEstablished} />
           </Suspense>
+        }
+      />
+      {/* Certification exams: the same hand-off again, started from the link
+          emailed when a candidate's payment is confirmed. */}
+      <Route
+        path="/certification/start"
+        element={
+          <Suspense fallback={<LoadingScreen />}>
+            <CertificationEntry onSession={handleSessionEstablished} />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/certification/session"
+        element={
+          <Suspense fallback={<LoadingScreen />}>
+            <CertificationSessionNotice />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/certification/instructions/:assessmentId"
+        element={
+          isLoggedIn ? (
+            <Suspense fallback={<LoadingScreen />}>
+              <ScholarshipInstructions kind="certification" />
+            </Suspense>
+          ) : (
+            <Navigate to="/login" replace />
+          )
         }
       />
       {/* Hiring invitations: the same hand-off, started from the email the

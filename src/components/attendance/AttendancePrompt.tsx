@@ -4,8 +4,18 @@ import { getTodayClassesApi, markAttendanceApi, type ClassSession } from '../../
 import { useToast } from '../../context/ToastContext';
 import styles from './AttendancePrompt.module.css';
 
-/** How often today's classes are re-checked while the app is open. */
-const POLL_MS = 60_000;
+/**
+ * How often today's classes are re-checked while the app is open. Every
+ * student has the app open all day, so the minute-by-minute check runs only
+ * while a class is waiting for their mark; otherwise the timer below already
+ * refreshes the moment the next class starts, and the slow check only picks up
+ * schedule changes.
+ */
+const LIVE_POLL_MS = 60_000;
+const IDLE_POLL_MS = 15 * 60_000;
+/** Returning to the tab re-checks only if the last check is at least this old. */
+const LIVE_FOCUS_STALE_MS = 60_000;
+const IDLE_FOCUS_STALE_MS = 5 * 60_000;
 /** "Remind me later" hides the pop-up for this long (never past the class end). */
 const SNOOZE_MS = 10 * 60_000;
 const SNOOZE_KEY = 'attendanceSnooze';
@@ -32,8 +42,8 @@ export const formatClock = (iso: string) =>
  *
  * The server owns the clock: it reports each session's status, and a mark
  * outside the class window is refused there. The client's only timing job is
- * knowing when to ask again — every minute, when the tab regains focus, and
- * exactly when the next class starts.
+ * knowing when to ask again — exactly when the next class starts, every minute
+ * while a class awaits the student's mark, and otherwise rarely.
  */
 const AttendancePrompt: React.FC = () => {
   const { showToast } = useToast();
@@ -43,8 +53,10 @@ const AttendancePrompt: React.FC = () => {
   const [marking, setMarking] = useState(false);
   const [, tick] = useState(0);
   const startTimer = useRef<number>();
+  const lastFetch = useRef(0);
 
   const refresh = useCallback(async () => {
+    lastFetch.current = Date.now();
     try {
       const res = await getTodayClassesApi();
       setSessions(Array.isArray(res.sessions) ? res.sessions : []);
@@ -57,19 +69,31 @@ const AttendancePrompt: React.FC = () => {
 
   useEffect(() => {
     void refresh();
-    const poll = window.setInterval(refresh, POLL_MS);
-    const onFocus = () => { if (document.visibilityState === 'visible') void refresh(); };
-    document.addEventListener('visibilitychange', onFocus);
     window.addEventListener(ATTENDANCE_EVENT, refresh);
     // Re-render every 15s so snoozes lapse and countdowns stay honest between polls.
     const clock = window.setInterval(() => tick((n) => n + 1), 15_000);
     return () => {
-      window.clearInterval(poll);
       window.clearInterval(clock);
-      document.removeEventListener('visibilitychange', onFocus);
       window.removeEventListener(ATTENDANCE_EVENT, refresh);
     };
   }, [refresh]);
+
+  const awaitingMark = sessions.some(
+    (s) => s.status === 'live' && new Date(s.ends_at).getTime() > Date.now() + skewMs,
+  );
+
+  useEffect(() => {
+    const poll = window.setInterval(refresh, awaitingMark ? LIVE_POLL_MS : IDLE_POLL_MS);
+    const staleMs = awaitingMark ? LIVE_FOCUS_STALE_MS : IDLE_FOCUS_STALE_MS;
+    const onFocus = () => {
+      if (document.visibilityState === 'visible' && Date.now() - lastFetch.current >= staleMs) void refresh();
+    };
+    document.addEventListener('visibilitychange', onFocus);
+    return () => {
+      window.clearInterval(poll);
+      document.removeEventListener('visibilitychange', onFocus);
+    };
+  }, [awaitingMark, refresh]);
 
   // Refresh right as the next class opens rather than up to a minute late.
   useEffect(() => {

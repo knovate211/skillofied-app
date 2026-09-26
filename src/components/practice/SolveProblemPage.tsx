@@ -69,6 +69,9 @@ const toPanelResults = (testResults: TestCaseResult[]) =>
 /** Must match the toastOut keyframe in index.css. */
 const TOAST_EXIT_MS = 180;
 
+// How long a submission's result is polled for before giving up.
+const SUBMIT_POLL_TIMEOUT_MS = 3 * 60 * 1000;
+
 // Toast interface
 interface Toast {
   /** Set while the exit animation plays; the row unmounts when it finishes. */
@@ -313,6 +316,13 @@ const SolveProblemPage: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Cleared on unmount so a pending result poll stops with the page.
+  const pollAlive = React.useRef(true);
+  useEffect(() => {
+    pollAlive.current = true;
+    return () => { pollAlive.current = false; };
+  }, []);
+
   // Submit code asynchronously via API gateway and poll status
   const handleSubmitCode = async () => {
     setIsSubmitting(true);
@@ -323,12 +333,15 @@ const SolveProblemPage: React.FC = () => {
       const submissionId = await submitCodeApi(id || '', language, code);
       showToast("Code submitted! Awaiting evaluation...", "info");
 
-      // Poll getSubmission until it's graded
-      let pollCount = 0;
-      const pollInterval = setInterval(async () => {
-        pollCount++;
-        if (pollCount > 15) {
-          clearInterval(pollInterval);
+      // Poll getSubmission until it's graded. Each request waits for the last
+      // to answer, the gap grows from 1s to 5s, and the poll stops when the
+      // learner leaves the page. Grading queues behind other submissions at
+      // busy times, so it is given minutes, not seconds.
+      const deadline = Date.now() + SUBMIT_POLL_TIMEOUT_MS;
+      let delay = 1000;
+      const poll = async () => {
+        if (!pollAlive.current) return;
+        if (Date.now() > deadline) {
           setIsSubmitting(false);
           setIsRunning(false);
           showToast("Evaluation timed out. Please check submissions history.", "error");
@@ -337,8 +350,8 @@ const SolveProblemPage: React.FC = () => {
 
         try {
           const sub = await getSubmissionApi(submissionId);
+          if (!pollAlive.current) return;
           if (sub.status !== 'Pending' && sub.status !== 'Running') {
-            clearInterval(pollInterval);
             setIsSubmitting(false);
             setIsRunning(false);
 
@@ -367,11 +380,15 @@ const SolveProblemPage: React.FC = () => {
             } else {
               showToast(`Submission Rejected: ${sub.status}`, "error");
             }
+            return;
           }
         } catch (err) {
           console.error("Failed to poll submission status:", err);
         }
-      }, 1000);
+        delay = Math.min(delay * 1.5, 5000);
+        setTimeout(poll, delay);
+      };
+      setTimeout(poll, delay);
 
     } catch (err: any) {
       console.error("Submit code error:", err);
