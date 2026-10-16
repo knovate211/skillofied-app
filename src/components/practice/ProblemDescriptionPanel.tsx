@@ -186,7 +186,10 @@ const ProblemDescriptionPanel: React.FC<Props> = ({ problem, submissions }) => {
                 <Formatted text={problem.statement} />
               </div>
 
-              {/* Examples */}
+              {/* Examples — absent on tasks the sandbox cannot run, where there
+                  is no expected stdout to show. */}
+              {problem.examples.length > 0 && (
+              <>
               <SectionLabel>Examples</SectionLabel>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {problem.examples.map((ex, i) => (
@@ -212,6 +215,8 @@ const ProblemDescriptionPanel: React.FC<Props> = ({ problem, submissions }) => {
                   </div>
                 ))}
               </div>
+              </>
+              )}
 
               {/* Constraints */}
               <SectionLabel>Constraints</SectionLabel>

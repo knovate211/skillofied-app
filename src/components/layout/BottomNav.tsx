@@ -1,4 +1,5 @@
 import React from 'react';
+import Spinner from '../common/Spinner';
 import styles from './BottomNav.module.css';
 
 type Tab = 'Home' | 'Course' | 'Practice' | 'Placement';
@@ -6,6 +7,8 @@ type Tab = 'Home' | 'Course' | 'Practice' | 'Placement';
 interface Props {
   active: Tab;
   onChange: (tab: Tab) => void;
+  /** The tab whose route is still loading, if any. */
+  pendingTab?: Tab | null;
 }
 
 const icons: Record<Tab, React.ReactNode> = {
@@ -36,7 +39,7 @@ const icons: Record<Tab, React.ReactNode> = {
   ),
 };
 
-const BottomNav: React.FC<Props> = ({ active, onChange }) => {
+const BottomNav: React.FC<Props> = ({ active, onChange, pendingTab }) => {
   const tabs: Tab[] = ['Home', 'Course', 'Practice', 'Placement'];
   return (
     <nav className={styles.nav}>
@@ -46,7 +49,9 @@ const BottomNav: React.FC<Props> = ({ active, onChange }) => {
           className={`${styles.tab} ${active === tab ? styles.active : ''}`}
           onClick={() => onChange(tab)}
         >
-          <span className={styles.icon}>{icons[tab]}</span>
+          {/* The tab itself carries the wait: Practice and Placement are lazy
+              chunks, and the old screen stays up while they download. */}
+          <span className={styles.icon}>{pendingTab === tab ? <Spinner size={18} /> : icons[tab]}</span>
           <span className={styles.label}>{tab}</span>
         </button>
       ))}

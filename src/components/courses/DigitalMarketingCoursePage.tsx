@@ -72,6 +72,50 @@ export const SYLLABUS: SyllabusModule[] = [
       { id: 'dm-m5-assignment', title: 'Assignment: Conversion Audit' },
     ],
   },
+  {
+    id: 'dm-m6',
+    title: 'MODULE 6: MEASUREMENT, ANALYTICS & ATTRIBUTION',
+    items: [
+      { id: 'dm-m6-l1', title: 'Reading GA4 Without Getting Lost' },
+      { id: 'dm-m6-l2', title: 'UTM Tracking & Clean Campaign Data' },
+      { id: 'dm-m6-l3', title: 'Attribution & the Monthly Report' },
+      { id: 'dm-m6-quiz', title: 'Module Quiz' },
+      { id: 'dm-m6-assignment', title: 'Assignment: Measurement Plan' },
+    ],
+  },
+  {
+    id: 'dm-m7',
+    title: 'MODULE 7: CONTENT, VIDEO & PARTNERSHIPS',
+    items: [
+      { id: 'dm-m7-l1', title: 'Content Marketing That Feeds Every Channel' },
+      { id: 'dm-m7-l2', title: 'Short-Form Video & Creative Testing' },
+      { id: 'dm-m7-l3', title: 'Influencers, Affiliates & Messaging Channels' },
+      { id: 'dm-m7-quiz', title: 'Module Quiz' },
+      { id: 'dm-m7-assignment', title: 'Assignment: Content & Creator Plan' },
+    ],
+  },
+  {
+    id: 'dm-m8',
+    title: 'MODULE 8: AI IN DIGITAL MARKETING',
+    items: [
+      { id: 'dm-m8-l1', title: 'Where AI Helps and Where It Fails' },
+      { id: 'dm-m8-l2', title: 'AI for Research, Copy & Creative' },
+      { id: 'dm-m8-l3', title: 'AI for Analysis, Reporting & Its Limits' },
+      { id: 'dm-m8-quiz', title: 'Module Quiz' },
+      { id: 'dm-m8-assignment', title: 'Assignment: AI Review & Policy' },
+    ],
+  },
+  {
+    id: 'dm-m9',
+    title: 'MODULE 9: CAPSTONE & CAREER',
+    items: [
+      { id: 'dm-m9-l1', title: 'The Capstone Campaign Plan' },
+      { id: 'dm-m9-l2', title: 'Presenting Results & Building a Portfolio' },
+      { id: 'dm-m9-l3', title: 'Career Paths & Interview Preparation' },
+      { id: 'dm-m9-quiz', title: 'Module Quiz' },
+      { id: 'dm-m9-assignment', title: 'Capstone: Full Campaign Plan' },
+    ],
+  },
 ];
 
 const DigitalMarketingCoursePage: React.FC = () => (

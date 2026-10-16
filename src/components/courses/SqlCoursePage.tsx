@@ -2,7 +2,6 @@ import React from 'react';
 import CoursePageShell from './shared/CoursePageShell';
 import { SyllabusModule } from '../../types';
 
-import CourseOverview from './modules/SqlCourse/CourseOverview';
 import SqlModuleRenderer from './modules/SqlCourse/SqlModuleRenderer';
 
 export const SYLLABUS: SyllabusModule[] = [
@@ -234,18 +233,9 @@ const SqlCoursePage: React.FC = () => (
     storageKey="maxSqlIndexRead"
     unlockAfterModuleId="m1"
     unlockModuleName="Module 1: Introduction & Fundamentals"
-    renderContent={(moduleId, page) => {
-      if (moduleId === 'overview') return <CourseOverview />;
-      if (
-        moduleId.startsWith('m') ||
-        moduleId === 'capstone' ||
-        moduleId === 'assessment' ||
-        moduleId === 'certification'
-      ) {
-        return <SqlModuleRenderer moduleId={moduleId} page={page} />;
-      }
-      return null;
-    }}
+    // Every section, overview included, is block-authored in SqlCourseData —
+    // the renderer resolves moduleId + page against SYLLABUS itself.
+    renderContent={(moduleId, page) => <SqlModuleRenderer moduleId={moduleId} page={page} />}
   />
 );
 

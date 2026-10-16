@@ -24,6 +24,12 @@ export function getCourseProgress(title: string): number {
   } else if (t.includes('full stack') || t.includes('fullstack')) {
     storageKey = 'maxFullStackIndexRead';
     totalItems = 7;
+  } else if (t.includes('operating system')) {
+    storageKey = 'maxOsIndexRead';
+    totalItems = 107;
+  } else if (t.includes('computer network') || t.includes('networking')) {
+    storageKey = 'maxNetworkingIndexRead';
+    totalItems = 105;
   } else if (t.includes('seo')) {
     storageKey = 'maxSeoIndexRead';
     totalItems = 27;
@@ -32,7 +38,7 @@ export function getCourseProgress(title: string): number {
     totalItems = 27;
   } else if (t.includes('testing') || t.includes('qa')) {
     storageKey = 'maxTestingIndexRead';
-    totalItems = 158;
+    totalItems = 168;
   }
 
   if (storageKey) {
@@ -45,10 +51,6 @@ export function getCourseProgress(title: string): number {
     }
   }
 
-  // Fallback to mock data progress values
-  if (t.includes('java')) return 99.8;
-  if (t.includes('frontend') || t.includes('front-end')) return 99.4;
-  if (t.includes('sql')) return 99.8;
-  
+  // No stored progress means the learner has not opened the course yet.
   return 0;
 }

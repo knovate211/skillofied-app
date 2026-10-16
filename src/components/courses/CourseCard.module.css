@@ -197,3 +197,12 @@
     padding: 26px 20px 20px;
   }
 }
+
+/* A pending button should not keep lifting on hover — it is not clickable. */
+.btn:disabled,
+.btn:disabled:hover {
+  transform: none;
+  filter: none;
+  opacity: 0.9;
+  cursor: progress;
+}

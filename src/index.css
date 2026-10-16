@@ -121,6 +121,46 @@
   padding: 0;
 }
 
+/* Global spin keyframe. Several components animate an inline-styled spinner
+   with `animation: spin ...`; keyframes declared inside a *.module.css file are
+   name-mangled by CSS Modules, so those references resolved to nothing and the
+   spinners sat still. Declaring it here once makes every one of them turn. */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Toast enter/exit for the fullscreen IDE's toast stack, which styles itself
+   with inline styles. Inline styles are not scoped, so they need the keyframes
+   declared globally here. ToastContext keeps its own copy inside its CSS
+   module — see the note there for why the two cannot be merged. */
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes toastOut {
+  from {
+    opacity: 1;
+    transform: none;
+    grid-template-rows: 1fr;
+    margin-bottom: 10px;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(40px) scale(0.96);
+    grid-template-rows: 0fr;
+    margin-bottom: 0;
+  }
+}
+
 body {
   font-family: var(--font-body);
   background: var(--bg-page);

@@ -2,6 +2,7 @@ import React from 'react';
 import CodeSnippet from '../../common/CodeSnippet';
 import LessonLayout, { LessonCallout, LessonSidePanel } from './LessonLayout';
 import { renderLessonTheory, lessonBadge } from './lessonTheory';
+import LessonBlocks, { LessonBlock } from './LessonBlocks';
 import styles from './StandardLessonView.module.css';
 
 /**
@@ -13,6 +14,11 @@ export interface StandardLesson {
   title: string;
   objectives?: string[];
   theory: string;
+  /**
+   * Block-authored body (headings, tables, steps, per-block code languages).
+   * When present it replaces the `theory` string in the prose slot.
+   */
+  blocks?: LessonBlock[];
   syntax?: string;
   codeExample?: string;
   codeOutput?: string;
@@ -39,7 +45,13 @@ const StandardLessonView: React.FC<Props> = ({ lesson, language, snippetTitle })
   <LessonLayout
     badge={lessonBadge(lesson.id)}
     title={lesson.title}
-    theory={renderLessonTheory(lesson.theory, language, snippetTitle ?? 'Code Block')}
+    theory={
+      lesson.blocks?.length ? (
+        <LessonBlocks blocks={lesson.blocks} defaultLanguage={language} alertLabel="Remember" />
+      ) : (
+        renderLessonTheory(lesson.theory, language, snippetTitle ?? 'Code Block')
+      )
+    }
     callout={lesson.callout}
     objectives={lesson.objectives ?? []}
     takeaways={lesson.takeaways ?? []}

@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ModuleQuiz from '../../shared/ModuleQuiz';
+import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 
 interface Props { page: number; }
 
 const Module2: React.FC<Props> = ({ page }) => {
-  const [assignmentText, setAssignmentText] = useState('');
-  const [assignmentSubmitted, setAssignmentSubmitted] = useState(false);
-
   const quizQuestions = [
-    { id: 1, question: 'Q1: What does HTML stand for?', options: ['A. Hyper Transfer Markup Language', 'B. HyperText Markup Language', 'C. Home Tool Markup Language', 'D. Hyperlinks and Text Markup Language'], correctAnswer: 'B. HyperText Markup Language' },
-    { id: 2, question: 'Q2: Which tag is used for the largest heading?', options: ['A. <heading>', 'B. <h6>', 'C. <h1>', 'D. <head>'], correctAnswer: 'C. <h1>' },
-    { id: 3, question: 'Q3: Which element is used for creating a hyperlink?', options: ['A. <link>', 'B. <a>', 'C. <href>', 'D. <nav>'], correctAnswer: 'B. <a>' },
-    { id: 4, question: 'Q4: Which tag is used for an unordered list?', options: ['A. <ol>', 'B. <li>', 'C. <ul>', 'D. <list>'], correctAnswer: 'C. <ul>' },
-    { id: 5, question: 'Q5: What is the correct HTML element for inserting a line break?', options: ['A. <break>', 'B. <lb>', 'C. <br>', 'D. <newline>'], correctAnswer: 'C. <br>' },
+    { id: 1, question: 'Q1: Which attribute gives an image a text alternative for screen readers?', options: ["A. alt", "B. title", "C. caption", "D. label"], correctAnswer: "A. alt" },
+    { id: 2, question: 'Q2: Which tag is used for the largest heading?', options: ["A. <heading>", "B. <h1>", "C. <h6>", "D. <head>"], correctAnswer: "B. <h1>" },
+    { id: 3, question: 'Q3: Which element is used for creating a hyperlink?', options: ["A. <link>", "B. <href>", "C. <a>", "D. <nav>"], correctAnswer: "C. <a>" },
+    { id: 4, question: 'Q4: Which tag is used for an unordered list?', options: ["A. <ol>", "B. <li>", "C. <list>", "D. <ul>"], correctAnswer: "D. <ul>" },
+    { id: 5, question: 'Q5: What is the correct HTML element for inserting a line break?', options: ["A. <br>", "B. <break>", "C. <lb>", "D. <newline>"], correctAnswer: "A. <br>" },
     { id: 6, question: 'Q6: Which input type creates a checkbox?', options: ['A. <input type="check">', 'B. <input type="checkbox">', 'C. <input type="tick">', 'D. <checkbox>'], correctAnswer: 'B. <input type="checkbox">' },
   ];
 
@@ -403,27 +402,11 @@ const Module2: React.FC<Props> = ({ page }) => {
 
     case 14:
       return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 2 Assignment</h2>
-          <p className={styles.paragraph}>Answer the following questions to complete the HTML Fundamentals module:</p>
-          <ol style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px' }}>
-            <li>1. What is the difference between <code>&lt;div&gt;</code> and <code>&lt;section&gt;</code>?</li>
-            <li>2. List all the input types you know and their purposes.</li>
-            <li>3. Why is semantic HTML important for accessibility?</li>
-            <li>4. Write the HTML code for a table showing a 3-student grade sheet.</li>
-            <li>5. What is the difference between <code>&lt;strong&gt;</code> and <code>&lt;b&gt;</code>?</li>
-          </ol>
-          {!assignmentSubmitted ? (
-            <div>
-              <textarea className={styles.assignmentBox} placeholder="Type your answers here..." value={assignmentText} onChange={(e) => setAssignmentText(e.target.value)} />
-              <button className={styles.saveBtn} onClick={() => { if (assignmentText.trim().length > 10) setAssignmentSubmitted(true); }} disabled={assignmentText.trim().length < 10}>Submit Assignment</button>
-            </div>
-          ) : (
-            <div className={styles.completeBadge} style={{ marginTop: '24px' }}>
-              <span>✓ Assignment Submitted! A mentor will review your work. 🎉</span>
-            </div>
-          )}
-        </div>
+        <ModuleAssignment
+          moduleId="frontend-m2"
+          title="Module 2 Assignment"
+          questions={frontendAssignments.m2}
+        />
       );
 
     default:

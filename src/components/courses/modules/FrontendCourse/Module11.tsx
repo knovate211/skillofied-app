@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -21,11 +22,11 @@ const Module11: React.FC<Props> = ({ page }) => {
   const [newDesc, setNewDesc] = useState('');
 
   const quizQuestions: QuizQuestion[] = [
-    { id: 1, question: 'Q1: What is a key benefit of React\'s Virtual DOM?', options: ['A. It deletes regular DOM', 'B. It updates only changed parts of the UI, improving performance', 'C. It lets you write HTML only', 'D. It prevents any CSS loading errors'], correctAnswer: 'B. It updates only changed parts of the UI, improving performance' },
+    { id: 1, question: 'Q1: What is a key benefit of React\'s Virtual DOM?', options: ["A. It updates only changed parts of the UI, improving performance", "B. It deletes regular DOM", "C. It lets you write HTML only", "D. It prevents any CSS loading errors"], correctAnswer: "A. It updates only changed parts of the UI, improving performance" },
     { id: 2, question: 'Q2: Which HTML attribute is written as "className" in JSX?', options: ['A. style', 'B. class', 'C. id', 'D. value'], correctAnswer: 'B. class' },
-    { id: 3, question: 'Q3: How must JSX expressions be wrapped if they contain multiple sibling elements?', options: ['A. Inside square brackets []', 'B. Inside a single parent container (e.g. <div> or Fragment)', 'C. inside template literals', 'D. Inside function blocks'], correctAnswer: 'B. Inside a single parent container (e.g. <div> or Fragment)' },
-    { id: 4, question: 'Q4: What is the nature of React "props"?', options: ['A. Mutable inside components', 'B. Read-only (immutable) from inside the receiving component', 'C. Stored in databases', 'D. Loaded asynchronously'], correctAnswer: 'B. Read-only (immutable) from inside the receiving component' },
-    { id: 5, question: 'Q5: What command scaffolds a React project using Vite?', options: ['A. npm install react', 'B. npm create vite@latest', 'C. create-react-app', 'D. npm run dev'], correctAnswer: 'B. npm create vite@latest' },
+    { id: 3, question: 'Q3: How must JSX expressions be wrapped if they contain multiple sibling elements?', options: ["A. Inside square brackets []", "B. inside template literals", "C. Inside a single parent container (e.g. <div> or Fragment)", "D. Inside function blocks"], correctAnswer: "C. Inside a single parent container (e.g. <div> or Fragment)" },
+    { id: 4, question: 'Q4: What is the nature of React "props"?', options: ["A. Mutable inside components", "B. Stored in databases", "C. Loaded asynchronously", "D. Read-only (immutable) from inside the receiving component"], correctAnswer: "D. Read-only (immutable) from inside the receiving component" },
+    { id: 5, question: 'Q5: What command scaffolds a React project using Vite?', options: ["A. npm create vite@latest", "B. npm install react", "C. create-react-app", "D. npm run dev"], correctAnswer: "A. npm create vite@latest" },
   ];
 
   const handleAddCard = () => {
@@ -121,7 +122,7 @@ const element = (
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 11.5: React Components</h2>
-          <p className={styles.paragraph}>Components are the building blocks of React applications. In modern React, we use **Functional Components** which are simply JavaScript functions that return JSX.</p>
+          <p className={styles.paragraph}>Components are the building blocks of React applications. In modern React, we use <strong>Functional Components</strong> which are simply JavaScript functions that return JSX.</p>
           
           <div className={styles.codeLabel}>Functional Component Definition</div>
           <CodeSnippet isRunnable={true} language="JavaScript" code={`import React from 'react';
@@ -230,14 +231,9 @@ export default UserProfile;`} />
     case 10:
       return (
         <ModuleAssignment
+          moduleId="frontend-m11"
           title="Module 11 Assignment"
-          questions={[
-            'What is the Virtual DOM and how does React optimize rendering updates?',
-            'List 3 syntax differences between standard HTML tags and JSX attributes.',
-            'Why must custom React component names always start with a capital letter?',
-            'Explain the direction and mutability properties of React "props".',
-            'Write a simple functional component structure that accepts a "title" prop and renders it inside an h2 tag.',
-          ]}
+          questions={frontendAssignments.m11}
         />
       );
 

@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -23,11 +24,11 @@ const Module9: React.FC<Props> = ({ page }) => {
   const [weatherError, setWeatherError] = useState('');
 
   const quizQuestions: QuizQuestion[] = [
-    { id: 1, question: 'Q1: What is the main threat of executing synchronous APIs in JavaScript?', options: ['A. Code won\'t compile', 'B. Page UI freezes while task executes', 'C. Variables lose types', 'D. Memory leak risk'], correctAnswer: 'B. Page UI freezes while task executes' },
+    { id: 1, question: 'Q1: What is the main threat of executing synchronous APIs in JavaScript?', options: ["A. Page UI freezes while task executes", "B. Code won't compile", "C. Variables lose types", "D. Memory leak risk"], correctAnswer: "A. Page UI freezes while task executes" },
     { id: 2, question: 'Q2: What are the three states of a JavaScript Promise?', options: ['A. Start, Process, End', 'B. Pending, Resolved, Rejected', 'C. Try, Catch, Finally', 'D. Async, Await, Fetch'], correctAnswer: 'B. Pending, Resolved, Rejected' },
-    { id: 3, question: 'Q3: How do you capture errors in an async/await function?', options: ['A. using e.preventDefault()', 'B. using try...catch blocks', 'C. using then().catch()', 'D. using if-else conditions'], correctAnswer: 'B. using try...catch blocks' },
-    { id: 4, question: 'Q4: What method is called on a response object to read JSON data from Fetch API?', options: ['A. response.getJSON()', 'B. response.json()', 'C. response.read()', 'D. JSON.parse(response)'], correctAnswer: 'B. response.json()' },
-    { id: 5, question: 'Q5: What keyword must prefix a function declaration to allow using the await keyword inside?', options: ['A. wait', 'B. promise', 'C. async', 'D. defer'], correctAnswer: 'C. async' },
+    { id: 3, question: 'Q3: How do you capture errors in an async/await function?', options: ["A. using e.preventDefault()", "B. using then().catch()", "C. using try...catch blocks", "D. using if-else conditions"], correctAnswer: "C. using try...catch blocks" },
+    { id: 4, question: 'Q4: What method is called on a response object to read JSON data from Fetch API?', options: ["A. response.getJSON()", "B. response.read()", "C. JSON.parse(response)", "D. response.json()"], correctAnswer: "D. response.json()" },
+    { id: 5, question: 'Q5: What keyword must prefix a function declaration to allow using the await keyword inside?', options: ["A. async", "B. wait", "C. promise", "D. defer"], correctAnswer: "A. async" },
   ];
 
   const runDelaySimulation = () => {
@@ -68,8 +69,8 @@ const Module9: React.FC<Props> = ({ page }) => {
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 9.1: Synchronous vs Asynchronous</h2>
-          <p className={styles.paragraph}>JavaScript is <strong>single-threaded</strong>, meaning it can only execute one line of code at a time. In a **synchronous** execution, each line of code must wait for the previous one to finish. If a task takes a long time (like fetching database data), the entire page freezes.</p>
-          <p className={styles.paragraph}>**Asynchronous** operations allow JavaScript to initiate a long-running task, continue executing other code, and handle the task result once it completes.</p>
+          <p className={styles.paragraph}>JavaScript is <strong>single-threaded</strong>, meaning it can only execute one line of code at a time. In a <strong>synchronous</strong> execution, each line of code must wait for the previous one to finish. If a task takes a long time (like fetching database data), the entire page freezes.</p>
+          <p className={styles.paragraph}><strong>Asynchronous</strong> operations allow JavaScript to initiate a long-running task, continue executing other code, and handle the task result once it completes.</p>
           
           <h3 className={styles.subtitle}>Interactive Async Simulator</h3>
           <div style={{ background: 'var(--bg-surface-2)', padding: '16px', borderRadius: '8px' }}>
@@ -218,7 +219,7 @@ fetchPromise
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 9.7: API Integration</h2>
-          <p className={styles.paragraph}>API integration connects your frontend components to backend databases. A professional client application should always manage **Loading**, **Error**, and **Success** states in the UI.</p>
+          <p className={styles.paragraph}>API integration connects your frontend components to backend databases. A professional client application should always manage <strong>Loading</strong>, <strong>Error</strong>, and <strong>Success</strong> states in the UI.</p>
           
           <div className={styles.codeLabel}>React State Integration concept</div>
           <CodeSnippet isRunnable={true} language="JavaScript" code={`const [loading, setLoading] = useState(false);
@@ -275,14 +276,9 @@ async function loadData() {
     case 10:
       return (
         <ModuleAssignment
+          moduleId="frontend-m9"
           title="Module 9 Assignment"
-          questions={[
-            'What is the single-threaded nature of JavaScript, and why is asynchronous code necessary?',
-            'What is "Callback Hell," and how do Promises solve this issue?',
-            'Explain the difference between then/catch and async/await syntax.',
-            'Write an async function that fetches items from an endpoint and catches network errors.',
-            'Why is checking response.ok crucial when working with Fetch API?',
-          ]}
+          questions={frontendAssignments.m9}
         />
       );
 

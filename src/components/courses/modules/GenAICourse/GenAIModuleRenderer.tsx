@@ -69,7 +69,7 @@ const GenAIModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
       <ModuleAssignment
         key={moduleId}
         moduleId={`genai-${moduleId}`}
-        title="Module Practice Set"
+        title="Practice Questions"
         questions={assignment.prompts}
       />
     );

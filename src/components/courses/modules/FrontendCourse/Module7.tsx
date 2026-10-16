@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -37,11 +38,11 @@ const Module7: React.FC<Props> = ({ page }) => {
   const [todoInput, setTodoInput] = useState('');
 
   const quizQuestions: QuizQuestion[] = [
-    { id: 1, question: 'Q1: Which method returns all matching elements as a NodeList?', options: ['A. querySelector()', 'B. querySelectorAll()', 'C. getElementById()', 'D. getElementsByClassName()'], correctAnswer: 'B. querySelectorAll()' },
+    { id: 1, question: 'Q1: Which method returns all matching elements as a NodeList?', options: ["A. querySelectorAll()", "B. querySelector()", "C. getElementById()", "D. getElementsByClassName()"], correctAnswer: "A. querySelectorAll()" },
     { id: 2, question: 'Q2: How do you prevent a form from refreshing the page on submit?', options: ['A. e.stop()', 'B. e.preventDefault()', 'C. return false', 'D. e.stopPropagation()'], correctAnswer: 'B. e.preventDefault()' },
     { id: 3, question: 'Q3: Where does Local Storage store data?', options: ['A. Database server', 'B. Session cookie', 'C. User\'s browser', 'D. Backend RAM'], correctAnswer: 'C. User\'s browser' },
-    { id: 4, question: 'Q4: What is the correct way to add a CSS class to an element in JS?', options: ['A. elem.class = "name"', 'B. elem.classList.add("name")', 'C. elem.className.append("name")', 'D. elem.style.class = "name"'], correctAnswer: 'B. elem.classList.add("name")' },
-    { id: 5, question: 'Q5: How does Session Storage differ from Local Storage?', options: ['A. Session storage stores objects', 'B. Session storage clears when tab/browser is closed', 'C. Session storage has larger capacity', 'D. Session storage is faster'], correctAnswer: 'B. Session storage clears when tab/browser is closed' },
+    { id: 4, question: 'Q4: What is the correct way to add a CSS class to an element in JS?', options: ["A. elem.class = \"name\"", "B. elem.className.append(\"name\")", "C. elem.style.class = \"name\"", "D. elem.classList.add(\"name\")"], correctAnswer: "D. elem.classList.add(\"name\")" },
+    { id: 5, question: 'Q5: How does Session Storage differ from Local Storage?', options: ["A. Session storage clears when tab/browser is closed", "B. Session storage stores objects", "C. Session storage has larger capacity", "D. Session storage is faster"], correctAnswer: "A. Session storage clears when tab/browser is closed" },
   ];
 
   const handleAddTodo = () => {
@@ -368,14 +369,9 @@ const sessionVal = sessionStorage.getItem("sessionID");`} />
     case 11:
       return (
         <ModuleAssignment
+          moduleId="frontend-m7"
           title="Module 7 Assignment"
-          questions={[
-            'What is the DOM tree, and how does JavaScript interact with it?',
-            'Compare querySelector, querySelectorAll, and getElementById.',
-            'How do you dynamic create and append a new button item? Write the code.',
-            'Write an example of form submit listener with preventDefault.',
-            'Contrast local storage and session storage capacities and lifespans.',
-          ]}
+          questions={frontendAssignments.m7}
         />
       );
 

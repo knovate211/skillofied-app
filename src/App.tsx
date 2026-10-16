@@ -6,9 +6,11 @@ import Sidebar from './components/layout/Sidebar';
 import CoursesSection from './components/courses/CoursesSection';
 import Login from './components/auth/Login';
 import { getMyCoursesApi } from './api';
-import { isApplicantSession } from './lib/session';
+import { isApplicantSession, isCandidateSession } from './lib/session';
+import { useNavigatePending } from './hooks/useNavigatePending';
 import styles from './App.module.css';
 import TodaySchedule from './components/dashboard/TodaySchedule';
+import AttendancePrompt from './components/attendance/AttendancePrompt';
 
 // Lazy loaded route components
 const FrontendCoursePage = lazy(() => import('./components/courses/FrontendCoursePage'));
@@ -17,6 +19,8 @@ const SqlCoursePage = lazy(() => import('./components/courses/SqlCoursePage'));
 const GolangCoursePage = lazy(() => import('./components/courses/GolangCoursePage'));
 const GenAICoursePage = lazy(() => import('./components/courses/GenAICoursePage'));
 const FullStackCoursePage = lazy(() => import('./components/courses/FullStackCoursePage'));
+const OsCoursePage = lazy(() => import('./components/courses/OsCoursePage'));
+const NetworkingCoursePage = lazy(() => import('./components/courses/NetworkingCoursePage'));
 const TestingCoursePage = lazy(() => import('./components/courses/TestingCoursePage'));
 const CoursePlaceholderPage = lazy(() => import('./components/courses/CoursePlaceholderPage'));
 const SeoCoursePage = lazy(() => import('./components/courses/SeoCoursePage'));
@@ -31,6 +35,10 @@ const ProfilePage = lazy(() => import('./components/profile/ProfilePage'));
 const ScholarshipEntry = lazy(() => import('./components/scholarship/ScholarshipEntry'));
 const ScholarshipInstructions = lazy(() => import('./components/scholarship/ScholarshipInstructions'));
 const ScholarshipSessionNotice = lazy(() => import('./components/scholarship/ScholarshipSessionNotice'));
+const HiringEntry = lazy(() => import('./components/hiring/HiringEntry'));
+const CertificationEntry = lazy(() => import('./components/certification/CertificationEntry'));
+const CertificationSessionNotice = lazy(() => import('./components/certification/CertificationSessionNotice'));
+const HiringSessionNotice = lazy(() => import('./components/hiring/HiringSessionNotice'));
 
 // A clean simple loading indicator to show during code-split chunk loading
 const LoadingScreen: React.FC = () => (
@@ -72,6 +80,7 @@ const App: React.FC = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { go, isPending } = useNavigatePending();
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -114,19 +123,27 @@ const App: React.FC = () => {
 
   const activeTab = getActiveTab(location.pathname);
 
-  const handleTabChange = (tab: Tab) => {
-    if (tab === 'Home') navigate('/');
-    else if (tab === 'Course') navigate('/courses');
-    else if (tab === 'Practice') navigate('/practice');
-    else if (tab === 'Placement') navigate('/placement');
+  const TAB_ROUTES: Record<Tab, string> = {
+    Home: '/',
+    Course: '/courses',
+    Practice: '/practice',
+    Placement: '/placement',
   };
+
+  const handleTabChange = (tab: Tab) => go(TAB_ROUTES[tab]);
+
+  // Practice and Placement are lazy chunks, so the tab shows the wait.
+  const pendingTab =
+    (Object.keys(TAB_ROUTES) as Tab[]).find((t) => isPending(TAB_ROUTES[t])) ?? null;
 
   // The scholarship hand-off is public by necessity: a candidate arriving from
   // the marketing site has no session until /scholarship/start exchanges their
   // token for one. Redirecting them to the login form would strand them at a
   // password they were never given.
   const isPublicPath =
-    location.pathname === '/login' || location.pathname.startsWith('/scholarship/');
+    location.pathname === '/login' || location.pathname.startsWith('/scholarship/') ||
+    location.pathname.startsWith('/hiring/') ||
+    location.pathname.startsWith('/certification/');
 
   useEffect(() => {
     if (!isLoggedIn && !isPublicPath) {
@@ -150,8 +167,22 @@ const App: React.FC = () => {
     const p = location.pathname;
     const allowed =
       p.startsWith('/scholarship/') ||
+      // A paid certification candidate is provisioned with the same
+      // 'applicant' role, and is confined the same way — to their own exam.
+      p.startsWith('/certification/') ||
       p.startsWith('/placement/tests/attempt/');
-    if (!allowed) navigate('/scholarship/session', { replace: true });
+    if (!allowed) {
+      navigate(p.startsWith('/certification/') ? '/certification/session' : '/scholarship/session', { replace: true });
+    }
+  }, [isLoggedIn, location.pathname, navigate]);
+
+  // The same confinement for a hiring candidate: their emailed link signs them
+  // in to sit one company test, not to browse the student portal.
+  useEffect(() => {
+    if (!isLoggedIn || !isCandidateSession()) return;
+    const p = location.pathname;
+    const allowed = p.startsWith('/hiring/') || p.startsWith('/placement/tests/attempt/');
+    if (!allowed) navigate('/hiring/session', { replace: true });
   }, [isLoggedIn, location.pathname, navigate]);
 
   const isCourseDetailPage = location.pathname.startsWith('/courses/') && location.pathname !== '/courses';
@@ -170,6 +201,66 @@ const App: React.FC = () => {
           <Suspense fallback={<LoadingScreen />}>
             <ScholarshipEntry onSession={handleSessionEstablished} />
           </Suspense>
+        }
+      />
+      {/* Certification exams: the same hand-off again, started from the link
+          emailed when a candidate's payment is confirmed. */}
+      <Route
+        path="/certification/start"
+        element={
+          <Suspense fallback={<LoadingScreen />}>
+            <CertificationEntry onSession={handleSessionEstablished} />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/certification/session"
+        element={
+          <Suspense fallback={<LoadingScreen />}>
+            <CertificationSessionNotice />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/certification/instructions/:assessmentId"
+        element={
+          isLoggedIn ? (
+            <Suspense fallback={<LoadingScreen />}>
+              <ScholarshipInstructions kind="certification" />
+            </Suspense>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      {/* Hiring invitations: the same hand-off, started from the email the
+          hiring team's "Add candidates" sends. */}
+      <Route
+        path="/hiring/start"
+        element={
+          <Suspense fallback={<LoadingScreen />}>
+            <HiringEntry onSession={handleSessionEstablished} />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/hiring/session"
+        element={
+          <Suspense fallback={<LoadingScreen />}>
+            <HiringSessionNotice />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/hiring/instructions/:assessmentId"
+        element={
+          isLoggedIn ? (
+            <Suspense fallback={<LoadingScreen />}>
+              <ScholarshipInstructions kind="hiring" />
+            </Suspense>
+          ) : (
+            <Navigate to="/login" replace />
+          )
         }
       />
       <Route
@@ -257,6 +348,8 @@ const App: React.FC = () => {
                     <Route path="/courses/golang" element={<GolangCoursePage />} />
                     <Route path="/courses/genai" element={<GenAICoursePage />} />
                     <Route path="/courses/fullstack" element={<FullStackCoursePage />} />
+                    <Route path="/courses/os" element={<OsCoursePage />} />
+                    <Route path="/courses/networking" element={<NetworkingCoursePage />} />
                     <Route path="/courses/seo" element={<SeoCoursePage />} />
                     <Route path="/courses/digital-marketing" element={<DigitalMarketingCoursePage />} />
                     {/* Courses without content yet fall through to the syllabus landing page. */}
@@ -271,8 +364,11 @@ const App: React.FC = () => {
                   </Routes>
                 </Suspense>
               </main>
+              {/* Lives in the shell, not the test player or IDE, so a live
+                  assessment is never interrupted by a class reminder. */}
+              {!isApplicantSession() && <AttendancePrompt />}
               {!isCourseDetailPage && (
-                <BottomNav active={activeTab} onChange={handleTabChange} />
+                <BottomNav active={activeTab} onChange={handleTabChange} pendingTab={pendingTab} />
               )}
             </div>
           ) : (

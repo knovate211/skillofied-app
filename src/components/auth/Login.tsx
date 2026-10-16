@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './Login.module.css';
-import knovateLogo from '../../assets/knovate-logo.png';
+import loginArt from '../../assets/apploginpage.png';
 import ForgotPasswordModal from './ForgotPasswordModal';
 import { loginApi } from '../../api';
 
@@ -8,77 +8,41 @@ interface LoginProps {
   onLogin: () => void;
 }
 
-/* The brand panel's scene. Inline rather than an asset so it stays crisp at any
-   size. Colours are literal, not tokens: the panel behind it is a fixed light
-   gradient, so the figures must not invert with the theme. */
-const BrandScene: React.FC = () => (
-  <svg viewBox="0 0 460 420" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path
-      d="M40 340 C40 200 130 120 230 120 C330 120 420 200 420 340"
-      stroke="#A9B98B"
-      strokeWidth="10"
-      fill="none"
-      strokeLinecap="round"
-      strokeDasharray="1 22"
-      opacity="0.7"
-    />
+/** The K mark, drawn so it stays crisp beside the wordmark at any size. */
+const Mark: React.FC<{ size?: number }> = ({ size = 34 }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
+    <path d="M4 3h7v26H4z" fill="#CE9C3C" />
+    <path d="M11 16 21 3h8L19 16z" fill="#E9C273" />
+    <path d="M11 16h8l10 13h-8z" fill="#B5701F" />
+  </svg>
+);
 
-    <g transform="translate(230,210)">
-      <circle r="92" fill="#fff" opacity="0.55" />
-      <circle r="92" fill="none" stroke="#E7A99A" strokeWidth="3" opacity="0.6" />
-    </g>
+const MailIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+    <rect x="3" y="5" width="18" height="14" rx="2" />
+    <path d="m3 7 9 6 9-6" />
+  </svg>
+);
 
-    <g transform="translate(230,225)">
-      <ellipse cx="0" cy="70" rx="66" ry="26" fill="#CE7C68" />
-      <circle cx="0" cy="-6" r="52" fill="#F3D2B8" />
-      <path
-        d="M-52 -10 C-52 -55 -20 -78 0 -78 C20 -78 52 -55 52 -10 C40 -30 20 -40 0 -40 C-20 -40 -40 -30 -52 -10Z"
-        fill="#463A34"
-      />
-      <circle cx="-18" cy="-4" r="5" fill="#463A34" />
-      <circle cx="18" cy="-4" r="5" fill="#463A34" />
-      <path d="M-14 18 Q0 28 14 18" stroke="#463A34" strokeWidth="3" fill="none" strokeLinecap="round" />
-    </g>
+const LockIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+    <rect x="4" y="10" width="16" height="11" rx="2" />
+    <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+  </svg>
+);
 
-    <g transform="translate(96,140)">
-      <circle r="38" fill="#FBEFD9" stroke="#CE9C3C" strokeWidth="3" />
-      <circle cx="0" cy="-4" r="21" fill="#E3B48A" />
-      <path
-        d="M-21 -6 C-21 -24 -8 -32 0 -32 C8 -32 21 -24 21 -6 C14 -16 6 -20 0 -20 C-6 -20 -14 -16 -21 -6Z"
-        fill="#463A34"
-      />
-      <path d="M-8 6 Q0 12 8 6" stroke="#463A34" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-    </g>
-    <text x="96" y="196" textAnchor="middle" fontWeight="700" fontSize="14" fill="#463A34">
-      Liam · Student
-    </text>
-
-    <g transform="translate(372,300)">
-      <circle r="38" fill="#EBF0E1" stroke="#7E9260" strokeWidth="3" />
-      <circle cx="0" cy="-4" r="21" fill="#E3B48A" />
-      <path
-        d="M-21 -6 C-21 -24 -8 -32 0 -32 C8 -32 21 -24 21 -6 C14 -16 6 -20 0 -20 C-6 -20 -14 -16 -21 -6Z"
-        fill="#463A34"
-      />
-      <path d="M-8 6 Q0 12 8 6" stroke="#463A34" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-    </g>
-    <text x="372" y="356" textAnchor="middle" fontWeight="700" fontSize="14" fill="#463A34">
-      Sarah · Mentor
-    </text>
-
-    <g stroke="#CE7C68" strokeWidth="2.4" fill="none" strokeLinecap="round">
-      <path d="M40 60 l14 14 M54 60 l-14 14" />
-      <path d="M400 90 l12 12 M412 90 l-12 12" />
-    </g>
-    <circle cx="360" cy="50" r="5" fill="#CE9C3C" />
-    <circle cx="60" cy="380" r="5" fill="#7E9260" />
-    <path d="M300 60 l6 -14 l6 14 l-6 -4 Z" fill="#CE9C3C" />
+const EyeIcon: React.FC<{ off: boolean }> = ({ off }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+    <circle cx="12" cy="12" r="3" />
+    {off && <path d="M3 3l18 18" />}
   </svg>
 );
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [shake, setShake] = useState(false);
@@ -97,7 +61,9 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       onLogin();
     } catch (err: any) {
       setIsLoading(false);
-      setError(err.message || 'Invalid email or password. Try admin@knovate.com / knovate123');
+      // Never suggest an account to try: this message is shown to everyone who
+      // mistypes a password, including people who should not have one.
+      setError(err.message || 'Invalid email or password.');
       setShake(true);
       setTimeout(() => setShake(false), 600);
     }
@@ -105,39 +71,29 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
   return (
     <div className={styles.page}>
-      {/* Left brand panel */}
+      {/* ── Brand panel ──
+          One artwork carrying the logo, headline and feature row. Its alt text
+          repeats that wording, because a screen reader gets nothing from a
+          picture of words. Dropped below 960px, where it would be unreadable. */}
       <div className={styles.panel}>
-        <span className={`${styles.dot} ${styles.dot1}`} />
-        <span className={`${styles.dot} ${styles.dot2}`} />
-        <span className={`${styles.dot} ${styles.dot3}`} />
-        <span className={`${styles.dot} ${styles.dot4}`} />
-
-        <div className={styles.panelBrand}>
-          <img src={knovateLogo} alt="Knovate" className={styles.brandLogo} />
-        </div>
-
-        <div className={styles.scene}>
-          <BrandScene />
-        </div>
-
-        <div className={styles.panelCaption}>
-          <h3>Learning grows with the right people</h3>
-          <p>
-            Every course pairs you with mentors and peers on the same path — track progress together, not alone.
-          </p>
-        </div>
+        <img
+          src={loginArt}
+          className={styles.panelArt}
+          alt="Knovate Learning Management System. Learn today, build tomorrow — access your courses, track your progress, and achieve your goals, all in one place. Personalised learning paths, expert instructors, progress tracking and certificates."
+        />
       </div>
 
-      {/* Right form panel */}
+      {/* ── Sign-in card ── */}
       <div className={styles.formPanel}>
-        <div className={`${styles.formInner} ${shake ? styles.shake : ''}`}>
-          <p className={styles.eyebrow}>Welcome back</p>
-          <h1 className={styles.heading}>Log in</h1>
-          <p className={styles.sub}>Pick up your courses right where you left off.</p>
+        <div className={`${styles.card} ${shake ? styles.shake : ''}`}>
+          <span className={styles.cardLogo}><Mark size={32} /> Knovate</span>
+          <h1 className={styles.heading}>LMS Login</h1>
+          <p className={styles.sub}>Continue your learning journey. Sign in to your account.</p>
 
           <form onSubmit={handleSubmit} className={styles.form} noValidate>
-            <div className={styles.field}>
-              <label htmlFor="email" className={styles.label}>Email</label>
+            <label htmlFor="email" className={styles.label}>Email address</label>
+            <div className={styles.inputWrap}>
+              <span className={styles.inputIcon}><MailIcon /></span>
               <input
                 id="email"
                 type="email"
@@ -150,11 +106,12 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               />
             </div>
 
-            <div className={styles.field}>
-              <label htmlFor="password" className={styles.label}>Password</label>
+            <label htmlFor="password" className={styles.label}>Password</label>
+            <div className={styles.inputWrap}>
+              <span className={styles.inputIcon}><LockIcon /></span>
               <input
                 id="password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 className={styles.input}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -162,6 +119,15 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 autoComplete="current-password"
                 required
               />
+              <button
+                type="button"
+                className={styles.reveal}
+                onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                title={showPassword ? 'Hide password' : 'Show password'}
+              >
+                <EyeIcon off={showPassword} />
+              </button>
             </div>
 
             <div className={styles.rowEnd}>
@@ -181,16 +147,19 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               </div>
             )}
 
-            <button
-              id="login-submit-btn"
-              type="submit"
-              className={styles.loginBtn}
-              disabled={isLoading}
-            >
-              {isLoading ? <span className={styles.spinner} aria-label="Logging in…" /> : 'Log in'}
+            <button id="login-submit-btn" type="submit" className={styles.loginBtn} disabled={isLoading}>
+              {isLoading ? (
+                <span className={styles.spinner} aria-label="Logging in…" />
+              ) : (
+                <>
+                  Log in
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={styles.btnArrow} aria-hidden="true">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </>
+              )}
             </button>
           </form>
-
         </div>
       </div>
 

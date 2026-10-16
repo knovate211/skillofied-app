@@ -59,6 +59,13 @@ const LANGUAGE_LABEL: Record<string, string> = {
   shell: 'Shell',
   yaml: 'YAML',
   protobuf: 'Protocol Buffers',
+  html: 'HTML',
+  css: 'CSS',
+  json: 'JSON',
+  xml: 'XML',
+  markdown: 'Markdown',
+  typescript: 'TypeScript',
+  jsx: 'JSX',
 };
 
 // ─── SQL result formatter (same as AssignmentCodeEditor) ─────────────────────
@@ -260,6 +267,7 @@ const AssignmentIDE: React.FC<Props> = ({
                   activeTab={consoleTab}
                   setActiveTab={setConsoleTab}
                   isAssignmentMode={true}
+                  runnable={runnable}
                 />
               </Panel>
             </PanelGroup>

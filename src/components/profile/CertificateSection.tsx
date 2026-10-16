@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './CertificateSection.module.css';
-import { getCertificatesApi } from '../../api';
-
-interface CertificateRecord {
-  id: string;
-  courseName: string;
-  issueDate: string;
-  credentialId: string;
-  pdfUrl: string;
-}
+import { getCertificatesApi, type CertificateRecord } from '../../api';
 
 const CertificateSection: React.FC = () => {
   const [certificates, setCertificates] = useState<CertificateRecord[]>([]);
@@ -55,46 +47,58 @@ const CertificateSection: React.FC = () => {
           </svg>
           <div className={styles.emptyTitle}>No Certificates Yet</div>
           <div className={styles.emptyDesc}>
-            You haven't earned any certificates yet. Enroll in a course, complete the final assessment, and your certificate will appear here!
+            Pass a Knovate certification exam and your certificate appears here, with a link an
+            employer can use to verify it.
           </div>
         </div>
       ) : (
         <div className={styles.grid}>
           {certificates.map((cert) => (
-            <div key={cert.id} className={styles.certCard}>
+            <div key={cert.credentialId} className={styles.certCard}>
               <div className={styles.certPreview}>
-                <div className={styles.certRibbon}>Verified</div>
+                {/* A revoked credential still shows, labelled: quietly hiding
+                    one leaves the holder wondering where it went. */}
+                <div className={styles.certRibbon}>{cert.revoked ? 'Revoked' : 'Verified'}</div>
                 <svg className={styles.certPreviewIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
               </div>
               <div className={styles.certContent}>
-                <div className={styles.certCourse}>{cert.courseName}</div>
+                <div className={styles.certCourse}>{cert.title}</div>
                 <div className={styles.certMeta}>
                   <div className={styles.metaRow}>
                     <span className={styles.metaLabel}>Issued</span>
-                    <span className={styles.metaValue}>{cert.issueDate}</span>
+                    <span className={styles.metaValue}>{cert.issuedAt}</span>
                   </div>
                   <div className={styles.metaRow}>
                     <span className={styles.metaLabel}>Credential ID</span>
                     <span className={styles.metaValue}>{cert.credentialId}</span>
                   </div>
+                  {cert.scorePercent > 0 && (
+                    <div className={styles.metaRow}>
+                      <span className={styles.metaLabel}>Score</span>
+                      <span className={styles.metaValue}>{cert.scorePercent}%</span>
+                    </div>
+                  )}
                 </div>
                 <div className={styles.certActions}>
-                  <button className={styles.btnView} title="View Details">
+                  {/* The verification page is the certificate's public face —
+                      it is what an employer is given, so it is what a holder
+                      needs to hand over. */}
+                  <a href={cert.verifyUrl} target="_blank" rel="noreferrer" className={styles.btnView} title="Open the public verification page">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                       <circle cx="12" cy="12" r="3" />
                     </svg>
-                    View
-                  </button>
-                  <a href={cert.pdfUrl} target="_blank" rel="noreferrer" className={styles.btnDownload} title="Download PDF">
+                    Verify
+                  </a>
+                  <a href={`${cert.verifyUrl}?print=1`} target="_blank" rel="noreferrer" className={styles.btnDownload} title="Open a printable certificate">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
                       <polyline points="7 10 12 15 17 10" />
                       <line x1="12" y1="15" x2="12" y2="3" />
                     </svg>
-                    PDF
+                    Certificate
                   </a>
                 </div>
               </div>

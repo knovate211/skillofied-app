@@ -1,0 +1,408 @@
+import { LessonMap } from './types';
+
+/** Module 12 (relationships) + Module 13 (normalisation) + Module 14 (PostgreSQL advanced). */
+export const designLessons: LessonMap = {
+  // ─────────────────────────── MODULE 12 ───────────────────────────
+  'm12-l1': {
+    title: 'One-to-One Relationships',
+    content: [
+      { type: 'text', value: 'One row in table A corresponds to at most one row in table B, and vice versa. It is the least common of the three relationships, and the one people most often implement without realising there was a choice.' },
+      { type: 'diagram', name: 'sql-rel-1-1', caption: 'A foreign key plus a UNIQUE constraint. The UNIQUE is what makes it one-to-one rather than one-to-many.' },
+      { type: 'code', language: 'sql', value: "CREATE TABLE users (\n  id    INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,\n  email TEXT NOT NULL UNIQUE\n);\n\nCREATE TABLE user_profiles (\n  id        INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,\n  user_id   INT NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,\n  bio       TEXT,\n  avatar_url TEXT,\n  birthday  DATE\n);" },
+      { type: 'alert', value: 'Remove the UNIQUE and you have a one-to-many relationship. That single keyword is the entire structural difference, which is why one-to-one relationships are so easy to create by accident in the wrong shape.' },
+      { type: 'heading', value: 'The real question: why not one table?' },
+      { type: 'text', value: 'If every user has exactly one profile, the columns could simply live on users. Splitting them is a deliberate decision, and there are four good reasons for it.' },
+      { type: 'compare', columns: [
+        { title: 'Split into two tables', tone: 'olive', items: [
+          'Optional data — most rows would be NULL if inlined',
+          'Large columns you rarely SELECT (a long bio, a document blob)',
+          'Sensitive data needing separate access grants',
+          'Different write frequencies — a hot table and a cold one',
+        ] },
+        { title: 'Keep one table', tone: 'honey', items: [
+          'The columns are always present',
+          'You always read them together',
+          'The split would add a join to every single query',
+          'The table is small anyway',
+        ] },
+      ] },
+      { type: 'code', language: 'sql', value: "-- A strong use: keep sensitive columns in a table only some roles can read\nCREATE TABLE employee_private (\n  employee_id INT PRIMARY KEY REFERENCES employees(id) ON DELETE CASCADE,\n  national_id TEXT NOT NULL,\n  bank_account TEXT NOT NULL\n);\n\nGRANT SELECT ON employees        TO analyst_role;\n-- no grant at all on employee_private" },
+      { type: 'text', value: 'Note the pattern in that table: the foreign key is itself the primary key. This enforces one-to-one without a separate UNIQUE constraint and saves a column — it is the cleanest way to express the relationship.' },
+      { type: 'code', language: 'sql', value: "-- Querying across the pair: LEFT JOIN, because the profile is optional\nSELECT u.email, p.bio\nFROM   users u\nLEFT JOIN user_profiles p ON p.user_id = u.id;" },
+    ],
+    objectives: [
+      'Model a one-to-one relationship with a unique foreign key',
+      'Decide when splitting into two tables is justified',
+      'Use a shared primary key to express the relationship cleanly',
+    ],
+    takeaways: [
+      'A UNIQUE constraint on the foreign key is what makes a relationship one-to-one.',
+      'Split for optionality, size, or access control — not by default.',
+      'Making the foreign key the primary key is the tidiest one-to-one design.',
+    ],
+  },
+
+  'm12-l2': {
+    title: 'One-to-Many Relationships',
+    content: [
+      { type: 'text', value: 'The workhorse relationship. One customer has many orders; one post has many comments; one department has many employees. Most of the tables you ever design will be joined this way.' },
+      { type: 'diagram', name: 'sql-rel-1-n', caption: 'The foreign key always lives on the many side. This is the rule that answers "which table gets the column?".' },
+      { type: 'text', value: 'The reason the key goes on the many side is simple: a column holds one value. An order belongs to one customer, so orders.customer_id works. A customer has many orders, so customers.order_id could only ever hold one of them.' },
+      { type: 'code', language: 'sql', value: "CREATE TABLE departments (\n  id   INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE\n);\n\nCREATE TABLE employees (\n  id      INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,\n  name    TEXT NOT NULL,\n  dept_id INT REFERENCES departments(id) ON DELETE SET NULL\n);\n\n-- Almost always worth adding: PostgreSQL does not index FKs for you\nCREATE INDEX idx_employees_dept ON employees (dept_id);" },
+      { type: 'heading', value: 'Three decisions to make explicitly' },
+      { type: 'table', headers: ['Decision', 'Options', 'How to choose'], rows: [
+        ['Is the parent required?', 'NOT NULL or nullable FK', 'An order without a customer is meaningless — NOT NULL. An employee without a department is fine — nullable'],
+        ['What happens on parent delete?', 'CASCADE / SET NULL / RESTRICT', 'CASCADE for owned children like comments; SET NULL for loose associations; RESTRICT for financial records'],
+        ['Index the FK?', 'Yes, almost always', 'Needed for joins, and for the parent-delete check itself'],
+      ] },
+      { type: 'heading', value: 'Querying both directions' },
+      { type: 'code', language: 'sql', value: "-- Many → one: each employee with their department\nSELECT e.name, d.name AS department\nFROM   employees e\nLEFT JOIN departments d ON d.id = e.dept_id;\n\n-- One → many, aggregated: each department with its headcount\nSELECT d.name, COUNT(e.id) AS headcount\nFROM   departments d\nLEFT JOIN employees e ON e.dept_id = d.id\nGROUP BY d.name;\n\n-- One → many, listed: each department with its members in one column\nSELECT d.name, STRING_AGG(e.name, ', ' ORDER BY e.name) AS members\nFROM   departments d\nLEFT JOIN employees e ON e.dept_id = d.id\nGROUP BY d.name;" },
+      { type: 'warning', value: 'The N+1 query problem is the most common performance bug built on this relationship: fetch 100 departments, then run one query per department to get its employees. That is 101 round trips. Fetch both sets in one query with a join, or fetch employees for all 100 ids with a single WHERE dept_id IN (...).' },
+      { type: 'alert', value: 'Most ORMs have an eager-loading option precisely for this — include in Sequelize, JOIN FETCH in JPA, include in Prisma. Knowing what it is doing underneath is what lets you recognise when it has not been used.' },
+    ],
+    objectives: [
+      'Place the foreign key on the correct side',
+      'Choose nullability and delete behaviour deliberately',
+      'Recognise and avoid the N+1 query pattern',
+    ],
+    takeaways: [
+      'The foreign key lives on the many side, because a column holds one value.',
+      'Index every foreign key column — it is not automatic.',
+      'N+1 queries turn one join into a hundred round trips.',
+    ],
+  },
+
+  'm12-l3': {
+    title: 'Many-to-Many Relationships',
+    content: [
+      { type: 'text', value: 'A student takes many courses; a course has many students. Neither table can hold the foreign key, because neither side has a single partner. The relationship needs a table of its own.' },
+      { type: 'diagram', name: 'sql-rel-n-n', caption: 'A junction table resolves one many-to-many into two one-to-many relationships.' },
+      { type: 'code', language: 'sql', value: "CREATE TABLE students (\n  id   INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,\n  name TEXT NOT NULL\n);\n\nCREATE TABLE courses (\n  id    INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,\n  title TEXT NOT NULL\n);\n\nCREATE TABLE enrollments (\n  student_id  INT NOT NULL REFERENCES students(id) ON DELETE CASCADE,\n  course_id   INT NOT NULL REFERENCES courses(id)  ON DELETE CASCADE,\n  enrolled_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),\n  grade       TEXT,\n  PRIMARY KEY (student_id, course_id)\n);\n\nCREATE INDEX idx_enrollments_course ON enrollments (course_id);" },
+      { type: 'heading', value: 'Three details in that definition worth noticing' },
+      { type: 'list', items: [
+        'The composite primary key (student_id, course_id) enforces that a student cannot enrol in the same course twice. Uniqueness comes free with the key.',
+        'The extra index on course_id exists because the composite PK is ordered student-first, so it cannot serve a query filtering by course alone — the leftmost-prefix rule from Module 9.',
+        'The junction table carries its own columns. enrolled_at and grade belong to the relationship, not to the student or the course.',
+      ] },
+      { type: 'alert', value: 'That last point is the strongest argument for a real junction table over an array column. The moment you need to record when someone enrolled, or what grade they got, the relationship itself has attributes — and only a table can hold them.' },
+      { type: 'heading', value: 'Querying through the junction' },
+      { type: 'code', language: 'sql', value: "-- Which courses is student 1 taking?\nSELECT c.title, e.enrolled_at\nFROM   enrollments e\nJOIN   courses c ON c.id = e.course_id\nWHERE  e.student_id = 1;\n\n-- Who is on course 5?\nSELECT s.name, e.grade\nFROM   enrollments e\nJOIN   students s ON s.id = e.student_id\nWHERE  e.course_id = 5;\n\n-- Full picture: two joins, one through the middle\nSELECT s.name AS student, c.title AS course, e.grade\nFROM   enrollments e\nJOIN   students s ON s.id = e.student_id\nJOIN   courses  c ON c.id = e.course_id\nORDER BY s.name, c.title;\n\n-- Enrolment counts, including courses nobody has joined\nSELECT c.title, COUNT(e.student_id) AS enrolled\nFROM   courses c\nLEFT JOIN enrollments e ON e.course_id = c.id\nGROUP BY c.title\nORDER BY enrolled DESC;" },
+      { type: 'heading', value: 'Naming' },
+      { type: 'text', value: 'If the junction represents something the business has a word for, use that word: enrollments, memberships, subscriptions, order_items. Fall back to concatenated names like student_courses only when the relationship genuinely has no name of its own.' },
+      { type: 'warning', value: 'Without the composite primary key (or a UNIQUE constraint on the pair), nothing stops the same student being enrolled in the same course five times. Every count and every join then silently multiplies. Always constrain the pair.' },
+    ],
+    objectives: [
+      'Model many-to-many with a junction table',
+      'Use a composite primary key to prevent duplicate pairs',
+      'Store attributes that belong to the relationship itself',
+    ],
+    takeaways: [
+      'A junction table turns one many-to-many into two one-to-many relationships.',
+      'The composite PK provides uniqueness; a second index is usually needed for the reverse lookup.',
+      'When the relationship has attributes, only a table can hold them.',
+    ],
+  },
+
+  'm12-l4': {
+    title: 'ER Diagrams',
+    content: [
+      { type: 'text', value: 'An entity-relationship diagram is how a schema gets discussed before it gets built. It shows entities, their attributes, and the cardinality of every relationship — and it catches design mistakes an hour of drawing can save a month of migrations.' },
+      { type: 'heading', value: 'Crow\'s foot notation' },
+      { type: 'table', headers: ['Symbol at the line end', 'Reads as'], rows: [
+        ['A single bar |', 'Exactly one'],
+        ['A crow\'s foot (three prongs)', 'Many'],
+        ['A circle ○', 'Zero — optional'],
+        ['○ plus crow\'s foot', 'Zero or many'],
+        ['| plus crow\'s foot', 'One or many'],
+      ] },
+      { type: 'diagram', name: 'sql-rel-1-n', caption: 'One department, many employees: a bar on the one side, a crow\'s foot on the many side.' },
+      { type: 'heading', value: 'How to design a schema from a description' },
+      { type: 'steps', title: 'Working from "an e-commerce store"', steps: [
+        { label: 'Find the nouns', text: 'customer, product, order, order line, category, address. Nouns become candidate entities.' },
+        { label: 'Find the verbs', text: '"a customer places an order", "an order contains products". Verbs become relationships.' },
+        { label: 'Assign cardinality', text: 'ask both directions. One customer places many orders; one order belongs to one customer. That is one-to-many.' },
+        { label: 'List attributes', text: 'and decide which belong to the entity and which belong to the relationship. A line item quantity belongs to the relationship.' },
+        { label: 'Choose keys', text: 'a primary key for each entity, and the foreign keys the cardinality implies.' },
+        { label: 'Check against real queries', text: 'write the five questions the application must answer and confirm the schema can answer each of them.' },
+      ] },
+      { type: 'code', language: 'text', value: "customers ──|<  orders ──|<  order_items  >|── products\n                                                  |\n                                                  >|── categories\n\ncustomers  1 ── many  orders          (FK: orders.customer_id)\norders     1 ── many  order_items     (FK: order_items.order_id)\nproducts   1 ── many  order_items     (FK: order_items.product_id)\ncategories 1 ── many  products        (FK: products.category_id)\n\norder_items is the junction: an order contains many products,\na product appears in many orders — and quantity and unit_price\nbelong to that pairing, not to either side." },
+      { type: 'code', language: 'sql', value: "CREATE TABLE order_items (\n  order_id   INT NOT NULL REFERENCES orders(id)   ON DELETE CASCADE,\n  product_id INT NOT NULL REFERENCES products(id) ON DELETE RESTRICT,\n  quantity   INT NOT NULL CHECK (quantity > 0),\n  unit_price NUMERIC(10,2) NOT NULL CHECK (unit_price >= 0),\n  PRIMARY KEY (order_id, product_id)\n);" },
+      { type: 'alert', value: 'unit_price is stored on the line item, not read from products. A product price changes; an invoice must not. Copying the price at the moment of sale is deliberate denormalisation, and it is correct — the historical fact is genuinely different from the current one.' },
+      { type: 'text', value: 'That distinction — between a current value and a recorded fact — is one of the most useful ideas in schema design. Ask of every column: is this a fact about now, or a fact about a moment?' },
+      { type: 'warning', value: 'ON DELETE RESTRICT on product_id is deliberate too. Deleting a product should not be allowed to erase what a customer bought. Order history is financial data, and CASCADE has no business anywhere near it.' },
+    ],
+    objectives: [
+      'Read and draw ER diagrams in crow\'s foot notation',
+      'Derive entities and relationships from a plain-English description',
+      'Distinguish current values from recorded historical facts',
+    ],
+    takeaways: [
+      'Nouns become entities, verbs become relationships, and cardinality is checked in both directions.',
+      'Attributes of a relationship live on the junction table.',
+      'Copy a price onto an invoice line — history must not change when the catalogue does.',
+    ],
+  },
+
+  // ─────────────────────────── MODULE 13 ───────────────────────────
+  'm13-l1': {
+    title: 'Database Anomalies',
+    content: [
+      { type: 'text', value: 'Normalisation exists to prevent three specific failures. Learn the failures first and the normal forms become obvious rather than arbitrary.' },
+      { type: 'text', value: 'Here is a badly designed table — one row per enrolment, with everything flattened in.' },
+      { type: 'dataset', name: 'enrollments_bad', caption: 'the same instructor and department are repeated on every row', headers: ['student_id', 'student_name', 'course', 'instructor', 'instructor_email'], rows: [
+        ['1', 'Ana Iyer', 'SQL Basics', 'Dr Rao', 'rao@uni.edu'],
+        ['1', 'Ana Iyer', 'Data Structures', 'Dr Sen', 'sen@uni.edu'],
+        ['2', 'Bo Chen', 'SQL Basics', 'Dr Rao', 'rao@uni.edu'],
+        ['3', 'Cy Das', 'SQL Basics', 'Dr Rao', 'rao@uni.edu'],
+      ] },
+      { type: 'heading', value: 'Update anomaly' },
+      { type: 'text', value: 'Dr Rao changes email address. That fact is stored in three places. Update two of them and the database now holds two contradictory answers to the same question, with nothing to indicate which is correct.' },
+      { type: 'code', language: 'sql', value: "-- Miss one row and the data is permanently inconsistent\nUPDATE enrollments_bad SET instructor_email = 'r.rao@uni.edu'\nWHERE  instructor = 'Dr Rao' AND course = 'SQL Basics';\n-- ...and the other SQL Basics rows? Still the old address." },
+      { type: 'heading', value: 'Insertion anomaly' },
+      { type: 'text', value: 'A new instructor is hired but has not been assigned a course yet. There is nowhere to record them: every row requires a student and a course. You cannot store a fact about an instructor without inventing a fake enrolment.' },
+      { type: 'heading', value: 'Deletion anomaly' },
+      { type: 'text', value: 'Cy Das withdraws from SQL Basics, so you delete the row. If Cy had been the last student on a course taught by an instructor who teaches nothing else, deleting an enrolment has silently erased the instructor from the database entirely.' },
+      { type: 'compare', columns: [
+        { title: 'Update anomaly', tone: 'rose', items: [
+          'One fact stored many times',
+          'Partial updates create contradictions',
+          'No way to tell which copy is right',
+        ] },
+        { title: 'Insertion anomaly', tone: 'honey', items: [
+          'Cannot record A without also knowing B',
+          'Forces fake or placeholder rows',
+          'The schema blocks legitimate data',
+        ] },
+        { title: 'Deletion anomaly', tone: 'olive', items: [
+          'Removing one fact removes another',
+          'Unrelated data disappears',
+          'Loss is silent and often unnoticed',
+        ] },
+      ] },
+      { type: 'heading', value: 'The fix, previewed' },
+      { type: 'code', language: 'sql', value: "-- Each fact stored exactly once, in the table it belongs to\nstudents    (id, name)\ninstructors (id, name, email)\ncourses     (id, title, instructor_id)\nenrollments (student_id, course_id)" },
+      { type: 'text', value: 'Now Dr Rao email lives in exactly one row. Changing it is one UPDATE that cannot be partially applied. An instructor can exist without a course. Deleting an enrolment deletes only that enrolment. All three anomalies are gone — not mitigated by careful coding, but structurally impossible.' },
+      { type: 'alert', value: 'That is the point worth carrying forward. Normalisation does not make anomalies less likely; it makes them unrepresentable. A rule enforced by structure never needs to be remembered.' },
+    ],
+    objectives: [
+      'Identify update, insertion and deletion anomalies in a schema',
+      'Trace each anomaly to the redundancy that causes it',
+      'Explain why splitting tables eliminates them structurally',
+    ],
+    takeaways: [
+      'All three anomalies come from one root cause: a fact stored more than once.',
+      'An insertion anomaly means the schema is refusing to store legitimate data.',
+      'Normalisation makes anomalies impossible rather than merely unlikely.',
+    ],
+  },
+
+  'm13-l2': {
+    title: '1NF, 2NF, 3NF and BCNF',
+    content: [
+      { type: 'text', value: 'The normal forms are a ladder. Each rung removes one specific kind of duplication, and each assumes the ones below it are already satisfied.' },
+      { type: 'diagram', name: 'sql-normalization', caption: 'Every rung is a different question about how columns depend on the key.' },
+      { type: 'heading', value: 'First Normal Form — atomic values' },
+      { type: 'text', value: 'Every cell holds a single value, and there are no repeating groups of columns.' },
+      { type: 'dataset', name: 'students (violates 1NF)', headers: ['id', 'name', 'courses'], rows: [
+        ['1', 'Ana Iyer', 'SQL, Python, Stats'],
+        ['2', 'Bo Chen', 'SQL'],
+      ] },
+      { type: 'text', value: 'That comma-separated list cannot be queried. "Who is taking Python?" becomes a LIKE against a string, which also matches a course called "Advanced Python for Data" — and there is no way to enforce that every listed course exists.' },
+      { type: 'code', language: 'sql', value: "-- 1NF: one row per value\nstudents          (id, name)\nstudent_courses   (student_id, course_name)\n\n-- Also a 1NF violation: repeating columns\nCREATE TABLE orders (id, product1, product2, product3);\n-- What happens on the fourth product?" },
+      { type: 'heading', value: 'Second Normal Form — no partial dependencies' },
+      { type: 'text', value: 'Applies only when the primary key is composite. Every non-key column must depend on the whole key, not on part of it.' },
+      { type: 'dataset', name: 'enrollments (violates 2NF)', caption: 'PK is (student_id, course_id)', headers: ['student_id', 'course_id', 'student_name', 'course_title', 'grade'], rows: [
+        ['1', '10', 'Ana Iyer', 'SQL Basics', 'A'],
+        ['1', '11', 'Ana Iyer', 'Statistics', 'B'],
+        ['2', '10', 'Bo Chen', 'SQL Basics', 'A'],
+      ] },
+      { type: 'list', items: [
+        'grade depends on both student_id and course_id — correct, it belongs here.',
+        'student_name depends only on student_id — a partial dependency.',
+        'course_title depends only on course_id — a partial dependency.',
+      ] },
+      { type: 'code', language: 'sql', value: "-- 2NF: each partial dependency moves to its own table\nstudents    (id, name)\ncourses     (id, title)\nenrollments (student_id, course_id, grade)" },
+      { type: 'heading', value: 'Third Normal Form — no transitive dependencies' },
+      { type: 'text', value: 'No non-key column may depend on another non-key column. If A determines B and B determines C, then C does not belong in A table.' },
+      { type: 'dataset', name: 'employees (violates 3NF)', headers: ['id', 'name', 'dept_id', 'dept_name', 'dept_city'], rows: [
+        ['1', 'Ana Iyer', '1', 'Engineering', 'Pune'],
+        ['2', 'Bo Chen', '1', 'Engineering', 'Pune'],
+        ['3', 'Cy Das', '2', 'Sales', 'Mumbai'],
+      ] },
+      { type: 'text', value: 'dept_name does not depend on the employee — it depends on dept_id, which happens to be stored alongside. Rename Engineering and you must update every employee row.' },
+      { type: 'code', language: 'sql', value: "-- 3NF: the department facts move to the department\nemployees   (id, name, dept_id)\ndepartments (id, name, city)" },
+      { type: 'heading', value: 'BCNF — the strict form of 3NF' },
+      { type: 'text', value: 'Every determinant must be a candidate key. It differs from 3NF only in rare cases involving overlapping candidate keys, and a schema in 3NF is almost always already in BCNF.' },
+      { type: 'table', headers: ['Form', 'Requirement', 'Test question'], rows: [
+        ['1NF', 'Atomic values, no repeating groups', 'Does any cell hold a list?'],
+        ['2NF', '1NF + no partial dependencies', 'Does any column depend on only part of a composite key?'],
+        ['3NF', '2NF + no transitive dependencies', 'Does any non-key column depend on another non-key column?'],
+        ['BCNF', 'Every determinant is a candidate key', 'Does anything determine a column without itself being a key?'],
+      ] },
+      { type: 'alert', value: 'The practical target is 3NF. Going further is usually academic; stopping short of it produces the anomalies from the previous lesson. If you can recite "the key, the whole key, and nothing but the key" and check it column by column, you can normalise.' },
+      { type: 'heading', value: 'Deliberate denormalisation' },
+      { type: 'text', value: 'Normalisation optimises for correctness at the cost of joins. Sometimes the read cost is not worth paying, and duplicating data is the right decision — but it should be a decision, not an accident.' },
+      { type: 'list', items: [
+        'Storing unit_price on an order line: not a violation at all. The sale price is a historical fact, distinct from the current catalogue price.',
+        'A denormalised comment_count on posts: avoids counting on every page load. Requires a trigger or scheduled job to stay accurate.',
+        'A reporting table refreshed nightly: fully denormalised on purpose, because dashboards read it constantly and never write to it.',
+      ] },
+      { type: 'warning', value: 'Every denormalised column is a fact stored twice, which means it can disagree with itself. Add one only when you have measured the read cost, and always with an explicit mechanism keeping it in sync.' },
+    ],
+    objectives: [
+      'Apply 1NF, 2NF and 3NF to a flawed schema',
+      'Identify partial and transitive dependencies',
+      'Denormalise deliberately, with a sync mechanism',
+    ],
+    takeaways: [
+      'The key, the whole key, and nothing but the key — 1NF, 2NF, 3NF in one sentence.',
+      '2NF only applies when the primary key is composite.',
+      'Denormalisation is a measured trade, never a shortcut around design.',
+    ],
+  },
+
+  // ─────────────────────────── MODULE 14 ───────────────────────────
+  'm14-l1': {
+    title: 'UUID, JSONB, Arrays and ENUM',
+    content: [
+      { type: 'heading', value: 'UUID' },
+      { type: 'text', value: 'A 128-bit identifier that can be generated anywhere without coordinating with the database. Useful when clients create ids offline, when several systems merge data, or when a sequential id would leak business information.' },
+      { type: 'code', language: 'sql', value: "CREATE TABLE sessions (\n  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n  user_id    INT NOT NULL REFERENCES users(id),\n  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()\n);" },
+      { type: 'compare', columns: [
+        { title: 'UUID', tone: 'honey', items: [
+          'Generated by any client, no round trip',
+          'Reveals nothing about volume or order',
+          'Safe to merge across systems',
+          '16 bytes, and random values fragment indexes',
+        ] },
+        { title: 'Serial integer', tone: 'olive', items: [
+          'Generated by the database only',
+          'Sequential — /orders/1042 leaks your order count',
+          'Collides when merging two databases',
+          '4 bytes, and inserts append neatly to the index',
+        ] },
+      ] },
+      { type: 'alert', value: 'The index fragmentation point is real but often overstated. If it matters for your write volume, UUID v7 (time-ordered) gives you the uniqueness of a UUID with the insert locality of a sequence.' },
+      { type: 'heading', value: 'JSONB' },
+      { type: 'text', value: 'Binary JSON, stored parsed and indexable. It is the right tool when the shape of the data genuinely varies per row — and the wrong tool for anything with a stable structure.' },
+      { type: 'code', language: 'sql', value: "CREATE TABLE events (\n  id      BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,\n  type    TEXT NOT NULL,\n  payload JSONB NOT NULL DEFAULT '{}'\n);\n\n-- Operators\nSELECT payload -> 'user'        FROM events;  -- returns JSON\nSELECT payload ->> 'user'       FROM events;  -- returns text\nSELECT payload #>> '{user,id}'  FROM events;  -- nested path, as text\n\n-- Containment: does the payload include this structure?\nSELECT * FROM events WHERE payload @> '{\"status\": \"failed\"}';\n\n-- Key existence\nSELECT * FROM events WHERE payload ? 'retry_count';\n\n-- A GIN index makes containment queries fast\nCREATE INDEX idx_events_payload ON events USING GIN (payload);" },
+      { type: 'warning', value: 'JSONB has no schema, so nothing validates it, nothing enforces a foreign key inside it, and a typo in a key name produces NULL rather than an error. Use it for genuinely variable payloads; promote anything you filter or join on to a real column.' },
+      { type: 'heading', value: 'Arrays' },
+      { type: 'code', language: 'sql', value: "CREATE TABLE articles (\n  id   INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,\n  title TEXT NOT NULL,\n  tags  TEXT[] NOT NULL DEFAULT '{}'\n);\n\nINSERT INTO articles (title, tags)\nVALUES ('Indexes explained', ARRAY['databases','performance']);\n\nSELECT * FROM articles WHERE 'databases' = ANY(tags);\nSELECT * FROM articles WHERE tags @> ARRAY['databases'];   -- indexable with GIN\nSELECT UNNEST(tags) AS tag, COUNT(*) FROM articles GROUP BY tag;" },
+      { type: 'alert', value: 'An array column is a 1NF violation you are choosing on purpose. It is defensible for a small, closed set of simple labels you never need to join to. The moment a tag needs a description, a colour or its own page, it needs a table.' },
+      { type: 'heading', value: 'ENUM' },
+      { type: 'code', language: 'sql', value: "CREATE TYPE order_status AS ENUM ('pending','paid','shipped','cancelled');\n\nCREATE TABLE orders (\n  id     INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,\n  status order_status NOT NULL DEFAULT 'pending'\n);\n\n-- Enums sort in declaration order, which is often useful\nSELECT * FROM orders ORDER BY status;\n\n-- Adding a value is easy; removing or reordering one is not\nALTER TYPE order_status ADD VALUE 'refunded' AFTER 'paid';" },
+      { type: 'compare', columns: [
+        { title: 'ENUM type', tone: 'honey', items: [
+          'Compact storage, sorts in declaration order',
+          'Adding a value is a one-line ALTER',
+          'Removing or reordering requires recreating the type',
+          'Cannot carry a label, description or sort weight',
+        ] },
+        { title: 'Lookup table + FK', tone: 'olive', items: [
+          'Values are ordinary rows — add, rename, deactivate freely',
+          'Can carry a display label, colour, sort order',
+          'Costs a join to display',
+          'The safer default for anything user-facing',
+        ] },
+      ] },
+      { type: 'text', value: 'A third option many teams prefer: a TEXT column with a CHECK constraint. It has most of the safety of an ENUM and none of the ALTER TYPE friction.' },
+      { type: 'code', language: 'sql', value: "status TEXT NOT NULL DEFAULT 'pending'\n       CHECK (status IN ('pending','paid','shipped','cancelled'))" },
+    ],
+    objectives: [
+      'Choose between UUID and integer keys',
+      'Query and index JSONB effectively',
+      'Decide between ENUM, CHECK constraint and lookup table',
+    ],
+    takeaways: [
+      'UUIDs buy client-side generation and opacity; sequences buy compactness and index locality.',
+      'JSONB is for variable payloads — promote anything you filter on to a real column.',
+      'A TEXT column with a CHECK constraint avoids most of the pain of ALTER TYPE.',
+    ],
+  },
+
+  'm14-l2': {
+    title: 'CTEs and Recursive Queries',
+    content: [
+      { type: 'text', value: 'A Common Table Expression names a subquery so the rest of the statement can refer to it. It turns a deeply nested query inside-out into a readable sequence of steps.' },
+      { type: 'code', language: 'sql', value: "-- Nested: read from the inside out\nSELECT d.name, s.headcount\nFROM   (SELECT dept_id, COUNT(*) AS headcount\n        FROM employees GROUP BY dept_id) s\nJOIN   departments d ON d.id = s.dept_id\nWHERE  s.headcount >= 2;\n\n-- The same thing as a CTE: read top to bottom\nWITH dept_counts AS (\n  SELECT dept_id, COUNT(*) AS headcount\n  FROM   employees\n  GROUP BY dept_id\n)\nSELECT d.name, c.headcount\nFROM   dept_counts c\nJOIN   departments d ON d.id = c.dept_id\nWHERE  c.headcount >= 2;" },
+      { type: 'heading', value: 'Chaining several CTEs' },
+      { type: 'text', value: 'Each CTE can reference the ones defined before it, which lets a complex report be expressed as a pipeline of named stages.' },
+      { type: 'code', language: 'sql', value: "WITH monthly_revenue AS (\n  SELECT DATE_TRUNC('month', placed_at) AS month,\n         SUM(total)                     AS revenue\n  FROM   orders\n  WHERE  status = 'paid'\n  GROUP BY 1\n),\nwith_previous AS (\n  SELECT month,\n         revenue,\n         LAG(revenue) OVER (ORDER BY month) AS prev_revenue\n  FROM   monthly_revenue\n)\nSELECT month,\n       revenue,\n       prev_revenue,\n       ROUND((revenue - prev_revenue) * 100.0\n             / NULLIF(prev_revenue, 0), 1) AS growth_pct\nFROM   with_previous\nORDER BY month;" },
+      { type: 'alert', value: 'Each stage does one thing and has a name. That is the real value of CTEs — a colleague can read the query as prose, and you can test any stage in isolation by selecting from it.' },
+      { type: 'heading', value: 'Recursive CTEs' },
+      { type: 'text', value: 'A recursive CTE walks a hierarchy: org charts, category trees, threaded comments, graph paths. It has two halves joined by UNION ALL — a starting point, and a rule for the next level.' },
+      { type: 'code', language: 'sql', value: "WITH RECURSIVE org_chart AS (\n  -- Anchor: where the walk starts\n  SELECT id, name, manager_id, 1 AS level, name::TEXT AS path\n  FROM   employees\n  WHERE  manager_id IS NULL\n\n  UNION ALL\n\n  -- Recursive: join back to the CTE to find the next level down\n  SELECT e.id, e.name, e.manager_id, oc.level + 1,\n         oc.path || ' > ' || e.name\n  FROM   employees e\n  JOIN   org_chart oc ON oc.id = e.manager_id\n)\nSELECT REPEAT('  ', level - 1) || name AS chart, level, path\nFROM   org_chart\nORDER BY path;" },
+      { type: 'steps', title: 'How the recursion actually runs', steps: [
+        { label: 'Run the anchor', text: 'produces the top-level rows — the CEO. These become the working set.' },
+        { label: 'Run the recursive term', text: 'against the working set only, producing the next level down.' },
+        { label: 'Repeat', text: 'the new rows become the working set. Continue until an iteration produces no rows.' },
+        { label: 'Union', text: 'every row produced by any iteration is the final result.' },
+      ] },
+      { type: 'code', language: 'sql', value: "-- A number series, to show the mechanism plainly\nWITH RECURSIVE numbers AS (\n  SELECT 1 AS n\n  UNION ALL\n  SELECT n + 1 FROM numbers WHERE n < 10\n)\nSELECT * FROM numbers;    -- 1 through 10" },
+      { type: 'warning', value: 'Omit the stopping condition and the query runs forever. On real data, a cycle in the hierarchy — an employee who is transitively their own manager — does the same thing. Guard with a depth limit, or with PostgreSQL CYCLE clause.' },
+      { type: 'code', language: 'sql', value: "WITH RECURSIVE org_chart AS (\n  ...\n) CYCLE id SET is_cycle USING path_array\nSELECT * FROM org_chart WHERE NOT is_cycle;" },
+      { type: 'heading', value: 'Data-modifying CTEs' },
+      { type: 'code', language: 'sql', value: "-- Archive and delete in one atomic statement\nWITH moved AS (\n  DELETE FROM orders\n  WHERE  placed_at < '2023-01-01'\n  RETURNING *\n)\nINSERT INTO orders_archive SELECT * FROM moved;" },
+      { type: 'alert', value: 'Before PostgreSQL 12, a CTE was always materialised — an optimisation fence. Since then the planner inlines them when it can. Add MATERIALIZED or NOT MATERIALIZED to override that decision if a plan surprises you.' },
+    ],
+    objectives: [
+      'Restructure nested subqueries into readable CTE pipelines',
+      'Traverse hierarchies with recursive CTEs',
+      'Guard recursion against infinite loops',
+    ],
+    takeaways: [
+      'A CTE names a step, letting a complex query read top to bottom.',
+      'Recursive CTEs need an anchor, a recursive term, and a termination condition.',
+      'A cycle in your data loops forever unless you guard for it.',
+    ],
+  },
+
+  'm14-l3': {
+    title: 'Window Functions',
+    content: [
+      { type: 'text', value: 'A window function computes across a set of rows related to the current row — but unlike GROUP BY, it does not collapse them. Every input row survives, with the computed value attached.' },
+      { type: 'diagram', name: 'sql-window-vs-group', caption: 'The single clearest contrast in SQL: GROUP BY returns fewer rows, a window function returns the same rows plus a column.' },
+      { type: 'syntax', title: 'The anatomy of an OVER clause', parts: [
+        { clause: 'function()', text: 'SUM, AVG, ROW_NUMBER, RANK, LAG, LEAD — the value being computed.' },
+        { clause: 'PARTITION BY', text: 'splits rows into independent groups. The window restarts for each. Optional.' },
+        { clause: 'ORDER BY', text: 'orders rows inside the partition. Required for ranking and offset functions.' },
+        { clause: 'ROWS / RANGE', text: 'narrows the window to a moving frame, e.g. the previous three rows.' },
+      ] },
+      { type: 'queryResult', query: "SELECT name,\n       dept_id,\n       salary,\n       SUM(salary)  OVER (PARTITION BY dept_id)               AS dept_payroll,\n       ROUND(AVG(salary) OVER (PARTITION BY dept_id), 0)      AS dept_avg,\n       RANK()       OVER (PARTITION BY dept_id ORDER BY salary DESC) AS rank_in_dept\nFROM   employees\nORDER BY dept_id NULLS LAST, salary DESC;", headers: ['name', 'dept_id', 'salary', 'dept_payroll', 'dept_avg', 'rank_in_dept'], rows: [
+        ['Ana Iyer', '1', '92000', '170000', '85000', '1'],
+        ['Bo Chen', '1', '78000', '170000', '85000', '2'],
+        ['Cy Das', '2', '64000', '128000', '64000', '1'],
+        ['Dia Rao', '2', '64000', '128000', '64000', '1'],
+        ['Eli Roy', '', '51000', '51000', '51000', '1'],
+      ], note: 'Five rows in, five rows out. Cy and Dia tie on salary so RANK gives both 1. NULL forms its own partition, exactly as it does with GROUP BY.' },
+      { type: 'heading', value: 'The three families' },
+      { type: 'table', headers: ['Family', 'Functions', 'Answers'], rows: [
+        ['Ranking', 'ROW_NUMBER, RANK, DENSE_RANK, NTILE', 'Where does this row place within its group?'],
+        ['Offset', 'LAG, LEAD, FIRST_VALUE, LAST_VALUE', 'What was the previous row? The next? The best?'],
+        ['Aggregate', 'SUM, AVG, COUNT, MIN, MAX with OVER', 'How does this row compare to its group total?'],
+      ] },
+      { type: 'heading', value: 'LAG and LEAD — comparing to neighbours' },
+      { type: 'code', language: 'sql', value: "-- Month-over-month growth, without a self join\nSELECT month,\n       revenue,\n       LAG(revenue)  OVER (ORDER BY month) AS prev_month,\n       revenue - LAG(revenue) OVER (ORDER BY month) AS change,\n       LEAD(revenue) OVER (ORDER BY month) AS next_month\nFROM   monthly_revenue\nORDER BY month;" },
+      { type: 'alert', value: 'Before window functions, this required joining a table to itself on month = month - 1, which is awkward and breaks on gaps. LAG is both clearer and correct.' },
+      { type: 'heading', value: 'Frames — running totals and moving averages' },
+      { type: 'code', language: 'sql', value: "-- Running total: every row from the start of the partition to this one\nSELECT sold_on, amount,\n       SUM(amount) OVER (ORDER BY sold_on\n                         ROWS BETWEEN UNBOUNDED PRECEDING\n                                  AND CURRENT ROW) AS running_total\nFROM   sales;\n\n-- 7-day moving average\nSELECT sold_on, amount,\n       ROUND(AVG(amount) OVER (ORDER BY sold_on\n                               ROWS BETWEEN 6 PRECEDING\n                                        AND CURRENT ROW), 2) AS avg_7d\nFROM   sales;" },
+      { type: 'warning', value: 'With an ORDER BY and no explicit frame, the default is RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW — a running total, not a partition total. If you wanted the whole-partition sum, either omit the ORDER BY or state the frame explicitly. This default surprises almost everyone once.' },
+      { type: 'heading', value: 'Top-N per group — the pattern to memorise' },
+      { type: 'code', language: 'sql', value: "-- Highest-paid two people in each department\nWITH ranked AS (\n  SELECT name, dept_id, salary,\n         ROW_NUMBER() OVER (PARTITION BY dept_id ORDER BY salary DESC) AS rn\n  FROM   employees\n)\nSELECT name, dept_id, salary\nFROM   ranked\nWHERE  rn <= 2;" },
+      { type: 'text', value: 'This question — top N per group — is nearly unanswerable with GROUP BY alone and trivial with a window function. It is the canonical example of why they exist, and it appears in interviews constantly.' },
+      { type: 'code', language: 'sql', value: "-- A named window avoids repeating the OVER clause\nSELECT name, salary,\n       RANK()       OVER w AS rank,\n       DENSE_RANK() OVER w AS dense_rank,\n       LAG(salary)  OVER w AS next_highest\nFROM   employees\nWINDOW w AS (ORDER BY salary DESC);" },
+      { type: 'alert', value: 'Window functions are evaluated after WHERE, GROUP BY and HAVING but before ORDER BY and LIMIT. That is why filtering on a window result requires wrapping it in a CTE or subquery — the value does not exist yet when WHERE runs.' },
+    ],
+    objectives: [
+      'Compute per-group values without collapsing rows',
+      'Use ranking, offset and frame-based window functions',
+      'Solve top-N-per-group with ROW_NUMBER',
+    ],
+    takeaways: [
+      'GROUP BY collapses rows; OVER keeps them and adds a column.',
+      'ORDER BY inside OVER silently makes an aggregate a running total.',
+      'You cannot filter a window result in WHERE — wrap it in a CTE first.',
+    ],
+  },
+};

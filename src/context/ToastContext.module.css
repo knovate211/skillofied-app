@@ -6,9 +6,68 @@
   z-index: 10000;
   display: flex;
   flex-direction: column;
-  gap: 10px;
   pointer-events: none;
   max-width: min(380px, calc(100vw - 32px));
+}
+
+/* Each toast gets a wrapper so the exit can collapse the space it occupied and
+   let the stack slide up — the job `layout` did before. The spacing lives on
+   the slot rather than on the viewport's `gap`, because a gap cannot animate. */
+.slot {
+  display: grid;
+  grid-template-rows: 1fr;
+  margin-bottom: 10px;
+  animation: toastIn 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.slot > * {
+  min-height: 0;
+}
+
+.leaving {
+  animation: toastOut 180ms cubic-bezier(0.4, 0, 1, 1) forwards;
+  pointer-events: none;
+}
+
+/* These keyframes MUST stay in this file, not in index.css.
+   CSS Modules rewrites every animation name it sees here into a scoped one, so
+   a rule in this file referencing a globally declared `toastOut` resolves to a
+   name that does not exist and silently animates nothing. The IDE's own toast
+   stack styles itself with inline styles, which are not scoped, so it uses the
+   global copy in index.css instead. */
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes toastOut {
+  from {
+    opacity: 1;
+    transform: none;
+    grid-template-rows: 1fr;
+    margin-bottom: 10px;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(40px) scale(0.96);
+    grid-template-rows: 0fr;
+    margin-bottom: 0;
+  }
+}
+
+/* Respect a reduced-motion preference: still appear and disappear, but without
+   the slide and scale. framer-motion handled this for us. */
+@media (prefers-reduced-motion: reduce) {
+  .slot,
+  .leaving {
+    animation-duration: 1ms;
+  }
 }
 
 .toast {

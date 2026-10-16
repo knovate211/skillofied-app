@@ -9,6 +9,8 @@ import {
   startAttemptApi,
 } from '../../../api';
 import styles from './Tests.module.css';
+import ActionButton from '../../common/ActionButton';
+import { useNavigatePending } from '../../../hooks/useNavigatePending';
 
 const SCOPES = [
   { id: '', label: 'All tests' },
@@ -26,6 +28,7 @@ function logoColor(name: string): string {
 /** Lists the tests a student can take, with a rules confirmation before start. */
 const AssessmentListPage: React.FC = () => {
   const navigate = useNavigate();
+  const { go, isPending } = useNavigatePending();
   const [searchParams] = useSearchParams();
   const inviteToken = searchParams.get('token') ?? '';
   const [scope, setScope] = useState('');
@@ -155,22 +158,25 @@ const AssessmentListPage: React.FC = () => {
 
                   <div style={{ display: 'flex', gap: 8 }}>
                     {done ? (
-                      <button
+                      <ActionButton
                         className={styles.ghostBtn}
-                        onClick={() => navigate(`/placement/tests/result/${done.id}`)}
+                        onClick={() => go(`/placement/tests/result/${done.id}`)}
+                        loading={isPending(`/placement/tests/result/${done.id}`)}
                       >
                         Result
-                      </button>
+                      </ActionButton>
                     ) : null}
-                    <button
+                    <ActionButton
                       className={styles.primaryBtn}
                       disabled={!item.canStart}
+                      loading={resuming && isPending(`/placement/tests/attempt/${item.liveAttemptId}`)}
+                      loadingText="Resuming…"
                       onClick={() => (resuming
-                        ? navigate(`/placement/tests/attempt/${item.liveAttemptId}`)
+                        ? go(`/placement/tests/attempt/${item.liveAttemptId}`)
                         : setSelected(item))}
                     >
                       {resuming ? 'Resume' : 'Start test'}
-                    </button>
+                    </ActionButton>
                   </div>
                 </div>
               </div>
@@ -197,9 +203,9 @@ const AssessmentListPage: React.FC = () => {
               <button className={styles.ghostBtn} onClick={() => setSelected(null)} disabled={starting}>
                 Cancel
               </button>
-              <button className={styles.primaryBtn} onClick={() => void start(selected)} disabled={starting}>
+              <ActionButton className={styles.primaryBtn} onClick={() => start(selected)} loading={starting}>
                 {starting ? 'Starting…' : 'Start now'}
-              </button>
+              </ActionButton>
             </div>
           </div>
         </div>

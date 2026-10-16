@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -24,11 +25,11 @@ const Module6: React.FC<Props> = ({ page }) => {
   const [ex1Correct, setEx1Correct] = useState<boolean | null>(null);
 
   const quizQuestions: QuizQuestion[] = [
-    { id: 1, question: 'Q1: Which keyword allows re-declaring variables in the same scope?', options: ['A. const', 'B. let', 'C. var', 'D. None of the above'], correctAnswer: 'C. var' },
-    { id: 2, question: 'Q2: What is the output of console.log(typeof null)?', options: ['A. "null"', 'B. "undefined"', 'C. "object"', 'D. "string"'], correctAnswer: 'C. "object"' },
-    { id: 3, question: 'Q3: Which operator checks both value and type equality?', options: ['A. ==', 'B. ===', 'C. =', 'D. !='], correctAnswer: 'B. ===' },
-    { id: 4, question: 'Q4: How do you add an element to the end of an array?', options: ['A. push()', 'B. pop()', 'C. shift()', 'D. unshift()'], correctAnswer: 'A. push()' },
-    { id: 5, question: 'Q5: What is a key characteristic of let variables?', options: ['A. Hoisted with value', 'B. Block scoped', 'C. Cannot be reassigned', 'D. Global only'], correctAnswer: 'B. Block scoped' },
+    { id: 1, question: 'Q1: Which keyword allows re-declaring variables in the same scope?', options: ["A. var", "B. const", "C. let", "D. static"], correctAnswer: "A. var" },
+    { id: 2, question: 'Q2: What is the output of console.log(typeof null)?', options: ["A. \"null\"", "B. \"object\"", "C. \"undefined\"", "D. \"string\""], correctAnswer: "B. \"object\"" },
+    { id: 3, question: 'Q3: Which operator checks both value and type equality?', options: ["A. ==", "B. =", "C. ===", "D. !="], correctAnswer: "C. ===" },
+    { id: 4, question: 'Q4: How do you add an element to the end of an array?', options: ["A. pop()", "B. shift()", "C. unshift()", "D. push()"], correctAnswer: "D. push()" },
+    { id: 5, question: 'Q5: What is a key characteristic of let variables?', options: ["A. Block scoped", "B. Hoisted with value", "C. Cannot be reassigned", "D. Global only"], correctAnswer: "A. Block scoped" },
   ];
 
   const checkExercise1 = () => {
@@ -410,14 +411,9 @@ let y = 10;`} />
     case 14:
       return (
         <ModuleAssignment
+          moduleId="frontend-m6"
           title="Module 6 Assignment"
-          questions={[
-            'Compare let, const, and var with respect to scope and reassignment.',
-            'What are block scopes and temporal dead zones?',
-            'Write a small function that checks if a number is even or odd.',
-            'How is strict equality (===) different from loose equality (==)?',
-            'Explain the concept of Hoisting.',
-          ]}
+          questions={frontendAssignments.m6}
         />
       );
 

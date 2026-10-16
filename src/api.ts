@@ -130,63 +130,69 @@ export async function getMyCoursesApi(): Promise<any[]> {
 	return data.getMyCourses;
 }
 
-export async function getReferralsApi(): Promise<any[]> {
-  const query = `
-    query GetReferrals {
-      getReferrals {
-        id
-        name
-        date
-        status
-      }
-    }
-  `;
+export interface MyReferrals {
+  /** False when the programme is paused — the tab says so rather than showing a dead code. */
+  active: boolean;
+  name?: string;
+  code?: string;
+  link?: string;
+  clicks?: number;
+  conversions?: number;
+  earnedRupees?: number;
+  paidRupees?: number;
+  pendingRupees?: number;
+  courseRewardRupees?: number;
+  examRewardRupees?: number;
+  friendDiscountPercent?: number;
+  referrals?: {
+    friend: string;
+    item: string;
+    kind: string;
+    rewardRupees: number;
+    status: string;
+    at: string;
+    paidAt?: string;
+  }[];
+}
+
+/**
+ * The signed-in learner's referral link and progress.
+ *
+ * The code is issued and stored by the server; the browser no longer invents
+ * one. A code made up on the client could never be credited, which is what the
+ * old version did while promising a reward for it.
+ */
+export async function getMyReferralsApi(): Promise<MyReferrals> {
+  return authedRequest<MyReferrals>('GET', '/api/referral/me');
+}
+
+/**
+ * The learner's certificates, newest first.
+ *
+ * Certificates are issued by the certification service when an exam is passed.
+ * An error here returns an empty list on purpose: the empty state ("no
+ * certificates yet") is honest, where inventing placeholder credentials — as
+ * this once did — put credential ids in front of learners who had earned none.
+ */
+export interface CertificateRecord {
+  credentialId: string;
+  title: string;
+  scorePercent: number;
+  issuedAt: string;
+  revoked: boolean;
+  source: string;
+  verifyUrl: string;
+}
+
+export async function getCertificatesApi(): Promise<CertificateRecord[]> {
   try {
-    const data = await graphqlRequest<{ getReferrals: any[] }>(query);
-    return data.getReferrals || [];
+    const data = await authedRequest<{ certificates: CertificateRecord[] }>('GET', '/api/certification/mine');
+    return data.certificates ?? [];
   } catch (err) {
-    console.error("Referrals API not fully implemented yet:", err);
+    console.error('Could not load certificates:', err);
     return [];
   }
 }
-
-export async function getCertificatesApi(): Promise<any[]> {
-  const query = `
-    query GetCertificates {
-      getCertificates {
-        id
-        courseName
-        issueDate
-        credentialId
-        pdfUrl
-      }
-    }
-  `;
-  try {
-    const data = await graphqlRequest<{ getCertificates: any[] }>(query);
-    return data.getCertificates || [];
-  } catch (err) {
-    console.error("Certificates API not fully implemented yet:", err);
-    return [
-      {
-        id: 'cert-1',
-        courseName: 'Full Stack Web Development',
-        issueDate: '2023-08-12',
-        credentialId: 'SKLO-FSWD-9X2P',
-        pdfUrl: '#',
-      },
-      {
-        id: 'cert-2',
-        courseName: 'Advanced Data Structures in Java',
-        issueDate: '2023-11-05',
-        credentialId: 'SKLO-ADJ-4M7L',
-        pdfUrl: '#',
-      }
-    ];
-  }
-}
-
-// ── Auth / GraphQL ─────────────────────────────────────────────────────────────
 
 export async function loginApi(email: string, password: string): Promise<LoginResponse> {
   const resp = await fetch(`${API_BASE}/api/login`, {
@@ -534,6 +540,13 @@ export interface AttemptState {
   title: string;
   status: 'in_progress' | 'submitted' | 'evaluating' | 'evaluated' | 'disqualified' | 'expired';
   allowBacktrack: boolean;
+  /**
+   * Sequential paper: the candidate may not move past a question until it is
+   * answered. Independent of allowBacktrack, which governs the other direction
+   * — a scholarship paper sets both, so questions are revealed one at a time
+   * but an answer already given can still be revised.
+   */
+  lockForward: boolean;
   proctoring: Proctoring;
   serverNow: string;
   expiresAt: string;
@@ -582,7 +595,7 @@ const ATTEMPT_QUESTION_FIELDS = `
 `;
 
 const ATTEMPT_STATE_FIELDS = `
-  attemptId assessmentId title status allowBacktrack
+  attemptId assessmentId title status allowBacktrack lockForward
   proctoring { requireFullscreen tabSwitchLimit blockCopyPaste webcam }
   serverNow expiresAt secondsLeft
   sections { id title kind orderIndex durationMinutes }
@@ -861,6 +874,8 @@ export interface TestCaseResult {
   status: string;
   executionMs: number;
   error: string;
+  /** Hidden cases come back with input and outputs blanked by the server. */
+  isHidden?: boolean;
 }
 
 export interface RunCodeResult {
@@ -917,6 +932,7 @@ const TEST_RESULT_FIELDS = `
   status
   executionMs
   error
+  isHidden
 `;
 
 export async function listPracticeSetsApi(): Promise<PracticeSetSummary[]> {
@@ -1080,6 +1096,70 @@ export async function claimScholarshipApi(token: string): Promise<ScholarshipCla
   );
 }
 
+export interface HiringClaim {
+  token: string;
+  user: { id: string; email: string; name: string; role: string };
+  assessmentId: string;
+  inviteToken: string;
+  title: string;
+  companyName: string;
+}
+
+/**
+ * Exchanges the token from a hiring invitation email for a session. The link
+ * is emailed only to the candidate, so holding it is what proves who they are.
+ */
+export async function claimHiringApi(token: string): Promise<HiringClaim> {
+  return postPublic(
+    '/api/hiring/claim',
+    { token },
+    'This link is no longer valid. Please ask the hiring team for a new one.',
+  );
+}
+
+export interface CertificationClaim {
+  token: string;
+  user: { id: string; email: string; name: string; role: string };
+  assessmentId: string;
+  inviteToken: string;
+  examTitle: string;
+  registrationId: string;
+}
+
+/**
+ * Exchanges the token from a certification exam link for a session. The
+ * candidate paid for this exam; the link is the only thing they hold, so the
+ * errors it can return are all shown to them verbatim.
+ */
+export async function claimCertificationApi(token: string): Promise<CertificationClaim> {
+  return postPublic(
+    '/api/certification/claim',
+    { token },
+    'This exam link is no longer valid. Please contact us if you have paid for this exam.',
+  );
+}
+
+export interface CertificationOutcome {
+  /** False for any attempt that is not a certification exam. */
+  isCertification: boolean;
+  examTitle?: string;
+  /** Coding answers grade asynchronously, so a result can be pending. */
+  evaluating?: boolean;
+  passed?: boolean;
+  scorePercent?: number;
+  passPercent?: number;
+  credentialId?: string;
+  verifyUrl?: string;
+  issuedAt?: string;
+}
+
+export async function getCertificationOutcomeApi(attemptId: string): Promise<CertificationOutcome> {
+  return authedRequest<CertificationOutcome>(
+    'GET',
+    `/api/certification/outcome?attemptId=${encodeURIComponent(attemptId)}`,
+  );
+}
+
 export interface ScholarshipOutcome {
   isScholarship: boolean;
   courseName?: string;
@@ -1120,3 +1200,101 @@ export async function getScholarshipOutcomeApi(attemptId: string): Promise<Schol
   if (!resp.ok) return { isScholarship: false };
   return resp.json();
 }
+
+// ── Live-class attendance ─────────────────────────────────────────────────────
+
+export type SessionStatus = 'upcoming' | 'live' | 'present' | 'absent';
+
+export interface ClassSession {
+  schedule_id: string;
+  course_id: string;
+  title: string;
+  instructor: string;
+  meeting_url: string;
+  date: string;
+  starts_at: string;
+  ends_at: string;
+  status: SessionStatus;
+  marked_at?: string;
+}
+
+export interface AttendanceHistory {
+  from: string;
+  to: string;
+  present: number;
+  absent: number;
+  courses: { course_id: string; title: string; present: number; absent: number }[];
+  sessions: ClassSession[];
+}
+
+async function authedRequest<T>(method: string, path: string, body?: unknown): Promise<T> {
+  const token = localStorage.getItem('token');
+  const headers: Record<string, string> = {};
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  if (body !== undefined) headers['Content-Type'] = 'application/json';
+
+  const resp = await fetch(`${API_BASE}${path}`, {
+    method,
+    headers,
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+  });
+  // A dev server without a proxy for this path answers with index.html and a
+  // 200 — treat anything that is not JSON as a failure, not as an empty result.
+  if (!(resp.headers.get('content-type') || '').includes('application/json')) {
+    throw new Error(`Unexpected response from ${path} (${resp.status})`);
+  }
+  const data = await resp.json().catch(() => ({}));
+  if (!resp.ok) throw new Error(data.error || `Request failed (${resp.status})`);
+  return data as T;
+}
+
+/** Today's classes for the signed-in student, with the server's clock. */
+export const getTodayClassesApi = () =>
+  authedRequest<{ sessions: ClassSession[]; server_time: string }>('GET', '/api/attendance/today');
+
+/** Marks the class running right now. Safe to call twice — the first mark stands. */
+export const markAttendanceApi = (scheduleId: string) =>
+  authedRequest<{ success: boolean; marked_at: string }>('POST', '/api/attendance/mark', { schedule_id: scheduleId });
+
+export const getAttendanceHistoryApi = (from?: string, to?: string) => {
+  const q = new URLSearchParams();
+  if (from) q.set('from', from);
+  if (to) q.set('to', to);
+  const qs = q.toString();
+  return authedRequest<AttendanceHistory>('GET', `/api/attendance/history${qs ? `?${qs}` : ''}`);
+};
+
+// ─── Integrity (test player) ─────────────────────────────────────────────────
+// Evidence for the reviewer's integrity report. Both calls are fire-and-forget
+// from the player's point of view: a dropped heartbeat or snapshot must never
+// interrupt a candidate's test, so failures are swallowed by the callers.
+
+async function postIntegrity(path: string, body: unknown, keepalive = false): Promise<void> {
+  const token = localStorage.getItem('token');
+  const resp = await fetch(`${API_BASE}/api/integrity/${path}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify(body),
+    // Lets the last batch of snapshots leave even as the page unloads.
+    keepalive,
+  });
+  if (!resp.ok) throw new Error(`integrity ${path} failed (${resp.status})`);
+}
+
+/** Which browser session is sitting the attempt — the server spots a second one. */
+export const integrityHeartbeatApi = (attemptId: string, sessionId: string, screen: string) =>
+  postIntegrity('heartbeat', { attemptId, sessionId, screen });
+
+export interface CodeSnapshot {
+  at: number;
+  language: string;
+  code: string;
+  reason: 'start' | 'edit' | 'language' | 'run' | 'submit';
+}
+
+/** Editor history for code playback in the reviewer's report. */
+export const integritySnapshotsApi = (attemptId: string, questionId: string, snapshots: CodeSnapshot[], keepalive = false) =>
+  postIntegrity('snapshots', { attemptId, questionId, snapshots }, keepalive);

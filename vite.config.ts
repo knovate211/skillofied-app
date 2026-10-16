@@ -31,8 +31,34 @@ export default defineConfig(({ mode }) => {
           target: apiTarget,
           changeOrigin: true,
         },
+        // Integrity evidence from the test player: heartbeats and code snapshots.
+        '/api/integrity': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
+        // Hiring invitations: /claim turns the emailed link into a session.
+        '/api/hiring': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
         // Public endpoints behind the login page's "Forgot password?" flow.
         '/api/password-reset': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
+        // The referral programme: the learner's own link and progress.
+        '/api/referral': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
+        // Certification exams: the claim hand-off, the result and the
+        // learner's certificates.
+        '/api/certification': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
+        // Live-class attendance: the pop-up and the profile Attendance tab.
+        '/api/attendance': {
           target: apiTarget,
           changeOrigin: true,
         },

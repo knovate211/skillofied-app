@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -21,11 +22,11 @@ const Module8: React.FC<Props> = ({ page }) => {
   const [spreadArray2] = useState<string[]>(['Node', 'Express']);
 
   const quizQuestions: QuizQuestion[] = [
-    { id: 1, question: 'Q1: What happens if you reassign a const variable?', options: ['A. It works perfectly', 'B. It silently fails', 'C. It throws a TypeError', 'D. It logs undefined'], correctAnswer: 'C. It throws a TypeError' },
+    { id: 1, question: 'Q1: What happens if you reassign a const variable?', options: ["A. It throws a TypeError", "B. It works perfectly", "C. It silently fails", "D. It logs undefined"], correctAnswer: "A. It throws a TypeError" },
     { id: 2, question: 'Q2: How do arrow functions differ from regular functions regarding the "this" keyword?', options: ['A. Arrow functions have their own "this"', 'B. Arrow functions inherit "this" from the parent scope', 'C. Arrow functions don\'t support "this"', 'D. Regular functions cannot use "this"'], correctAnswer: 'B. Arrow functions inherit "this" from the parent scope' },
     { id: 3, question: 'Q3: Which character wraps template literals?', options: ['A. Double quotes ""', 'B. Single quotes \'\'', 'C. Backticks ``', 'D. Parentheses ()'], correctAnswer: 'C. Backticks ``' },
-    { id: 4, question: 'Q4: What syntax copies all elements from array A into array B using the spread operator?', options: ['A. B = [A]', 'B. B = [...A]', 'C. B = rest(A)', 'D. B = copy(A)'], correctAnswer: 'B. B = [...A]' },
-    { id: 5, question: 'Q5: Which keyword allows a class to inherit properties from another class?', options: ['A. inherits', 'B. extends', 'C. super', 'D. class'], correctAnswer: 'B. extends' },
+    { id: 4, question: 'Q4: What syntax copies all elements from array A into array B using the spread operator?', options: ["A. B = [A]", "B. B = rest(A)", "C. B = copy(A)", "D. B = [...A]"], correctAnswer: "D. B = [...A]" },
+    { id: 5, question: 'Q5: Which keyword allows a class to inherit properties from another class?', options: ["A. extends", "B. inherits", "C. super", "D. class"], correctAnswer: "A. extends" },
   ];
 
   const checkArrowConvert = () => {
@@ -48,7 +49,7 @@ const Module8: React.FC<Props> = ({ page }) => {
           <p className={styles.paragraph}>ECMAScript 2015 (ES6) introduced two block-scoped keywords: <code>let</code> and <code>const</code>, replacing the legacy function-scoped <code>var</code>.</p>
           
           <h3 className={styles.subtitle}>Reassignment vs Mutation</h3>
-          <p className={styles.paragraph}>A common misconception is that <code>const</code> makes variables immutable. In reality, it only prevents **reassignment** of the variable identifier. The properties of const objects and arrays can still be mutated.</p>
+          <p className={styles.paragraph}>A common misconception is that <code>const</code> makes variables immutable. In reality, it only prevents <strong>reassignment</strong> of the variable identifier. The properties of const objects and arrays can still be mutated.</p>
 
           <div className={styles.codeLabel}>Reassignment and Mutation sandbox</div>
           <CodeSnippet isRunnable={true} language="CSS" code={`const user = { name: "John" };
@@ -272,14 +273,9 @@ class Dog extends Animal {
     case 12:
       return (
         <ModuleAssignment
+          moduleId="frontend-m8"
           title="Module 8 Assignment"
-          questions={[
-            'Can properties of const arrays and objects be modified? Give an example.',
-            'How do you rewrite a standard function block into arrow function format?',
-            'Demonstrate object destructuring with default fallbacks.',
-            'Compare spread and rest parameters applications.',
-            'Explain the role of super() in constructor chains.',
-          ]}
+          questions={frontendAssignments.m8}
         />
       );
 

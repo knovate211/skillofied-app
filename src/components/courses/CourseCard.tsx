@@ -1,8 +1,9 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Course } from '../../types';
 import styles from './CourseCard.module.css';
 import { getCourseButtonText, getCourseProgress } from '../../utils/courseHelpers';
+import ActionButton from '../common/ActionButton';
+import { useNavigatePending } from '../../hooks/useNavigatePending';
 
 interface Props {
   course: Course;
@@ -64,6 +65,25 @@ const iconFor = (title: string) => {
       </svg>
     );
   }
+  if (t.includes('operating system')) {
+    return (
+      <svg {...props}>
+        <rect x="3" y="4" width="18" height="13" rx="2" />
+        <path d="M8 21h8M12 17v4" />
+        <path d="M7 8h4M7 11h2" />
+      </svg>
+    );
+  }
+  if (t.includes('computer network') || t.includes('networking')) {
+    return (
+      <svg {...props}>
+        <circle cx="12" cy="5" r="2" />
+        <circle cx="5" cy="18" r="2" />
+        <circle cx="19" cy="18" r="2" />
+        <path d="M12 7v4M12 11H5v5M12 11h7v5" />
+      </svg>
+    );
+  }
   if (t.includes('testing') || t.includes('qa')) {
     return (
       <svg {...props}>
@@ -106,6 +126,8 @@ const COURSE_ROUTES: Record<string, string> = {
   'Golang Engineering': '/courses/golang',
   'Full Stack Engineering': '/courses/fullstack',
   'GenAI & Forward Deployed Engineering': '/courses/genai',
+  'Operating Systems': '/courses/os',
+  'Computer Networks': '/courses/networking',
   'GenAI Engineering': '/courses/genai',
   'Software Testing': '/courses/testing',
   'SEO Fundamentals': '/courses/seo',
@@ -113,18 +135,15 @@ const COURSE_ROUTES: Record<string, string> = {
 };
 
 const CourseCard: React.FC<Props> = ({ course, index = 0 }) => {
-  const navigate = useNavigate();
+  const { go, isPending } = useNavigatePending();
   const toneClass = TONES[index % TONES.length];
 
   const progressValue = getCourseProgress(course.title);
   const displayProgress = Math.round(progressValue);
 
-  const open = () => {
-    const route = COURSE_ROUTES[course.title];
-    // No course page built yet — the syllabus landing page still shows the
-    // outline rather than dead-ending the learner.
-    navigate(route || '/courses');
-  };
+  // No course page built yet — the syllabus landing page still shows the
+  // outline rather than dead-ending the learner.
+  const route = COURSE_ROUTES[course.title] || '/courses';
 
   return (
     <div className={`${styles.card} ${toneClass}`}>
@@ -163,10 +182,15 @@ const CourseCard: React.FC<Props> = ({ course, index = 0 }) => {
           </div>
         </div>
 
-        <button className={styles.btn} onClick={open}>
-          <span>{getCourseButtonText(course.progress)}</span>
-          <span aria-hidden="true">→</span>
-        </button>
+        <ActionButton
+          className={styles.btn}
+          onClick={() => go(route)}
+          loading={isPending(route)}
+          loadingText="Opening…"
+          trailing={<span aria-hidden="true">→</span>}
+        >
+          {getCourseButtonText(progressValue)}
+        </ActionButton>
       </div>
     </div>
   );

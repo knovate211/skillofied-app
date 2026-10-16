@@ -23,10 +23,10 @@ const CourseOverview: React.FC = () => {
 
         <h2 style={{ fontSize: '22px', marginBottom: '12px', color: 'var(--heading)' }}>How the Course Runs</h2>
         <p style={{ fontSize: '16px', lineHeight: '1.6', marginBottom: '16px' }}>
-          Twelve modules, each with lessons, a quiz and a practice set you complete in the built-in editor.
-          Coding tasks are pure-Python and run in the sandbox, so you learn the mechanics — similarity,
-          chunking, ranking, retries, cost — by implementing them rather than importing them. Tasks that
-          need a live model provider or a database are written as design exercises instead.
+          Twelve modules, each with lessons, a module quiz and a practice set. Both are multiple choice and
+          both are graded. The questions put you in a real situation — a RAG answer citing a document that
+          was never retrieved, a retry storm, a bill that doubled — and ask what you would conclude, with
+          the wrong options being the mistakes teams actually make.
         </p>
 
         <h2 style={{ fontSize: '22px', marginBottom: '12px', color: 'var(--heading)' }}>Prerequisites</h2>

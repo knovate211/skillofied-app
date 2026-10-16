@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Group as PanelGroup, Panel, Separator as PanelResizeHandle } from 'react-resizable-panels';
-import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, Info, XCircle } from 'lucide-react';
 
 import WorkspaceHeader from './WorkspaceHeader';
@@ -60,15 +59,23 @@ const languageOptions = (p: ProblemDetail | null): { id: string; label: string }
 
 const toPanelResults = (testResults: TestCaseResult[]) =>
   testResults.map((tr) => ({
-    input: tr.input,
-    expected: tr.expectedOutput,
-    actual: tr.actualOutput,
+    input: tr.isHidden ? 'Hidden test case' : tr.input,
+    expected: tr.isHidden ? '—' : tr.expectedOutput,
+    actual: tr.isHidden ? '—' : tr.actualOutput,
     passed: tr.status === 'Accepted',
     stdout: tr.error,
   }));
 
+/** Must match the toastOut keyframe in index.css. */
+const TOAST_EXIT_MS = 180;
+
+// How long a submission's result is polled for before giving up.
+const SUBMIT_POLL_TIMEOUT_MS = 3 * 60 * 1000;
+
 // Toast interface
 interface Toast {
+  /** Set while the exit animation plays; the row unmounts when it finishes. */
+  leaving?: boolean;
   id: string;
   message: string;
   type: 'success' | 'error' | 'info';
@@ -204,7 +211,11 @@ const SolveProblemPage: React.FC = () => {
     const toastId = Math.random().toString(36).substr(2, 9);
     setToasts((prev) => [...prev, { id: toastId, message, type }]);
     setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== toastId));
+      setToasts((prev) => prev.map((t) => (t.id === toastId ? { ...t, leaving: true } : t)));
+      setTimeout(
+        () => setToasts((prev) => prev.filter((t) => t.id !== toastId)),
+        TOAST_EXIT_MS,
+      );
     }, 4000);
   };
 
@@ -305,6 +316,13 @@ const SolveProblemPage: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Cleared on unmount so a pending result poll stops with the page.
+  const pollAlive = React.useRef(true);
+  useEffect(() => {
+    pollAlive.current = true;
+    return () => { pollAlive.current = false; };
+  }, []);
+
   // Submit code asynchronously via API gateway and poll status
   const handleSubmitCode = async () => {
     setIsSubmitting(true);
@@ -315,12 +333,15 @@ const SolveProblemPage: React.FC = () => {
       const submissionId = await submitCodeApi(id || '', language, code);
       showToast("Code submitted! Awaiting evaluation...", "info");
 
-      // Poll getSubmission until it's graded
-      let pollCount = 0;
-      const pollInterval = setInterval(async () => {
-        pollCount++;
-        if (pollCount > 15) {
-          clearInterval(pollInterval);
+      // Poll getSubmission until it's graded. Each request waits for the last
+      // to answer, the gap grows from 1s to 5s, and the poll stops when the
+      // learner leaves the page. Grading queues behind other submissions at
+      // busy times, so it is given minutes, not seconds.
+      const deadline = Date.now() + SUBMIT_POLL_TIMEOUT_MS;
+      let delay = 1000;
+      const poll = async () => {
+        if (!pollAlive.current) return;
+        if (Date.now() > deadline) {
           setIsSubmitting(false);
           setIsRunning(false);
           showToast("Evaluation timed out. Please check submissions history.", "error");
@@ -329,8 +350,8 @@ const SolveProblemPage: React.FC = () => {
 
         try {
           const sub = await getSubmissionApi(submissionId);
+          if (!pollAlive.current) return;
           if (sub.status !== 'Pending' && sub.status !== 'Running') {
-            clearInterval(pollInterval);
             setIsSubmitting(false);
             setIsRunning(false);
 
@@ -359,11 +380,15 @@ const SolveProblemPage: React.FC = () => {
             } else {
               showToast(`Submission Rejected: ${sub.status}`, "error");
             }
+            return;
           }
         } catch (err) {
           console.error("Failed to poll submission status:", err);
         }
-      }, 1000);
+        delay = Math.min(delay * 1.5, 5000);
+        setTimeout(poll, delay);
+      };
+      setTimeout(poll, delay);
 
     } catch (err: any) {
       console.error("Submit code error:", err);
@@ -385,28 +410,28 @@ const SolveProblemPage: React.FC = () => {
     <div className="h-screen w-screen flex flex-col overflow-hidden font-sans select-none antialiased" style={{ background: '#0d0f1a', color: '#e2e8f0' }}>
       {/* Toast notifications */}
       <div className="fixed top-4 right-4 z-[9999] flex flex-col space-y-2 pointer-events-none">
-        <AnimatePresence>
-          {toasts.map((toast) => (
-            <motion.div
-              key={toast.id}
-              initial={{ opacity: 0, y: -20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 50, scale: 0.95 }}
-              className={`flex items-center space-x-2.5 px-4 py-3 rounded-xl border shadow-xl text-xs font-semibold pointer-events-auto ${toast.type === 'success'
-                  ? 'border-green-500/20 text-green-500 shadow-green-500/5'
-                  : toast.type === 'error'
-                    ? 'border-red-500/20 text-red-500 shadow-red-500/5'
-                    : 'border-accent/20 text-accent shadow-accent/5'
-                }`}
-              style={{ background: '#151829' }}
-            >
-              {toast.type === 'success' && <CheckCircle className="h-4 w-4" />}
-              {toast.type === 'error' && <XCircle className="h-4 w-4" />}
-              {toast.type === 'info' && <Info className="h-4 w-4" />}
-              <span>{toast.message}</span>
-            </motion.div>
-          ))}
-        </AnimatePresence>
+        {toasts.map((toast) => (
+          <div
+            key={toast.id}
+            className={`flex items-center space-x-2.5 px-4 py-3 rounded-xl border shadow-xl text-xs font-semibold pointer-events-auto ${toast.type === 'success'
+                ? 'border-green-500/20 text-green-500 shadow-green-500/5'
+                : toast.type === 'error'
+                  ? 'border-red-500/20 text-red-500 shadow-red-500/5'
+                  : 'border-accent/20 text-accent shadow-accent/5'
+              }`}
+            style={{
+              background: '#151829',
+              animation: toast.leaving
+                ? `toastOut ${TOAST_EXIT_MS}ms cubic-bezier(0.4, 0, 1, 1) forwards`
+                : 'toastIn 180ms cubic-bezier(0.22, 1, 0.36, 1)',
+            }}
+          >
+            {toast.type === 'success' && <CheckCircle className="h-4 w-4" />}
+            {toast.type === 'error' && <XCircle className="h-4 w-4" />}
+            {toast.type === 'info' && <Info className="h-4 w-4" />}
+            <span>{toast.message}</span>
+          </div>
+        ))}
       </div>
 
       {/* Header */}

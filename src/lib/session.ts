@@ -31,3 +31,9 @@ export function getRole(): string {
 export function isApplicantSession(): boolean {
   return getRole() === 'applicant';
 }
+
+// A hiring candidate is in the same position: a session that exists to sit
+// the one company test they were emailed, confined to it by App.tsx.
+export function isCandidateSession(): boolean {
+  return getRole() === 'candidate';
+}

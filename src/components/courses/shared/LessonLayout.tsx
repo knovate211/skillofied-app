@@ -65,7 +65,7 @@ const LessonLayout: React.FC<Props> = ({
 
   return (
     <div className={styles.wrap}>
-      <div className={styles.grid}>
+      <div className={`${styles.grid} ${sidePanel ? '' : styles.gridSolo}`}>
         <div className={styles.main}>
           {badge && <span className={styles.badge}>{badge}</span>}
           <h1 className={styles.title}>{title}</h1>

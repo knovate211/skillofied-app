@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -13,11 +14,11 @@ const Module16: React.FC<Props> = ({ page }) => {
   const [themeMode, setThemeMode] = useState<'light' | 'dark'>('dark');
 
   const quizQuestions: QuizQuestion[] = [
-    { id: 1, question: 'Q1: What is "Prop Drilling" in React development?', options: ['A. Fetching parameters from server databases', 'B. Passing props through multiple nested components that don\'t need them, just to reach a deep child component', 'C. Compiling JSX into variables', 'D. Reassigning local state variables'], correctAnswer: 'B. Passing props through multiple nested components that don\'t need them, just to reach a deep child component' },
+    { id: 1, question: 'Q1: What is "Prop Drilling" in React development?', options: ["A. Passing props through multiple nested components that don't need them, just to reach a deep child component", "B. Fetching parameters from server databases", "C. Compiling JSX into variables", "D. Reassigning local state variables"], correctAnswer: "A. Passing props through multiple nested components that don't need them, just to reach a deep child component" },
     { id: 2, question: 'Q2: In useReducer, what triggers a state transition?', options: ['A. Mutating state directly', 'B. Dispatching an action object', 'C. Re-rendering the layout page', 'D. Changing props inputs'], correctAnswer: 'B. Dispatching an action object' },
-    { id: 3, question: 'Q3: How does Zustand differ from Redux Toolkit?', options: ['A. Zustand requires huge boilerplate code templates', 'B. Zustand is lightweight and does not require Provider wrapper setups', 'C. Zustand is written in Java', 'D. There is no difference'], correctAnswer: 'B. Zustand is lightweight and does not require Provider wrapper setups' },
-    { id: 4, question: 'Q4: Which React features enable lazy-loading of components?', options: ['A. useMemo & useCallback', 'B. React.lazy() & Suspense', 'C. useEffect & useState', 'D. Context API & Providers'], correctAnswer: 'B. React.lazy() & Suspense' },
-    { id: 5, question: 'Q5: What are the two main parts returned by a Context object?', options: ['A. dispatch & actions', 'B. Provider & Consumer', 'C. state & setState', 'D. get & set'], correctAnswer: 'B. Provider & Consumer' },
+    { id: 3, question: 'Q3: How does Zustand differ from Redux Toolkit?', options: ["A. Zustand requires huge boilerplate code templates", "B. Zustand is written in Java", "C. Zustand is lightweight and does not require Provider wrapper setups", "D. There is no difference"], correctAnswer: "C. Zustand is lightweight and does not require Provider wrapper setups" },
+    { id: 4, question: 'Q4: Which React features enable lazy-loading of components?', options: ["A. useMemo & useCallback", "B. useEffect & useState", "C. Context API & Providers", "D. React.lazy() & Suspense"], correctAnswer: "D. React.lazy() & Suspense" },
+    { id: 5, question: 'Q5: What are the two main parts returned by a Context object?', options: ["A. Provider & Consumer", "B. dispatch & actions", "C. state & setState", "D. get & set"], correctAnswer: "A. Provider & Consumer" },
   ];
 
   switch (page) {
@@ -25,8 +26,8 @@ const Module16: React.FC<Props> = ({ page }) => {
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 16.1: Context API</h2>
-          <p className={styles.paragraph}>In React, data is passed top-down via props. However, for global properties (e.g. user authentication or themes), passing props through dozens of nested intermediate components is tedious and error-prone (known as **Prop Drilling**).</p>
-          <p className={styles.paragraph}>The **Context API** provides a way to share values like these between components without having to explicitly pass a prop through every level of the tree.</p>
+          <p className={styles.paragraph}>In React, data is passed top-down via props. However, for global properties (e.g. user authentication or themes), passing props through dozens of nested intermediate components is tedious and error-prone (known as <strong>Prop Drilling</strong>).</p>
+          <p className={styles.paragraph}>The <strong>Context API</strong> provides a way to share values like these between components without having to explicitly pass a prop through every level of the tree.</p>
           
           <div className={styles.codeLabel}>Context creation and usage</div>
           <CodeSnippet isRunnable={true} language="JavaScript" code={`import React, { createContext, useContext } from 'react';
@@ -166,14 +167,9 @@ function App() {
     case 8:
       return (
         <ModuleAssignment
+          moduleId="frontend-m16"
           title="Module 16 Assignment"
-          questions={[
-            'Outline how React Context prevents Prop Drilling issues.',
-            'Describe the parameters accepted by a reducer function.',
-            'Contrast Zustand global stores and Context Providers.',
-            'What is the role of selectors in Redux Toolkit?',
-            'Explain how React.lazy and Suspense boundaries reduce initial page load times.',
-          ]}
+          questions={frontendAssignments.m16}
         />
       );
 

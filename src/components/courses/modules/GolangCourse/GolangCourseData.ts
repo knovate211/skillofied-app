@@ -321,7 +321,12 @@ Hello, Aditi!`,
       }
     ],
     quiz: [
-      { id: 1, question: 'Which command compiles and runs a Go file directly?', options: ['go run', 'go build', 'go start', 'go exec'], correctAnswer: 'go run' }
+      { id: 1, question: 'Which command compiles and runs a Go file directly?', options: ['go run', 'go build', 'go start', 'go exec'], correctAnswer: 'go run' },
+      { id: 2, question: "Which company created Go?", options: ["Microsoft", "Mozilla", "Google", "Apple"], correctAnswer: "Google" },
+      { id: 3, question: "What does `go build` produce for a main package?", options: ["A bytecode .class file", "An interpreted script", "A shared JavaScript bundle", "A compiled executable binary"], correctAnswer: "A compiled executable binary" },
+      { id: 4, question: "Which function is the entry point of a Go program?", options: ["main() in package main", "init() in any package", "start() in package app", "run() in package main"], correctAnswer: "main() in package main" },
+      { id: 5, question: "Why does Go compile quickly compared with C++?", options: ["It skips type checking", "Simple grammar and explicit, acyclic imports", "It compiles only on first run", "It interprets code instead"], correctAnswer: "Simple grammar and explicit, acyclic imports" },
+      { id: 6, question: "What happens when a Go file imports a package it never uses?", options: ["It compiles with a warning", "The import is removed at runtime", "Compilation fails with an error", "It runs but logs a notice"], correctAnswer: "Compilation fails with an error" },
     ],
     assignment: {
       prompts: [
@@ -794,7 +799,12 @@ this goes to stderr`,
       }
     ],
     quiz: [
-      { id: 1, question: 'Which format verb prints a variable type in fmt.Printf?', options: ['%T', '%v', '%s', '%d'], correctAnswer: '%T' }
+      { id: 1, question: 'Which format verb prints a variable type in fmt.Printf?', options: ["%v", "%T", "%s", "%d"], correctAnswer: "%T" },
+      { id: 2, question: "What is the zero value of an uninitialised int variable?", options: ["nil", "0", "undefined", "-1"], correctAnswer: "0" },
+      { id: 3, question: "Where can the short declaration `x := 5` be used?", options: ["Only at package level", "Anywhere in the file", "Only inside functions", "Only inside for loops"], correctAnswer: "Only inside functions" },
+      { id: 4, question: "How do you convert an int `n` to float64?", options: ["(float64) n", "n.toFloat64()", "parseFloat(n)", "float64(n)"], correctAnswer: "float64(n)" },
+      { id: 5, question: "What does `const Pi = 3.14` give you that `var Pi = 3.14` does not?", options: ["A value fixed at compile time", "A value stored on the heap", "A value that is always a string", "A value shared across goroutines"], correctAnswer: "A value fixed at compile time" },
+      { id: 6, question: "What is the result of `7 / 2` when both operands are ints?", options: ["3.5", "3", "4", "A compile error"], correctAnswer: "3" },
     ],
     assignment: {
       prompts: [
@@ -1199,7 +1209,12 @@ extracted find: 9 at (2,2)`,
       }
     ],
     quiz: [
-      { id: 1, question: 'What is the only looping keyword in Go?', options: ['for', 'while', 'do', 'each'], correctAnswer: 'for' }
+      { id: 1, question: 'What is the only looping keyword in Go?', options: ["while", "do", "for", "each"], correctAnswer: "for" },
+      { id: 2, question: "Does a Go switch case fall through to the next case by default?", options: ["No; you must write fallthrough", "Yes, like C", "Only for string cases", "Only if break is omitted"], correctAnswer: "No; you must write fallthrough" },
+      { id: 3, question: "How do you write a while-style loop in Go?", options: ["while condition { }", "for condition { }", "loop condition { }", "do { } while condition"], correctAnswer: "for condition { }" },
+      { id: 4, question: "What does `continue` do inside a for loop?", options: ["Exits the loop entirely", "Restarts the loop from zero", "Skips to the next iteration", "Exits the enclosing function"], correctAnswer: "Skips to the next iteration" },
+      { id: 5, question: "What is a labelled break used for?", options: ["Jumping to any line in the file", "Pausing a goroutine", "Exiting a switch case early", "Breaking out of an outer loop"], correctAnswer: "Breaking out of an outer loop" },
+      { id: 6, question: "Which is valid Go syntax for an if with a short statement?", options: ["if v := f(); v > 0 { }", "if (v = f(); v > 0) { }", "if v > 0 where v = f() { }", "if let v = f() { }"], correctAnswer: "if v := f(); v > 0 { }" },
     ],
     assignment: {
       prompts: [
@@ -1329,7 +1344,12 @@ func main() {
 }`, takeaways: ['Recursive functions call themselves.', 'Always define a base case to prevent stack overflows.'] }
     ],
     quiz: [
-      { id: 1, question: 'How do you ignore a returned value from a function?', options: ['Using _ blank identifier', 'Using null', 'Using nil', 'By leaving it empty'], correctAnswer: 'Using _ blank identifier' }
+      { id: 1, question: 'How do you ignore a returned value from a function?', options: ["Using null", "Using nil", "By leaving it empty", "Using _ blank identifier"], correctAnswer: "Using _ blank identifier" },
+      { id: 2, question: "What does a variadic parameter `nums ...int` arrive as inside the function?", options: ["An [N]int array", "A map of ints", "A channel of ints", "A []int slice"], correctAnswer: "A []int slice" },
+      { id: 3, question: "How do you pass an existing slice `s` to a variadic function?", options: ["f(s...)", "f(*s)", "f(...s)", "f(&s)"], correctAnswer: "f(s...)" },
+      { id: 4, question: "What is a closure in Go?", options: ["A function that cannot return values", "A function value that captures surrounding variables", "A method bound to a struct pointer", "A function that runs only once"], correctAnswer: "A function value that captures surrounding variables" },
+      { id: 5, question: "By default, how are arguments passed to Go functions?", options: ["By reference", "By pointer automatically", "By value; a copy is passed", "By name"], correctAnswer: "By value; a copy is passed" },
+      { id: 6, question: "Why is a base case essential in a recursive function?", options: ["Go requires it to compile", "It makes the function run concurrently", "It caches earlier results", "Without one the call stack grows until it overflows"], correctAnswer: "Without one the call stack grows until it overflows" },
     ],
     assignment: {
       prompts: [
@@ -1407,7 +1427,12 @@ func main() {
 }`, takeaways: ['Combine slices and maps to build complex structures.', 'Maps offer O(1) time complexity for lookup operations.'] }
     ],
     quiz: [
-      { id: 1, question: 'Which built-in function increases a slice size?', options: ['append', 'push', 'extend', 'add'], correctAnswer: 'append' }
+      { id: 1, question: 'Which built-in function increases a slice size?', options: ['append', 'push', 'extend', 'add'], correctAnswer: 'append' },
+      { id: 2, question: "What is the key difference between an array and a slice?", options: ["A slice cannot hold structs", "An array is always heap-allocated", "An array has a fixed length that is part of its type", "A slice cannot be iterated with range"], correctAnswer: "An array has a fixed length that is part of its type" },
+      { id: 3, question: "Reading a map key that does not exist returns what?", options: ["A runtime panic", "nil for every value type", "A compile error", "The zero value of the value type"], correctAnswer: "The zero value of the value type" },
+      { id: 4, question: "How do you test whether a key is present in a map?", options: ["v, ok := m[key]", "m.has(key)", "key in m", "m.contains(key)"], correctAnswer: "v, ok := m[key]" },
+      { id: 5, question: "Is iteration order over a Go map guaranteed?", options: ["Yes, insertion order", "No; it is deliberately unspecified", "Yes, sorted by key", "Only for string keys"], correctAnswer: "No; it is deliberately unspecified" },
+      { id: 6, question: "Why can two slices affect each other after `b := a[1:3]`?", options: ["Slicing copies but links them", "Go syncs slices automatically", "They share the same underlying array", "b is a pointer to a"], correctAnswer: "They share the same underlying array" },
     ],
     assignment: {
       prompts: [
@@ -1495,7 +1520,12 @@ func main() {
       { id: 'm6-l6', title: 'Lesson 6.6 Best Practices', objectives: ['Efficient structs allocation'], theory: 'When designing structs, order fields from largest to smallest type. This helps Go optimize struct memory usage by minimizing padding bytes.', takeaways: ['Order struct fields from largest to smallest type to reduce padding.', 'Pass large structs as pointers to avoid copy overhead.'] }
     ],
     quiz: [
-      { id: 1, question: 'How does Go export a struct field for external package access?', options: ['Capitalize the first letter', 'Prefix with export keyword', 'Prefix with public keyword', 'Define JSON tags'], correctAnswer: 'Capitalize the first letter' }
+      { id: 1, question: 'How does Go export a struct field for external package access?', options: ["Prefix with export keyword", "Capitalize the first letter", "Prefix with public keyword", "Define JSON tags"], correctAnswer: "Capitalize the first letter" },
+      { id: 2, question: "When should a method use a pointer receiver?", options: ["Whenever the struct has strings", "When it modifies the struct or the struct is large", "Only for exported methods", "Never; value receivers are required"], correctAnswer: "When it modifies the struct or the struct is large" },
+      { id: 3, question: "What does embedding a struct give the outer struct?", options: ["Classical inheritance with overriding", "A copy of the embedded package", "Promotion of the embedded type's fields and methods", "Automatic JSON serialisation"], correctAnswer: "Promotion of the embedded type's fields and methods" },
+      { id: 4, question: "What does the tag `json:\"name,omitempty\"` do?", options: ["Makes the field required", "Renames the Go field to name", "Encrypts the field in JSON", "Uses key name and omits the field when empty"], correctAnswer: "Uses key name and omits the field when empty" },
+      { id: 5, question: "An unexported struct field is lowercase. What happens when it is marshalled with encoding/json?", options: ["It is skipped", "It is included normally", "Marshalling fails", "It is written as null"], correctAnswer: "It is skipped" },
+      { id: 6, question: "Why does Go favour composition over inheritance?", options: ["Go has no structs", "Small types combine without fragile class hierarchies", "Inheritance is slower at runtime", "Composition removes the need for interfaces"], correctAnswer: "Small types combine without fragile class hierarchies" },
     ],
     assignment: {
       prompts: [
@@ -1572,7 +1602,12 @@ func main() {
       { id: 'm7-l6', title: 'Lesson 7.6 Real-World Examples', objectives: ['Mocking and Testing'], theory: 'Interfaces are highly useful for writing mock implementations in tests. For example, mock database interfaces to run unit tests without connecting to a live database. This allows you to verify business logic and error paths in isolation without side effects.', takeaways: ['Interfaces make mocking external services simple.', 'Enables parallel, isolated testing of business logic.', 'Avoid mocking third-party libraries; instead, mock your own domain interfaces.'] }
     ],
     quiz: [
-      { id: 1, question: 'Which keyword implements interfaces in Go?', options: ['None (implicit)', 'implements', 'interface', 'struct'], correctAnswer: 'None (implicit)' }
+      { id: 1, question: 'Which keyword implements interfaces in Go?', options: ["implements", "interface", "None (implicit)", "struct"], correctAnswer: "None (implicit)" },
+      { id: 2, question: "What does `interface{}` (or `any`) accept?", options: ["A value of any type", "Only pointer types", "Only structs", "Only types with methods"], correctAnswer: "A value of any type" },
+      { id: 3, question: "What happens on `s := v.(string)` when v holds an int?", options: ["s becomes an empty string", "It panics", "It converts the int to a string", "It returns nil"], correctAnswer: "It panics" },
+      { id: 4, question: "How do you assert a type safely without risking a panic?", options: ["s := string(v)", "s := v as string", "s, ok := v.(string)", "s := try v.(string)"], correctAnswer: "s, ok := v.(string)" },
+      { id: 5, question: "A type satisfies an interface when...", options: ["It embeds the interface", "It is declared with implements", "It lives in the same package", "It has every method the interface declares"], correctAnswer: "It has every method the interface declares" },
+      { id: 6, question: "What is a type switch used for?", options: ["Branching on a value's dynamic type", "Converting between numeric types", "Switching goroutines", "Choosing a build target"], correctAnswer: "Branching on a value's dynamic type" },
     ],
     assignment: {
       prompts: [
@@ -1662,7 +1697,12 @@ func main() {
 }`, takeaways: ['Wrap errors using the %w formatting verb.', 'Use errors.Is() to check for specific errors in an error chain.', 'Use errors.As() to extract custom error types from wrapped chains.'] }
     ],
     quiz: [
-      { id: 1, question: 'In what order do deferred functions execute?', options: ['LIFO (Last In First Out)', 'FIFO (First In First Out)', 'Random', 'Parallel'], correctAnswer: 'LIFO (Last In First Out)' }
+      { id: 1, question: 'In what order do deferred functions execute?', options: ["FIFO (First In First Out)", "Random", "Parallel", "LIFO (Last In First Out)"], correctAnswer: "LIFO (Last In First Out)" },
+      { id: 2, question: "By convention, where does a Go function return its error?", options: ["As the first return value", "Through a global variable", "By throwing an exception", "As the last return value"], correctAnswer: "As the last return value" },
+      { id: 3, question: "What does `recover()` do?", options: ["Regains control in a deferred function during a panic", "Retries the function that panicked, once", "Restarts the whole program", "Converts every error into nil"], correctAnswer: "Regains control in a deferred function during a panic" },
+      { id: 4, question: "How do you wrap an error while keeping the original for errors.Is?", options: ["fmt.Errorf(\"context: %v\", err)", "fmt.Errorf(\"context: %w\", err)", "errors.New(err.Error())", "panic(err)"], correctAnswer: "fmt.Errorf(\"context: %w\", err)" },
+      { id: 5, question: "When is `panic` appropriate in library code?", options: ["For every invalid user input", "Instead of returning errors", "Rarely; only for unrecoverable programmer errors", "Whenever an expected file or config is missing"], correctAnswer: "Rarely; only for unrecoverable programmer errors" },
+      { id: 6, question: "When are deferred function arguments evaluated?", options: ["When the function returns", "When the deferred call executes", "At program exit", "When the defer statement runs"], correctAnswer: "When the defer statement runs" },
     ],
     assignment: {
       prompts: [
@@ -1691,7 +1731,12 @@ func main() {
       { id: 'm9-l5', title: 'Lesson 9.5 Package Organization', objectives: ['Refactoring architecture layouts'], theory: 'Organize projects using standard Go structures: place main executables in a cmd/ directory, and keep internal business logic in an internal/ directory.', takeaways: ['Use cmd/ folders to organize main entry-point scripts.', 'Keep package dependencies tidy and clean.'] }
     ],
     quiz: [
-      { id: 1, question: 'Which file lists the direct dependencies of a Go project?', options: ['go.mod', 'go.sum', 'package.json', 'go.deps'], correctAnswer: 'go.mod' }
+      { id: 1, question: 'Which file lists the direct dependencies of a Go project?', options: ['go.mod', 'go.sum', 'package.json', 'go.deps'], correctAnswer: 'go.mod' },
+      { id: 2, question: "What does `go mod tidy` do?", options: ["Formats all source files", "Deletes the module cache", "Adds missing and removes unused module requirements", "Upgrades every dependency to its latest version"], correctAnswer: "Adds missing and removes unused module requirements" },
+      { id: 3, question: "What makes an identifier visible outside its package?", options: ["Adding the export keyword", "Declaring it in main.go", "Listing it in go.mod", "Starting its name with an uppercase letter"], correctAnswer: "Starting its name with an uppercase letter" },
+      { id: 4, question: "What does go.sum record?", options: ["Checksums of module dependencies", "The list of test files", "Compiler flags", "Environment variables"], correctAnswer: "Checksums of module dependencies" },
+      { id: 5, question: "Code under an `internal/` directory can be imported by...", options: ["Any module on the internet", "Packages rooted at internal's parent", "Only the main package", "Nothing; it cannot be imported"], correctAnswer: "Packages rooted at internal's parent" },
+      { id: 6, question: "How many packages can a single directory contain, excluding tests?", options: ["Unlimited", "Two", "One", "One per file"], correctAnswer: "One" },
     ],
     assignment: {
       prompts: [
@@ -1731,7 +1776,12 @@ func main() {
       { id: 'm10-l6', title: 'Lesson 10.6 Logging', objectives: ['Write logs'], theory: 'Log events to stdout or files using the standard log package, or use structured loggers like zap to output logs in JSON format.', takeaways: ['Structured logging is essential for production tracing.', 'Zap provides high-performance logging capabilities.'] }
     ],
     quiz: [
-      { id: 1, question: 'Which package is used to read/write JSON files in Go?', options: ['encoding/json', 'text/json', 'os/json', 'net/json'], correctAnswer: 'encoding/json' }
+      { id: 1, question: 'Which package is used to read/write JSON files in Go?', options: ["text/json", "encoding/json", "os/json", "net/json"], correctAnswer: "encoding/json" },
+      { id: 2, question: "Why write `defer f.Close()` right after opening a file?", options: ["It makes reads faster", "It closes the file on every return path", "It locks the file for other processes", "It is required for writes to succeed"], correctAnswer: "It closes the file on every return path" },
+      { id: 3, question: "Which function reads an entire small file into memory?", options: ["io.ReadAll(\"path\")", "bufio.ReadFile", "os.ReadFile", "fs.Load"], correctAnswer: "os.ReadFile" },
+      { id: 4, question: "Which is best for reading a large file line by line?", options: ["os.ReadFile", "json.Unmarshal", "strings.Split on the whole file", "bufio.Scanner"], correctAnswer: "bufio.Scanner" },
+      { id: 5, question: "Which package parses CSV files?", options: ["encoding/csv", "text/csv", "io/csv", "strings/csv"], correctAnswer: "encoding/csv" },
+      { id: 6, question: "What does os.MkdirAll do if the directory already exists?", options: ["Returns an error", "Returns nil without error", "Deletes and recreates it", "Panics"], correctAnswer: "Returns nil without error" },
     ],
     assignment: {
       prompts: [
@@ -1850,7 +1900,12 @@ func main() {
       { id: 'm11-l8', title: 'Lesson 11.8 Worker Pools', objectives: ['Write throttled concurrent workers'], theory: 'Design worker pools to limit resources. Spawn a fixed number of worker goroutines that process tasks read from a shared work channel.', takeaways: ['Worker pools limit concurrent resource usage.', 'Prevents CPU and memory spikes.'] }
     ],
     quiz: [
-      { id: 1, question: 'Which command audits a Go binary for memory race conditions?', options: ['go run -race', 'go test -speed', 'go race', 'go verify'], correctAnswer: 'go run -race' }
+      { id: 1, question: 'Which command runs your tests with the data race detector enabled?', options: ["go test -speed", "go vet -threads", "go test -race", "go verify"], correctAnswer: "go test -race" },
+      { id: 2, question: "What happens when you send on an unbuffered channel with no ready receiver?", options: ["The sender blocks until a receiver is ready", "The value is dropped", "The program panics", "The value is queued indefinitely"], correctAnswer: "The sender blocks until a receiver is ready" },
+      { id: 3, question: "What is sync.WaitGroup used for?", options: ["Limiting CPU usage", "Waiting for a set of goroutines to finish", "Sharing memory safely", "Scheduling goroutines on threads"], correctAnswer: "Waiting for a set of goroutines to finish" },
+      { id: 4, question: "What does `select` do with several channel operations?", options: ["Runs all of them in parallel", "Always picks the first case", "Proceeds with whichever is ready first", "Closes the unused channels"], correctAnswer: "Proceeds with whichever is ready first" },
+      { id: 5, question: "Why pass a context.Context into long-running work?", options: ["To make it run on a new thread", "To share global variables", "To avoid returning errors", "So callers can cancel it or set a deadline"], correctAnswer: "So callers can cancel it or set a deadline" },
+      { id: 6, question: "What does a worker pool bound?", options: ["The number of jobs processed concurrently", "The size of each channel message", "The number of CPU cores used by Go", "The total memory of the program"], correctAnswer: "The number of jobs processed concurrently" },
     ],
     assignment: {
       prompts: [
@@ -1910,7 +1965,12 @@ func BenchmarkLoop(b *testing.B) {
       { id: 'm12-l5', title: 'Lesson 12.5 Mocking Basics', objectives: ['Mock interface responses'], theory: 'Mock external services by defining mock structs that implement the same interface. This lets you test business logic in isolation without making real network or database calls.', takeaways: ['Use interfaces to mock external services.', 'Mocking decouples tests from network and database environments.'] }
     ],
     quiz: [
-      { id: 1, question: 'What suffix must Go test filenames have?', options: ['_test.go', '.test.go', '_spec.go', '.spec.go'], correctAnswer: '_test.go' }
+      { id: 1, question: 'What suffix must Go test filenames have?', options: [".test.go", "_spec.go", ".spec.go", "_test.go"], correctAnswer: "_test.go" },
+      { id: 2, question: "What must a test function signature look like?", options: ["func testXxx()", "func TestXxx() error", "func Test(t testing.T) bool", "func TestXxx(t *testing.T)"], correctAnswer: "func TestXxx(t *testing.T)" },
+      { id: 3, question: "What is the main benefit of table-driven tests?", options: ["Many cases share one test body", "They run faster than normal tests", "They need no assertions", "They replace benchmarks"], correctAnswer: "Many cases share one test body" },
+      { id: 4, question: "How do you run benchmarks?", options: ["go bench", "go test -bench=.", "go run -bench", "go test -perf"], correctAnswer: "go test -bench=." },
+      { id: 5, question: "What does t.Fatal do that t.Error does not?", options: ["Fails the whole package run", "Marks the test as skipped", "Stops the current test immediately", "Prints without failing"], correctAnswer: "Stops the current test immediately" },
+      { id: 6, question: "Why define a small interface for a dependency you want to mock?", options: ["Interfaces make code faster", "Mocks must be interfaces by law", "It removes the need for tests", "Tests can substitute a fake implementation"], correctAnswer: "Tests can substitute a fake implementation" },
     ],
     assignment: {
       prompts: [
@@ -1974,7 +2034,12 @@ func getProfile(w http.ResponseWriter, r *http.Request) {
       { id: 'm13-l7', title: 'Lesson 13.7 API Versioning', objectives: ['Define version paths'], theory: 'Version your API endpoints using path prefixes like `/api/v1` to prevent breaking changes for existing clients when updates are deployed.', takeaways: ['Scope endpoints under versioned prefixes (e.g. /api/v1).', 'Prevents breaking client integrations.'] }
     ],
     quiz: [
-      { id: 1, question: 'Which built-in package serves HTTP routers in Go?', options: ['net/http', 'http', 'web', 'net/web'], correctAnswer: 'net/http' }
+      { id: 1, question: 'Which built-in package serves HTTP routers in Go?', options: ['net/http', 'http', 'web', 'net/web'], correctAnswer: 'net/http' },
+      { id: 2, question: "What is the signature of an http.HandlerFunc?", options: ["func(r *http.Request) string", "func(ctx context.Context) error", "func(w http.ResponseWriter, r *http.Request)", "func(w io.Writer)"], correctAnswer: "func(w http.ResponseWriter, r *http.Request)" },
+      { id: 3, question: "Which call starts an HTTP server on port 8080?", options: ["http.Start(8080)", "http.Serve(\"8080\")", "net.Listen(8080)", "http.ListenAndServe(\":8080\", mux)"], correctAnswer: "http.ListenAndServe(\":8080\", mux)" },
+      { id: 4, question: "How is middleware usually written with net/http?", options: ["A function that wraps and returns an http.Handler", "A struct tag on the handler", "A goroutine started for each route at server startup", "A global variable of rules"], correctAnswer: "A function that wraps and returns an http.Handler" },
+      { id: 5, question: "Which status code should a successful resource creation return?", options: ["200 OK", "201 Created", "204 No Content", "302 Found"], correctAnswer: "201 Created" },
+      { id: 6, question: "Why decode request JSON into a typed struct?", options: ["It skips the need for validation", "It makes responses smaller", "Invalid shapes fail early with a clear error", "It avoids reading the body"], correctAnswer: "Invalid shapes fail early with a clear error" },
     ],
     assignment: {
       prompts: [
@@ -2021,7 +2086,12 @@ tx.Commit()`, takeaways: ['Transactions ensure atomic execution of multiple data
       { id: 'm14-l7', title: 'Lesson 14.7 Repository Pattern', objectives: ['Isolate database queries'], theory: 'Isolate database queries from your core application logic by defining repository interfaces. This separates data storage concerns from business rules.', takeaways: ['Decouples data access from business logic.', 'Enables mock testing of application services.'] }
     ],
     quiz: [
-      { id: 1, question: 'What is the purpose of using query placeholder parameters ($1, ?)?', options: ['To prevent SQL Injection', 'To style query variables', 'To improve search speed', 'To format output values'], correctAnswer: 'To prevent SQL Injection' }
+      { id: 1, question: 'What is the purpose of using query placeholder parameters ($1, ?)?', options: ["To style query variables", "To prevent SQL Injection", "To improve search speed", "To format output values"], correctAnswer: "To prevent SQL Injection" },
+      { id: 2, question: "Why reuse one *sql.DB instead of opening one per request?", options: ["Each Open leaks memory permanently", "It is a pooled handle meant to be long-lived", "Go allows only one Open", "It disables transactions otherwise"], correctAnswer: "It is a pooled handle meant to be long-lived" },
+      { id: 3, question: "What should you do after querying rows with db.Query?", options: ["Nothing; rows close automatically", "Call db.Close()", "defer rows.Close() and check rows.Err()", "Restart the connection"], correctAnswer: "defer rows.Close() and check rows.Err()" },
+      { id: 4, question: "What guarantees a transaction's statements succeed or fail together?", options: ["Running them in a goroutine", "Using prepared statements", "Setting a longer timeout", "Commit or Rollback on a sql.Tx"], correctAnswer: "Commit or Rollback on a sql.Tx" },
+      { id: 5, question: "What problem do migrations solve?", options: ["Versioned, repeatable schema changes across environments", "Faster queries by rewriting slow SQL automatically", "Automatic index tuning", "Backing up production data"], correctAnswer: "Versioned, repeatable schema changes across environments" },
+      { id: 6, question: "What does the repository pattern isolate?", options: ["HTTP routing from middleware", "Data-access code from business logic", "Tests from production code", "Goroutines from channels"], correctAnswer: "Data-access code from business logic" },
     ],
     assignment: {
       prompts: [
@@ -2073,7 +2143,12 @@ func main() {
       { id: 'm15-l8', title: 'Lesson 15.8 Authentication', objectives: ['Protect routes'], theory: 'Secure API routes by adding JWT authorization middleware to verify user sessions.', takeaways: ['Intercepts requests to verify access credentials.', 'Protects endpoints from unauthorized access.'] }
     ],
     quiz: [
-      { id: 1, question: 'Which tag enforces parameter validation checks in Gin binding structs?', options: ['binding', 'validate', 'json', 'require'], correctAnswer: 'binding' }
+      { id: 1, question: 'Which tag enforces parameter validation checks in Gin binding structs?', options: ["validate", "json", "binding", "require"], correctAnswer: "binding" },
+      { id: 2, question: "Which call creates a Gin engine with logger and recovery middleware?", options: ["gin.Default()", "gin.New()", "gin.Create()", "gin.Server()"], correctAnswer: "gin.Default()" },
+      { id: 3, question: "How do you read the path parameter in route `/users/:id`?", options: ["c.Query(\"id\")", "c.Param(\"id\")", "c.Get(\"id\")", "c.PostForm(\"id\")"], correctAnswer: "c.Param(\"id\")" },
+      { id: 4, question: "Which method binds and validates a JSON request body?", options: ["c.JSON(&req)", "c.ReadJSON(req)", "c.ShouldBindJSON(&req)", "c.Bind(req.JSON)"], correctAnswer: "c.ShouldBindJSON(&req)" },
+      { id: 5, question: "Why separate controllers from services?", options: ["Gin needs separate layers to register routes correctly", "It reduces the binary size", "Services run in separate processes", "HTTP handling stays thin and business logic is testable"], correctAnswer: "HTTP handling stays thin and business logic is testable" },
+      { id: 6, question: "How do you apply middleware to a group of routes?", options: ["Create a router group and call Use on it", "Add a tag to each handler", "Register it in go.mod", "Wrap main() with it"], correctAnswer: "Create a router group and call Use on it" },
     ],
     assignment: {
       prompts: [
@@ -2116,7 +2191,12 @@ func main() {
       { id: 'm16-l6', title: 'Lesson 16.6 CORS', objectives: ['Configure CORS policies'], theory: 'Configure Cross-Origin Resource Sharing (CORS) rules to control which frontend origins are allowed to request resources from your backend API.', takeaways: ['CORS restricts cross-origin browser requests.', 'Essential for managing client-side browser connections.'] }
     ],
     quiz: [
-      { id: 1, question: 'Which algorithm is commonly used for secure password hashing in Go?', options: ['bcrypt', 'md5', 'sha1', 'aes'], correctAnswer: 'bcrypt' }
+      { id: 1, question: 'Which algorithm is commonly used for secure password hashing in Go?', options: ["md5", "sha1", "aes", "bcrypt"], correctAnswer: "bcrypt" },
+      { id: 2, question: "Why must passwords be hashed rather than encrypted?", options: ["Hashing is faster to reverse", "Encryption is not available in Go", "Hashes are shorter to store", "Hashing is one-way, so a leak does not reveal them"], correctAnswer: "Hashing is one-way, so a leak does not reveal them" },
+      { id: 3, question: "Which part of a JWT prevents tampering?", options: ["The signature", "The header", "The payload", "The expiry claim"], correctAnswer: "The signature" },
+      { id: 4, question: "Why pair a short-lived access token with a refresh token?", options: ["It removes the need for passwords", "It limits the damage if an access token is stolen", "It makes tokens unreadable", "It avoids HTTPS"], correctAnswer: "It limits the damage if an access token is stolen" },
+      { id: 5, question: "What does CORS control?", options: ["Which servers may reach your database", "How passwords are hashed", "Which browser origins may call your API", "Rate limits per user"], correctAnswer: "Which browser origins may call your API" },
+      { id: 6, question: "Authentication versus authorization?", options: ["What you may do versus who you are", "Login versus logout", "Tokens versus cookies", "Who you are versus what you may do"], correctAnswer: "Who you are versus what you may do" },
     ],
     assignment: {
       prompts: [
@@ -2170,7 +2250,12 @@ CMD ["/main"]`, takeaways: ['Multi-stage Dockerfiles build minimal production im
       { id: 'm17-l6', title: 'Lesson 17.6 Service Discovery', objectives: ['Route network addresses'], theory: 'Track and route traffic to dynamically scaled microservice instances using service registries like Consul or Kubernetes DNS.', takeaways: ['Service discovery resolves dynamic IP addresses.', 'Simplifies horizontal service scaling.'] }
     ],
     quiz: [
-      { id: 1, question: 'Which serialization format is used by gRPC?', options: ['Protocol Buffers', 'JSON', 'XML', 'YAML'], correctAnswer: 'Protocol Buffers' }
+      { id: 1, question: 'Which serialization format is used by gRPC?', options: ['Protocol Buffers', 'JSON', 'XML', 'YAML'], correctAnswer: 'Protocol Buffers' },
+      { id: 2, question: "What is a key trade-off of microservices?", options: ["Simpler debugging than a monolith", "Simpler debugging, since each service is small and isolated", "Independent deployment at the cost of network complexity", "Fewer moving parts to operate"], correctAnswer: "Independent deployment at the cost of network complexity" },
+      { id: 3, question: "Why use a message queue between services?", options: ["It stores messages permanently, replacing the database", "It makes calls synchronous", "It removes the need for retries", "It decouples them and absorbs spikes asynchronously"], correctAnswer: "It decouples them and absorbs spikes asynchronously" },
+      { id: 4, question: "What file defines a gRPC service and its messages?", options: ["A .proto file", "A go.mod file", "A Dockerfile", "A .yaml route file"], correctAnswer: "A .proto file" },
+      { id: 5, question: "Why build Go services into minimal container images?", options: ["Go needs a full OS to execute", "Static binaries need almost nothing else to run", "It speeds up compilation", "Containers require Go runtime"], correctAnswer: "Static binaries need almost nothing else to run" },
+      { id: 6, question: "What problem does service discovery solve?", options: ["Encrypting traffic between services", "Versioning the database", "Finding the current address of a service instance", "Formatting logs"], correctAnswer: "Finding the current address of a service instance" },
     ],
     assignment: {
       prompts: [
@@ -2211,7 +2296,12 @@ CMD ["/main"]`, takeaways: ['Multi-stage Dockerfiles build minimal production im
       { id: 'm18-l6', title: 'Lesson 18.6 CI/CD Basics', objectives: ['Automate builds validation'], theory: 'Configure automated pipelines (e.g. GitHub Actions) to run test suites and lint checks on every commit.', takeaways: ['Ensures deployment reliability.'] }
     ],
     quiz: [
-      { id: 1, question: 'What is the main benefit of Go compilation?', options: ['Generates a single self-contained binary', 'Runs on a JVM', 'Interprets code at runtime', 'Automatically deploys to AWS'], correctAnswer: 'Generates a single self-contained binary' }
+      { id: 1, question: 'What is the main benefit of Go compilation?', options: ["Runs on a JVM", "Generates a single self-contained binary", "Interprets code at runtime", "Automatically deploys to AWS"], correctAnswer: "Generates a single self-contained binary" },
+      { id: 2, question: "How do you cross-compile a Go binary for Linux on macOS?", options: ["go build --linux", "GOOS=linux GOARCH=amd64 go build", "go cross linux", "go install -os=linux"], correctAnswer: "GOOS=linux GOARCH=amd64 go build" },
+      { id: 3, question: "Why read configuration from environment variables?", options: ["Environment variables are read faster than config files", "Go cannot read config files", "The same build runs in every environment without code changes", "They encrypt secrets automatically"], correctAnswer: "The same build runs in every environment without code changes" },
+      { id: 4, question: "What does a multi-stage Dockerfile give a Go service?", options: ["Faster Go compilation", "Automatic horizontal scaling", "Faster compilation, because each stage compiles in parallel", "A small runtime image without the build toolchain"], correctAnswer: "A small runtime image without the build toolchain" },
+      { id: 5, question: "What is Docker Compose mainly used for?", options: ["Running several related containers together", "Building Go binaries", "Deploying to AWS directly", "Monitoring production"], correctAnswer: "Running several related containers together" },
+      { id: 6, question: "What should a CI pipeline do before building?", options: ["Deploy to production first", "Run tests and fail fast on errors", "Skip tests to save time", "Delete old releases"], correctAnswer: "Run tests and fail fast on errors" },
     ],
     assignment: {
       prompts: [

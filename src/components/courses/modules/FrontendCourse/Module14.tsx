@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -14,10 +15,10 @@ const Module14: React.FC<Props> = ({ page }) => {
   const [isSimAuth, setIsSimAuth] = useState(false);
 
   const quizQuestions: QuizQuestion[] = [
-    { id: 1, question: 'Q1: What is a key characteristic of Single Page Applications (SPAs) routing?', options: ['A. The server loads a new HTML page on every navigation click', 'B. Page changes happen client-side in the browser without reloading the page', 'C. Routing must use hashes only', 'D. JavaScript is compiled to native code'], correctAnswer: 'B. Page changes happen client-side in the browser without reloading the page' },
+    { id: 1, question: 'Q1: What is a key characteristic of Single Page Applications (SPAs) routing?', options: ["A. Page changes happen client-side in the browser without reloading the page", "B. The server loads a new HTML page on every navigation click", "C. Routing must use hashes only", "D. JavaScript is compiled to native code"], correctAnswer: "A. Page changes happen client-side in the browser without reloading the page" },
     { id: 2, question: 'Q2: Which React Router component is used to link to different routes instead of standard anchor tags?', options: ['A. <a href>', 'B. <Link>', 'C. <RouterLink>', 'D. <Navigate>'], correctAnswer: 'B. <Link>' },
-    { id: 3, question: 'Q3: How do you extract dynamic path parameters like "/user/:id" inside components?', options: ['A. useParams() hook', 'B. useRoute() hook', 'C. props.match.params', 'D. document.location.search'], correctAnswer: 'A. useParams() hook' },
-    { id: 4, question: 'Q4: What component serves as a placeholder for child routes in a nested routing setup?', options: ['A. <Routes>', 'B. <Outlet />', 'C. <Fragment>', 'D. <Navigate>'], correctAnswer: 'B. <Outlet />' },
+    { id: 3, question: 'Q3: How do you extract dynamic path parameters like "/user/:id" inside components?', options: ["A. useRoute() hook", "B. props.match.params", "C. useParams() hook", "D. document.location.search"], correctAnswer: "C. useParams() hook" },
+    { id: 4, question: 'Q4: What component serves as a placeholder for child routes in a nested routing setup?', options: ["A. <Routes>", "B. <Fragment>", "C. <Navigate>", "D. <Outlet />"], correctAnswer: "D. <Outlet />" },
     { id: 5, question: 'Q5: How do you redirect a user programmatically inside event handlers or hooks?', options: ['A. useNavigate() hook', 'B. window.location.href', 'C. <Link to="...">', 'D. useParams()'], correctAnswer: 'A. useNavigate() hook' },
   ];
 
@@ -27,7 +28,7 @@ const Module14: React.FC<Props> = ({ page }) => {
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 14.1: Routing Basics</h2>
           <p className={styles.paragraph}>In standard websites, browser clicks trigger HTTP server requests, fetching entirely new HTML documents. This causes visible white screen flashes.</p>
-          <p className={styles.paragraph}>In a **Single Page Application (SPA)**, client-side routing intercepts browser transitions. It updates the layout view by swapping React components dynamically, resulting in smooth, instant transitions.</p>
+          <p className={styles.paragraph}>In a <strong>Single Page Application (SPA)</strong>, client-side routing intercepts browser transitions. It updates the layout view by swapping React components dynamically, resulting in smooth, instant transitions.</p>
         </div>
       );
 
@@ -186,14 +187,9 @@ function ProtectedRoute({ isAuthenticated, children }) {
     case 8:
       return (
         <ModuleAssignment
+          moduleId="frontend-m14"
           title="Module 14 Assignment"
-          questions={[
-            'Describe single-page application (SPA) routing advantages over traditional multi-page setups.',
-            'Compare the use of Link and standard anchor (a) tags in React Router.',
-            'How are dynamic route parameters defined and retrieved inside React components?',
-            'What is nested routing? Why is Outlet required?',
-            'Explain the execution workflow of a ProtectedRoute wrapper component.',
-          ]}
+          questions={frontendAssignments.m14}
         />
       );
 

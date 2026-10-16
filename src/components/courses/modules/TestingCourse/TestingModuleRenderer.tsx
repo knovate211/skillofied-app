@@ -40,32 +40,39 @@ const TestingModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   let pageType: 'lesson' | 'quiz' | 'assignment' | 'missing' = 'lesson';
   let activeLesson: any = null;
 
+  // Authored lesson content wins over id-pattern routing: the capstone
+  // projects (m15-p1), interview prep and "overview-prereq" all have lesson
+  // bodies, and a loose "-p" match used to send them to the assignment view.
+  const authoredLesson = moduleData.lessons?.find((l: any) => l.id === itemId) ?? null;
+
   if (itemId.endsWith('-quiz')) {
     pageType = 'quiz';
+  } else if (authoredLesson) {
+    activeLesson = authoredLesson;
+    pageType = 'lesson';
   } else if (
-    itemId.endsWith('-assignment') || 
-    itemId.endsWith('-proj') || 
-    itemId.includes('-p') || 
-    itemId.endsWith('-final') ||
-    itemId.startsWith('interview-') ||
+    itemId.endsWith('-assignment') ||
+    itemId.endsWith('-proj') ||
     itemId.startsWith('assessment-') ||
     itemId.startsWith('cert-')
   ) {
     pageType = 'assignment';
   } else {
-    activeLesson = moduleData.lessons?.find((l: any) => l.id === itemId) ?? null;
-    pageType = activeLesson ? 'lesson' : 'missing';
+    pageType = 'missing';
   }
 
+  /** Shown for any item whose content has not been authored yet. */
+  const notWrittenYet = (
+    <div className={styles.contentArea}>
+      <h2 style={{ fontSize: '24px', marginBottom: '20px', color: 'var(--heading)' }}>{itemTitle || 'Lesson'}</h2>
+      <p style={{ color: 'var(--text-secondary)' }}>
+        This lesson is being written and will be published shortly. Continue with the next item in the sidebar in the meantime.
+      </p>
+    </div>
+  );
+
   if (pageType === 'missing') {
-    return (
-      <div className={styles.contentArea}>
-        <h2 style={{ fontSize: '24px', marginBottom: '20px', color: 'var(--heading)' }}>{itemTitle || 'Lesson'}</h2>
-        <p style={{ color: 'var(--text-secondary)' }}>
-          This lesson is being written and will be published shortly. Continue with the next item in the sidebar in the meantime.
-        </p>
-      </div>
-    );
+    return notWrittenYet;
   }
 
   // 1. Quizzes
@@ -76,14 +83,20 @@ const TestingModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
 
   // 2. Assignments & Projects
   if (pageType === 'assignment') {
-    const assignment = moduleData.assignment || { prompts: [] };
-    const prompts = assignment.prompts.length > 0 ? assignment.prompts : [itemTitle];
+    const prompts = moduleData.assignment?.prompts ?? [];
+    // The overview/interview/assessment/certification sections have no authored
+    // prompts. Falling back to the item title used to hand the learner a
+    // textarea whose only "question" was a heading like "Prerequisites", so
+    // say the content is not ready instead of inventing a task.
+    if (prompts.length === 0) {
+      return notWrittenYet;
+    }
     return <ModuleAssignment key={itemId} moduleId={`testing-${moduleId}`} title="Module Practice Set" questions={prompts} />;
   }
 
   // 3. Lessons
   if (pageType === 'lesson' && activeLesson) {
-    return <StandardLessonView lesson={activeLesson} language="javascript" snippetTitle="example.spec.js" />;
+    return <StandardLessonView lesson={activeLesson} language="java" snippetTitle="Example" />;
   }
 
   return <div className={styles.contentArea}>Content not available.</div>;

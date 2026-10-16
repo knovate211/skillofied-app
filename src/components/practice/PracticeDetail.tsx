@@ -6,6 +6,8 @@ import { listPracticeSetsApi, listProblemsApi } from '../../api';
 import TopicChip from '../common/TopicChip';
 import { formatPracticeSetTitle } from '../../utils/practiceHelpers';
 import styles from './PracticeDetail.module.css';
+import ActionButton from '../common/ActionButton';
+import { useNavigatePending } from '../../hooks/useNavigatePending';
 
 // Topic chips are derived from the problems actually in this set, so an SQL
 // set shows SQL topics rather than a hardcoded list of DSA categories.
@@ -42,6 +44,7 @@ const toneFor = (difficulty: string): Tone => {
 const PracticeDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { go, isPending } = useNavigatePending();
 
   const [currentSet, setCurrentSet] = useState<any>(null);
   const [problems, setProblems] = useState<PracticeProblem[]>([]);
@@ -73,10 +76,9 @@ const PracticeDetail: React.FC = () => {
     navigate('/practice');
   };
 
-  // Navigate to Solve Problem Workspace
-  const handleSolve = (problemId: string) => {
-    navigate(`/problems/${problemId}/solve`);
-  };
+  // Navigate to Solve Problem Workspace. The workspace is a large lazy chunk,
+  // so the button reports progress until it has rendered.
+  const solveRoute = (problemId: string) => `/problems/${problemId}/solve`;
 
   // Helper to compute topic stats
   const getTopicStats = (topic: TopicType) => {
@@ -220,13 +222,15 @@ const PracticeDetail: React.FC = () => {
                   <span className={`${styles.status} ${isSolved ? styles.statusSolved : ''}`}>
                     {prob.status}
                   </span>
-                  <button
-                    onClick={() => handleSolve(prob.id)}
+                  <ActionButton
+                    onClick={() => go(solveRoute(prob.id))}
+                    loading={isPending(solveRoute(prob.id))}
+                    loadingText="Opening…"
+                    trailing={<span aria-hidden="true">→</span>}
                     className={`${styles.solveBtn} ${styles[`btn${tone}`]}`}
                   >
-                    <span>{isSolved ? 'Try again' : 'Solve'}</span>
-                    <span aria-hidden="true">→</span>
-                  </button>
+                    {isSolved ? 'Try again' : 'Solve'}
+                  </ActionButton>
                 </div>
               </div>
             );

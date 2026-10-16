@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -19,11 +20,11 @@ const Module10: React.FC<Props> = ({ page }) => {
   ]);
 
   const quizQuestions: QuizQuestion[] = [
-    { id: 1, question: 'Q1: Which command initializes a new local Git repository?', options: ['A. git clone', 'B. git init', 'C. git start', 'D. git create'], correctAnswer: 'B. git init' },
-    { id: 2, question: 'Q2: How do you stage specific changes in file "index.html" to be committed?', options: ['A. git add index.html', 'B. git stage index.html', 'C. git commit index.html', 'D. git save index.html'], correctAnswer: 'A. git add index.html' },
-    { id: 3, question: 'Q3: What is the main purpose of GitHub compared to Git?', options: ['A. GitHub compiles Git code', 'B. GitHub is a hosting service for Git repositories', 'C. GitHub is the backend of Git', 'D. GitHub is local only'], correctAnswer: 'B. GitHub is a hosting service for Git repositories' },
-    { id: 4, question: 'Q4: Which command switches to a branch named "feature-login"?', options: ['A. git branch feature-login', 'B. git checkout feature-login', 'C. git merge feature-login', 'D. git push feature-login'], correctAnswer: 'B. git checkout feature-login' },
-    { id: 5, question: 'Q5: What Git command displays the history of commits?', options: ['A. git history', 'B. git status', 'C. git log', 'D. git diff'], correctAnswer: 'C. git log' },
+    { id: 1, question: 'Q1: Which command initializes a new local Git repository?', options: ["A. git init", "B. git clone", "C. git start", "D. git create"], correctAnswer: "A. git init" },
+    { id: 2, question: 'Q2: How do you stage specific changes in file "index.html" to be committed?', options: ["A. git stage index.html", "B. git add index.html", "C. git commit index.html", "D. git save index.html"], correctAnswer: "B. git add index.html" },
+    { id: 3, question: 'Q3: What is the main purpose of GitHub compared to Git?', options: ["A. GitHub compiles Git code", "B. GitHub is the backend of Git", "C. GitHub is a hosting service for Git repositories", "D. GitHub is local only"], correctAnswer: "C. GitHub is a hosting service for Git repositories" },
+    { id: 4, question: 'Q4: Which command switches to a branch named "feature-login"?', options: ["A. git branch feature-login", "B. git merge feature-login", "C. git push feature-login", "D. git checkout feature-login"], correctAnswer: "D. git checkout feature-login" },
+    { id: 5, question: 'Q5: What Git command displays the history of commits?', options: ["A. git log", "B. git history", "C. git status", "D. git diff"], correctAnswer: "A. git log" },
   ];
 
   const handleAddCommit = (br: 'main' | 'feature') => {
@@ -35,7 +36,7 @@ const Module10: React.FC<Props> = ({ page }) => {
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 10.1: Introduction to Git</h2>
-          <p className={styles.paragraph}><strong>Git</strong> is a free and open-source **Distributed Version Control System (VCS)** designed to track changes in source code files over time. It allows teams to collaborate, roll back to previous states, and manage different feature pipelines concurrently.</p>
+          <p className={styles.paragraph}><strong>Git</strong> is a free and open-source <strong>Distributed Version Control System (VCS)</strong> designed to track changes in source code files over time. It allows teams to collaborate, roll back to previous states, and manage different feature pipelines concurrently.</p>
           
           <h3 className={styles.subtitle}>Why Version Control Matters:</h3>
           <ul style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingLeft: '20px', fontSize: '13.5px', color: 'var(--text-secondary)' }}>
@@ -250,14 +251,9 @@ git merge feature-login`} />
     case 10:
       return (
         <ModuleAssignment
+          moduleId="frontend-m10"
           title="Module 10 Assignment"
-          questions={[
-            'What is the difference between Git and GitHub?',
-            'Outline the steps to save local work to a git repository.',
-            'Why do developers use branches? How do you switch branches?',
-            'What causes a merge conflict, and how is it resolved?',
-            'Explain the role of a Pull Request in collaborative development.',
-          ]}
+          questions={frontendAssignments.m10}
         />
       );
 

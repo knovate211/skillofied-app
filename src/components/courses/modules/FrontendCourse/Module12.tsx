@@ -3,6 +3,7 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { frontendAssignments } from './assignments';
 import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
@@ -17,11 +18,11 @@ const Module12: React.FC<Props> = ({ page }) => {
   const [projectCount, setProjectCount] = useState(0);
 
   const quizQuestions: QuizQuestion[] = [
-    { id: 1, question: 'Q1: What is the main difference between Props and State?', options: ['A. Props are internal memory, State is external configuration', 'B. Props are read-only (passed down), State is local (managed inside component)', 'C. Props trigger page refresh, State compiles JSX', 'D. State cannot be modified'], correctAnswer: 'B. Props are read-only (passed down), State is local (managed inside component)' },
-    { id: 2, question: 'Q2: What function does useState return?', options: ['A. The current state and a function to update it', 'B. A render function', 'C. A state getter only', 'D. A compile error compiler'], correctAnswer: 'A. The current state and a function to update it' },
-    { id: 3, question: 'Q3: What does the term "Controlled Component" mean in React forms?', options: ['A. The component is managed by browser controls', 'B. The form input value is driven by React state', 'C. The input cannot be edited', 'D. The form is handled by global ref objects'], correctAnswer: 'B. The form input value is driven by React state' },
-    { id: 4, question: 'Q4: Why does React need unique "key" props when rendering lists?', options: ['A. To apply CSS styling styles', 'B. To help React identify which items have changed, been added, or been removed', 'C. To bind click event handlers', 'D. To encrypt item values'], correctAnswer: 'B. To help React identify which items have changed, been added, or been removed' },
-    { id: 5, question: 'Q5: Which logical operator is commonly used for inline conditional rendering if you only want to render something when a condition is true?', options: ['A. ||', 'B. &&', 'C. ?:', 'D. ??'], correctAnswer: 'B. &&' },
+    { id: 1, question: 'Q1: What is the main difference between Props and State?', options: ["A. Props are read-only (passed down), State is local (managed inside component)", "B. Props are internal memory, State is external configuration", "C. Props trigger page refresh, State compiles JSX", "D. State cannot be modified"], correctAnswer: "A. Props are read-only (passed down), State is local (managed inside component)" },
+    { id: 2, question: 'Q2: What function does useState return?', options: ["A. A render function", "B. The current state and a function to update it", "C. A state getter only", "D. A compile error compiler"], correctAnswer: "B. The current state and a function to update it" },
+    { id: 3, question: 'Q3: What does the term "Controlled Component" mean in React forms?', options: ["A. The component is managed by browser controls", "B. The input cannot be edited", "C. The form input value is driven by React state", "D. The form is handled by global ref objects"], correctAnswer: "C. The form input value is driven by React state" },
+    { id: 4, question: 'Q4: Why does React need unique "key" props when rendering lists?', options: ["A. To apply CSS styling styles", "B. To bind click event handlers", "C. To encrypt item values", "D. To help React identify which items have changed, been added, or been removed"], correctAnswer: "D. To help React identify which items have changed, been added, or been removed" },
+    { id: 5, question: 'Q5: Which logical operator is commonly used for inline conditional rendering if you only want to render something when a condition is true?', options: ["A. &&", "B. ||", "C. ?:", "D. ??"], correctAnswer: "A. &&" },
   ];
 
   switch (page) {
@@ -29,7 +30,7 @@ const Module12: React.FC<Props> = ({ page }) => {
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 12.1: State Introduction</h2>
-          <p className={styles.paragraph}>While **props** allow parents to pass data down, **state** is a component's private, local memory. State holds data that can change over time, and updates to state trigger component re-rendering.</p>
+          <p className={styles.paragraph}>While <strong>props</strong> allow parents to pass data down, <strong>state</strong> is a component's private, local memory. State holds data that can change over time, and updates to state trigger component re-rendering.</p>
           
           <h3 className={styles.subtitle}>Props vs State</h3>
           <table className={styles.table}>
@@ -109,7 +110,7 @@ function Counter() {
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 12.4: Forms in React</h2>
-          <p className={styles.paragraph}>In a **controlled component**, the form input element's value is controlled by React state. Every character typed triggers a state update via an <code>onChange</code> handler.</p>
+          <p className={styles.paragraph}>In a <strong>controlled component</strong>, the form input element's value is controlled by React state. Every character typed triggers a state update via an <code>onChange</code> handler.</p>
           
           <div className={styles.codeLabel}>Controlled Input structure</div>
           <CodeSnippet isRunnable={true} language="JavaScript" code={`function NameForm() {
@@ -199,14 +200,9 @@ return (
     case 9:
       return (
         <ModuleAssignment
+          moduleId="frontend-m12"
           title="Module 12 Assignment"
-          questions={[
-            'Contrast state and props in React components.',
-            'What happens if you modify a state variable directly without calling setState?',
-            'Design a controlled text area input structure in React.',
-            'How does the && logical operator render content conditionally in JSX?',
-            'Why is using array indexes as list item keys discouraged in dynamic list structures?',
-          ]}
+          questions={frontendAssignments.m12}
         />
       );
 

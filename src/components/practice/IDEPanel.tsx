@@ -63,6 +63,33 @@ const IDEPanel: React.FC<IDEPanelProps> = ({
       case 'sql':
       case 'postgresql':
         return 'sql';
+      case 'html':
+        return 'html';
+      case 'css':
+        return 'css';
+      case 'json':
+        return 'json';
+      case 'xml':
+        return 'xml';
+      case 'yaml':
+      case 'yml':
+        return 'yaml';
+      case 'markdown':
+      case 'md':
+        return 'markdown';
+      case 'typescript':
+      case 'ts':
+        return 'typescript';
+      // JSX has no dedicated Monaco mode; TypeScript highlights it correctly.
+      case 'jsx':
+      case 'tsx':
+        return 'typescript';
+      case 'dockerfile':
+        return 'dockerfile';
+      case 'shell':
+      case 'bash':
+      case 'sh':
+        return 'shell';
       default:
         return 'javascript';
     }

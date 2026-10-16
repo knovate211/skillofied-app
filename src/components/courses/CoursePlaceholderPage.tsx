@@ -41,30 +41,33 @@ const COURSE_DATA: Record<string, CourseDetail> = {
     ]
   },
   seo: {
-    title: 'SEO Fundamentals',
+    title: 'AI SEO & Search Visibility',
     mentor: 'Marketing Team Specialist',
-    duration: '6 Weeks',
-    lectures: 36,
-    projects: 3,
-    description: 'Learn keyword research, on-page optimization, content strategies, technical site audits, link building, and advanced web search analysis to rank on Google\'s first page.',
+    duration: '8 Weeks',
+    lectures: 26,
+    projects: 8,
+    description: 'Learn how AI answer engines pick their sources, and optimise a real site to be found, understood and cited by ChatGPT, Google AI Overviews, Gemini, Perplexity and Claude — alongside classic search.',
     colorGrad: 'linear-gradient(135deg, #f39c12, #f1c40f)',
-    initial: 'SE',
+    initial: 'AI',
     startDate: 'July 22, 2026',
     syllabus: [
-      { id: 'seo-m1', title: 'Module 1: Search Engine Crawling & Indexing', lessons: ['How Google Search Works', 'Understanding Crawl Budgets & Indexability', 'Sitemaps and Robots.txt Best Practices'] },
-      { id: 'seo-m2', title: 'Module 2: Keyword Research & Competitor Analysis', lessons: ['Identifying Search Intent', 'Keyword Grouping & Selection Metrics', 'Competitor Gap & Opportunity Audits'] },
-      { id: 'seo-m3', title: 'Module 3: On-Page SEO Optimization', lessons: ['Title Tags, Meta Descriptions & Header Structures', 'SEO Copywriting & Image Optimization', 'URL Hierarchy and Internal Link Architecture'] },
-      { id: 'seo-m4', title: 'Module 4: Technical SEO & Speed Optimization', lessons: ['Core Web Vitals & Page Load Impact', 'Schema Markup & Rich Snippets Implementation', 'Handling Canonicalization & Redirects'] },
-      { id: 'seo-m5', title: 'Module 5: Link Building & Off-Page Authority', lessons: ['Evaluating Domain Authority', 'Ethical Guest Posting & Content Outreach', 'Backlink Auditing & Disavow Tool'] }
+      { id: 'seo-m1', title: 'Module 1: AI Search Foundations — GEO, LLM SEO & AEO', lessons: ['How AI Search Engines Answer Questions', 'GEO, LLM SEO and AEO Compared', 'Why Classic SEO Still Decides AI Visibility'] },
+      { id: 'seo-m2', title: 'Module 2: Optimising a Page for AI Answers', lessons: ['Answer-First Content Structure', 'Structured Content vs Structured Data', 'One Page for AEO, GEO and SEO'] },
+      { id: 'seo-m3', title: 'Module 3: Training AI to Find and Cite You', lessons: ['Auditing What AI Says About You', 'About, Contact and Source Pages AI Can Trust', 'How AI Models Actually Learn'] },
+      { id: 'seo-m4', title: 'Module 4: Crawlability for AI Crawlers', lessons: ['How Crawling Works for Search and AI Bots', 'robots.txt Mistakes That Block AI', 'llms.txt: Writing and Verifying It'] },
+      { id: 'seo-m5', title: 'Module 5: Reputation — E-E-A-T and Entity Authority', lessons: ['Google E-E-A-T Explained', 'Building a Consistent Entity Across the Web', 'Mentions in Databases, Forums and Communities'] },
+      { id: 'seo-m6', title: 'Module 6: Digital PR — Earning Mentions That Train AI', lessons: ['Why Mentions Move AI Answers', 'Writing a Press Release for Humans, Search and AI', 'Distribution, Follow-Up and Measuring Coverage'] },
+      { id: 'seo-m7', title: 'Module 7: AI-Assisted Technical SEO', lessons: ['Building an SEO-Ready Site with AI Tools', 'FAQ Schema, Interlinking and Long-Tail Coverage', 'Page Speed and Core Web Vitals with AI Help'] },
+      { id: 'seo-m8', title: 'Module 8: Measuring AI Visibility and Staying Ahead', lessons: ['Tracking Citations and Brand Mentions in AI Answers', 'Google AI Overviews and AI Mode', 'Ethics, Limits and What Comes Next'] }
     ]
   },
   'digital-marketing': {
     title: 'Digital Marketing Strategy',
     mentor: 'Marketing Team Lead',
-    duration: '10 Weeks',
-    lectures: 60,
-    projects: 5,
-    description: 'Formulate end-to-end digital growth funnels. Master Pay-Per-Click search ads, social media campaigns, email marketing automation, conversion optimization, and tracking analytics.',
+    duration: '12 Weeks',
+    lectures: 29,
+    projects: 9,
+    description: 'Formulate end-to-end digital growth funnels. Master paid search and social ads, organic social, email automation, conversion optimisation, analytics and attribution, content and video, AI-assisted marketing, and a full capstone campaign plan.',
     colorGrad: 'linear-gradient(135deg, #e67e22, #f39c12)',
     initial: 'DM',
     startDate: 'July 18, 2026',
@@ -73,7 +76,11 @@ const COURSE_DATA: Record<string, CourseDetail> = {
       { id: 'dm-m2', title: 'Module 2: Social Media Marketing & Organic Growth', lessons: ['Content Pillars and Scheduling Strategies', 'Algorithm Optimization (LinkedIn, Instagram)', 'Community Management & Engagement'] },
       { id: 'dm-m3', title: 'Module 3: Pay-Per-Click (PPC) Advertising', lessons: ['Google Search Ads Campaign Setup', 'Meta (Facebook/Instagram) Ads Manager', 'Bidding Strategies, Budgets, and Retargeting'] },
       { id: 'dm-m4', title: 'Module 4: Email Marketing Automation', lessons: ['Lead Magnet Design & List Growth', 'Writing High-Open-Rate Sequences', 'Setting up Behavioral Triggers & Workflows'] },
-      { id: 'dm-m5', title: 'Module 5: Conversion Rate Optimization (CRO)', lessons: ['Landing Page Best Practices', 'A/B Testing Frameworks & Tools', 'Analyzing User Heatmaps and Sessions'] }
+      { id: 'dm-m5', title: 'Module 5: Conversion Rate Optimization (CRO)', lessons: ['Landing Page Best Practices', 'A/B Testing Frameworks & Tools', 'Analyzing User Heatmaps and Sessions'] },
+      { id: 'dm-m6', title: 'Module 6: Measurement, Analytics & Attribution', lessons: ['Reading GA4 Without Getting Lost', 'UTM Tracking & Clean Campaign Data', 'Attribution & the Monthly Report'] },
+      { id: 'dm-m7', title: 'Module 7: Content, Video & Partnerships', lessons: ['Content Marketing That Feeds Every Channel', 'Short-Form Video & Creative Testing', 'Influencers, Affiliates & Messaging Channels'] },
+      { id: 'dm-m8', title: 'Module 8: AI in Digital Marketing', lessons: ['Where AI Helps and Where It Fails', 'AI for Research, Copy & Creative', 'AI for Analysis, Reporting & Its Limits'] },
+      { id: 'dm-m9', title: 'Module 9: Capstone & Career', lessons: ['The Capstone Campaign Plan', 'Presenting Results & Building a Portfolio', 'Career Paths & Interview Preparation'] }
     ]
   },
   testing: {
