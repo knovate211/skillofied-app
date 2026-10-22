@@ -6,7 +6,11 @@ import Sidebar from './components/layout/Sidebar';
 import CoursesSection from './components/courses/CoursesSection';
 import Login from './components/auth/Login';
 import { getMyCoursesApi } from './api';
-import { isApplicantSession, isCandidateSession } from './lib/session';
+import { getSessionUser, isApplicantSession, isCandidateSession } from './lib/session';
+import { claimLearnerData, clearLearnerData } from './lib/learnerData';
+import { hydrateCourseProgress } from './lib/courseProgress';
+import { getUnlockedCoursePaths } from './lib/courseAccess';
+import { useToast } from './context/ToastContext';
 import { useNavigatePending } from './hooks/useNavigatePending';
 import styles from './App.module.css';
 import TodaySchedule from './components/dashboard/TodaySchedule';
@@ -22,7 +26,6 @@ const FullStackCoursePage = lazy(() => import('./components/courses/FullStackCou
 const OsCoursePage = lazy(() => import('./components/courses/OsCoursePage'));
 const NetworkingCoursePage = lazy(() => import('./components/courses/NetworkingCoursePage'));
 const TestingCoursePage = lazy(() => import('./components/courses/TestingCoursePage'));
-const CoursePlaceholderPage = lazy(() => import('./components/courses/CoursePlaceholderPage'));
 const SeoCoursePage = lazy(() => import('./components/courses/SeoCoursePage'));
 const DigitalMarketingCoursePage = lazy(() => import('./components/courses/DigitalMarketingCoursePage'));
 const PracticeSection = lazy(() => import('./components/practice/PracticeSection'));
@@ -69,13 +72,37 @@ type Tab = 'Home' | 'Course' | 'Practice' | 'Placement';
 
 
 
+/**
+ * Opens a course page only when the learner is enrolled in it. Without this a
+ * typed URL opened any course, locked ones included. `enrolledCourses` is null
+ * until getMyCourses answers, so a slow load waits rather than bouncing.
+ */
+const CourseGate: React.FC<{ enrolledCourses: any[] | null; children: React.ReactNode }> = ({
+  enrolledCourses,
+  children,
+}) => {
+  const { pathname } = useLocation();
+  const { showToast } = useToast();
+  const allowed = enrolledCourses !== null && getUnlockedCoursePaths(enrolledCourses).has(pathname);
+
+  useEffect(() => {
+    if (enrolledCourses !== null && !allowed) {
+      showToast('That course is not part of your enrolment.', 'error');
+    }
+  }, [enrolledCourses, allowed, showToast]);
+
+  if (enrolledCourses === null) return <LoadingScreen />;
+  if (!allowed) return <Navigate to="/courses" replace />;
+  return <>{children}</>;
+};
+
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
     // Require both the flag AND a real token — guards against stale sessions
     return localStorage.getItem('isLoggedIn') === 'true' && !!localStorage.getItem('token');
   });
 
-  const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
+  const [enrolledCourses, setEnrolledCourses] = useState<any[] | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -83,12 +110,18 @@ const App: React.FC = () => {
   const { go, isPending } = useNavigatePending();
 
   useEffect(() => {
+    setEnrolledCourses(null);
     if (isLoggedIn) {
+      // Login.tsx claims the cache before navigating; the scholarship, hiring
+      // and certification hand-offs establish a session without it.
+      claimLearnerData(getSessionUser().id);
+      hydrateCourseProgress();
       getMyCoursesApi()
         .then((data) => setEnrolledCourses(data))
-        .catch((err) => console.error('Failed to load enrolled courses:', err));
-    } else {
-      setEnrolledCourses([]);
+        .catch((err) => {
+          console.error('Failed to load enrolled courses:', err);
+          setEnrolledCourses([]);
+        });
     }
   }, [isLoggedIn]);
 
@@ -107,6 +140,7 @@ const App: React.FC = () => {
   };
 
   const handleLogout = () => {
+    clearLearnerData();
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -326,7 +360,7 @@ const App: React.FC = () => {
               <Sidebar
                 isOpen={isSidebarOpen}
                 onClose={() => setIsSidebarOpen(false)}
-                enrolledCourses={enrolledCourses}
+                enrolledCourses={enrolledCourses ?? []}
               />
               <main className={isCourseDetailPage ? styles.mainCoursePage : styles.main}>
                 <Suspense fallback={<LoadingScreen />}>
@@ -342,19 +376,20 @@ const App: React.FC = () => {
                       }
                     />
                     <Route path="/courses" element={<CoursesSection />} />
-                    <Route path="/courses/frontend" element={<FrontendCoursePage />} />
-                    <Route path="/courses/java" element={<JavaCoursePage />} />
-                    <Route path="/courses/sql" element={<SqlCoursePage />} />
-                    <Route path="/courses/golang" element={<GolangCoursePage />} />
-                    <Route path="/courses/genai" element={<GenAICoursePage />} />
-                    <Route path="/courses/fullstack" element={<FullStackCoursePage />} />
-                    <Route path="/courses/os" element={<OsCoursePage />} />
-                    <Route path="/courses/networking" element={<NetworkingCoursePage />} />
-                    <Route path="/courses/seo" element={<SeoCoursePage />} />
-                    <Route path="/courses/digital-marketing" element={<DigitalMarketingCoursePage />} />
-                    {/* Courses without content yet fall through to the syllabus landing page. */}
-                    <Route path="/courses/testing" element={<TestingCoursePage />} />
-                    <Route path="/courses/:courseId" element={<CoursePlaceholderPage />} />
+                    <Route path="/courses/frontend" element={<CourseGate enrolledCourses={enrolledCourses}><FrontendCoursePage /></CourseGate>} />
+                    <Route path="/courses/java" element={<CourseGate enrolledCourses={enrolledCourses}><JavaCoursePage /></CourseGate>} />
+                    <Route path="/courses/sql" element={<CourseGate enrolledCourses={enrolledCourses}><SqlCoursePage /></CourseGate>} />
+                    <Route path="/courses/golang" element={<CourseGate enrolledCourses={enrolledCourses}><GolangCoursePage /></CourseGate>} />
+                    <Route path="/courses/genai" element={<CourseGate enrolledCourses={enrolledCourses}><GenAICoursePage /></CourseGate>} />
+                    <Route path="/courses/fullstack" element={<CourseGate enrolledCourses={enrolledCourses}><FullStackCoursePage /></CourseGate>} />
+                    <Route path="/courses/os" element={<CourseGate enrolledCourses={enrolledCourses}><OsCoursePage /></CourseGate>} />
+                    <Route path="/courses/networking" element={<CourseGate enrolledCourses={enrolledCourses}><NetworkingCoursePage /></CourseGate>} />
+                    <Route path="/courses/seo" element={<CourseGate enrolledCourses={enrolledCourses}><SeoCoursePage /></CourseGate>} />
+                    <Route path="/courses/digital-marketing" element={<CourseGate enrolledCourses={enrolledCourses}><DigitalMarketingCoursePage /></CourseGate>} />
+                    <Route path="/courses/testing" element={<CourseGate enrolledCourses={enrolledCourses}><TestingCoursePage /></CourseGate>} />
+                    {/* Every real course has its own route above. An unknown id used to open a
+                        placeholder announcing "Enrolled & Active" for whatever was typed. */}
+                    <Route path="/courses/:courseId" element={<Navigate to="/courses" replace />} />
                     <Route path="/practice" element={<PracticeSection />} />
                     <Route path="/practice/:id" element={<PracticeDetail />} />
                     <Route path="/placement" element={<PlacementSection />} />

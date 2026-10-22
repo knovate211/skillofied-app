@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './Sidebar.module.css';
 import knovateLogo from '../../assets/knovate-logo.png';
+import { getUnlockedCoursePaths } from '../../lib/courseAccess';
 
 interface CourseEligibility {
   title: string;
@@ -34,35 +35,20 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, enrolledCourses }) =
     };
   }, [isOpen]);
 
-  const isGolangUnlocked = enrolledCourses.some(c => c.title.includes('Golang'));
-  const isFullStackUnlocked = enrolledCourses.some(c => c.title.includes('Full Stack') || c.title.includes('Fullstack'));
-  const isGenAIUnlocked = enrolledCourses.some(c => c.title.includes('GenAI') || c.title.includes('Generative AI')) || isFullStackUnlocked;
-  const isFrontendUnlocked = enrolledCourses.some(c => c.title === 'Front-End Technologies') || isFullStackUnlocked;
-  const isJavaUnlocked = enrolledCourses.some(c => c.title === 'Java Development' || c.title === 'Java') || isFullStackUnlocked;
-  const isSqlUnlocked = enrolledCourses.some(c => c.title === 'Mastering SQL') || isFullStackUnlocked;
-  const isDigitalMarketingUnlocked = enrolledCourses.some(c => c.title === 'SEO Fundamentals' || c.title === 'Digital Marketing Strategy');
-  const isTestingUnlocked = enrolledCourses.some(c => c.title.toLowerCase().includes('testing'));
-
-  // Computer Science Core is self-paced: no separate enrolment, no schedule, no
-  // mentor. It opens for anyone on a development track — the fundamentals under
-  // every one of those courses — and stays shut for the marketing and QA tracks,
-  // where it is not part of what the student signed up to learn.
-  const isDevelopmentStudent =
-    isFullStackUnlocked || isFrontendUnlocked || isJavaUnlocked ||
-    isSqlUnlocked || isGolangUnlocked || isGenAIUnlocked;
+  const unlocked = getUnlockedCoursePaths(enrolledCourses);
 
   const courses: CourseEligibility[] = [
     {
       title: 'Golang Engineering',
       path: '/courses/golang',
-      isUnlocked: isGolangUnlocked,
+      isUnlocked: unlocked.has('/courses/golang'),
       icon: '🐹',
       category: 'Development',
     },
     {
       title: 'GenAI & Forward Deployed Engineering',
       path: '/courses/genai',
-      isUnlocked: isGenAIUnlocked,
+      isUnlocked: unlocked.has('/courses/genai'),
       icon: '🤖',
       category: 'Development',
     },
@@ -72,56 +58,56 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, enrolledCourses }) =
     {
       title: 'Front-End Technologies',
       path: '/courses/frontend',
-      isUnlocked: isFrontendUnlocked,
+      isUnlocked: unlocked.has('/courses/frontend'),
       icon: '🎨',
       category: 'Development',
     },
     {
       title: 'Java Development',
       path: '/courses/java',
-      isUnlocked: isJavaUnlocked,
+      isUnlocked: unlocked.has('/courses/java'),
       icon: '☕',
       category: 'Development',
     },
     {
       title: 'Mastering SQL',
       path: '/courses/sql',
-      isUnlocked: isSqlUnlocked,
+      isUnlocked: unlocked.has('/courses/sql'),
       icon: '💾',
       category: 'Development',
     },
     {
       title: 'Operating Systems',
       path: '/courses/os',
-      isUnlocked: isDevelopmentStudent,
+      isUnlocked: unlocked.has('/courses/os'),
       icon: '💽',
       category: 'Computer Science Core',
     },
     {
       title: 'Computer Networks',
       path: '/courses/networking',
-      isUnlocked: isDevelopmentStudent,
+      isUnlocked: unlocked.has('/courses/networking'),
       icon: '🌐',
       category: 'Computer Science Core',
     },
     {
       title: 'SEO Fundamentals',
       path: '/courses/seo',
-      isUnlocked: isDigitalMarketingUnlocked,
+      isUnlocked: unlocked.has('/courses/seo'),
       icon: '🔍',
       category: 'Marketing',
     },
     {
       title: 'Digital Marketing Strategy',
       path: '/courses/digital-marketing',
-      isUnlocked: isDigitalMarketingUnlocked,
+      isUnlocked: unlocked.has('/courses/digital-marketing'),
       icon: '📈',
       category: 'Marketing',
     },
     {
       title: 'Software Testing',
       path: '/courses/testing',
-      isUnlocked: isTestingUnlocked,
+      isUnlocked: unlocked.has('/courses/testing'),
       icon: '🧪',
       category: 'QA & Testing',
     },

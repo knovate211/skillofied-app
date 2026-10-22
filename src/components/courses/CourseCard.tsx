@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { Course } from '../../types';
 import styles from './CourseCard.module.css';
 import { getCourseButtonText, getCourseProgress } from '../../utils/courseHelpers';
 import ActionButton from '../common/ActionButton';
 import { useNavigatePending } from '../../hooks/useNavigatePending';
+import { onCourseProgressHydrated } from '../../lib/courseProgress';
 
 interface Props {
   course: Course;
@@ -138,6 +139,10 @@ const CourseCard: React.FC<Props> = ({ course, index = 0 }) => {
   const { go, isPending } = useNavigatePending();
   const toneClass = TONES[index % TONES.length];
 
+  // Progress is read from the cache; render again once the server's copy has
+  // been merged in, or a learner on a new device sees 0%.
+  const [, refresh] = useReducer((n: number) => n + 1, 0);
+  useEffect(() => onCourseProgressHydrated(refresh), []);
   const progressValue = getCourseProgress(course.title);
   const displayProgress = Math.round(progressValue);
 

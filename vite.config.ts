@@ -46,6 +46,11 @@ export default defineConfig(({ mode }) => {
           target: apiTarget,
           changeOrigin: true,
         },
+        // How far the learner has read through each course.
+        '/api/course-progress': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
         // The referral programme: the learner's own link and progress.
         '/api/referral': {
           target: apiTarget,

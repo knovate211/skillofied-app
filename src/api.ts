@@ -1248,6 +1248,23 @@ async function authedRequest<T>(method: string, path: string, body?: unknown): P
   return data as T;
 }
 
+export interface CourseProgressRecord {
+  course_key: string;
+  max_index: number;
+  last_lesson: string;
+}
+
+/** How far the signed-in learner has read through every course they opened. */
+export const getCourseProgressApi = () =>
+  authedRequest<{ progress: CourseProgressRecord[] }>('GET', '/api/course-progress');
+
+/** Records progress in one course. The server keeps the furthest index it has seen. */
+export const saveCourseProgressApi = (courseKey: string, maxIndex: number, lastLesson: string) =>
+  authedRequest<CourseProgressRecord>('PUT', `/api/course-progress/${encodeURIComponent(courseKey)}`, {
+    max_index: maxIndex,
+    last_lesson: lastLesson,
+  });
+
 /** Today's classes for the signed-in student, with the server's clock. */
 export const getTodayClassesApi = () =>
   authedRequest<{ sessions: ClassSession[]; server_time: string }>('GET', '/api/attendance/today');
