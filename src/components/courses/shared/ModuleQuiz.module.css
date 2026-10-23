@@ -360,3 +360,30 @@
     flex-wrap: wrap;
   }
 }
+
+/* Under the nav on the last question: which questions still need an answer. */
+.unanswered {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.jumpBtn {
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.jumpBtn:hover {
+  border-color: var(--accent);
+}

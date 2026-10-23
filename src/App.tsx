@@ -14,6 +14,7 @@ import { useToast } from './context/ToastContext';
 import { useNavigatePending } from './hooks/useNavigatePending';
 import styles from './App.module.css';
 import TodaySchedule from './components/dashboard/TodaySchedule';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import AttendancePrompt from './components/attendance/AttendancePrompt';
 
 // Lazy loaded route components
@@ -146,11 +147,15 @@ const App: React.FC = () => {
     navigate('/login', { replace: true });
   };
 
-  const getActiveTab = (pathname: string): Tab => {
-    if (pathname === '/courses') return 'Course';
-    if (pathname === '/practice') return 'Practice';
-    if (pathname === '/placement') return 'Placement';
-    return 'Home';
+  // The tab owns its whole section, so /practice/3 still highlights Practice.
+  // Pages outside the four sections (profile) highlight none.
+  const getActiveTab = (pathname: string): Tab | null => {
+    const inSection = (base: string) => pathname === base || pathname.startsWith(base + '/');
+    if (pathname === '/') return 'Home';
+    if (inSection('/courses')) return 'Course';
+    if (inSection('/practice')) return 'Practice';
+    if (inSection('/placement')) return 'Placement';
+    return null;
   };
 
   const activeTab = getActiveTab(location.pathname);
@@ -220,6 +225,9 @@ const App: React.FC = () => {
   const isCourseDetailPage = location.pathname.startsWith('/courses/') && location.pathname !== '/courses';
 
   return (
+    // Outer boundary: the standalone screens (test player, IDE, hand-offs).
+    // The shell below has its own, so a broken page keeps the navigation.
+    <ErrorBoundary resetKey={location.pathname}>
     <Routes>
       <Route
         path="/login"
@@ -361,6 +369,7 @@ const App: React.FC = () => {
                 enrolledCourses={enrolledCourses ?? []}
               />
               <main className={isCourseDetailPage ? styles.mainCoursePage : styles.main}>
+                <ErrorBoundary resetKey={location.pathname}>
                 <Suspense fallback={<LoadingScreen />}>
                   <Routes>
                     <Route
@@ -396,6 +405,7 @@ const App: React.FC = () => {
                     <Route path="*" element={<Navigate to="/" replace />} />
                   </Routes>
                 </Suspense>
+                </ErrorBoundary>
               </main>
               {/* Lives in the shell, not the test player or IDE, so a live
                   assessment is never interrupted by a class reminder. */}
@@ -410,6 +420,7 @@ const App: React.FC = () => {
         }
       />
     </Routes>
+    </ErrorBoundary>
   );
 };
 

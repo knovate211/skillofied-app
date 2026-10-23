@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import styles from './ProfilePage.module.css';
 import Modal from '../common/Modal';
+import { validateGeneric, validatePersonal, validateSchool, validateUG } from './validateProfile';
 import { getProfileApi, upsertProfileApi } from '../../api';
 import ReferralSection from './ReferralSection';
 import CertificateSection from './CertificateSection';
@@ -118,6 +119,12 @@ const ComingSoon: React.FC<{ tab: string }> = ({ tab }) => (
 const ProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ProfileTab>('Profile');
   const [openModal, setOpenModal] = useState<ModalKey>(null);
+  // Problems with the open form's draft; the form stays open until they are fixed.
+  const [formErrors, setFormErrors] = useState<string[]>([]);
+  const closeModal = () => {
+    setFormErrors([]);
+    setOpenModal(null);
+  };
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -240,10 +247,24 @@ const ProfilePage: React.FC = () => {
     if (key === 'edu12') setDEdu12({ ...edu12 });
     if (key === 'ugDetail') setDUg({ ...ug });
     if (key === 'pgDetail') setDPg({ ...pg });
+    setFormErrors([]);
     setOpenModal(key);
   };
 
   const save = async () => {
+    const problems =
+      openModal === 'personal' ? validatePersonal(dPersonal)
+      : openModal === 'generic' ? validateGeneric(dGeneric)
+      : openModal === 'edu10' ? validateSchool(dEdu10, 'School Name')
+      : openModal === 'edu12' ? validateSchool(dEdu12, 'School / College Name')
+      : openModal === 'ugDetail' ? validateUG(dUg)
+      : [];
+    if (problems.length) {
+      setFormErrors(problems);
+      return;
+    }
+    setFormErrors([]);
+
     // Compute the next committed state
     const nextPersonal = openModal === 'personal' ? { ...dPersonal } : personal;
     const nextGeneric  = openModal === 'generic'  ? { ...dGeneric  } : generic;
@@ -435,7 +456,7 @@ const ProfilePage: React.FC = () => {
       {/* ════════════ MODALS ════════════ */}
 
       {/* ── Personal Info Modal ── */}
-      <Modal isOpen={openModal === 'personal'} title="Personal Information" onClose={() => setOpenModal(null)} onSave={save}>
+      <Modal isOpen={openModal === 'personal'} title="Personal Information" onClose={closeModal} onSave={save} errors={formErrors}>
         <FG label="Full Name" req><TxtInput placeholder="Enter your full name" value={dPersonal.name} onChange={e => setDPersonal(p => ({ ...p, name: e.target.value }))} /></FG>
         <FG label="Email Address" req><TxtInput type="email" placeholder="Enter email" value={dPersonal.email} onChange={e => setDPersonal(p => ({ ...p, email: e.target.value }))} /></FG>
         <div className="formGrid2">
@@ -450,7 +471,7 @@ const ProfilePage: React.FC = () => {
       </Modal>
 
       {/* ── Generic Details Modal ── */}
-      <Modal isOpen={openModal === 'generic'} title="Generic Details" onClose={() => setOpenModal(null)} onSave={save}>
+      <Modal isOpen={openModal === 'generic'} title="Generic Details" onClose={closeModal} onSave={save} errors={formErrors}>
         <FG label="Work Experience" req><SelInput opts={WORK_EXP_OPTIONS} value={dGeneric.workExperience} onChange={e => setDGeneric(g => ({ ...g, workExperience: e.target.value }))} /></FG>
         <FG label="Career gap in years" req><SelInput opts={CAREER_GAP_OPTIONS} value={dGeneric.careerGap} onChange={e => setDGeneric(g => ({ ...g, careerGap: e.target.value }))} /></FG>
         <FG label="Current State" req><TxtInput placeholder="e.g. Karnataka" value={dGeneric.currentState} onChange={e => setDGeneric(g => ({ ...g, currentState: e.target.value }))} /></FG>
@@ -478,7 +499,7 @@ const ProfilePage: React.FC = () => {
       </Modal>
 
       {/* ── 10th Grade Modal ── */}
-      <Modal isOpen={openModal === 'edu10'} title="10th Grade Details" onClose={() => setOpenModal(null)} onSave={save}>
+      <Modal isOpen={openModal === 'edu10'} title="10th Grade Details" onClose={closeModal} onSave={save} errors={formErrors}>
         <FG label="School Name" req><TxtInput placeholder="Enter school name" value={dEdu10.schoolName} onChange={e => setDEdu10(d => ({ ...d, schoolName: e.target.value }))} /></FG>
         <div className="formGrid2">
           <FG label="Year of Passout" req><TxtInput placeholder="e.g. 2018" value={dEdu10.yearOfPassout} onChange={e => setDEdu10(d => ({ ...d, yearOfPassout: e.target.value }))} /></FG>
@@ -487,7 +508,7 @@ const ProfilePage: React.FC = () => {
       </Modal>
 
       {/* ── 12th Grade Modal ── */}
-      <Modal isOpen={openModal === 'edu12'} title="12th / PUC / Intermediate / Diploma" onClose={() => setOpenModal(null)} onSave={save}>
+      <Modal isOpen={openModal === 'edu12'} title="12th / PUC / Intermediate / Diploma" onClose={closeModal} onSave={save} errors={formErrors}>
         <FG label="School / College Name" req><TxtInput placeholder="Enter school or college name" value={dEdu12.schoolName} onChange={e => setDEdu12(d => ({ ...d, schoolName: e.target.value }))} /></FG>
         <div className="formGrid2">
           <FG label="Year of Passout" req><TxtInput placeholder="e.g. 2020" value={dEdu12.yearOfPassout} onChange={e => setDEdu12(d => ({ ...d, yearOfPassout: e.target.value }))} /></FG>
@@ -496,7 +517,7 @@ const ProfilePage: React.FC = () => {
       </Modal>
 
       {/* ── UG Detail Modal ── */}
-      <Modal isOpen={openModal === 'ugDetail'} title="UG Detail" onClose={() => setOpenModal(null)} onSave={save}>
+      <Modal isOpen={openModal === 'ugDetail'} title="UG Detail" onClose={closeModal} onSave={save} errors={formErrors}>
         <div className="formGrid2">
           <FG label="University Roll No." req><TxtInput placeholder="Roll number" value={dUg.universityRollNo} onChange={e => setDUg(d => ({ ...d, universityRollNo: e.target.value }))} /></FG>
           <FG label="College Name" req><TxtInput placeholder="College name" value={dUg.collegeName} onChange={e => setDUg(d => ({ ...d, collegeName: e.target.value }))} /></FG>
@@ -514,7 +535,7 @@ const ProfilePage: React.FC = () => {
       </Modal>
 
       {/* ── PG Detail Modal ── */}
-      <Modal isOpen={openModal === 'pgDetail'} title="PG Detail" onClose={() => setOpenModal(null)} onSave={save}>
+      <Modal isOpen={openModal === 'pgDetail'} title="PG Detail" onClose={closeModal} onSave={save} errors={formErrors}>
         <FG label="Do you have Post Graduation Certificate?" req>
           <div className="radioGroup">
             <label className="radioLabel"><input type="radio" name="pgCert" value="Yes" checked={dPg.hasCertificate === 'Yes'} onChange={() => setDPg({ hasCertificate: 'Yes' })} /> Yes</label>
