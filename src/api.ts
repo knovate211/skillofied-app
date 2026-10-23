@@ -1,4 +1,57 @@
+import { clearSession } from './lib/session';
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+
+// ── Request core ──────────────────────────────────────────────────────────────
+
+/**
+ * The session is gone server-side (expired or revoked): forget it here and send
+ * the learner to log in again. Every authenticated request ends up here, REST
+ * or GraphQL, so an expired session behaves the same wherever it is noticed.
+ */
+function endSession(): void {
+  clearSession();
+  if (window.location.pathname !== '/login') window.location.href = '/login';
+}
+
+interface RequestOptions {
+  method?: string;
+  body?: unknown;
+  /** Send the bearer token, and treat a 401 as an expired session. Default true. */
+  auth?: boolean;
+  /** Let the request outlive the page (the last integrity snapshots on unload). */
+  keepalive?: boolean;
+}
+
+/**
+ * The one place a request is made: base URL, JSON body, bearer token. `data` is
+ * the parsed JSON body, or undefined when the response was not JSON — a dev
+ * server without a proxy for the path answers with index.html and a 200. The
+ * body is parsed whatever its content type says: the gateway labels some JSON
+ * error bodies text/plain.
+ */
+async function request(path: string, { method = 'GET', body, auth = true, keepalive }: RequestOptions = {}) {
+  const headers: Record<string, string> = {};
+  const token = auth ? localStorage.getItem('token') : null;
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  if (body !== undefined) headers['Content-Type'] = 'application/json';
+
+  const resp = await fetch(`${API_BASE}${path}`, {
+    method,
+    headers,
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+    keepalive,
+  });
+  const text = await resp.text();
+  let data: any;
+  try {
+    data = text ? JSON.parse(text) : {};
+  } catch {
+    data = undefined;
+  }
+  if (auth && resp.status === 401) endSession();
+  return { ok: resp.ok, status: resp.status, data };
+}
 
 export interface User {
   id: string;
@@ -195,38 +248,20 @@ export async function getCertificatesApi(): Promise<CertificateRecord[]> {
 }
 
 export async function loginApi(email: string, password: string): Promise<LoginResponse> {
-  const resp = await fetch(`${API_BASE}/api/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ email, password }),
-  });
-
-  if (!resp.ok) {
-    const errData = await resp.json().catch(() => ({}));
-    throw new Error(errData.error || 'Failed to authenticate');
-  }
-
-  return resp.json();
+  const { ok, data } = await request('/api/login', { method: 'POST', body: { email, password }, auth: false });
+  if (!ok || !data) throw new Error(data?.error || 'Failed to authenticate');
+  return data;
 }
 
+/** A POST that needs no session (password reset, the hand-off claims). */
 async function postPublic(
   path: string,
   body: Record<string, unknown>,
   fallbackError: string,
 ): Promise<any> {
-  const resp = await fetch(`${API_BASE}${path}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-
-  const data = await resp.json().catch(() => ({}));
-  if (!resp.ok) {
-    throw new Error(data.error || fallbackError);
-  }
-  return data;
+  const { ok, data } = await request(path, { method: 'POST', body, auth: false });
+  if (!ok) throw new Error(data?.error || fallbackError);
+  return data ?? {};
 }
 
 /**
@@ -267,34 +302,13 @@ export async function confirmPasswordResetApi(
 }
 
 export async function graphqlRequest<T = any>(query: string, variables: Record<string, any> = {}): Promise<T> {
-  const token = localStorage.getItem('token');
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  const resp = await fetch(`${API_BASE}/api/graphql`, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({
-      query,
-      variables,
-    }),
-  });
-
-  const result = await resp.json();
+  const { status, data: result } = await request('/api/graphql', { method: 'POST', body: { query, variables } });
+  if (!result) throw new Error(`Unexpected response from the server (${status})`);
 
   if (result.errors && result.errors.length > 0) {
     const errMsg = result.errors[0].message || 'GraphQL Query Error';
-    if (errMsg === 'authentication required') {
-      localStorage.removeItem('token');
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
-    }
+    // GraphQL reports a missing or expired session as an error, not a 401.
+    if (errMsg === 'authentication required') endSession();
     throw new Error(errMsg);
   }
 
@@ -1193,12 +1207,9 @@ export interface ScholarshipOutcome {
  * rather than erroring, so the result page can call it unconditionally.
  */
 export async function getScholarshipOutcomeApi(attemptId: string): Promise<ScholarshipOutcome> {
-  const token = localStorage.getItem('token');
-  const resp = await fetch(`${API_BASE}/api/scholarship/outcome?attemptId=${encodeURIComponent(attemptId)}`, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-  });
-  if (!resp.ok) return { isScholarship: false };
-  return resp.json();
+  const { ok, data } = await request(`/api/scholarship/outcome?attemptId=${encodeURIComponent(attemptId)}`);
+  if (!ok || !data) return { isScholarship: false };
+  return data;
 }
 
 // ── Live-class attendance ─────────────────────────────────────────────────────
@@ -1228,23 +1239,11 @@ export interface AttendanceHistory {
 }
 
 async function authedRequest<T>(method: string, path: string, body?: unknown): Promise<T> {
-  const token = localStorage.getItem('token');
-  const headers: Record<string, string> = {};
-  if (token) headers['Authorization'] = `Bearer ${token}`;
-  if (body !== undefined) headers['Content-Type'] = 'application/json';
-
-  const resp = await fetch(`${API_BASE}${path}`, {
-    method,
-    headers,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
-  });
-  // A dev server without a proxy for this path answers with index.html and a
-  // 200 — treat anything that is not JSON as a failure, not as an empty result.
-  if (!(resp.headers.get('content-type') || '').includes('application/json')) {
-    throw new Error(`Unexpected response from ${path} (${resp.status})`);
-  }
-  const data = await resp.json().catch(() => ({}));
-  if (!resp.ok) throw new Error(data.error || `Request failed (${resp.status})`);
+  const { ok, status, data } = await request(path, { method, body });
+  // Not JSON: most likely a dev server without a proxy for this path, which
+  // answers with index.html — a failure, not an empty result.
+  if (data === undefined) throw new Error(`Unexpected response from ${path} (${status})`);
+  if (!ok) throw new Error(data.error || `Request failed (${status})`);
   return data as T;
 }
 
@@ -1264,6 +1263,18 @@ export const saveCourseProgressApi = (courseKey: string, maxIndex: number, lastL
     max_index: maxIndex,
     last_lesson: lastLesson,
   });
+
+/**
+ * Asks the course AI mentor. The conversation goes to the api-gateway, which
+ * holds the model key and the mentor's instructions; only the reply comes back.
+ */
+export async function askMentorApi(
+  messages: { role: 'user' | 'assistant'; content: string }[],
+  course?: string,
+): Promise<string> {
+  const data = await authedRequest<{ reply: string }>('POST', '/api/ai-mentor/chat', { messages, course });
+  return data.reply;
+}
 
 /** Today's classes for the signed-in student, with the server's clock. */
 export const getTodayClassesApi = () =>
@@ -1287,18 +1298,9 @@ export const getAttendanceHistoryApi = (from?: string, to?: string) => {
 // interrupt a candidate's test, so failures are swallowed by the callers.
 
 async function postIntegrity(path: string, body: unknown, keepalive = false): Promise<void> {
-  const token = localStorage.getItem('token');
-  const resp = await fetch(`${API_BASE}/api/integrity/${path}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-    body: JSON.stringify(body),
-    // Lets the last batch of snapshots leave even as the page unloads.
-    keepalive,
-  });
-  if (!resp.ok) throw new Error(`integrity ${path} failed (${resp.status})`);
+  // keepalive lets the last batch of snapshots leave even as the page unloads.
+  const { ok, status } = await request(`/api/integrity/${path}`, { method: 'POST', body, keepalive });
+  if (!ok) throw new Error(`integrity ${path} failed (${status})`);
 }
 
 /** Which browser session is sitting the attempt — the server spots a second one. */

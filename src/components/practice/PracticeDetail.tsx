@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { practiceSets, practiceProblems as initialProblems } from '../../data/mockData';
 import { TopicType, PracticeProblem } from '../../types';
 import { listPracticeSetsApi, listProblemsApi } from '../../api';
 import TopicChip from '../common/TopicChip';
@@ -49,27 +48,32 @@ const PracticeDetail: React.FC = () => {
   const [currentSet, setCurrentSet] = useState<any>(null);
   const [problems, setProblems] = useState<PracticeProblem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  // There is deliberately no mock stand-in on failure: it showed problems the
+  // server did not have, and an unknown set opened a different one instead.
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
   const [activeTopic, setActiveTopic] = useState<TopicType>('All');
 
   useEffect(() => {
     setIsLoading(true);
-
-    const fallbackSet = () => practiceSets.find((ps) => ps.id === id) || practiceSets[2];
-    const fallbackProblems = () => initialProblems.filter((p) => !p.setId || p.setId === id);
+    setLoadError(null);
 
     Promise.all([listPracticeSetsApi(), listProblemsApi(id)])
       .then(([sets, fetchedProblems]) => {
-        setCurrentSet(sets.find((s) => s.id === id) || fallbackSet());
-        setProblems(fetchedProblems.length > 0 ? (fetchedProblems as PracticeProblem[]) : fallbackProblems());
-        setIsLoading(false);
+        const set = sets.find((s) => s.id === id);
+        if (!set) {
+          setLoadError("This practice set doesn't exist, or it isn't available to you.");
+          return;
+        }
+        setCurrentSet(set);
+        setProblems(fetchedProblems as PracticeProblem[]);
       })
       .catch((err) => {
-        console.error("Failed to load details from API:", err);
-        setCurrentSet(fallbackSet());
-        setProblems(fallbackProblems());
-        setIsLoading(false);
-      });
-  }, [id]);
+        console.error('Failed to load practice set:', err);
+        setLoadError("We couldn't load this practice set. Check your connection and try again.");
+      })
+      .finally(() => setIsLoading(false));
+  }, [id, reloadKey]);
 
   // Navigate back to practice dashboard
   const handleBack = () => {
@@ -114,6 +118,18 @@ const PracticeDetail: React.FC = () => {
   // Calculate overall completion percent based on current solved problems
   const totalSolved = problems.filter((p) => p.status === 'Solved').length;
   const overallProgress = problems.length > 0 ? (totalSolved / problems.length) * 100 : 0;
+
+  if (loadError) {
+    return (
+      <div className={styles.container} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 16, minHeight: '300px', textAlign: 'center' }}>
+        <p style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{loadError}</p>
+        <div style={{ display: 'flex', gap: 12 }}>
+          <button className={styles.backLink} onClick={() => setReloadKey((k) => k + 1)}>Try again</button>
+          <button className={styles.backLink} onClick={handleBack}>Back to Practice</button>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading || !currentSet) {
     return (
@@ -195,6 +211,12 @@ const PracticeDetail: React.FC = () => {
           </h3>
           <span className={styles.resultsCount}>{filteredProblems.length} results</span>
         </div>
+
+        {problems.length === 0 && (
+          <p style={{ color: 'var(--text-secondary)', padding: '24px 0' }}>
+            No challenges have been added to this set yet.
+          </p>
+        )}
 
         <div className={styles.problemsGrid}>
           {filteredProblems.map((prob) => {

@@ -1,45 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Group as PanelGroup, Panel, Separator as PanelResizeHandle } from 'react-resizable-panels';
-import { CheckCircle, Info, XCircle } from 'lucide-react';
+import { XCircle } from 'lucide-react';
 
 import WorkspaceHeader from './WorkspaceHeader';
+import { useToast } from '../../context/ToastContext';
 import ProblemDescriptionPanel from './ProblemDescriptionPanel';
 import IDEPanel from './IDEPanel';
 import ConsolePanel from './ConsolePanel';
 
-// Type-only: erased at build time, so the 2.5k-line fallback dataset below is
-// never pulled into this chunk. It is loaded on demand only if the API fails.
-import type { ProblemDetail } from '../../data/problemsData';
-import { practiceProblems } from '../../data/mockData';
 import {
   getProblemApi,
   getSubmissionApi,
   listSubmissionsApi,
   normalizeSubmissionStatus,
+  ProblemDetailDto,
   runCodeApi,
   runScratchpadApi,
   submitCodeApi,
   TestCaseResult,
 } from '../../api';
-
-/** Loaded lazily so the offline fallback never ships in the main solve bundle. */
-async function loadFallbackProblem(id: string, nameFallback: string): Promise<ProblemDetail> {
-  const { getProblemDetail } = await import('../../data/problemsData');
-  return getProblemDetail(id, nameFallback);
-}
+import { languageLabel } from '../../lib/codeLanguages';
 
 const isSqlProblem = (p: { tags?: string[]; topic?: string } | null): boolean =>
   !!p && (p.tags?.includes('SQL') || p.topic === 'Database' || p.topic === 'Databases');
-
-const LANGUAGE_LABELS: Record<string, string> = {
-  javascript: 'JavaScript',
-  python: 'Python',
-  java: 'Java',
-  cpp: 'C++',
-  go: 'Go',
-  sql: 'PostgreSQL',
-};
 
 /**
  * The languages to offer for this problem.
@@ -51,10 +35,10 @@ const LANGUAGE_LABELS: Record<string, string> = {
  * which languages have a real starter; fall back to the full list only when it
  * says nothing.
  */
-const languageOptions = (p: ProblemDetail | null): { id: string; label: string }[] | undefined => {
-  const supported = (p as { supportedLanguages?: string[] } | null)?.supportedLanguages;
+const languageOptions = (p: ProblemDetailDto | null): { id: string; label: string }[] | undefined => {
+  const supported = p?.supportedLanguages;
   if (!supported?.length) return undefined;
-  return supported.map((id) => ({ id, label: LANGUAGE_LABELS[id] ?? id }));
+  return supported.map((id) => ({ id, label: languageLabel(id) }));
 };
 
 const toPanelResults = (testResults: TestCaseResult[]) =>
@@ -66,20 +50,8 @@ const toPanelResults = (testResults: TestCaseResult[]) =>
     stdout: tr.error,
   }));
 
-/** Must match the toastOut keyframe in index.css. */
-const TOAST_EXIT_MS = 180;
-
 // How long a submission's result is polled for before giving up.
 const SUBMIT_POLL_TIMEOUT_MS = 3 * 60 * 1000;
-
-// Toast interface
-interface Toast {
-  /** Set while the exit animation plays; the row unmounts when it finishes. */
-  leaving?: boolean;
-  id: string;
-  message: string;
-  type: 'success' | 'error' | 'info';
-}
 
 interface Submission {
   status: 'Accepted' | 'Wrong Answer' | 'Runtime Error';
@@ -91,13 +63,15 @@ interface Submission {
 
 const SolveProblemPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-
-  // Find overall problem name from initial list if exists
-  const baseProb = practiceProblems.find((p) => p.id === id);
-  const problemName = baseProb ? baseProb.title : 'Challenge';
+  const navigate = useNavigate();
 
   // Load problem details
-  const [problem, setProblem] = useState<ProblemDetail | null>(null);
+  const [problem, setProblem] = useState<ProblemDetailDto | null>(null);
+  // Why the problem could not be shown, if it could not. There is deliberately
+  // no offline stand-in: a made-up problem looked real, took submissions the
+  // server had never heard of, and hid an outage behind plausible content.
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
   // Workspace settings state
   const [language, setLanguage] = useState<string>(() => {
@@ -113,19 +87,20 @@ const SolveProblemPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [runResults, setRunResults] = useState<any>(null);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
-  const [toasts, setToasts] = useState<Toast[]>([]);
+  const { showToast } = useToast();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Reload problem and submissions when id changes
   useEffect(() => {
     setIsLoading(true);
+    setLoadError(null);
     setRunResults(null);
     setConsoleTab('testcases');
 
     // Applies a freshly loaded problem, picking the language and seeding the
     // editor from either saved work or the starter template.
-    const applyProblem = (prob: ProblemDetail) => {
+    const applyProblem = (prob: ProblemDetailDto) => {
       setProblem(prob);
 
       // Pick a language the problem can actually be solved in. Defaulting to
@@ -162,12 +137,15 @@ const SolveProblemPage: React.FC = () => {
     };
 
     getProblemApi(id || '')
-      .then(async (prob) => {
-        applyProblem(prob ? (prob as unknown as ProblemDetail) : await loadFallbackProblem(id || '', problemName));
+      .then((prob) => {
+        if (prob) applyProblem(prob);
+        else setLoadError("This problem doesn't exist, or it has been removed.");
       })
-      .catch(async (err) => {
-        console.error("Failed to load problem details from API:", err);
-        applyProblem(await loadFallbackProblem(id || '', problemName));
+      .catch((err) => {
+        console.error('Failed to load problem details from API:', err);
+        setLoadError(/not found/i.test(err?.message || '')
+          ? "This problem doesn't exist, or it has been removed."
+          : "We couldn't load this problem. Check your connection and try again.");
       })
       .finally(() => setIsLoading(false));
 
@@ -184,9 +162,9 @@ const SolveProblemPage: React.FC = () => {
       })
       .catch((err) => console.error("Failed to load submissions from API:", err));
 
-    // `problemName` derives from `id`, and `language` is set by this effect —
-    // including either would refetch the problem and discard in-progress code.
-  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+    // `language` is set by this effect — including it would refetch the
+    // problem and discard in-progress code. `reloadKey` is the retry button.
+  }, [id, reloadKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Load default/saved code on language change
   useEffect(() => {
@@ -206,18 +184,6 @@ const SolveProblemPage: React.FC = () => {
       localStorage.setItem(`code_${id}_${language}`, code);
     }
   }, [code, id, language]);
-
-  const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
-    const toastId = Math.random().toString(36).substr(2, 9);
-    setToasts((prev) => [...prev, { id: toastId, message, type }]);
-    setTimeout(() => {
-      setToasts((prev) => prev.map((t) => (t.id === toastId ? { ...t, leaving: true } : t)));
-      setTimeout(
-        () => setToasts((prev) => prev.filter((t) => t.id !== toastId)),
-        TOAST_EXIT_MS,
-      );
-    }, 4000);
-  };
 
   const handleResetCode = () => {
     if (!problem) return;
@@ -398,6 +364,31 @@ const SolveProblemPage: React.FC = () => {
     }
   };
 
+  if (loadError) {
+    return (
+      <div className="h-screen w-screen flex flex-col items-center justify-center gap-4 px-6 text-center" style={{ background: '#0d0f1a', color: '#e2e8f0' }}>
+        <XCircle size={36} color="#f87171" />
+        <p className="font-semibold">{loadError}</p>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setReloadKey((k) => k + 1)}
+            className="px-4 py-2 rounded-lg font-semibold"
+            style={{ background: '#4648d4', color: '#fff' }}
+          >
+            Try again
+          </button>
+          <button
+            onClick={() => navigate('/practice')}
+            className="px-4 py-2 rounded-lg font-semibold"
+            style={{ background: '#151829', color: '#e2e8f0', border: '1px solid #2a2f45' }}
+          >
+            Back to Practice
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (isLoading || !problem) {
     return (
       <div className="h-screen w-screen flex items-center justify-center font-semibold" style={{ background: '#0d0f1a', color: '#94a3b8' }}>
@@ -408,32 +399,6 @@ const SolveProblemPage: React.FC = () => {
 
   return (
     <div className="h-screen w-screen flex flex-col overflow-hidden font-sans select-none antialiased" style={{ background: '#0d0f1a', color: '#e2e8f0' }}>
-      {/* Toast notifications */}
-      <div className="fixed top-4 right-4 z-[9999] flex flex-col space-y-2 pointer-events-none">
-        {toasts.map((toast) => (
-          <div
-            key={toast.id}
-            className={`flex items-center space-x-2.5 px-4 py-3 rounded-xl border shadow-xl text-xs font-semibold pointer-events-auto ${toast.type === 'success'
-                ? 'border-green-500/20 text-green-500 shadow-green-500/5'
-                : toast.type === 'error'
-                  ? 'border-red-500/20 text-red-500 shadow-red-500/5'
-                  : 'border-accent/20 text-accent shadow-accent/5'
-              }`}
-            style={{
-              background: '#151829',
-              animation: toast.leaving
-                ? `toastOut ${TOAST_EXIT_MS}ms cubic-bezier(0.4, 0, 1, 1) forwards`
-                : 'toastIn 180ms cubic-bezier(0.22, 1, 0.36, 1)',
-            }}
-          >
-            {toast.type === 'success' && <CheckCircle className="h-4 w-4" />}
-            {toast.type === 'error' && <XCircle className="h-4 w-4" />}
-            {toast.type === 'info' && <Info className="h-4 w-4" />}
-            <span>{toast.message}</span>
-          </div>
-        ))}
-      </div>
-
       {/* Header */}
       <WorkspaceHeader
         currentProblemId={id || ''}

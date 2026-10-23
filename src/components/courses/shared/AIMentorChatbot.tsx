@@ -1,25 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { askMentorApi } from '../../../api';
 import { AIAnimation } from './AIAnimation';
 import './AIMentorChatbot.css';
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
+// The model, the system prompt and the API key live in the api-gateway
+// (/api/ai-mentor). A key built into this bundle would be public.
 const CONFIG = {
   mentorName: 'Lali AI Mentor',
-  subject: 'programming and software development',
-  model: 'gpt-4o-mini',
   welcomeMessage:
     "Hi! I'm Lali your AI Mentor. Ask me anything about your code, algorithms, or interview prep.",
-  systemPrompt: `You are Lali AI Mentor, a friendly and encouraging AI mentor embedded in an online course about programming and software development.
-
-Your two jobs:
-1. EXPLAIN: When a student asks a question, explain concepts clearly, with short code examples where useful. Match your depth to what they seem to already know. Use plain language before jargon.
-2. QUIZ: Periodically, or when asked, quiz the student with a short question to check understanding. Ask one question at a time, wait for their answer, then give feedback before moving on. Mix in occasional quick checks even when not explicitly asked, if it fits naturally after an explanation.
-
-Style rules:
-- Keep responses concise and scannable. Use short paragraphs and code blocks, not walls of text.
-- Be encouraging but honest — if an answer is wrong, say so clearly and explain why, then help them get it right.
-- Never do a student's graded assignment for them wholesale; guide them toward the answer with questions and hints instead.
-- If asked something outside programming/software topics, gently redirect back to the course material.`,
 };
 
 // ─── TYPES ───────────────────────────────────────────────────────────────────
@@ -42,16 +32,69 @@ function escapeHtml(str: string): string {
     .replace(/>/g, '&gt;');
 }
 
+const INLINE_CODE_STYLE =
+  'background:var(--bg-page);padding:2px 4px;border-radius:4px;color:var(--accent);font-family:monospace;font-size:12px;';
+
+/** Inline markdown on already-escaped text: `code` and **bold**. */
+function renderInline(text: string): string {
+  return text
+    .replace(/`([^`]+)`/g, `<code style="${INLINE_CODE_STYLE}">$1</code>`)
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+}
+
+/**
+ * The small slice of markdown the mentor writes: fenced code blocks, headings,
+ * bullet and numbered lists, paragraphs, `code` and **bold**. The input is
+ * escaped first, so model output can never inject HTML.
+ */
 function renderMarkdown(text: string): string {
-  const escaped = escapeHtml(text);
-  const withBlocks = escaped.replace(
-    /```([\\s\\S]*?)```/g,
-    (_m, code: string) => '<div class="code-block">' + code.trim() + '</div>'
-  );
-  const withInline = withBlocks.replace(/`([^`]+)`/g, '<code style="background:var(--bg-page);padding:2px 4px;border-radius:4px;color:var(--accent);font-family:monospace;font-size:12px;">' + '$1' + '</code>');
-  return withInline
-    .split(/\\n{2,}/)
-    .map(p => '<p style="margin-bottom:8px;line-height:1.6">' + p.replace(/\\n/g, '<br>') + '</p>')
+  // Set code blocks aside first: their blank lines and newlines are content,
+  // not paragraph breaks. A language tag after the fence is dropped.
+  const blocks: string[] = [];
+  const withoutCode = escapeHtml(text).replace(/```[\w+-]*\n?([\s\S]*?)```/g, (_m, code: string) => {
+    blocks.push('<pre class="code-block">' + code.replace(/\n$/, '') + '</pre>');
+    return `\n\n\u0000${blocks.length - 1}\u0000\n\n`;
+  });
+
+  return withoutCode
+    .split(/\n{2,}/)
+    .map(chunk => chunk.trim())
+    .filter(Boolean)
+    .map(chunk => {
+      const block = chunk.match(/^\u0000(\d+)\u0000$/);
+      if (block) return blocks[Number(block[1])];
+      if (/^(-{3,}|\*{3,})$/.test(chunk)) return '<hr style="border:none;border-top:1px solid var(--border);margin:10px 0">';
+
+      // A chunk can mix a heading or a lead-in line with a list
+      // ("What changed:\n* a\n* b"), so group consecutive lines by kind.
+      const BULLET = /^\s*[-*]\s+/;
+      const NUMBERED = /^\s*\d+[.)]\s+/;
+      const HEADING = /^#{1,6}\s+/;
+      const kindOf = (line: string) =>
+        HEADING.test(line) ? 'h' : BULLET.test(line) ? 'ul' : NUMBERED.test(line) ? 'ol' : 'p';
+      const runs: { kind: string; lines: string[] }[] = [];
+      for (const line of chunk.split('\n')) {
+        const kind = kindOf(line);
+        const last = runs[runs.length - 1];
+        if (last && last.kind === kind) last.lines.push(line);
+        else runs.push({ kind, lines: [line] });
+      }
+      return runs
+        .map(({ kind, lines }) => {
+          if (kind === 'h') {
+            return lines.map(l => '<p style="margin-bottom:6px;font-weight:700">' + renderInline(l.replace(HEADING, '')) + '</p>').join('');
+          }
+          if (kind === 'p') {
+            return '<p style="margin-bottom:8px;line-height:1.6">' + lines.map(renderInline).join('<br>') + '</p>';
+          }
+          const marker = kind === 'ul' ? BULLET : NUMBERED;
+          // The app's CSS reset strips list markers, so restore them here.
+          const listStyle = kind === 'ul' ? 'disc' : 'decimal';
+          return `<${kind} style="margin:0 0 8px 18px;list-style:${listStyle}">` +
+            lines.map(l => '<li>' + renderInline(l.replace(marker, '')) + '</li>').join('') + `</${kind}>`;
+        })
+        .join('');
+    })
     .join('');
 }
 
@@ -84,7 +127,12 @@ function playPopSound() {
 }
 
 // ─── COMPONENT ───────────────────────────────────────────────────────────────
-const AIMentorChatbot: React.FC = () => {
+interface AIMentorChatbotProps {
+  /** The course being studied, so answers can use it as context. */
+  courseTitle?: string;
+}
+
+const AIMentorChatbot: React.FC<AIMentorChatbotProps> = ({ courseTitle }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -214,41 +262,7 @@ const AIMentorChatbot: React.FC = () => {
     setIsBusy(true);
 
     try {
-      const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-      if (!apiKey) {
-        addMessage('ai', 'API Key missing. Please set VITE_OPENAI_API_KEY in your .env.local file.', false);
-        setIsBusy(false);
-        return;
-      }
-
-      // Use the Vite proxy endpoint instead of direct API to avoid CORS issues
-      const response = await fetch('/api/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          model: CONFIG.model,
-          max_tokens: 1000,
-          messages: [
-            { role: 'system', content: CONFIG.systemPrompt },
-            ...historyRef.current.map(msg => ({
-              role: msg.role === 'assistant' ? 'assistant' : 'user',
-              content: msg.content
-            }))
-          ],
-        }),
-      });
-      const data = await response.json();
-      
-      if (data.error) {
-        addMessage('ai', `API Error: ${data.error.message}`, false);
-        setIsBusy(false);
-        return;
-      }
-
-      const replyText = data.choices?.[0]?.message?.content || "Sorry, I couldn't generate a response just now.";
+      const replyText = await askMentorApi(historyRef.current, courseTitle);
 
       addMessage('ai', renderMarkdown(replyText), true);
       historyRef.current.push({ role: 'assistant', content: replyText });
@@ -258,14 +272,17 @@ const AIMentorChatbot: React.FC = () => {
 
       // Speak response aloud
       speak(replyText);
-    } catch (err) {
-      addMessage('ai', 'Something went wrong reaching the mentor service. Please try again.');
+    } catch (err: any) {
+      // The gateway's errors are written for the learner (rate limit, not configured).
+      addMessage('ai', err?.message || 'Something went wrong reaching the mentor service. Please try again.');
       console.error('AI Mentor error:', err);
+      // Drop the unanswered turn so the history keeps alternating user/assistant.
+      historyRef.current.pop();
     } finally {
       setIsBusy(false);
       inputRef.current?.focus();
     }
-  }, [inputValue, isBusy, addMessage, speak]);
+  }, [inputValue, isBusy, addMessage, speak, courseTitle]);
 
   const handleOpen = () => {
     setIsOpen(true);
@@ -299,6 +316,7 @@ const AIMentorChatbot: React.FC = () => {
       {!isOpen && (
         <button
           onClick={handleOpen}
+          aria-label="Open AI mentor"
           style={{
             position: 'fixed',
             bottom: '90px',

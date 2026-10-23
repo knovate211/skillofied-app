@@ -1,6 +1,7 @@
 import React from 'react';
 import { PracticeSet } from '../../types';
-import styles from './PracticeCard.module.css';
+import styles from '../common/ProgressCard.module.css';
+import extra from './PracticeCard.module.css';
 import { formatPracticeSetTitle } from '../../utils/practiceHelpers';
 import ActionButton from '../common/ActionButton';
 import { useNavigatePending } from '../../hooks/useNavigatePending';
@@ -59,7 +60,7 @@ const PracticeCard: React.FC<Props> = ({ practiceSet }) => {
 
   return (
     <div
-      className={`${styles.card} ${theme.toneClass}`}
+      className={`${styles.card} ${extra.clickable} ${theme.toneClass}`}
       onClick={open}
       role="button"
       tabIndex={0}
@@ -74,10 +75,10 @@ const PracticeCard: React.FC<Props> = ({ practiceSet }) => {
         <div className={styles.icon}>
           <SproutIcon />
         </div>
-        <h3 className={styles.setName} title={displayTitle}>
+        <h3 className={styles.name} title={displayTitle}>
           {displayTitle}
         </h3>
-        <p className={styles.level}>{theme.label}</p>
+        <p className={styles.subtitle}>{theme.label}</p>
       </div>
 
       <div className={styles.body}>
@@ -93,8 +94,8 @@ const PracticeCard: React.FC<Props> = ({ practiceSet }) => {
           />
         </div>
 
-        <div className={styles.metaRow}>
-          <div className={styles.problemCount}>
+        <div className={`${styles.metaRow} ${extra.metaGap}`}>
+          <div className={extra.problemCount}>
             <svg
               width="14"
               height="14"
@@ -112,7 +113,7 @@ const PracticeCard: React.FC<Props> = ({ practiceSet }) => {
             <span>{practiceSet.totalProblems} problems</span>
           </div>
 
-          <span className={styles.badge}>{status}</span>
+          <span className={extra.badge}>{status}</span>
         </div>
 
         {/* The whole card is the click target, so this button only reports

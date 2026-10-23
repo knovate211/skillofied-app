@@ -67,15 +67,10 @@ export default defineConfig(({ mode }) => {
           target: apiTarget,
           changeOrigin: true,
         },
-        '/api/anthropic': {
-          target: 'https://api.anthropic.com',
+        // The course pages' AI mentor; the model key stays in the gateway.
+        '/api/ai-mentor': {
+          target: apiTarget,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\/anthropic/, ''),
-        },
-        '/api/openai': {
-          target: 'https://api.openai.com',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\/openai/, ''),
         },
       },
     },

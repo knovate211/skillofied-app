@@ -1,10 +1,11 @@
 import React, { useEffect, useReducer } from 'react';
 import { Course } from '../../types';
-import styles from './CourseCard.module.css';
+import styles from '../common/ProgressCard.module.css';
 import { getCourseButtonText, getCourseProgress } from '../../utils/courseHelpers';
 import ActionButton from '../common/ActionButton';
 import { useNavigatePending } from '../../hooks/useNavigatePending';
 import { onCourseProgressHydrated } from '../../lib/courseProgress';
+import { courseForTitle, CourseIcon } from '../../lib/courseRegistry';
 
 interface Props {
   course: Course;
@@ -19,121 +20,86 @@ const TONES = [styles.toneHoney, styles.toneOlive, styles.toneRose];
 
 const formatTitle = (title: string) => (title === 'Front-End Technologies' ? 'Front-End Tech' : title);
 
-const iconFor = (title: string) => {
-  const t = title.toLowerCase();
-  const props = {
-    width: 20,
-    height: 20,
-    viewBox: '0 0 24 24',
-    fill: 'none',
-    stroke: 'currentColor',
-    strokeWidth: 1.9,
-    strokeLinecap: 'round' as const,
-    strokeLinejoin: 'round' as const,
-  };
+// Shared by every icon below (the JSX spreads it as `props`).
+const props = {
+  width: 20,
+  height: 20,
+  viewBox: '0 0 24 24',
+  fill: 'none',
+  stroke: 'currentColor',
+  strokeWidth: 1.9,
+  strokeLinecap: 'round' as const,
+  strokeLinejoin: 'round' as const,
+};
 
-  if (t.includes('sql') || t.includes('database')) {
-    return (
-      <svg {...props}>
-        <ellipse cx="12" cy="5" rx="8" ry="3" />
-        <path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5" />
-        <path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
-      </svg>
-    );
-  }
-  if (t.includes('front-end') || t.includes('frontend')) {
-    return (
-      <svg {...props}>
-        <path d="M4 7h16" />
-        <path d="M4 12h10" />
-        <path d="M4 17h13" />
-      </svg>
-    );
-  }
-  if (t.includes('java')) {
-    return (
-      <svg {...props}>
-        <path d="M5 8h11v5a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5V8z" />
-        <path d="M16 9h2a2.5 2.5 0 0 1 0 5h-2" />
-        <path d="M8 3c0 1.5 1.5 1.5 1.5 3M12 3c0 1.5 1.5 1.5 1.5 3" />
-      </svg>
-    );
-  }
-  if (t.includes('genai') || t.includes('ai')) {
-    return (
-      <svg {...props}>
-        <path d="M12 3l1.9 4.9L19 9.8l-4.2 3.2L15.6 18 12 15.3 8.4 18l.8-5L5 9.8l5.1-1.9z" />
-      </svg>
-    );
-  }
-  if (t.includes('operating system')) {
-    return (
-      <svg {...props}>
-        <rect x="3" y="4" width="18" height="13" rx="2" />
-        <path d="M8 21h8M12 17v4" />
-        <path d="M7 8h4M7 11h2" />
-      </svg>
-    );
-  }
-  if (t.includes('computer network') || t.includes('networking')) {
-    return (
-      <svg {...props}>
-        <circle cx="12" cy="5" r="2" />
-        <circle cx="5" cy="18" r="2" />
-        <circle cx="19" cy="18" r="2" />
-        <path d="M12 7v4M12 11H5v5M12 11h7v5" />
-      </svg>
-    );
-  }
-  if (t.includes('testing') || t.includes('qa')) {
-    return (
-      <svg {...props}>
-        <path d="M20 6L9 17l-5-5" />
-      </svg>
-    );
-  }
-  if (t.includes('seo') || t.includes('marketing')) {
-    return (
-      <svg {...props}>
-        <path d="M3 11v2a1 1 0 0 0 1 1h3l5 4V6L7 10H4a1 1 0 0 0-1 1z" />
-        <path d="M17 8a5 5 0 0 1 0 8" />
-      </svg>
-    );
-  }
-  if (t.includes('golang') || t.includes('full stack') || t.includes('fullstack')) {
-    return (
-      <svg {...props}>
-        <path d="M9 8l-5 4 5 4M15 8l5 4-5 4" />
-      </svg>
-    );
-  }
-  return (
+/** Card icon per course; which course gets which is set in courseRegistry. */
+const ICONS: Record<CourseIcon, React.ReactNode> = {
+  database: (
     <svg {...props}>
-      <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5V5.5z" />
-      <path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H19v3H6.5A2.5 2.5 0 0 1 4 20.5z" />
+      <ellipse cx="12" cy="5" rx="8" ry="3" />
+      <path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5" />
+      <path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
     </svg>
-  );
+  ),
+  lines: (
+    <svg {...props}>
+      <path d="M4 7h16" />
+      <path d="M4 12h10" />
+      <path d="M4 17h13" />
+    </svg>
+  ),
+  cup: (
+    <svg {...props}>
+      <path d="M5 8h11v5a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5V8z" />
+      <path d="M16 9h2a2.5 2.5 0 0 1 0 5h-2" />
+      <path d="M8 3c0 1.5 1.5 1.5 1.5 3M12 3c0 1.5 1.5 1.5 1.5 3" />
+    </svg>
+  ),
+  sparkle: (
+    <svg {...props}>
+      <path d="M12 3l1.9 4.9L19 9.8l-4.2 3.2L15.6 18 12 15.3 8.4 18l.8-5L5 9.8l5.1-1.9z" />
+    </svg>
+  ),
+  monitor: (
+    <svg {...props}>
+      <rect x="3" y="4" width="18" height="13" rx="2" />
+      <path d="M8 21h8M12 17v4" />
+      <path d="M7 8h4M7 11h2" />
+    </svg>
+  ),
+  network: (
+    <svg {...props}>
+      <circle cx="12" cy="5" r="2" />
+      <circle cx="5" cy="18" r="2" />
+      <circle cx="19" cy="18" r="2" />
+      <path d="M12 7v4M12 11H5v5M12 11h7v5" />
+    </svg>
+  ),
+  check: (
+    <svg {...props}>
+      <path d="M20 6L9 17l-5-5" />
+    </svg>
+  ),
+  megaphone: (
+    <svg {...props}>
+      <path d="M3 11v2a1 1 0 0 0 1 1h3l5 4V6L7 10H4a1 1 0 0 0-1 1z" />
+      <path d="M17 8a5 5 0 0 1 0 8" />
+    </svg>
+  ),
+  code: (
+    <svg {...props}>
+      <path d="M9 8l-5 4 5 4M15 8l5 4-5 4" />
+    </svg>
+  ),
 };
 
-/**
- * Maps the course title returned by the API to its course-viewer route.
- * Titles not listed here have no course page built yet.
- */
-const COURSE_ROUTES: Record<string, string> = {
-  'Front-End Technologies': '/courses/frontend',
-  'Java': '/courses/java',
-  'Java Development': '/courses/java',
-  'Mastering SQL': '/courses/sql',
-  'Golang Engineering': '/courses/golang',
-  'Full Stack Engineering': '/courses/fullstack',
-  'GenAI & Forward Deployed Engineering': '/courses/genai',
-  'Operating Systems': '/courses/os',
-  'Computer Networks': '/courses/networking',
-  'GenAI Engineering': '/courses/genai',
-  'Software Testing': '/courses/testing',
-  'SEO Fundamentals': '/courses/seo',
-  'Digital Marketing Strategy': '/courses/digital-marketing',
-};
+/** Shown for an enrolment the app has no course page for. */
+const FALLBACK_ICON = (
+  <svg {...props}>
+    <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5V5.5z" />
+    <path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H19v3H6.5A2.5 2.5 0 0 1 4 20.5z" />
+  </svg>
+);
 
 const CourseCard: React.FC<Props> = ({ course, index = 0 }) => {
   const { go, isPending } = useNavigatePending();
@@ -148,14 +114,15 @@ const CourseCard: React.FC<Props> = ({ course, index = 0 }) => {
 
   // No course page built yet — the syllabus landing page still shows the
   // outline rather than dead-ending the learner.
-  const route = COURSE_ROUTES[course.title] || '/courses';
+  const info = courseForTitle(course.title);
+  const route = info?.path ?? '/courses';
 
   return (
     <div className={`${styles.card} ${toneClass}`}>
       <div className={styles.header}>
-        <div className={styles.icon}>{iconFor(course.title)}</div>
-        <h3 className={styles.courseName}>{formatTitle(course.title)}</h3>
-        <p className={styles.instructor}>{course.mentor}</p>
+        <div className={styles.icon}>{info ? ICONS[info.cardIcon] : FALLBACK_ICON}</div>
+        <h3 className={styles.name}>{formatTitle(course.title)}</h3>
+        <p className={styles.subtitle}>{course.mentor}</p>
       </div>
 
       <div className={styles.body}>
@@ -169,7 +136,7 @@ const CourseCard: React.FC<Props> = ({ course, index = 0 }) => {
         </div>
 
         <div className={styles.metaRow}>
-          <div className={styles.timeTag}>
+          <div className={styles.meta}>
             <svg
               width="14"
               height="14"

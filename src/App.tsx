@@ -6,7 +6,7 @@ import Sidebar from './components/layout/Sidebar';
 import CoursesSection from './components/courses/CoursesSection';
 import Login from './components/auth/Login';
 import { getMyCoursesApi } from './api';
-import { getSessionUser, isApplicantSession, isCandidateSession } from './lib/session';
+import { clearSession, getSessionUser, isApplicantSession, isCandidateSession } from './lib/session';
 import { claimLearnerData, clearLearnerData } from './lib/learnerData';
 import { hydrateCourseProgress } from './lib/courseProgress';
 import { getUnlockedCoursePaths } from './lib/courseAccess';
@@ -141,9 +141,7 @@ const App: React.FC = () => {
 
   const handleLogout = () => {
     clearLearnerData();
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    clearSession();
     setIsLoggedIn(false);
     navigate('/login', { replace: true });
   };
@@ -370,12 +368,12 @@ const App: React.FC = () => {
                       element={
                         <>
                           <TodaySchedule />
-                          <CoursesSection />
-                          <PracticeSection isHomePage />
+                          <CoursesSection enrolledCourses={enrolledCourses} />
+                          <PracticeSection isHomePage enrolledCourses={enrolledCourses} />
                         </>
                       }
                     />
-                    <Route path="/courses" element={<CoursesSection />} />
+                    <Route path="/courses" element={<CoursesSection enrolledCourses={enrolledCourses} />} />
                     <Route path="/courses/frontend" element={<CourseGate enrolledCourses={enrolledCourses}><FrontendCoursePage /></CourseGate>} />
                     <Route path="/courses/java" element={<CourseGate enrolledCourses={enrolledCourses}><JavaCoursePage /></CourseGate>} />
                     <Route path="/courses/sql" element={<CourseGate enrolledCourses={enrolledCourses}><SqlCoursePage /></CourseGate>} />
@@ -390,7 +388,7 @@ const App: React.FC = () => {
                     {/* Every real course has its own route above. An unknown id used to open a
                         placeholder announcing "Enrolled & Active" for whatever was typed. */}
                     <Route path="/courses/:courseId" element={<Navigate to="/courses" replace />} />
-                    <Route path="/practice" element={<PracticeSection />} />
+                    <Route path="/practice" element={<PracticeSection enrolledCourses={enrolledCourses} />} />
                     <Route path="/practice/:id" element={<PracticeDetail />} />
                     <Route path="/placement" element={<PlacementSection />} />
                     <Route path="/placement/tests/result/:attemptId" element={<TestResultPage />} />

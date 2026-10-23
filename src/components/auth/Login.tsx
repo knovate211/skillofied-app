@@ -3,6 +3,7 @@ import styles from './Login.module.css';
 import loginArt from '../../assets/apploginpage.png';
 import ForgotPasswordModal from './ForgotPasswordModal';
 import { claimLearnerData } from '../../lib/learnerData';
+import { setSession } from '../../lib/session';
 import { loginApi } from '../../api';
 
 interface LoginProps {
@@ -56,8 +57,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
     try {
       const data = await loginApi(email, password);
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      setSession(data.token, data.user);
       claimLearnerData(data.user?.id);
       setIsLoading(false);
       onLogin();

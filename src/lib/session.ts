@@ -37,3 +37,20 @@ export function isApplicantSession(): boolean {
 export function isCandidateSession(): boolean {
   return getRole() === 'candidate';
 }
+
+/**
+ * Stores a new session: the login form and the scholarship, hiring and
+ * certification hand-offs all start one this way.
+ */
+export function setSession(token: string, user: SessionUser): void {
+  localStorage.setItem('token', token);
+  localStorage.setItem('user', JSON.stringify(user));
+  localStorage.setItem('isLoggedIn', 'true');
+}
+
+/** Forgets the session. Learner data is cleared separately (lib/learnerData). */
+export function clearSession(): void {
+  localStorage.removeItem('isLoggedIn');
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+}

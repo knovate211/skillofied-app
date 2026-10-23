@@ -1,25 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronLeft, ChevronRight, RefreshCw, Sun, Moon, Play, Send, Pause } from 'lucide-react';
+import { T } from './theme';
 
-// ─── Design tokens ─────────────────────────────────────────────
-const T = {
-  bg: '#0d0f1a',
-  bgPanel: '#111320',
-  bgCard: '#151829',
-  border: '#1f2235',
-  borderAccent: '#4648d4',
-  primary: '#4648d4',
-  primaryHover: '#5557e8',
-  green: '#00ea64',
-  amber: '#fbbf24',
-  purple: '#c0c1ff',
-  textPrimary: '#e2e8f0',
-  textSecondary: '#94a3b8',
-  textMuted: '#4b5675',
-  fontMono: "'Fira Code','JetBrains Mono',monospace",
-  fontSans: "'Plus Jakarta Sans',sans-serif",
-};
 
 interface WorkspaceHeaderProps {
   currentProblemId: string;
@@ -79,7 +62,6 @@ const WorkspaceHeader: React.FC<WorkspaceHeaderProps> = ({
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Fira+Code:wght@400;500&display=swap');
         .wh-icon:hover { background: ${T.bgCard} !important; border-color: ${T.border} !important; color: ${T.textPrimary} !important; }
         .wh-nav:hover  { background: ${T.bgCard} !important; border-color: ${T.border} !important; color: ${T.textPrimary} !important; }
         .wh-crumb:hover { color: ${T.textPrimary} !important; }

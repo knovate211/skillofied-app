@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useModuleData } from '../../shared/useModuleData';
+import { JAVA_MODULE_LOADERS } from './modules/loaders';
 import type { Lesson, ModuleData } from './JavaCourseData';
 import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
@@ -15,13 +17,10 @@ interface Props {
 }
 
 const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
-  const [courseData, setCourseData] = useState<Record<string, ModuleData> | null>(null);
-
-  useEffect(() => {
-    import('./JavaCourseData').then((module) => {
-      setCourseData(module.JAVA_COURSE_DATA);
-    });
-  }, []);
+  // Only the open module is fetched (one chunk per module, see modules/loaders.ts).
+  // Shaped like the old whole-course object so the lookups below are unchanged.
+  const { data: moduleChunk, missing, failed: loadFailed, retry } = useModuleData(JAVA_MODULE_LOADERS, moduleId);
+  const courseData: Record<string, ModuleData> | null = missing ? {} : moduleChunk ? { [moduleId]: moduleChunk } : null;
 
   const moduleData = courseData ? courseData[moduleId] : null;
 
@@ -63,6 +62,17 @@ const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
       setSandboxCode(moduleData.exercise.starterCode);
     }
   }, [moduleId, page]);
+
+  if (!courseData && loadFailed) {
+    return (
+      <div className={styles.contentArea}>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: '12px' }}>
+          This lesson couldn't be loaded. Check your connection and try again.
+        </p>
+        <button className={styles.lessonNavBtn} onClick={retry}>Try again</button>
+      </div>
+    );
+  }
 
   if (!courseData) {
     return (

@@ -4,6 +4,7 @@ import ConsolePanel from '../../practice/ConsolePanel';
 import ProblemDescriptionPanel from '../../practice/ProblemDescriptionPanel';
 import { useToast } from '../../../context/ToastContext';
 import { runScratchpadApi } from '../../../api';
+import { languageLabel } from '../../../lib/codeLanguages';
 
 const IDEPanel = lazy(() => import('../../practice/IDEPanel'));
 
@@ -46,29 +47,7 @@ interface Props {
   examples?: { input: string; output: string; explanation?: string }[];
 }
 
-// ─── Language label map ───────────────────────────────────────────────────────
-
-const LANGUAGE_LABEL: Record<string, string> = {
-  javascript: 'JavaScript',
-  python: 'Python',
-  java: 'Java',
-  cpp: 'C++',
-  go: 'Go',
-  sql: 'PostgreSQL',
-  dockerfile: 'Dockerfile',
-  shell: 'Shell',
-  yaml: 'YAML',
-  protobuf: 'Protocol Buffers',
-  html: 'HTML',
-  css: 'CSS',
-  json: 'JSON',
-  xml: 'XML',
-  markdown: 'Markdown',
-  typescript: 'TypeScript',
-  jsx: 'JSX',
-};
-
-// ─── SQL result formatter (same as AssignmentCodeEditor) ─────────────────────
+// ─── SQL result formatter ────────────────────────────────────────────────────
 
 function formatSqlOutput(stdout: string): string {
   let parsed: { rows?: Record<string, unknown>[] };
@@ -121,7 +100,7 @@ const AssignmentIDE: React.FC<Props> = ({
   const [customInput, setCustomInput] = useState('');
 
   const { showToast } = useToast();
-  const label = LANGUAGE_LABEL[language] ?? language;
+  const label = languageLabel(language);
 
   // Adapt the prompt string into the shape ProblemDescriptionPanel expects
   const problemForPanel = {

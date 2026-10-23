@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useModuleData } from '../../shared/useModuleData';
+import type { ModuleData } from './GolangCourseData';
+import { GOLANG_MODULE_LOADERS } from './modules/loaders';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
 import StandardLessonView from '../../shared/StandardLessonView';
@@ -15,19 +18,27 @@ interface Props {
 }
 
 const GolangModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
-  const [courseData, setCourseData] = useState<any>(null);
-
-  useEffect(() => {
-    import('./GolangCourseData').then((module) => {
-      setCourseData(module.GOLANG_COURSE_DATA);
-    });
-  }, []);
+  // Only the open module is fetched (one chunk per module, see modules/loaders.ts).
+  // Shaped like the old whole-course object so the lookups below are unchanged.
+  const { data: moduleChunk, missing, failed: loadFailed, retry } = useModuleData(GOLANG_MODULE_LOADERS, moduleId);
+  const courseData: Record<string, ModuleData> | null = missing ? {} : moduleChunk ? { [moduleId]: moduleChunk } : null;
 
   // Isolate non-module renders
   if (moduleId === 'projects') return <MajorProjects page={page} />;
   if (moduleId === 'interview') return <InterviewPrep page={page} />;
   if (moduleId === 'assessment') return <FinalAssessment page={page} />;
   if (moduleId === 'certification') return <Certification page={page} />;
+
+  if (!courseData && loadFailed) {
+    return (
+      <div className={styles.contentArea}>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: '12px' }}>
+          This lesson couldn't be loaded. Check your connection and try again.
+        </p>
+        <button className={styles.lessonNavBtn} onClick={retry}>Try again</button>
+      </div>
+    );
+  }
 
   if (!courseData) {
     return (

@@ -4,6 +4,8 @@ import ModuleAssignment from '../../shared/ModuleAssignment';
 import StandardLessonView from '../../shared/StandardLessonView';
 import { SYLLABUS } from '../../TestingCoursePage';
 import { SyllabusModule } from '../../../../types';
+import type { Lesson } from './TestingCourseData';
+import { TESTING_LESSON_LOADERS } from './lessons/loaders';
 import styles from '../../FrontendCoursePage.module.css';
 
 interface Props {
@@ -13,6 +15,11 @@ interface Props {
 
 const TestingModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   const [courseData, setCourseData] = useState<any>(null);
+  // Lesson bodies for the open module only, keyed by the module they belong to
+  // so a stale response from a previous module is never shown.
+  const [loaded, setLoaded] = useState<{ moduleId: string; lessons: Record<string, Lesson> } | null>(null);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [retry, setRetry] = useState(0);
 
   useEffect(() => {
     import('./TestingCourseData').then((module) => {
@@ -20,7 +27,38 @@ const TestingModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
     });
   }, []);
 
-  if (!courseData) {
+  useEffect(() => {
+    const load = TESTING_LESSON_LOADERS[moduleId];
+    if (!load) return;
+    let cancelled = false;
+    setLoadFailed(false);
+    load()
+      .then((lessons) => {
+        if (!cancelled) setLoaded({ moduleId, lessons });
+      })
+      .catch(() => {
+        if (!cancelled) setLoadFailed(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [moduleId, retry]);
+
+  const moduleLessons = loaded?.moduleId === moduleId ? loaded.lessons : null;
+  const waitingForLessons = !!TESTING_LESSON_LOADERS[moduleId] && !moduleLessons;
+
+  if (loadFailed && waitingForLessons) {
+    return (
+      <div className={styles.contentArea}>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: '12px' }}>
+          This lesson couldn't be loaded. Check your connection and try again.
+        </p>
+        <button className={styles.lessonNavBtn} onClick={() => setRetry((n) => n + 1)}>Try again</button>
+      </div>
+    );
+  }
+
+  if (!courseData || waitingForLessons) {
     return (
       <div className={styles.contentArea} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '200px' }}>
         <div style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid var(--accent)', borderTopColor: 'transparent', animation: 'spin 1s linear infinite' }} />
@@ -43,7 +81,10 @@ const TestingModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   // Authored lesson content wins over id-pattern routing: the capstone
   // projects (m15-p1), interview prep and "overview-prereq" all have lesson
   // bodies, and a loose "-p" match used to send them to the assignment view.
-  const authoredLesson = moduleData.lessons?.find((l: any) => l.id === itemId) ?? null;
+  const authoredLesson =
+    moduleData.lessons?.find((l: any) => l.id === itemId) ??
+    (moduleData.lessonIds?.includes(itemId) ? moduleLessons?.[itemId] : null) ??
+    null;
 
   if (itemId.endsWith('-quiz')) {
     pageType = 'quiz';

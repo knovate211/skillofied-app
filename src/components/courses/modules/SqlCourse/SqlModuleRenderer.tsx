@@ -15,21 +15,59 @@ interface Props {
 
 const SqlModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   const [courseData, setCourseData] = useState<any>(null);
+  // The open lesson's group of bodies, keyed by the item it was loaded for so a
+  // stale response from a previous lesson is never shown.
+  const [loaded, setLoaded] = useState<{ itemId: string; lessons: Record<string, any> } | null>(null);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [retry, setRetry] = useState(0);
+
+  const moduleItem = SYLLABUS.find((m: SyllabusModule) => m.id === moduleId);
+  const itemId = moduleItem ? moduleItem.items[page - 1]?.id : '';
+  const isLessonPage = !!itemId && !itemId.endsWith('-quiz') && !itemId.endsWith('-assignment');
 
   useEffect(() => {
     import('./SqlCourseData').then((module) => {
       setCourseData({
-        sqlLessons: module.sqlLessons,
+        sqlLessonFileFor: module.sqlLessonFileFor,
         sqlQuizzes: module.sqlQuizzes,
         sqlAssignments: module.sqlAssignments,
       });
     });
   }, []);
 
-  const moduleItem = SYLLABUS.find((m: SyllabusModule) => m.id === moduleId);
-  const itemId = moduleItem ? moduleItem.items[page - 1]?.id : '';
+  useEffect(() => {
+    if (!courseData || !isLessonPage) return;
+    const load = courseData.sqlLessonFileFor(itemId);
+    if (!load) return;
+    let cancelled = false;
+    setLoadFailed(false);
+    load()
+      .then((lessons: Record<string, any>) => {
+        if (!cancelled) setLoaded({ itemId, lessons });
+      })
+      .catch(() => {
+        if (!cancelled) setLoadFailed(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [courseData, itemId, isLessonPage, retry]);
 
-  if (!courseData) {
+  const waitingForLesson =
+    isLessonPage && !!courseData?.sqlLessonFileFor(itemId) && loaded?.itemId !== itemId;
+
+  if (loadFailed && waitingForLesson) {
+    return (
+      <div className={styles.contentArea}>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: '12px' }}>
+          This lesson couldn't be loaded. Check your connection and try again.
+        </p>
+        <button className={styles.lessonNavBtn} onClick={() => setRetry((n) => n + 1)}>Try again</button>
+      </div>
+    );
+  }
+
+  if (!courseData || waitingForLesson) {
     return (
       <div className={styles.contentArea} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '200px' }}>
         <div style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid var(--accent)', borderTopColor: 'transparent', animation: 'spin 1s linear infinite' }} />
@@ -37,7 +75,7 @@ const SqlModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
     );
   }
 
-  const { sqlLessons, sqlQuizzes, sqlAssignments } = courseData;
+  const { sqlQuizzes, sqlAssignments } = courseData;
 
   if (!itemId) {
     return <div className={styles.contentArea}>Item not found</div>;
@@ -66,7 +104,7 @@ const SqlModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   }
 
   // 3. Standard Lesson or Capstone
-  const lessonData = sqlLessons[itemId];
+  const lessonData = loaded?.itemId === itemId ? loaded.lessons[itemId] : undefined;
 
   if (!lessonData) {
     return (

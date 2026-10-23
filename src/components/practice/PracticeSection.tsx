@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useCarousel } from '../../hooks/useCarousel';
-import { getMyCoursesApi, listPracticeSetsApi } from '../../api';
+import { listPracticeSetsApi } from '../../api';
+import { courseForTitle } from '../../lib/courseRegistry';
 import { practiceSetMetadata } from '../../data/mockData';
 import SectionHeader from '../layout/SectionHeader';
 import PracticeCard from './PracticeCard';
@@ -8,28 +9,23 @@ import styles from './PracticeSection.module.css';
 
 interface PracticeSectionProps {
   isHomePage?: boolean;
+  /** From App, which loads them once for the whole shell; null while loading. */
+  enrolledCourses: any[] | null;
 }
 
-const PracticeSection: React.FC<PracticeSectionProps> = ({ isHomePage = false }) => {
+const PracticeSection: React.FC<PracticeSectionProps> = ({ isHomePage = false, enrolledCourses }) => {
   const [sets, setSets] = useState<any[]>([]);
-  const [isMarketingEnrolled, setIsMarketingEnrolled] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const isMarketingEnrolled = useMemo(
+    () => (enrolledCourses ?? []).some((c: any) => courseForTitle(c.title)?.category === 'Marketing'),
+    [enrolledCourses],
+  );
 
   // Call hooks unconditionally at the top level
   const carousel = useCarousel(sets.length, 3);
 
   useEffect(() => {
-    // 1. Load course enrollment statuses to verify Marketing courses
-    getMyCoursesApi()
-      .then((courses) => {
-        const hasMarketing = (courses || []).some((c: any) =>
-          c.title.includes('SEO') || c.title.includes('Marketing') || c.id === 'seo' || c.id === 'digital-marketing'
-        );
-        setIsMarketingEnrolled(hasMarketing);
-      })
-      .catch(err => console.error("Failed to load courses:", err));
-
-    // 2. Load practice sets, enriched with local category/description metadata
+    // Load practice sets, enriched with local category/description metadata
     listPracticeSetsApi()
       .then((fetchedSets) => {
         setSets(fetchedSets.map((s) => {

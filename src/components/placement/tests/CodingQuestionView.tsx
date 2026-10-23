@@ -30,6 +30,7 @@ function trapToken(attemptId: string, questionId: string): string {
   return `kv_${h.toString(36)}`;
 }
 import styles from './Tests.module.css';
+import { PROGRAMMING_LANGUAGES } from '../../../lib/codeLanguages';
 
 interface ProblemDetail {
   title: string;
@@ -39,13 +40,6 @@ interface ProblemDetail {
   starterCodes: Record<string, string>;
 }
 
-const LANGUAGES = [
-  { id: 'javascript', label: 'JavaScript', monaco: 'javascript' },
-  { id: 'python', label: 'Python', monaco: 'python' },
-  { id: 'java', label: 'Java', monaco: 'java' },
-  { id: 'cpp', label: 'C++', monaco: 'cpp' },
-  { id: 'go', label: 'Go', monaco: 'go' },
-];
 
 const LANG_KEY = 'skillofide.test.language';
 const FONT_KEY = 'skillofide.test.fontSize';
@@ -334,7 +328,8 @@ const CodingQuestionView: React.FC<Props> = ({
     return () => window.removeEventListener('keydown', onKey);
   }, [run, running, submitting, language, code]);
 
-  const monacoLang = LANGUAGES.find((l) => l.id === language)?.monaco ?? 'plaintext';
+  // Monaco and the runner use the same language ids.
+  const monacoLang = PROGRAMMING_LANGUAGES.some((l) => l.id === language) ? language : 'plaintext';
   const cases = runResult?.testResults ?? [];
   const passed = useMemo(() => cases.filter((c) => c.status === 'Accepted').length, [cases]);
 
@@ -489,7 +484,7 @@ const CodingQuestionView: React.FC<Props> = ({
           className={styles.wbSelect}
           aria-label="Language"
         >
-          {LANGUAGES.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}
+          {PROGRAMMING_LANGUAGES.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}
         </select>
 
         <div className={styles.wbToolGroup}>

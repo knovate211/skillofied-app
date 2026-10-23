@@ -1,30 +1,6 @@
 import React, { useState } from 'react';
+import { T } from './theme';
 
-// ─── Design tokens ────────────────────────────────────────────
-const T = {
-  bg: '#0d0f1a',
-  bgPanel: '#111320',
-  bgCard: '#151829',
-  bgHover: '#1a1d30',
-  border: '#1f2235',
-  borderAccent: '#4648d4',
-  primary: '#4648d4',
-  primaryDim: '#2f31a0',
-  primaryGlow: 'rgba(70,72,212,0.15)',
-  green: '#00ea64',
-  greenDim: '#052e16',
-  amber: '#fbbf24',
-  amberDim: '#2c1800',
-  red: '#f87171',
-  redDim: '#2a0a0a',
-  purple: '#c0c1ff',
-  textPrimary: '#e2e8f0',
-  textSecondary: '#94a3b8',
-  textMuted: '#4b5675',
-  white: '#ffffff',
-  fontMono: "'Fira Code', 'JetBrains Mono', monospace",
-  fontSans: "'Plus Jakarta Sans', sans-serif",
-};
 
 // ─── Types ────────────────────────────────────────────────────
 interface Example {
@@ -125,7 +101,6 @@ const ProblemDescriptionPanel: React.FC<Props> = ({ problem, submissions }) => {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Fira+Code:wght@400;500&display=swap');
         .pdp-scroll::-webkit-scrollbar { width: 4px; }
         .pdp-scroll::-webkit-scrollbar-track { background: transparent; }
         .pdp-scroll::-webkit-scrollbar-thumb { background: ${T.border}; border-radius: 4px; }
@@ -337,28 +312,3 @@ const ProblemDescriptionPanel: React.FC<Props> = ({ problem, submissions }) => {
 };
 
 export default ProblemDescriptionPanel;
-
-// ─── Demo wrapper (remove in production) ──────────────────────
-export function Demo() {
-  const problem: ProblemDetail = {
-    title: 'Arithmetic Operators Basics',
-    difficulty: 'Easy',
-    xp: 50,
-    topic: 'Operators',
-    statement: 'Write a program that takes two integer inputs `a` and `b` and returns their sum, difference, product, and quotient (integer division) in an array format:\n\n`[sum, difference, product, quotient]`\n\nMake sure to handle **standard arithmetic rules**.',
-    examples: [{ input: 'a = 10\nb = 2', output: '[12, 8, 20, 5]', explanation: '10+2=12, 10-2=8, 10×2=20, 10÷2=5' }],
-    constraints: ['-10^4 <= a, b <= 10^4', 'b != 0 for division'],
-    tags: ['Basic Math', 'Operators'],
-  };
-  const submissions: Submission[] = [
-    { status: 'Accepted', timestamp: '2026-05-28 13:01', language: 'JavaScript', runtime: '48ms', code: '' },
-    { status: 'Wrong Answer', timestamp: '2026-05-28 12:55', language: 'JavaScript', runtime: '—', code: '' },
-  ];
-  return (
-    <div style={{ background: '#0d0f1a', minHeight: '100vh', padding: 24, fontFamily: "'Plus Jakarta Sans',sans-serif" }}>
-      <div style={{ maxWidth: 520, height: 640 }}>
-        <ProblemDescriptionPanel problem={problem} submissions={submissions} />
-      </div>
-    </div>
-  );
-}

@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './Sidebar.module.css';
 import knovateLogo from '../../assets/knovate-logo.png';
 import { getUnlockedCoursePaths } from '../../lib/courseAccess';
+import { COURSES } from '../../lib/courseRegistry';
 
 interface CourseEligibility {
   title: string;
@@ -37,81 +38,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, enrolledCourses }) =
 
   const unlocked = getUnlockedCoursePaths(enrolledCourses);
 
-  const courses: CourseEligibility[] = [
-    {
-      title: 'Golang Engineering',
-      path: '/courses/golang',
-      isUnlocked: unlocked.has('/courses/golang'),
-      icon: '🐹',
-      category: 'Development',
-    },
-    {
-      title: 'GenAI & Forward Deployed Engineering',
-      path: '/courses/genai',
-      isUnlocked: unlocked.has('/courses/genai'),
-      icon: '🤖',
-      category: 'Development',
-    },
-    // Full Stack is an entitlement rather than a course of its own: enrolling in
-    // it unlocks GenAI above plus Front-End, Java and SQL below, which is where
-    // the actual curriculum lives. It is deliberately not listed here.
-    {
-      title: 'Front-End Technologies',
-      path: '/courses/frontend',
-      isUnlocked: unlocked.has('/courses/frontend'),
-      icon: '🎨',
-      category: 'Development',
-    },
-    {
-      title: 'Java Development',
-      path: '/courses/java',
-      isUnlocked: unlocked.has('/courses/java'),
-      icon: '☕',
-      category: 'Development',
-    },
-    {
-      title: 'Mastering SQL',
-      path: '/courses/sql',
-      isUnlocked: unlocked.has('/courses/sql'),
-      icon: '💾',
-      category: 'Development',
-    },
-    {
-      title: 'Operating Systems',
-      path: '/courses/os',
-      isUnlocked: unlocked.has('/courses/os'),
-      icon: '💽',
-      category: 'Computer Science Core',
-    },
-    {
-      title: 'Computer Networks',
-      path: '/courses/networking',
-      isUnlocked: unlocked.has('/courses/networking'),
-      icon: '🌐',
-      category: 'Computer Science Core',
-    },
-    {
-      title: 'SEO Fundamentals',
-      path: '/courses/seo',
-      isUnlocked: unlocked.has('/courses/seo'),
-      icon: '🔍',
-      category: 'Marketing',
-    },
-    {
-      title: 'Digital Marketing Strategy',
-      path: '/courses/digital-marketing',
-      isUnlocked: unlocked.has('/courses/digital-marketing'),
-      icon: '📈',
-      category: 'Marketing',
-    },
-    {
-      title: 'Software Testing',
-      path: '/courses/testing',
-      isUnlocked: unlocked.has('/courses/testing'),
-      icon: '🧪',
-      category: 'QA & Testing',
-    },
-  ];
+  const courses: CourseEligibility[] = COURSES.filter((c) => c.inSidebar).map((c) => ({
+    title: c.title,
+    path: c.path,
+    isUnlocked: unlocked.has(c.path),
+    icon: c.sidebarIcon,
+    category: c.category,
+  }));
 
   const handleLinkClick = (path: string, isUnlocked: boolean, courseTitle: string) => {
     if (!isUnlocked) {

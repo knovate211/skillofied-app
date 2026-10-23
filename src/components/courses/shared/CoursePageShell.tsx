@@ -48,8 +48,10 @@ const CoursePageShell: React.FC<CoursePageShellProps> = ({
   unlockModuleName,
   renderContent,
 }) => {
-  // Flatten all items for sequential navigation
-  const allItems = syllabus.flatMap(mod => mod.items);
+  // Flatten all items for sequential navigation. Memoised because it feeds the
+  // dependency lists in useSyllabusNavigation: a fresh array each render made
+  // those memos and effects re-run on every render.
+  const allItems = React.useMemo(() => syllabus.flatMap(mod => mod.items), [syllabus]);
 
   // Progress tracking (localStorage-backed)
   const { maxIndexRead, setMaxIndexRead, progressPercent } = useCourseProgress(
@@ -264,7 +266,7 @@ const CoursePageShell: React.FC<CoursePageShellProps> = ({
       })()}
 
       {/* AI Mentor floating chatbot — available on all course pages */}
-      <AIMentorChatbot />
+      <AIMentorChatbot courseTitle={courseTitle} />
     </div>
   );
 };
