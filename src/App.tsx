@@ -6,7 +6,7 @@ import Sidebar from './components/layout/Sidebar';
 import CoursesSection from './components/courses/CoursesSection';
 import Login from './components/auth/Login';
 import { getMyCoursesApi } from './api';
-import { clearSession, getSessionUser, isApplicantSession, isCandidateSession } from './lib/session';
+import { clearSession, getHandoff, getSessionUser, isApplicantSession, isCandidateSession } from './lib/session';
 import { claimLearnerData, clearLearnerData } from './lib/learnerData';
 import { hydrateCourseProgress } from './lib/courseProgress';
 import { getUnlockedCoursePaths } from './lib/courseAccess';
@@ -207,9 +207,14 @@ const App: React.FC = () => {
       // A paid certification candidate is provisioned with the same
       // 'applicant' role, and is confined the same way — to their own exam.
       p.startsWith('/certification/') ||
-      p.startsWith('/placement/tests/attempt/');
+      p.startsWith('/placement/tests/attempt/') ||
+      // The player lands here on submit. A certification result page is what
+      // reads the outcome and issues the certificate, so blocking it meant no
+      // candidate was ever certified; a scholarship result is withheld there.
+      p.startsWith('/placement/tests/result/');
     if (!allowed) {
-      navigate(p.startsWith('/certification/') ? '/certification/session' : '/scholarship/session', { replace: true });
+      const certification = p.startsWith('/certification/') || getHandoff() === 'certification';
+      navigate(certification ? '/certification/session' : '/scholarship/session', { replace: true });
     }
   }, [isLoggedIn, location.pathname, navigate]);
 

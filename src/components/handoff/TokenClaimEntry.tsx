@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { setSession, SessionUser } from '../../lib/session';
+import { setHandoff, setSession, SessionUser } from '../../lib/session';
 import styles from '../scholarship/Scholarship.module.css';
 
 /** What every hand-off claim endpoint returns. */
@@ -65,6 +65,7 @@ function TokenClaimEntry<R extends ClaimResult>({ claim, invitePrefix, instructi
       try {
         const res = await claim(token);
         setSession(res.token, res.user);
+        setHandoff(invitePrefix);
         // Scoped to this one assessment and useless anywhere else, so
         // sessionStorage is enough. The instructions screen hands it to startAttempt.
         sessionStorage.setItem(`${invitePrefix}.invite.${res.assessmentId}`, res.inviteToken);

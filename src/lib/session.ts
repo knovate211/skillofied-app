@@ -38,6 +38,19 @@ export function isCandidateSession(): boolean {
   return getRole() === 'candidate';
 }
 
+// Scholarship and certification candidates share the 'applicant' role, so the
+// role alone cannot say which hand-off started the session. The claim records
+// it here, and App.tsx uses it to pick the right session notice.
+export type Handoff = 'scholarship' | 'certification' | 'hiring';
+
+export function setHandoff(kind: string): void {
+  localStorage.setItem('handoff', kind);
+}
+
+export function getHandoff(): string {
+  return localStorage.getItem('handoff') ?? '';
+}
+
 /**
  * Stores a new session: the login form and the scholarship, hiring and
  * certification hand-offs all start one this way.
@@ -53,4 +66,5 @@ export function clearSession(): void {
   localStorage.removeItem('isLoggedIn');
   localStorage.removeItem('token');
   localStorage.removeItem('user');
+  localStorage.removeItem('handoff');
 }
