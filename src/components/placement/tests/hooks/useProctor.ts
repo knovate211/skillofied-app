@@ -22,16 +22,26 @@ export function useProctor(
   // fullscreenchange is not mistaken for the candidate escaping the test.
   const intentionalExit = useRef(false);
 
+  // Read through a ref so `report` — and every listener built on it — stays
+  // stable across renders. The player passes a fresh arrow each render; with it
+  // in the dependency list, each re-render tore the listeners down and put them
+  // back. During a fullscreenchange that is fatal: the needsFullscreen listener
+  // sets state first, React re-renders between listeners, and the breach
+  // listener is removed before the browser reaches it. Leaving full screen was
+  // never recorded, so it never counted toward the limit.
+  const onTerminatedRef = useRef(onTerminated);
+  onTerminatedRef.current = onTerminated;
+
   const report = useCallback(async (kind: string, detail = '') => {
     if (!activeRef.current || !attemptId) return;
     try {
       const res = await recordProctorEventApi(attemptId, kind, detail);
       if (res.warning) setWarning(res.warning);
-      if (res.terminated) onTerminated(res.warning || 'Your test was ended by the proctor.');
+      if (res.terminated) onTerminatedRef.current(res.warning || 'Your test was ended by the proctor.');
     } catch {
       // A dropped signal must never interrupt the candidate's test.
     }
-  }, [attemptId, onTerminated]);
+  }, [attemptId]);
 
   // One action, one breach. Switching tabs fires "page hidden" and "window
   // lost focus" together, and doing it in full screen fires "full screen
@@ -116,10 +126,19 @@ export function useProctor(
     }, 1500);
     cleanups.push(() => window.clearInterval(resizeTimer));
 
-    // Screenshots: Print Screen, and macOS's ⌘⇧3 / ⌘⇧4 / ⌘⇧5.
+    // Screenshots: Print Screen, and macOS's ⌘⇧3 / ⌘⇧4 / ⌘⇧5. Both keydown
+    // and keyup are watched because some systems swallow one of them; a press
+    // seen on both is one screenshot, not two penalties.
+    let lastShot = { key: '', at: 0 };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'PrintScreen') void report('screenshot', 'Print Screen');
-      else if (e.metaKey && e.shiftKey && ['3', '4', '5'].includes(e.key)) void report('screenshot', `⌘⇧${e.key}`);
+      let label = '';
+      if (e.key === 'PrintScreen') label = 'Print Screen';
+      else if (e.metaKey && e.shiftKey && ['3', '4', '5'].includes(e.key)) label = `⌘⇧${e.key}`;
+      if (!label) return;
+      const now = Date.now();
+      if (lastShot.key === label && now - lastShot.at < 1000) return;
+      lastShot = { key: label, at: now };
+      void report('screenshot', label);
     };
     window.addEventListener('keyup', onKey);
     window.addEventListener('keydown', onKey);

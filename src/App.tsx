@@ -42,6 +42,7 @@ const ScholarshipSessionNotice = lazy(() => import('./components/scholarship/Sch
 const HiringEntry = lazy(() => import('./components/hiring/HiringEntry'));
 const CertificationEntry = lazy(() => import('./components/certification/CertificationEntry'));
 const CertificationSessionNotice = lazy(() => import('./components/certification/CertificationSessionNotice'));
+const CertificationResultPage = lazy(() => import('./components/certification/CertificationResultPage'));
 const HiringSessionNotice = lazy(() => import('./components/hiring/HiringSessionNotice'));
 
 // A clean simple loading indicator to show during code-split chunk loading
@@ -202,19 +203,25 @@ const App: React.FC = () => {
   useEffect(() => {
     if (!isLoggedIn || !isApplicantSession()) return;
     const p = location.pathname;
+    const certification = getHandoff() === 'certification';
+    // The player lands on the generic result page on submit. A certification
+    // candidate gets their own result page instead: it judges pass/fail by the
+    // exam's pass mark, issues the certificate, and has no student portal around it.
+    const resultPrefix = '/placement/tests/result/';
+    if (certification && p.startsWith(resultPrefix)) {
+      navigate(`/certification/result/${p.slice(resultPrefix.length)}`, { replace: true });
+      return;
+    }
     const allowed =
       p.startsWith('/scholarship/') ||
       // A paid certification candidate is provisioned with the same
       // 'applicant' role, and is confined the same way — to their own exam.
       p.startsWith('/certification/') ||
       p.startsWith('/placement/tests/attempt/') ||
-      // The player lands here on submit. A certification result page is what
-      // reads the outcome and issues the certificate, so blocking it meant no
-      // candidate was ever certified; a scholarship result is withheld there.
-      p.startsWith('/placement/tests/result/');
+      // A scholarship result is withheld on that page; it shows a notice.
+      p.startsWith(resultPrefix);
     if (!allowed) {
-      const certification = p.startsWith('/certification/') || getHandoff() === 'certification';
-      navigate(certification ? '/certification/session' : '/scholarship/session', { replace: true });
+      navigate(certification || p.startsWith('/certification/') ? '/certification/session' : '/scholarship/session', { replace: true });
     }
   }, [isLoggedIn, location.pathname, navigate]);
 
@@ -272,6 +279,18 @@ const App: React.FC = () => {
           isLoggedIn ? (
             <Suspense fallback={<LoadingScreen />}>
               <ScholarshipInstructions kind="certification" />
+            </Suspense>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      <Route
+        path="/certification/result/:attemptId"
+        element={
+          isLoggedIn ? (
+            <Suspense fallback={<LoadingScreen />}>
+              <CertificationResultPage />
             </Suspense>
           ) : (
             <Navigate to="/login" replace />

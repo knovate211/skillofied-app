@@ -1165,6 +1165,26 @@ export interface CertificationOutcome {
   credentialId?: string;
   verifyUrl?: string;
   issuedAt?: string;
+  /** Which attempt of this registration this was, and how many it allows. */
+  attemptNo?: number;
+  maxAttempts?: number;
+  /** Attempts still available on this registration (0 once passed). */
+  attemptsLeft?: number;
+  /** The paper, so a retake can go back to its instructions. */
+  assessmentId?: string;
+  /** The name printed on the certificate. */
+  holderName?: string;
+  marks?: number;
+  maxMarks?: number;
+  timeTakenMinutes?: number;
+  durationMinutes?: number;
+  submittedAt?: string;
+  /** The exam's page on the marketing site (register, resit). */
+  examUrl?: string;
+  /** Set once no attempts are left: when a new registration opens. */
+  resitFrom?: string;
+  /** The attempt was ended by the tab-switch limit, not submitted. */
+  endedByProctor?: boolean;
 }
 
 export async function getCertificationOutcomeApi(attemptId: string): Promise<CertificationOutcome> {
