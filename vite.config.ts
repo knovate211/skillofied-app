@@ -62,6 +62,11 @@ export default defineConfig(({ mode }) => {
           target: apiTarget,
           changeOrigin: true,
         },
+        // Profile → College: linking the account to a college's placement cell.
+        '/api/college': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
         // Live-class attendance: the pop-up and the profile Attendance tab.
         '/api/attendance': {
           target: apiTarget,

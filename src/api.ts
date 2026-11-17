@@ -1337,3 +1337,26 @@ export interface CodeSnapshot {
 /** Editor history for code playback in the reviewer's report. */
 export const integritySnapshotsApi = (attemptId: string, questionId: string, snapshots: CodeSnapshot[], keepalive = false) =>
   postIntegrity('snapshots', { attemptId, questionId, snapshots }, keepalive);
+
+// ── College link ──────────────────────────────────────────────────────────────
+// A student can link their account to their college, so its placement cell
+// sees their progress, attendance, test scores and certificates (never answers,
+// camera data or messages). Linking is the student's choice and can be undone.
+
+export interface CollegeLinkEntry {
+  collegeId: string;
+  name: string;
+  city: string;
+  rollNo: string;
+  branch: string;
+  year: string;
+  linkedAt?: string;
+}
+
+export const getCollegeLinkApi = () =>
+  authedRequest<{ college: CollegeLinkEntry | null; requests: CollegeLinkEntry[] }>('GET', '/api/college/link');
+export const linkCollegeApi = (body: { code: string; rollNo: string; branch: string; year: string }) =>
+  authedRequest<{ linked: boolean; collegeId: string; name: string }>('POST', '/api/college/link', body);
+export const unlinkCollegeApi = () => authedRequest<{ unlinked: boolean }>('DELETE', '/api/college/link');
+export const answerCollegeRequestApi = (collegeId: string, answer: 'accept' | 'decline') =>
+  authedRequest<{ linked?: boolean; declined?: boolean }>('POST', `/api/college/requests/${encodeURIComponent(collegeId)}/${answer}`);

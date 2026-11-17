@@ -6,12 +6,13 @@ import { getProfileApi, upsertProfileApi } from '../../api';
 import ReferralSection from './ReferralSection';
 import CertificateSection from './CertificateSection';
 import AttendanceSection from './AttendanceSection';
+import CollegeSection from './CollegeSection';
 
 /* ─────────────────────────────── types ─────────────────────────────── */
-type ProfileTab = 'Profile' | 'Attendance' | 'Subscription' | 'Referral' | 'Certificate';
+type ProfileTab = 'Profile' | 'Attendance' | 'College' | 'Subscription' | 'Referral' | 'Certificate';
 type ModalKey = 'personal' | 'generic' | 'edu10' | 'edu12' | 'ugDetail' | 'pgDetail' | null;
 
-const TABS: ProfileTab[] = ['Profile', 'Attendance', 'Subscription', 'Referral', 'Certificate'];
+const TABS: ProfileTab[] = ['Profile', 'Attendance', 'College', 'Subscription', 'Referral', 'Certificate'];
 
 const WORK_EXP_OPTIONS = ['No Experience - Fresher', '< 1 Year', '1 Year', '2 Years', '3 Years', '4 Years', '5+ Years'];
 const CAREER_GAP_OPTIONS = ['0', '1', '2', '3', '4', '5+'];
@@ -345,6 +346,7 @@ const ProfilePage: React.FC = () => {
         {activeTab === 'Referral' && <ReferralSection />}
         {activeTab === 'Certificate' && <CertificateSection />}
         {activeTab === 'Attendance' && <AttendanceSection />}
+        {activeTab === 'College' && <CollegeSection />}
         {activeTab === 'Subscription' && <ComingSoon tab={activeTab} />}
         {activeTab === 'Profile' && (
           <div className={styles.profileContent}>
