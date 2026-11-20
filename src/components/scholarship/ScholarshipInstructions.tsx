@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { AssessmentSummaryItem, listAssessmentsApi, startAttemptApi } from '../../api';
-import knovateLogo from '../../assets/knovate-logo.png';
+import knovateLogo from '../../assets/knovate-logo.svg';
 import PermissionCard, { type PermState } from './PermissionCard';
 import SystemCheck, { runChecks } from './SystemCheck';
 import styles from './Scholarship.module.css';

@@ -1,10 +1,28 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import CertificateA from './CertificateA';
 import styles from './CertificateSection.module.css';
 import { getCertificatesApi, type CertificateRecord } from '../../api';
 
 const CertificateSection: React.FC = () => {
   const [certificates, setCertificates] = useState<CertificateRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [viewing, setViewing] = useState<CertificateRecord | null>(null);
+
+  // Download = the browser's "Save as PDF" on a page holding only the certificate.
+  const printCert = () => {
+    document.body.classList.add('knv-printing');
+    const done = () => { document.body.classList.remove('knv-printing'); window.removeEventListener('afterprint', done); };
+    window.addEventListener('afterprint', done);
+    setTimeout(() => window.print(), 50);
+  };
+
+  useEffect(() => {
+    if (!viewing) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setViewing(null);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [viewing]);
 
   useEffect(() => {
     getCertificatesApi()
@@ -20,7 +38,7 @@ const CertificateSection: React.FC = () => {
         <div className={styles.headerText}>
           <h2 className={styles.title}>My Certificates</h2>
           <p className={styles.subtitle}>
-            View, download, and share the certificates you've earned from completing Knovate courses.
+            View, download, and share the certificates you've earned — course completion and certification exams.
           </p>
         </div>
         <div className={styles.badgeWrap}>
@@ -55,32 +73,11 @@ const CertificateSection: React.FC = () => {
         <div className={styles.grid}>
           {certificates.map((cert) => (
             <div key={cert.credentialId} className={styles.certCard}>
-              <div className={styles.certPreview}>
-                {/* A revoked credential still shows, labelled: quietly hiding
-                    one leaves the holder wondering where it went. */}
-                <div className={styles.certRibbon}>{cert.revoked ? 'Revoked' : 'Verified'}</div>
-                <svg className={styles.certPreviewIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-              </div>
+              <button type="button" className={styles.certThumb} onClick={() => setViewing(cert)} aria-label={`Open certificate for ${cert.title}`}>
+                <CertificateA holderName={cert.holderName || 'Knovate learner'} title={cert.title}
+                  scorePercent={cert.scorePercent} issuedAt={cert.issuedAt} credentialId={cert.credentialId} revoked={cert.revoked} kind={cert.source === 'course' ? 'course' : 'exam'} />
+              </button>
               <div className={styles.certContent}>
-                <div className={styles.certCourse}>{cert.title}</div>
-                <div className={styles.certMeta}>
-                  <div className={styles.metaRow}>
-                    <span className={styles.metaLabel}>Issued</span>
-                    <span className={styles.metaValue}>{cert.issuedAt}</span>
-                  </div>
-                  <div className={styles.metaRow}>
-                    <span className={styles.metaLabel}>Credential ID</span>
-                    <span className={styles.metaValue}>{cert.credentialId}</span>
-                  </div>
-                  {cert.scorePercent > 0 && (
-                    <div className={styles.metaRow}>
-                      <span className={styles.metaLabel}>Score</span>
-                      <span className={styles.metaValue}>{cert.scorePercent}%</span>
-                    </div>
-                  )}
-                </div>
                 <div className={styles.certActions}>
                   {/* The verification page is the certificate's public face —
                       it is what an employer is given, so it is what a holder
@@ -92,19 +89,41 @@ const CertificateSection: React.FC = () => {
                     </svg>
                     Verify
                   </a>
-                  <a href={`${cert.verifyUrl}?print=1`} target="_blank" rel="noreferrer" className={styles.btnDownload} title="Open a printable certificate">
+                  <button type="button" onClick={() => { setViewing(cert); setTimeout(printCert, 400); }} className={styles.btnDownload} title="Download the certificate as a PDF">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
                       <polyline points="7 10 12 15 17 10" />
                       <line x1="12" y1="15" x2="12" y2="3" />
                     </svg>
-                    Certificate
-                  </a>
+                    Download
+                  </button>
                 </div>
               </div>
             </div>
           ))}
         </div>
+      )}
+      {viewing && createPortal(
+        <div className={styles.viewer} role="dialog" aria-modal="true" aria-label="Certificate" onClick={() => setViewing(null)}>
+          <div className={styles.viewerBox} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.viewerBar}>
+              <strong>{viewing.title}</strong>
+              <span style={{ flex: 1 }} />
+              <a href={viewing.verifyUrl} target="_blank" rel="noreferrer" className={styles.btnView}>Verify page</a>
+              <a className={styles.btnView} target="_blank" rel="noreferrer"
+                href={`https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=${encodeURIComponent(viewing.title)}&organizationName=Knovate&certId=${encodeURIComponent(viewing.credentialId)}&certUrl=${encodeURIComponent(viewing.verifyUrl)}`}>
+                Add to LinkedIn
+              </a>
+              {!viewing.revoked && <button type="button" className={styles.btnDownload} onClick={printCert}>Download PDF</button>}
+              <button type="button" className={styles.viewerClose} onClick={() => setViewing(null)} aria-label="Close">×</button>
+            </div>
+            <div className="knv-print-root">
+              <CertificateA holderName={viewing.holderName || 'Knovate learner'} title={viewing.title}
+                scorePercent={viewing.scorePercent} issuedAt={viewing.issuedAt} credentialId={viewing.credentialId} revoked={viewing.revoked} kind={viewing.source === 'course' ? 'course' : 'exam'} />
+            </div>
+          </div>
+        </div>,
+        document.body,
       )}
     </div>
   );

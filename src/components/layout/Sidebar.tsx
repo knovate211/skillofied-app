@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './Sidebar.module.css';
-import knovateLogo from '../../assets/knovate-logo.png';
+import knovateLogo from '../../assets/knovate-logo.svg';
 import { getUnlockedCoursePaths } from '../../lib/courseAccess';
 import { COURSES } from '../../lib/courseRegistry';
 

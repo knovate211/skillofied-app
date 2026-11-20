@@ -140,3 +140,5 @@
   .h1 { font-size: 26px; }
   .pair { grid-template-columns: 1fr; }
 }
+.brand { display: inline-flex; align-items: center; gap: 6px; }
+.brandLogo { height: 34px; width: auto; display: block; }

@@ -249,3 +249,33 @@
     padding: 24px;
   }
 }
+
+/* Certificate preview on each card: the real drawing, scaled down. */
+.certThumb { display: block; width: 100%; padding: 10px; border: none; border-bottom: 1px solid var(--border); background: #f3ede3; cursor: zoom-in; }
+.certThumb:hover { background: #efe6d8; }
+
+/* Full-size viewer */
+.viewer { position: fixed; inset: 0; z-index: 1000; background: rgba(20, 16, 12, .6); display: flex; align-items: center; justify-content: center; padding: 24px; }
+.viewerBox { width: min(1123px, 100%); max-height: 100%; overflow: auto; background: var(--bg-surface, #fff); border-radius: 14px; padding: 14px; box-shadow: 0 24px 60px rgba(0,0,0,.35); }
+.viewerBar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.viewerClose { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: transparent; font-size: 20px; cursor: pointer; color: var(--text-primary); }
+
+/* Printing: only the certificate, one A4 landscape page. */
+@media print {
+  @page { size: A4 landscape; margin: 0; }
+  :global(body.knv-printing) > * { display: none !important; }
+  :global(body.knv-printing) > .viewer { display: block !important; position: static; background: none; padding: 0; }
+  :global(body.knv-printing) .viewerBox { box-shadow: none; padding: 0; border-radius: 0; width: 297mm; max-height: none; overflow: visible; }
+  :global(body.knv-printing) .viewerBar { display: none; }
+  :global(body.knv-printing) { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* The actions sit on the same beige as the certificate preview — no white strip. */
+.certCard { background: #f3ede3; }
+.certThumb { border-bottom: none; }
+.certContent { background: transparent; padding: 4px 10px 12px; }
+.certActions { border-top: none; padding-top: 0; }
+.btnView { background: transparent; border-color: rgba(43, 38, 32, .25); }
+.btnView:hover { background: rgba(43, 38, 32, .06); border-color: rgba(43, 38, 32, .45); }
+.btnDownload { background: transparent; color: #b5701f; border-color: rgba(201, 138, 58, .55); }
+.btnDownload:hover { background: #c98a3a; color: #fff; border-color: #c98a3a; }

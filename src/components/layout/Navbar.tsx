@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Navbar.module.css';
-import knovateLogo from '../../assets/knovate-logo.png';
+import knovateLogo from '../../assets/knovate-logo.svg';
 import { useTheme } from '../../context/ThemeContext';
 import { useCourseHeader } from '../../context/CourseHeaderContext';
 

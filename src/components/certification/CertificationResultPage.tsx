@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { getCertificationOutcomeApi, type CertificationOutcome } from '../../api';
+import knovateLogo from '../../assets/knovate-logo.svg';
 import s from './CertificationResult.module.css';
 
 /**
@@ -125,7 +126,7 @@ const CertificationResultPage: React.FC = () => {
   const shell = (content: React.ReactNode, wide = false) => (
     <div className={s.page}>
       <header className={s.header}>
-        <span className={s.brand}>Knovate <span>· Certification</span></span>
+        <span className={s.brand}><img src={knovateLogo} alt="Knovate" className={s.brandLogo} /> <span>· Certification</span></span>
         {headerMeta && <span className={s.headerMeta}>{headerMeta}</span>}
       </header>
       <main className={s.main}>

@@ -229,6 +229,8 @@ export async function getMyReferralsApi(): Promise<MyReferrals> {
  */
 export interface CertificateRecord {
   credentialId: string;
+  /** The name printed on the certificate. */
+  holderName?: string;
   title: string;
   scorePercent: number;
   issuedAt: string;
