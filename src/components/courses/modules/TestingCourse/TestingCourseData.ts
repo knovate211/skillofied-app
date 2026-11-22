@@ -2,15 +2,6 @@ import { QuizQuestion } from '../../../../types';
 import { AssignmentQuestion } from '../../shared/ModuleAssignment';
 import type { LessonCallout, LessonSidePanel } from '../../shared/LessonLayout';
 import type { LessonBlock } from '../../shared/LessonBlocks';
-import { overviewAndModule1Lessons } from './lessons/overviewAndModule1';
-import { modules2And4Lessons } from './lessons/modules2And4';
-import { modules3And5Lessons } from './lessons/modules3And5';
-import { modules6And7Lessons } from './lessons/modules6And7';
-import { modules8And11Lessons } from './lessons/modules8And11';
-import { modules9And13Lessons } from './lessons/modules9And13';
-import { modules10And12Lessons } from './lessons/modules10And12';
-import { modules14And15Lessons } from './lessons/modules14And15';
-import { interviewLessons } from './lessons/interview';
 
 export interface Lesson {
   id: string;
@@ -35,25 +26,18 @@ export interface ModuleData {
   title: string;
   overview: string;
   outcomes: string[];
-  lessons: Lesson[];
+  /**
+   * Lessons, in order. Most modules list ids here and their bodies live in
+   * ./lessons, loaded only when the module is opened (see lessons/loaders.ts);
+   * the few short ones are written inline in `lessons` instead.
+   */
+  lessonIds?: string[];
+  lessons?: Lesson[];
   quiz: QuizQuestion[];
   assignment: {
     prompts: AssignmentQuestion[];
   };
 }
-
-/** Full lesson bodies, authored per module under ./lessons. */
-const EXPANDED_LESSONS: Record<string, Lesson> = {
-  ...overviewAndModule1Lessons,
-  ...modules2And4Lessons,
-  ...modules3And5Lessons,
-  ...modules6And7Lessons,
-  ...modules8And11Lessons,
-  ...modules9And13Lessons,
-  ...modules10And12Lessons,
-  ...modules14And15Lessons,
-  ...interviewLessons,
-};
 
 export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
   m1: {
@@ -64,16 +48,7 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Understand why software testing is critical.',
       'Differentiate between SDLC and STLC phases.'
     ],
-    lessons: [
-      EXPANDED_LESSONS['m1-l1'],
-      EXPANDED_LESSONS['m1-l2'],
-      EXPANDED_LESSONS['m1-l3'],
-      EXPANDED_LESSONS['m1-l4'],
-      EXPANDED_LESSONS['m1-l5'],
-      EXPANDED_LESSONS['m1-l6'],
-      EXPANDED_LESSONS['m1-l7'],
-      EXPANDED_LESSONS['m1-l8'],
-    ],
+    lessonIds: ['m1-l1', 'm1-l2', 'm1-l3', 'm1-l4', 'm1-l5', 'm1-l6', 'm1-l7', 'm1-l8'],
     quiz: [
       { id: 1, question: 'Which phase of STLC involves identifying testing scope and resources?', options: ["A. Test Planning", "B. Test Case Development", "C. Test Closure", "D. Environment Setup"], correctAnswer: "A. Test Planning" },
       { id: 2, question: 'What is the primary goal of software testing?', options: ['A. To prove the program has zero bugs', 'B. To find defects and verify expected behavior', 'C. To write code', 'D. To design user interfaces'], correctAnswer: 'B. To find defects and verify expected behavior' },
@@ -106,16 +81,7 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Apply the 7 testing principles to real projects.',
       'Explain the difference between verification and validation.'
     ],
-    lessons: [
-      EXPANDED_LESSONS['m2-l1'],
-      EXPANDED_LESSONS['m2-l2'],
-      EXPANDED_LESSONS['m2-l3'],
-      EXPANDED_LESSONS['m2-l4'],
-      EXPANDED_LESSONS['m2-l5'],
-      EXPANDED_LESSONS['m2-l6'],
-      EXPANDED_LESSONS['m2-l7'],
-      EXPANDED_LESSONS['m2-l8'],
-    ],
+    lessonIds: ['m2-l1', 'm2-l2', 'm2-l3', 'm2-l4', 'm2-l5', 'm2-l6', 'm2-l7', 'm2-l8'],
     quiz: [
       { id: 1, question: 'Running the same regression tests every release finds fewer and fewer new bugs. Which testing principle describes this?', options: ["A. Defect clustering", "B. Exhaustive testing is impossible", "C. Early testing saves time", "D. Pesticide paradox"], correctAnswer: "D. Pesticide paradox" },
       { id: 2, question: 'Which test level is closest to the business user?', options: ["A. Acceptance Testing", "B. Unit Testing", "C. Integration Testing", "D. System Testing"], correctAnswer: "A. Acceptance Testing" },
@@ -148,18 +114,7 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Write structured functional test cases.',
       'Apply Boundary Value Analysis and Equivalence Partitioning.'
     ],
-    lessons: [
-      EXPANDED_LESSONS['m3-l1'],
-      EXPANDED_LESSONS['m3-l2'],
-      EXPANDED_LESSONS['m3-l3'],
-      EXPANDED_LESSONS['m3-l4'],
-      EXPANDED_LESSONS['m3-l5'],
-      EXPANDED_LESSONS['m3-l6'],
-      EXPANDED_LESSONS['m3-l7'],
-      EXPANDED_LESSONS['m3-l8'],
-      EXPANDED_LESSONS['m3-l9'],
-      EXPANDED_LESSONS['m3-l10'],
-    ],
+    lessonIds: ['m3-l1', 'm3-l2', 'm3-l3', 'm3-l4', 'm3-l5', 'm3-l6', 'm3-l7', 'm3-l8', 'm3-l9', 'm3-l10'],
     quiz: [
       { id: 1, question: 'If a text field accepts a password between 6 and 12 characters, what are the boundaries to test using BVA?', options: ["A. 6, 12", "B. 1, 5, 10, 15", "C. 5, 6, 7, 11, 12, 13", "D. 0, 6, 12, 20"], correctAnswer: "C. 5, 6, 7, 11, 12, 13" },
       { id: 2, question: 'What is a Test Strategy?', options: ["A. A day-by-day execution schedule listing which tester runs each test case", "B. A detailed, step-by-step list of test cases for one sprint", "C. A database schema definition", "D. A high-level, static project or organizational policy document defining testing approaches"], correctAnswer: "D. A high-level, static project or organizational policy document defining testing approaches" },
@@ -192,14 +147,7 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Write highly descriptive and reproducible bug reports.',
       'Explain the difference between severity and priority.'
     ],
-    lessons: [
-      EXPANDED_LESSONS['m4-l1'],
-      EXPANDED_LESSONS['m4-l2'],
-      EXPANDED_LESSONS['m4-l3'],
-      EXPANDED_LESSONS['m4-l4'],
-      EXPANDED_LESSONS['m4-l5'],
-      EXPANDED_LESSONS['m4-l6'],
-    ],
+    lessonIds: ['m4-l1', 'm4-l2', 'm4-l3', 'm4-l4', 'm4-l5', 'm4-l6'],
     quiz: [
       { id: 1, question: 'What is the state of a bug when it is rejected by developers as not being a defect?', options: ['A. Deferred', 'B. Invalid/Rejected', 'C. Closed', 'D. Fixed'], correctAnswer: 'B. Invalid/Rejected' },
       { id: 2, question: 'Misspelled company logo on the homepage has which classification?', options: ["A. Low Severity, Low Priority", "B. High Severity, Low Priority", "C. Low Severity, High Priority", "D. High Severity, High Priority"], correctAnswer: "C. Low Severity, High Priority" },
@@ -232,15 +180,7 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Participate in Scrum ceremonies as a QA engineer.',
       'Estimate story points and define acceptance criteria.'
     ],
-    lessons: [
-      EXPANDED_LESSONS['m5-l1'],
-      EXPANDED_LESSONS['m5-l2'],
-      EXPANDED_LESSONS['m5-l3'],
-      EXPANDED_LESSONS['m5-l4'],
-      EXPANDED_LESSONS['m5-l5'],
-      EXPANDED_LESSONS['m5-l6'],
-      EXPANDED_LESSONS['m5-l7'],
-    ],
+    lessonIds: ['m5-l1', 'm5-l2', 'm5-l3', 'm5-l4', 'm5-l5', 'm5-l6', 'm5-l7'],
     quiz: [
       { id: 1, question: 'Who owns the product backlog prioritization in Scrum?', options: ["A. Product Owner", "B. Scrum Master", "C. QA Lead", "D. Tech Lead"], correctAnswer: "A. Product Owner" },
       { id: 2, question: 'What is the duration of a standard daily stand-up meeting?', options: ['A. 1 hour', 'B. 15 minutes', 'C. 30 minutes', 'D. 5 minutes'], correctAnswer: 'B. 15 minutes' },
@@ -273,17 +213,7 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Write assertions on JSON responses.',
       'Automate API test runs using Postman collections.'
     ],
-    lessons: [
-      EXPANDED_LESSONS['m6-l1'],
-      EXPANDED_LESSONS['m6-l2'],
-      EXPANDED_LESSONS['m6-l3'],
-      EXPANDED_LESSONS['m6-l4'],
-      EXPANDED_LESSONS['m6-l5'],
-      EXPANDED_LESSONS['m6-l6'],
-      EXPANDED_LESSONS['m6-l7'],
-      EXPANDED_LESSONS['m6-l8'],
-      EXPANDED_LESSONS['m6-l9'],
-    ],
+    lessonIds: ['m6-l1', 'm6-l2', 'm6-l3', 'm6-l4', 'm6-l5', 'm6-l6', 'm6-l7', 'm6-l8', 'm6-l9'],
     quiz: [
       { id: 1, question: 'Which HTTP method should be used to create a new resource?', options: ["A. GET", "B. PUT", "C. DELETE", "D. POST"], correctAnswer: "D. POST" },
       { id: 2, question: 'What does a 401 status code signify?', options: ["A. Unauthorized (Authentication failed)", "B. Internal Server Error", "C. Page Not Found", "D. Success"], correctAnswer: "A. Unauthorized (Authentication failed)" },
@@ -316,15 +246,7 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Write SELECT, INSERT, UPDATE, and DELETE queries.',
       'Verify database state updates matching API triggers.'
     ],
-    lessons: [
-      EXPANDED_LESSONS['m7-l1'],
-      EXPANDED_LESSONS['m7-l2'],
-      EXPANDED_LESSONS['m7-l3'],
-      EXPANDED_LESSONS['m7-l4'],
-      EXPANDED_LESSONS['m7-l5'],
-      EXPANDED_LESSONS['m7-l6'],
-      EXPANDED_LESSONS['m7-l7'],
-    ],
+    lessonIds: ['m7-l1', 'm7-l2', 'm7-l3', 'm7-l4', 'm7-l5', 'm7-l6', 'm7-l7'],
     quiz: [
       { id: 1, question: 'Which JOIN returns all rows from the left table and matched rows from the right table?', options: ["A. INNER JOIN", "B. RIGHT JOIN", "C. LEFT JOIN", "D. FULL JOIN"], correctAnswer: "C. LEFT JOIN" },
       { id: 2, question: 'Which command modifies existing records in a table?', options: ["A. SELECT", "B. INSERT", "C. DELETE", "D. UPDATE"], correctAnswer: "D. UPDATE" },
@@ -357,18 +279,7 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Write automated browser interaction scripts.',
       'Apply explicit and implicit waits to reduce test instability.'
     ],
-    lessons: [
-      EXPANDED_LESSONS['m8-l1'],
-      EXPANDED_LESSONS['m8-l2'],
-      EXPANDED_LESSONS['m8-l3'],
-      EXPANDED_LESSONS['m8-l4'],
-      EXPANDED_LESSONS['m8-l5'],
-      EXPANDED_LESSONS['m8-l6'],
-      EXPANDED_LESSONS['m8-l7'],
-      EXPANDED_LESSONS['m8-l8'],
-      EXPANDED_LESSONS['m8-l9'],
-      EXPANDED_LESSONS['m8-l10'],
-    ],
+    lessonIds: ['m8-l1', 'm8-l2', 'm8-l3', 'm8-l4', 'm8-l5', 'm8-l6', 'm8-l7', 'm8-l8', 'm8-l9', 'm8-l10'],
     quiz: [
       { id: 1, question: 'Which command closes all open browser windows and terminates the driver session?', options: ['A. close()', 'B. quit()', 'C. terminate()', 'D. exit()'], correctAnswer: 'B. quit()' },
       { id: 2, question: 'Why is Thread.sleep() discouraged in Selenium tests?', options: ["A. It fails on browsers that load pages asynchronously", "B. It is deprecated and removed in Selenium 4", "C. It blocks execution for a fixed duration, slowing down tests unnecessarily", "D. It does not work in Java"], correctAnswer: "C. It blocks execution for a fixed duration, slowing down tests unnecessarily" },
@@ -401,15 +312,7 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Implement a clean Page Object Model design pattern.',
       'Organize parallel executions using TestNG.'
     ],
-    lessons: [
-      EXPANDED_LESSONS['m9-l1'],
-      EXPANDED_LESSONS['m9-l2'],
-      EXPANDED_LESSONS['m9-l3'],
-      EXPANDED_LESSONS['m9-l4'],
-      EXPANDED_LESSONS['m9-l5'],
-      EXPANDED_LESSONS['m9-l6'],
-      EXPANDED_LESSONS['m9-l7'],
-    ],
+    lessonIds: ['m9-l1', 'm9-l2', 'm9-l3', 'm9-l4', 'm9-l5', 'm9-l6', 'm9-l7'],
     quiz: [
       { id: 1, question: 'Which file manages dependencies and build lifecycle in a Maven project?', options: ["A. pom.xml", "B. package.json", "C. build.gradle", "D. testng.xml"], correctAnswer: "A. pom.xml" },
       { id: 2, question: 'What is the primary benefit of the Page Object Model?', options: ["A. Faster test execution by caching page elements in memory", "B. Decoupling test code from webpage UI selectors, reducing maintenance costs", "C. Automatic bug reporting", "D. Eliminates the need for browser drivers"], correctAnswer: 'B. Decoupling test code from webpage UI selectors, reducing maintenance costs' },
@@ -442,14 +345,7 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Differentiate between Load, Stress, and Spike testing.',
       'Simulate concurrent virtual users using Apache JMeter.'
     ],
-    lessons: [
-      EXPANDED_LESSONS['m10-l1'],
-      EXPANDED_LESSONS['m10-l2'],
-      EXPANDED_LESSONS['m10-l3'],
-      EXPANDED_LESSONS['m10-l4'],
-      EXPANDED_LESSONS['m10-l5'],
-      EXPANDED_LESSONS['m10-l6'],
-    ],
+    lessonIds: ['m10-l1', 'm10-l2', 'm10-l3', 'm10-l4', 'm10-l5', 'm10-l6'],
     quiz: [
       { id: 1, question: 'Which type of testing evaluates performance over an extended period of time to spot memory leaks?', options: ["A. Load Testing", "B. Stress Testing", "C. Spike Testing", "D. Endurance (Soak) Testing"], correctAnswer: "D. Endurance (Soak) Testing" },
       { id: 2, question: 'What does latency measure in API performance reports?', options: ["A. Time taken for a request to travel from client to server and return the first byte", "B. Total network bytes transferred", "C. Average CPU usage on the server during the test", "D. The number of transactions the server completes per second under load"], correctAnswer: "A. Time taken for a request to travel from client to server and return the first byte" },
@@ -482,13 +378,7 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Differentiate between mobile simulators, emulators, and physical devices.',
       'Configure Appium desired capabilities.'
     ],
-    lessons: [
-      EXPANDED_LESSONS['m11-l1'],
-      EXPANDED_LESSONS['m11-l2'],
-      EXPANDED_LESSONS['m11-l3'],
-      EXPANDED_LESSONS['m11-l4'],
-      EXPANDED_LESSONS['m11-l5'],
-    ],
+    lessonIds: ['m11-l1', 'm11-l2', 'm11-l3', 'm11-l4', 'm11-l5'],
     quiz: [
       { id: 1, question: 'Which tool connects and manages Android devices from the command line?', options: ["A. Xcode", "B. Appium Inspector", "C. ADB (Android Debug Bridge)", "D. SDK Manager"], correctAnswer: "C. ADB (Android Debug Bridge)" },
       { id: 2, question: 'What is the main advantage of Appium?', options: ["A. It only works on Windows", "B. It does not require test devices", "C. It runs tests on devices without needing an installed app", "D. It is cross-platform, letting you use the same API for Android and iOS tests"], correctAnswer: "D. It is cross-platform, letting you use the same API for Android and iOS tests" },
@@ -521,13 +411,7 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Explain common web vulnerabilities.',
       'Test authentication and authorization mechanisms.'
     ],
-    lessons: [
-      EXPANDED_LESSONS['m12-l1'],
-      EXPANDED_LESSONS['m12-l2'],
-      EXPANDED_LESSONS['m12-l3'],
-      EXPANDED_LESSONS['m12-l4'],
-      EXPANDED_LESSONS['m12-l5'],
-    ],
+    lessonIds: ['m12-l1', 'm12-l2', 'm12-l3', 'm12-l4', 'm12-l5'],
     quiz: [
       { id: 1, question: 'What does OWASP stand for?', options: ["A. Online Web Alert System Protocol", "B. Open Web Application Security Project", "C. Open Windows Access Security Plan", "D. Object Web Architecture Standards Program"], correctAnswer: "B. Open Web Application Security Project" },
       { id: 2, question: 'Which vulnerability allows attackers to inject malicious SQL scripts into database inputs?', options: ["A. XSS", "B. CSRF", "C. SQL Injection", "D. Broken Authentication"], correctAnswer: "C. SQL Injection" },
@@ -560,14 +444,7 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Manage version control with Git.',
       'Configure automated test triggers inside a Jenkins pipeline.'
     ],
-    lessons: [
-      EXPANDED_LESSONS['m13-l1'],
-      EXPANDED_LESSONS['m13-l2'],
-      EXPANDED_LESSONS['m13-l3'],
-      EXPANDED_LESSONS['m13-l4'],
-      EXPANDED_LESSONS['m13-l5'],
-      EXPANDED_LESSONS['m13-l6'],
-    ],
+    lessonIds: ['m13-l1', 'm13-l2', 'm13-l3', 'm13-l4', 'm13-l5', 'm13-l6'],
     quiz: [
       { id: 1, question: 'Which command creates and switches to a new Git branch?', options: ["A. git checkout -b", "B. git branch", "C. git commit", "D. git merge"], correctAnswer: "A. git checkout -b" },
       { id: 2, question: 'What is the standard configuration file used to build pipelines in Jenkins?', options: ['A. pom.xml', 'B. Jenkinsfile', 'C. package.json', 'D. testng.xml'], correctAnswer: 'B. Jenkinsfile' },
@@ -600,14 +477,7 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Generate unit tests using LLMs.',
       'Configure self-healing locator strategies.'
     ],
-    lessons: [
-      EXPANDED_LESSONS['m14-l1'],
-      EXPANDED_LESSONS['m14-l2'],
-      EXPANDED_LESSONS['m14-l3'],
-      EXPANDED_LESSONS['m14-l4'],
-      EXPANDED_LESSONS['m14-l5'],
-      EXPANDED_LESSONS['m14-l6'],
-    ],
+    lessonIds: ['m14-l1', 'm14-l2', 'm14-l3', 'm14-l4', 'm14-l5', 'm14-l6'],
     quiz: [
       { id: 1, question: 'What is the primary benefit of self-healing locators in test automation?', options: ["A. Faster execution, because locators are cached between test runs", "B. Complete removal of locators", "C. Rewriting failing assertions so the test run passes", "D. Automatically updating selectors when DOM elements change, reducing maintenance"], correctAnswer: "D. Automatically updating selectors when DOM elements change, reducing maintenance" },
       { id: 2, question: 'How does AI visual regression testing differ from standard HTML assertions?', options: ["A. It compares screenshots using machine learning to detect visual deviations, regardless of HTML changes", "B. It does not check code", "C. It checks the HTML source for style changes, then renders only the changed elements", "D. It requires compilation"], correctAnswer: "A. It compares screenshots using machine learning to detect visual deviations, regardless of HTML changes" },
@@ -640,15 +510,7 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
       'Construct a production-grade testing suite.',
       'Generate professional test closures and reports.'
     ],
-    lessons: [
-      EXPANDED_LESSONS['m15-p1'],
-      EXPANDED_LESSONS['m15-p2'],
-      EXPANDED_LESSONS['m15-p3'],
-      EXPANDED_LESSONS['m15-p4'],
-      EXPANDED_LESSONS['m15-p5'],
-      EXPANDED_LESSONS['m15-p6'],
-      EXPANDED_LESSONS['m15-final'],
-    ],
+    lessonIds: ['m15-p1', 'm15-p2', 'm15-p3', 'm15-p4', 'm15-p5', 'm15-p6', 'm15-final'],
     quiz: [
       { id: 1, question: "For an e-commerce site, which flow should be tested first?", options: ["A. The About Us page", "B. Checkout and payment", "C. Footer links", "D. Blog comments"], correctAnswer: "B. Checkout and payment" },
       { id: 2, question: "What is essential when testing a banking transfer?", options: ["A. The page colour scheme", "B. Animation smoothness", "C. Balances stay consistent even when a step fails", "D. The page loads within one second on mobile"], correctAnswer: "C. Balances stay consistent even when a step fails" },
@@ -678,15 +540,7 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
     title: 'COURSE OVERVIEW',
     overview: 'Get introduced to the Software Testing course, learning outcomes, career roadmaps, and resources.',
     outcomes: ['Understand the course roadmap', 'Identify career options in QA'],
-    lessons: [
-      EXPANDED_LESSONS['overview-welcome'],
-      EXPANDED_LESSONS['overview-intro'],
-      EXPANDED_LESSONS['overview-outcomes'],
-      EXPANDED_LESSONS['overview-roadmap'],
-      EXPANDED_LESSONS['overview-career'],
-      EXPANDED_LESSONS['overview-prereq'],
-      EXPANDED_LESSONS['overview-resources'],
-    ],
+    lessonIds: ['overview-welcome', 'overview-intro', 'overview-outcomes', 'overview-roadmap', 'overview-career', 'overview-prereq', 'overview-resources'],
     quiz: [],
     assignment: { prompts: [] }
   },
@@ -695,18 +549,7 @@ export const TESTING_COURSE_DATA: Record<string, ModuleData> = {
     title: 'INTERVIEW PREPARATION',
     overview: 'Master manual, automation, API, and SQL interview questionnaires.',
     outcomes: ['Succeed in QA technical interviews'],
-    lessons: [
-      EXPANDED_LESSONS['interview-manual'],
-      EXPANDED_LESSONS['interview-selenium'],
-      EXPANDED_LESSONS['interview-api'],
-      EXPANDED_LESSONS['interview-sql'],
-      EXPANDED_LESSONS['interview-agile'],
-      EXPANDED_LESSONS['interview-framework'],
-      EXPANDED_LESSONS['interview-hr'],
-      EXPANDED_LESSONS['interview-resume'],
-      EXPANDED_LESSONS['interview-mock'],
-      EXPANDED_LESSONS['interview-coding'],
-    ],
+    lessonIds: ['interview-manual', 'interview-selenium', 'interview-api', 'interview-sql', 'interview-agile', 'interview-framework', 'interview-hr', 'interview-resume', 'interview-mock', 'interview-coding'],
     quiz: [],
     assignment: { prompts: [] }
   },

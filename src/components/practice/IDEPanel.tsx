@@ -1,18 +1,8 @@
 import React, { useState } from 'react';
 import Editor from '@monaco-editor/react';
 import { Maximize2, Minimize2, RotateCcw } from 'lucide-react';
-
-const T = {
-  bg: '#0d0f1a',
-  bgPanel: '#111320',
-  bgCard: '#151829',
-  bgHover: '#1a1d30',
-  border: '#1f2235',
-  textPrimary: '#e2e8f0',
-  textSecondary: '#94a3b8',
-  textMuted: '#4b5675',
-  accent: '#28C5BC',
-};
+import { languageLabel, PROGRAMMING_LANGUAGES } from '../../lib/codeLanguages';
+import { T } from './theme';
 
 interface IDEPanelProps {
   language: string;
@@ -98,14 +88,8 @@ const IDEPanel: React.FC<IDEPanelProps> = ({
   const languages = availableLanguages
     ? availableLanguages
     : isSqlMode
-    ? [{ id: 'sql', label: 'PostgreSQL' }]
-    : [
-        { id: 'javascript', label: 'JavaScript' },
-        { id: 'python', label: 'Python' },
-        { id: 'java', label: 'Java' },
-        { id: 'cpp', label: 'C++' },
-        { id: 'go', label: 'Go' },
-      ];
+    ? [{ id: 'sql', label: languageLabel('sql') }]
+    : PROGRAMMING_LANGUAGES;
 
   const iconBtnStyle = {
     display: 'flex', alignItems: 'center', justifyContent: 'center',

@@ -1,25 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronLeft, ChevronRight, RefreshCw, Sun, Moon, Play, Send, Pause } from 'lucide-react';
+import { T } from './theme';
 
-// ─── Design tokens ─────────────────────────────────────────────
-const T = {
-  bg: '#0d0f1a',
-  bgPanel: '#111320',
-  bgCard: '#151829',
-  border: '#1f2235',
-  borderAccent: '#4648d4',
-  primary: '#4648d4',
-  primaryHover: '#5557e8',
-  green: '#00ea64',
-  amber: '#fbbf24',
-  purple: '#c0c1ff',
-  textPrimary: '#e2e8f0',
-  textSecondary: '#94a3b8',
-  textMuted: '#4b5675',
-  fontMono: "'Fira Code','JetBrains Mono',monospace",
-  fontSans: "'Plus Jakarta Sans',sans-serif",
-};
 
 interface WorkspaceHeaderProps {
   currentProblemId: string;
@@ -79,16 +62,22 @@ const WorkspaceHeader: React.FC<WorkspaceHeaderProps> = ({
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Fira+Code:wght@400;500&display=swap');
         .wh-icon:hover { background: ${T.bgCard} !important; border-color: ${T.border} !important; color: ${T.textPrimary} !important; }
         .wh-nav:hover  { background: ${T.bgCard} !important; border-color: ${T.border} !important; color: ${T.textPrimary} !important; }
         .wh-crumb:hover { color: ${T.textPrimary} !important; }
         .wh-run:hover   { background: ${T.bgCard} !important; border-color: ${T.textMuted} !important; color: ${T.textPrimary} !important; }
         .wh-submit:hover { background: ${T.primaryHover} !important; }
         @keyframes wh-ping { 0%,100%{opacity:1} 50%{opacity:.25} }
+        /* A phone cannot fit the full bar: the breadcrumb, dividers and timer
+           go, and Back / Run shrink, so Submit stays on screen. */
+        @media (max-width: 640px) {
+          .wh-header { padding: 0 10px !important; gap: 8px !important; }
+          .wh-hide-sm { display: none !important; }
+          .wh-run, .wh-submit { padding: 6px 10px !important; }
+        }
       `}</style>
 
-      <header style={{
+      <header className="wh-header" style={{
         position: 'sticky', top: 0, zIndex: 50,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         borderBottom: `1px solid ${T.border}`,
@@ -105,17 +94,18 @@ const WorkspaceHeader: React.FC<WorkspaceHeaderProps> = ({
           <button
             className="wh-icon"
             onClick={() => navigate('/practice')}
+            aria-label="Back to practice"
             style={{ ...iconBtn, gap: 5, width: 'auto', padding: '0 10px', fontSize: 12, fontWeight: 700, color: T.textSecondary }}
           >
             <ArrowLeft size={13} />
-            Back
+            <span className="wh-hide-sm">Back</span>
           </button>
 
           {/* Divider */}
-          <div style={{ width: 1, height: 18, background: T.border, flexShrink: 0 }} />
+          <div className="wh-hide-sm" style={{ width: 1, height: 18, background: T.border, flexShrink: 0 }} />
 
           {/* Breadcrumb */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: T.textMuted, whiteSpace: 'nowrap', overflow: 'hidden' }}>
+          <div className="wh-hide-sm" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: T.textMuted, whiteSpace: 'nowrap', overflow: 'hidden' }}>
             <span className="wh-crumb" onClick={() => navigate('/practice')} style={{ cursor: 'pointer', color: T.textMuted, transition: 'color .15s' }}>Practice</span>
             <span style={{ color: T.border }}>/</span>
             <span className="wh-crumb" onClick={() => navigate('/practice')} style={{ cursor: 'pointer', color: T.textMuted, transition: 'color .15s' }}>{problemTopic}</span>
@@ -124,7 +114,7 @@ const WorkspaceHeader: React.FC<WorkspaceHeaderProps> = ({
           </div>
 
           {/* Divider */}
-          <div style={{ width: 1, height: 18, background: T.border, flexShrink: 0 }} />
+          <div className="wh-hide-sm" style={{ width: 1, height: 18, background: T.border, flexShrink: 0 }} />
 
           {/* Prev / Next */}
           <div style={{ display: 'flex', gap: 2, background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 8, padding: 2 }}>
@@ -144,7 +134,7 @@ const WorkspaceHeader: React.FC<WorkspaceHeaderProps> = ({
         </div>
 
         {/* ── CENTER: timer ── */}
-        <div style={{
+        <div className="wh-hide-sm" style={{
           display: 'flex', alignItems: 'center', gap: 8,
           background: T.bgCard, border: `1px solid ${T.border}`,
           borderRadius: 9999, padding: '5px 14px',
@@ -191,7 +181,7 @@ const WorkspaceHeader: React.FC<WorkspaceHeaderProps> = ({
           </button>
 
           {/* Separator */}
-          <div style={{ width: 1, height: 18, background: T.border }} />
+          <div className="wh-hide-sm" style={{ width: 1, height: 18, background: T.border }} />
 
           {/* Run code */}
           <button
@@ -210,7 +200,9 @@ const WorkspaceHeader: React.FC<WorkspaceHeaderProps> = ({
             }}
           >
             <Play size={12} />
-            Run code
+            Run
+            {/* The button's flex gap spaces the two words. */}
+            <span className="wh-hide-sm">code</span>
           </button>
 
           {/* Submit */}

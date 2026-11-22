@@ -130,6 +130,9 @@ const ModuleQuiz: React.FC<ModuleQuizProps> = ({ moduleId, title = 'Module Quiz'
 
   const answeredCount = Object.keys(answers).length;
   const allAnswered = answeredCount === questions.length;
+  // Question numbers still unanswered, so the last page can point at them
+  // instead of just greying out Submit.
+  const unanswered = questions.flatMap((q, i) => (answers[q.id] === undefined ? [i] : []));
 
   if (questions.length === 0) {
     return <div className={styles.wrap}>Quiz questions are being prepared.</div>;
@@ -285,6 +288,17 @@ const ModuleQuiz: React.FC<ModuleQuizProps> = ({ moduleId, title = 'Module Quiz'
           </button>
         )}
       </div>
+
+      {isLast && !submitted && !allAnswered && (
+        <p className={styles.unanswered}>
+          Answer every question to submit. Still to answer:
+          {unanswered.map((i) => (
+            <button key={i} className={styles.jumpBtn} onClick={() => goTo(i)}>
+              Q{i + 1}
+            </button>
+          ))}
+        </p>
+      )}
     </div>
   );
 };

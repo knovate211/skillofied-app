@@ -12,8 +12,7 @@ import { modules8And9Lessons, modules8And9Quizzes, modules8And9Assignments } fro
 /**
  * Digital Marketing Strategy — full course content.
  *
- * Module and lesson titles follow the published syllabus shown on the course
- * landing page (CoursePlaceholderPage). Lesson bodies, quizzes and assignments
+ * Module and lesson titles follow the course's published syllabus. Lesson bodies, quizzes and assignments
  * live under ./digitalMarketing, roughly two modules per file.
  *
  * Assessment is quizzes plus written case studies: this is a marketing course,

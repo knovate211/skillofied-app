@@ -296,3 +296,17 @@
   background: var(--border);
   margin: 4px 0;
 }
+
+/* Validation problems, above the footer buttons. */
+.errors {
+  padding: 12px 24px 0;
+  background: var(--bg-surface);
+  flex-shrink: 0;
+}
+
+.errors p {
+  margin: 0 0 6px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #c2410c;
+}

@@ -5,7 +5,8 @@ import styles from './BottomNav.module.css';
 type Tab = 'Home' | 'Course' | 'Practice' | 'Placement';
 
 interface Props {
-  active: Tab;
+  /** The highlighted tab; null when the page belongs to none. */
+  active: Tab | null;
   onChange: (tab: Tab) => void;
   /** The tab whose route is still loading, if any. */
   pendingTab?: Tab | null;

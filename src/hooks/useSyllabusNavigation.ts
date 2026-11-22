@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SyllabusModule } from '../types';
+import { hydrateCourseProgress, lastLessonKey, queueSave } from '../lib/courseProgress';
 
 /** Query parameter holding the open lesson, e.g. /courses/golang?lesson=m2-l3 */
 const LESSON_PARAM = 'lesson';
-
-/** Where the last-visited lesson is remembered, derived from the course's progress key. */
-const lastLessonKey = (storageKey: string) => `${storageKey}:lastLesson`;
 
 /**
  * Manages all sidebar navigation state and prev/next lesson navigation
@@ -76,17 +74,33 @@ export function useSyllabusNavigation(
   // learner left off. Mount-only, so it never fights in-course navigation, and
   // `replace` so browser back returns to the course list rather than bouncing
   // through this redirect again.
+  //
+  // On a new device the saved lesson only arrives with the server's progress,
+  // so the resume waits for it — and is dropped if the learner has meanwhile
+  // picked a lesson or left the course.
   const resumeChecked = useRef(false);
+  const mounted = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   useEffect(() => {
     if (resumeChecked.current) return;
     resumeChecked.current = true;
     if (lessonParam) return;
 
-    const saved = localStorage.getItem(lastLessonKey(storageKey));
-    // A saved id from an older version of the syllabus is ignored.
-    if (saved && saved !== initialItemId && allItems.some(item => item.id === saved)) {
-      goToItem(saved, true);
-    }
+    const resume = () => {
+      if (!mounted.current || new URLSearchParams(window.location.search).has(LESSON_PARAM)) return;
+      const saved = localStorage.getItem(lastLessonKey(storageKey));
+      // A saved id from an older version of the syllabus is ignored.
+      if (saved && saved !== initialItemId && allItems.some(item => item.id === saved)) {
+        goToItem(saved, true);
+      }
+    };
+    resume();
+    hydrateCourseProgress().then(resume);
   }, [lessonParam, storageKey, initialItemId, allItems, goToItem]);
 
   // Remember the open lesson so the next visit can resume it.
@@ -98,6 +112,7 @@ export function useSyllabusNavigation(
   useEffect(() => {
     if (!lessonParam) return;
     localStorage.setItem(lastLessonKey(storageKey), selectedItemId);
+    queueSave(storageKey);
   }, [lessonParam, selectedItemId, storageKey]);
 
   // Track furthest lesson visited for progress calculation

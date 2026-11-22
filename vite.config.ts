@@ -46,6 +46,11 @@ export default defineConfig(({ mode }) => {
           target: apiTarget,
           changeOrigin: true,
         },
+        // How far the learner has read through each course.
+        '/api/course-progress': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
         // The referral programme: the learner's own link and progress.
         '/api/referral': {
           target: apiTarget,
@@ -57,20 +62,25 @@ export default defineConfig(({ mode }) => {
           target: apiTarget,
           changeOrigin: true,
         },
+        // Profile → College: linking the account to a college's placement cell.
+        '/api/college': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
+        // Profile photo and resume uploads.
+        '/api/files': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
         // Live-class attendance: the pop-up and the profile Attendance tab.
         '/api/attendance': {
           target: apiTarget,
           changeOrigin: true,
         },
-        '/api/anthropic': {
-          target: 'https://api.anthropic.com',
+        // The course pages' AI mentor; the model key stays in the gateway.
+        '/api/ai-mentor': {
+          target: apiTarget,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\/anthropic/, ''),
-        },
-        '/api/openai': {
-          target: 'https://api.openai.com',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\/openai/, ''),
         },
       },
     },

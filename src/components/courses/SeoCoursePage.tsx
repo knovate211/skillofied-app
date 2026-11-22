@@ -2,7 +2,7 @@ import React from 'react';
 import CoursePageShell from './shared/CoursePageShell';
 import { SyllabusModule } from '../../types';
 import MarketingModuleRenderer from './modules/MarketingCourses/MarketingModuleRenderer';
-import { seoContent } from './modules/MarketingCourses/SeoCourseData';
+import { SEO_MODULE_LOADERS } from './modules/MarketingCourses/loaders';
 
 /**
  * Module and lesson titles mirror the published syllabus on the course landing
@@ -119,7 +119,7 @@ const SeoCoursePage: React.FC = () => (
     renderContent={(moduleId, page) => (
       <MarketingModuleRenderer
         syllabus={SYLLABUS}
-        content={seoContent}
+        loaders={SEO_MODULE_LOADERS}
         moduleId={moduleId}
         page={page}
       />

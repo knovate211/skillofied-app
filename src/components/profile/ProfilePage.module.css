@@ -541,4 +541,4 @@
   line-height: 1;
   padding: 0;
   flex-shrink: 0;
-}
+}.resumeHint { margin: 0; font-size: .85rem; color: var(--text-secondary); }

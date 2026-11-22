@@ -8,9 +8,8 @@ import { aiModules7And8Lessons, aiModules7And8Quizzes, aiModules7And8Assignments
 /**
  * AI SEO & Search Visibility — full course content.
  *
- * Module and lesson titles follow the published syllabus shown on the course
- * landing page (CoursePlaceholderPage), so what learners were promised is what
- * they get. Lesson bodies live under ./seo, two modules per file.
+ * Module and lesson titles follow the course's published syllabus, so what
+ * learners were promised is what they get. Lesson bodies live under ./seo, two modules per file.
  */
 export const seoContent: MarketingCourseContent = {
   lessons: {

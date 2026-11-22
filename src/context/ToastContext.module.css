@@ -32,9 +32,8 @@
 /* These keyframes MUST stay in this file, not in index.css.
    CSS Modules rewrites every animation name it sees here into a scoped one, so
    a rule in this file referencing a globally declared `toastOut` resolves to a
-   name that does not exist and silently animates nothing. The IDE's own toast
-   stack styles itself with inline styles, which are not scoped, so it uses the
-   global copy in index.css instead. */
+   name that does not exist and silently animates nothing. (The practice IDE
+   now uses this same toast stack, so there is no global copy any more.) */
 @keyframes toastIn {
   from {
     opacity: 0;

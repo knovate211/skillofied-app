@@ -181,8 +181,8 @@ const JobsBoard: React.FC = () => {
           <p className={styles.subheading}>Real-time openings from LinkedIn, Indeed, Glassdoor and more</p>
         </div>
         <button className={styles.liveIndicator} onClick={() => fetchJobs(activeQuery)} title="Refresh">
-          <span className={`${styles.liveDot} ${loading ? styles.liveDotLoading : ''}`} />
-          {loading ? 'Loading…' : 'Live'}
+          <span className={`${styles.liveDot} ${loading ? styles.liveDotLoading : error ? styles.liveDotOff : ''}`} />
+          {loading ? 'Loading…' : error ? 'Unavailable' : 'Live'}
         </button>
       </div>
 

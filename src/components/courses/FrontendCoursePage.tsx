@@ -1,31 +1,34 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import CoursePageShell from './shared/CoursePageShell';
 import LessonChrome from './shared/LessonChrome';
 import { SyllabusModule } from '../../types';
 
 // Import modular lesson components
 import CourseOverview from './modules/FrontendCourse/CourseOverview';
-import Module1 from './modules/FrontendCourse/Module1';
-import Module2 from './modules/FrontendCourse/Module2';
-import Module3 from './modules/FrontendCourse/Module3';
-import Module4 from './modules/FrontendCourse/Module4';
-import Module5 from './modules/FrontendCourse/Module5';
-import Module6 from './modules/FrontendCourse/Module6';
-import Module7 from './modules/FrontendCourse/Module7';
-import Module8 from './modules/FrontendCourse/Module8';
-import Module9 from './modules/FrontendCourse/Module9';
-import Module10 from './modules/FrontendCourse/Module10';
-import Module11 from './modules/FrontendCourse/Module11';
-import Module12 from './modules/FrontendCourse/Module12';
-import Module13 from './modules/FrontendCourse/Module13';
-import Module14 from './modules/FrontendCourse/Module14';
-import Module15 from './modules/FrontendCourse/Module15';
-import Module16 from './modules/FrontendCourse/Module16';
-import Module17 from './modules/FrontendCourse/Module17';
-import MajorProjects from './modules/FrontendCourse/MajorProjects';
-import InterviewPrep from './modules/FrontendCourse/InterviewPrep';
-import FinalAssessment from './modules/FrontendCourse/FinalAssessment';
-import Certification from './modules/FrontendCourse/Certification';
+
+// Each module is its own chunk, fetched when the learner opens it. Bundled
+// together they made this page about 345 KB before a single lesson showed.
+const Module1 = lazy(() => import('./modules/FrontendCourse/Module1'));
+const Module2 = lazy(() => import('./modules/FrontendCourse/Module2'));
+const Module3 = lazy(() => import('./modules/FrontendCourse/Module3'));
+const Module4 = lazy(() => import('./modules/FrontendCourse/Module4'));
+const Module5 = lazy(() => import('./modules/FrontendCourse/Module5'));
+const Module6 = lazy(() => import('./modules/FrontendCourse/Module6'));
+const Module7 = lazy(() => import('./modules/FrontendCourse/Module7'));
+const Module8 = lazy(() => import('./modules/FrontendCourse/Module8'));
+const Module9 = lazy(() => import('./modules/FrontendCourse/Module9'));
+const Module10 = lazy(() => import('./modules/FrontendCourse/Module10'));
+const Module11 = lazy(() => import('./modules/FrontendCourse/Module11'));
+const Module12 = lazy(() => import('./modules/FrontendCourse/Module12'));
+const Module13 = lazy(() => import('./modules/FrontendCourse/Module13'));
+const Module14 = lazy(() => import('./modules/FrontendCourse/Module14'));
+const Module15 = lazy(() => import('./modules/FrontendCourse/Module15'));
+const Module16 = lazy(() => import('./modules/FrontendCourse/Module16'));
+const Module17 = lazy(() => import('./modules/FrontendCourse/Module17'));
+const MajorProjects = lazy(() => import('./modules/FrontendCourse/MajorProjects'));
+const InterviewPrep = lazy(() => import('./modules/FrontendCourse/InterviewPrep'));
+const FinalAssessment = lazy(() => import('./modules/FrontendCourse/FinalAssessment'));
+const Certification = lazy(() => import('./modules/FrontendCourse/Certification'));
 
 // ─── SYLLABUS DATA ────────────────────────────────────────────────────────────
 const SYLLABUS: SyllabusModule[] = [
@@ -369,8 +372,16 @@ const SYLLABUS: SyllabusModule[] = [
 // cannot go through LessonLayout like the other courses. Routing every page
 // through LessonChrome here gives them the template's header, measure, and type
 // scale without rewriting the seventeen module files.
+const moduleSpinner = (
+  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '200px' }}>
+    <div style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid var(--accent)', borderTopColor: 'transparent', animation: 'spin 1s linear infinite' }} />
+  </div>
+);
+
 function renderFrontendContent(moduleId: string, page: number): React.ReactNode {
-  const content = renderModule(moduleId, page);
+  // The modules are lazy chunks; this boundary keeps the course shell (header,
+  // syllabus, lesson footer) on screen while one loads.
+  const content = <Suspense fallback={moduleSpinner}>{renderModule(moduleId, page)}</Suspense>;
 
   // Only the teaching modules get the reading measure. The overview, projects,
   // prep, assessment, and certification sections are wide dashboard layouts

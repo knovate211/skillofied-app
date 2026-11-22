@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './Sidebar.module.css';
-import knovateLogo from '../../assets/knovate-logo.png';
+import knovateLogo from '../../assets/knovate-logo.svg';
+import { getUnlockedCoursePaths } from '../../lib/courseAccess';
+import { COURSES } from '../../lib/courseRegistry';
 
 interface CourseEligibility {
   title: string;
@@ -34,98 +36,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, enrolledCourses }) =
     };
   }, [isOpen]);
 
-  const isGolangUnlocked = enrolledCourses.some(c => c.title.includes('Golang'));
-  const isFullStackUnlocked = enrolledCourses.some(c => c.title.includes('Full Stack') || c.title.includes('Fullstack'));
-  const isGenAIUnlocked = enrolledCourses.some(c => c.title.includes('GenAI') || c.title.includes('Generative AI')) || isFullStackUnlocked;
-  const isFrontendUnlocked = enrolledCourses.some(c => c.title === 'Front-End Technologies') || isFullStackUnlocked;
-  const isJavaUnlocked = enrolledCourses.some(c => c.title === 'Java Development' || c.title === 'Java') || isFullStackUnlocked;
-  const isSqlUnlocked = enrolledCourses.some(c => c.title === 'Mastering SQL') || isFullStackUnlocked;
-  const isDigitalMarketingUnlocked = enrolledCourses.some(c => c.title === 'SEO Fundamentals' || c.title === 'Digital Marketing Strategy');
-  const isTestingUnlocked = enrolledCourses.some(c => c.title.toLowerCase().includes('testing'));
+  const unlocked = getUnlockedCoursePaths(enrolledCourses);
 
-  // Computer Science Core is self-paced: no separate enrolment, no schedule, no
-  // mentor. It opens for anyone on a development track — the fundamentals under
-  // every one of those courses — and stays shut for the marketing and QA tracks,
-  // where it is not part of what the student signed up to learn.
-  const isDevelopmentStudent =
-    isFullStackUnlocked || isFrontendUnlocked || isJavaUnlocked ||
-    isSqlUnlocked || isGolangUnlocked || isGenAIUnlocked;
-
-  const courses: CourseEligibility[] = [
-    {
-      title: 'Golang Engineering',
-      path: '/courses/golang',
-      isUnlocked: isGolangUnlocked,
-      icon: '🐹',
-      category: 'Development',
-    },
-    {
-      title: 'GenAI & Forward Deployed Engineering',
-      path: '/courses/genai',
-      isUnlocked: isGenAIUnlocked,
-      icon: '🤖',
-      category: 'Development',
-    },
-    // Full Stack is an entitlement rather than a course of its own: enrolling in
-    // it unlocks GenAI above plus Front-End, Java and SQL below, which is where
-    // the actual curriculum lives. It is deliberately not listed here.
-    {
-      title: 'Front-End Technologies',
-      path: '/courses/frontend',
-      isUnlocked: isFrontendUnlocked,
-      icon: '🎨',
-      category: 'Development',
-    },
-    {
-      title: 'Java Development',
-      path: '/courses/java',
-      isUnlocked: isJavaUnlocked,
-      icon: '☕',
-      category: 'Development',
-    },
-    {
-      title: 'Mastering SQL',
-      path: '/courses/sql',
-      isUnlocked: isSqlUnlocked,
-      icon: '💾',
-      category: 'Development',
-    },
-    {
-      title: 'Operating Systems',
-      path: '/courses/os',
-      isUnlocked: isDevelopmentStudent,
-      icon: '💽',
-      category: 'Computer Science Core',
-    },
-    {
-      title: 'Computer Networks',
-      path: '/courses/networking',
-      isUnlocked: isDevelopmentStudent,
-      icon: '🌐',
-      category: 'Computer Science Core',
-    },
-    {
-      title: 'SEO Fundamentals',
-      path: '/courses/seo',
-      isUnlocked: isDigitalMarketingUnlocked,
-      icon: '🔍',
-      category: 'Marketing',
-    },
-    {
-      title: 'Digital Marketing Strategy',
-      path: '/courses/digital-marketing',
-      isUnlocked: isDigitalMarketingUnlocked,
-      icon: '📈',
-      category: 'Marketing',
-    },
-    {
-      title: 'Software Testing',
-      path: '/courses/testing',
-      isUnlocked: isTestingUnlocked,
-      icon: '🧪',
-      category: 'QA & Testing',
-    },
-  ];
+  const courses: CourseEligibility[] = COURSES.filter((c) => c.inSidebar).map((c) => ({
+    title: c.title,
+    path: c.path,
+    isUnlocked: unlocked.has(c.path),
+    icon: c.sidebarIcon,
+    category: c.category,
+  }));
 
   const handleLinkClick = (path: string, isUnlocked: boolean, courseTitle: string) => {
     if (!isUnlocked) {

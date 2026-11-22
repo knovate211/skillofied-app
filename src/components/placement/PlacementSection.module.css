@@ -564,6 +564,12 @@
   background: var(--accent);
 }
 
+/* Listings could not be loaded: not "Live". */
+.liveDotOff {
+  animation: none;
+  background: var(--text-muted, #9ca3af);
+}
+
 /* ── Skeleton Loader ── */
 .skeletonHeader {
   display: flex;

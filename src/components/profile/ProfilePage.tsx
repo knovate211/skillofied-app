@@ -1,16 +1,20 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styles from './ProfilePage.module.css';
 import Modal from '../common/Modal';
+import { validateGeneric, validatePersonal, validateSchool, validateUG } from './validateProfile';
 import { getProfileApi, upsertProfileApi } from '../../api';
 import ReferralSection from './ReferralSection';
 import CertificateSection from './CertificateSection';
+import { AvatarPhoto, ResumeCard } from './ProfileFiles';
+import { knovateId } from '../../lib/knovateId';
 import AttendanceSection from './AttendanceSection';
+import CollegeSection from './CollegeSection';
 
 /* ─────────────────────────────── types ─────────────────────────────── */
-type ProfileTab = 'Profile' | 'Attendance' | 'Subscription' | 'Referral' | 'Certificate';
+type ProfileTab = 'Profile' | 'Attendance' | 'College' | 'Subscription' | 'Referral' | 'Certificate';
 type ModalKey = 'personal' | 'generic' | 'edu10' | 'edu12' | 'ugDetail' | 'pgDetail' | null;
 
-const TABS: ProfileTab[] = ['Profile', 'Attendance', 'Subscription', 'Referral', 'Certificate'];
+const TABS: ProfileTab[] = ['Profile', 'Attendance', 'College', 'Subscription', 'Referral', 'Certificate'];
 
 const WORK_EXP_OPTIONS = ['No Experience - Fresher', '< 1 Year', '1 Year', '2 Years', '3 Years', '4 Years', '5+ Years'];
 const CAREER_GAP_OPTIONS = ['0', '1', '2', '3', '4', '5+'];
@@ -118,10 +122,15 @@ const ComingSoon: React.FC<{ tab: string }> = ({ tab }) => (
 const ProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ProfileTab>('Profile');
   const [openModal, setOpenModal] = useState<ModalKey>(null);
+  // Problems with the open form's draft; the form stays open until they are fixed.
+  const [formErrors, setFormErrors] = useState<string[]>([]);
+  const closeModal = () => {
+    setFormErrors([]);
+    setOpenModal(null);
+  };
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // name comes from the users table (set at login), profile fields come from user_profiles
   const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
@@ -240,10 +249,24 @@ const ProfilePage: React.FC = () => {
     if (key === 'edu12') setDEdu12({ ...edu12 });
     if (key === 'ugDetail') setDUg({ ...ug });
     if (key === 'pgDetail') setDPg({ ...pg });
+    setFormErrors([]);
     setOpenModal(key);
   };
 
   const save = async () => {
+    const problems =
+      openModal === 'personal' ? validatePersonal(dPersonal)
+      : openModal === 'generic' ? validateGeneric(dGeneric)
+      : openModal === 'edu10' ? validateSchool(dEdu10, 'School Name')
+      : openModal === 'edu12' ? validateSchool(dEdu12, 'School / College Name')
+      : openModal === 'ugDetail' ? validateUG(dUg)
+      : [];
+    if (problems.length) {
+      setFormErrors(problems);
+      return;
+    }
+    setFormErrors([]);
+
     // Compute the next committed state
     const nextPersonal = openModal === 'personal' ? { ...dPersonal } : personal;
     const nextGeneric  = openModal === 'generic'  ? { ...dGeneric  } : generic;
@@ -324,6 +347,7 @@ const ProfilePage: React.FC = () => {
         {activeTab === 'Referral' && <ReferralSection />}
         {activeTab === 'Certificate' && <CertificateSection />}
         {activeTab === 'Attendance' && <AttendanceSection />}
+        {activeTab === 'College' && <CollegeSection />}
         {activeTab === 'Subscription' && <ComingSoon tab={activeTab} />}
         {activeTab === 'Profile' && (
           <div className={styles.profileContent}>
@@ -333,13 +357,16 @@ const ProfilePage: React.FC = () => {
               <div className={styles.avatarWrap}>
                 <div className={styles.avatarCircle}>
                   <CircleProgress pct={profileCompletion} />
-                  <div className={styles.avatarInner}><span className={styles.avatarInitials}>{initials}</span></div>
+                  <div className={styles.avatarInner} />
+                  <AvatarPhoto initials={initials} />
                 </div>
               </div>
               <div className={styles.userInfo}>
                 <div className={styles.userNameRow}>
                   <h1 className={styles.userName}>{personal.name || <span className={styles.emptyVal}>Your Name</span>}</h1>
-                  <span className={styles.idBadge}>Knovate ID: <strong>SKLO1V59</strong></span>
+                  {knovateId(storedUser.id) && (
+                    <span className={styles.idBadge} title="Your Knovate ID — quote it to support or a recruiter">Knovate ID: <strong>{knovateId(storedUser.id)}</strong></span>
+                  )}
                   <button className={styles.editBtn} onClick={() => open('personal')}>Edit</button>
                 </div>
                 <div className={styles.userMeta}>
@@ -375,10 +402,7 @@ const ProfilePage: React.FC = () => {
                   <svg viewBox="0 0 24 24" fill="#0077b5" className={styles.linkIcon}><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>
                   <div><div className={styles.linkCardLabel}>LinkedIn profile</div><div className={styles.linkCardVal}>{generic.linkedinLink || 'Not added'}</div></div>
                 </a>
-                <div className={styles.linkCard}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#e53e3e" strokeWidth="2" className={styles.linkIcon}><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
-                  <div><div className={styles.linkCardLabel}>Resume</div><div className={styles.linkCardVal}>{generic.resumeName || 'Not uploaded'}</div></div>
-                </div>
+                <ResumeCard cardClass={styles.linkCard} iconClass={styles.linkIcon} labelClass={styles.linkCardLabel} valueClass={styles.linkCardVal} />
               </div>
             </SectionCard>
 
@@ -435,7 +459,7 @@ const ProfilePage: React.FC = () => {
       {/* ════════════ MODALS ════════════ */}
 
       {/* ── Personal Info Modal ── */}
-      <Modal isOpen={openModal === 'personal'} title="Personal Information" onClose={() => setOpenModal(null)} onSave={save}>
+      <Modal isOpen={openModal === 'personal'} title="Personal Information" onClose={closeModal} onSave={save} errors={formErrors}>
         <FG label="Full Name" req><TxtInput placeholder="Enter your full name" value={dPersonal.name} onChange={e => setDPersonal(p => ({ ...p, name: e.target.value }))} /></FG>
         <FG label="Email Address" req><TxtInput type="email" placeholder="Enter email" value={dPersonal.email} onChange={e => setDPersonal(p => ({ ...p, email: e.target.value }))} /></FG>
         <div className="formGrid2">
@@ -450,7 +474,7 @@ const ProfilePage: React.FC = () => {
       </Modal>
 
       {/* ── Generic Details Modal ── */}
-      <Modal isOpen={openModal === 'generic'} title="Generic Details" onClose={() => setOpenModal(null)} onSave={save}>
+      <Modal isOpen={openModal === 'generic'} title="Generic Details" onClose={closeModal} onSave={save} errors={formErrors}>
         <FG label="Work Experience" req><SelInput opts={WORK_EXP_OPTIONS} value={dGeneric.workExperience} onChange={e => setDGeneric(g => ({ ...g, workExperience: e.target.value }))} /></FG>
         <FG label="Career gap in years" req><SelInput opts={CAREER_GAP_OPTIONS} value={dGeneric.careerGap} onChange={e => setDGeneric(g => ({ ...g, careerGap: e.target.value }))} /></FG>
         <FG label="Current State" req><TxtInput placeholder="e.g. Karnataka" value={dGeneric.currentState} onChange={e => setDGeneric(g => ({ ...g, currentState: e.target.value }))} /></FG>
@@ -467,18 +491,13 @@ const ProfilePage: React.FC = () => {
             <label className="radioLabel"><input type="radio" name="workingPro" value="No" checked={dGeneric.isWorkingPro === 'No'} onChange={() => setDGeneric(g => ({ ...g, isWorkingPro: 'No' }))} /> No</label>
           </div>
         </FG>
-        <FG label="Upload Resume">
-          <div className="fileUpload" onClick={() => fileInputRef.current?.click()}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
-            <span className="fileUploadText">{dGeneric.resumeName || 'Click to upload PDF / DOC'}</span>
-          </div>
-          <input ref={fileInputRef} type="file" accept=".pdf,.doc,.docx" style={{ display: 'none' }}
-            onChange={e => { if (e.target.files?.[0]) setDGeneric(g => ({ ...g, resumeName: e.target.files![0].name })); }} />
+        <FG label="Resume">
+          <p className={styles.resumeHint}>Upload, view or replace your resume from the Resume card on your profile.</p>
         </FG>
       </Modal>
 
       {/* ── 10th Grade Modal ── */}
-      <Modal isOpen={openModal === 'edu10'} title="10th Grade Details" onClose={() => setOpenModal(null)} onSave={save}>
+      <Modal isOpen={openModal === 'edu10'} title="10th Grade Details" onClose={closeModal} onSave={save} errors={formErrors}>
         <FG label="School Name" req><TxtInput placeholder="Enter school name" value={dEdu10.schoolName} onChange={e => setDEdu10(d => ({ ...d, schoolName: e.target.value }))} /></FG>
         <div className="formGrid2">
           <FG label="Year of Passout" req><TxtInput placeholder="e.g. 2018" value={dEdu10.yearOfPassout} onChange={e => setDEdu10(d => ({ ...d, yearOfPassout: e.target.value }))} /></FG>
@@ -487,7 +506,7 @@ const ProfilePage: React.FC = () => {
       </Modal>
 
       {/* ── 12th Grade Modal ── */}
-      <Modal isOpen={openModal === 'edu12'} title="12th / PUC / Intermediate / Diploma" onClose={() => setOpenModal(null)} onSave={save}>
+      <Modal isOpen={openModal === 'edu12'} title="12th / PUC / Intermediate / Diploma" onClose={closeModal} onSave={save} errors={formErrors}>
         <FG label="School / College Name" req><TxtInput placeholder="Enter school or college name" value={dEdu12.schoolName} onChange={e => setDEdu12(d => ({ ...d, schoolName: e.target.value }))} /></FG>
         <div className="formGrid2">
           <FG label="Year of Passout" req><TxtInput placeholder="e.g. 2020" value={dEdu12.yearOfPassout} onChange={e => setDEdu12(d => ({ ...d, yearOfPassout: e.target.value }))} /></FG>
@@ -496,7 +515,7 @@ const ProfilePage: React.FC = () => {
       </Modal>
 
       {/* ── UG Detail Modal ── */}
-      <Modal isOpen={openModal === 'ugDetail'} title="UG Detail" onClose={() => setOpenModal(null)} onSave={save}>
+      <Modal isOpen={openModal === 'ugDetail'} title="UG Detail" onClose={closeModal} onSave={save} errors={formErrors}>
         <div className="formGrid2">
           <FG label="University Roll No." req><TxtInput placeholder="Roll number" value={dUg.universityRollNo} onChange={e => setDUg(d => ({ ...d, universityRollNo: e.target.value }))} /></FG>
           <FG label="College Name" req><TxtInput placeholder="College name" value={dUg.collegeName} onChange={e => setDUg(d => ({ ...d, collegeName: e.target.value }))} /></FG>
@@ -514,7 +533,7 @@ const ProfilePage: React.FC = () => {
       </Modal>
 
       {/* ── PG Detail Modal ── */}
-      <Modal isOpen={openModal === 'pgDetail'} title="PG Detail" onClose={() => setOpenModal(null)} onSave={save}>
+      <Modal isOpen={openModal === 'pgDetail'} title="PG Detail" onClose={closeModal} onSave={save} errors={formErrors}>
         <FG label="Do you have Post Graduation Certificate?" req>
           <div className="radioGroup">
             <label className="radioLabel"><input type="radio" name="pgCert" value="Yes" checked={dPg.hasCertificate === 'Yes'} onChange={() => setDPg({ hasCertificate: 'Yes' })} /> Yes</label>

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { AssessmentSummaryItem, listAssessmentsApi, startAttemptApi } from '../../api';
-import knovateLogo from '../../assets/knovate-logo.png';
+import knovateLogo from '../../assets/knovate-logo.svg';
 import PermissionCard, { type PermState } from './PermissionCard';
 import SystemCheck, { runChecks } from './SystemCheck';
 import styles from './Scholarship.module.css';
@@ -72,6 +72,8 @@ const ScholarshipInstructions: React.FC<{ kind?: 'scholarship' | 'hiring' | 'cer
 
   const watched = !!assessment?.proctoring?.webcam;
   const needsScreen = !!assessment?.proctoring?.requireFullscreen;
+  // The server ends the attempt at this many tab switches; 0 means log only.
+  const tabLimit = Number(assessment?.proctoring?.tabSwitchLimit) || 0;
   const sections = useMemo(
     () => parseSections(assessment?.sectionSummary ?? ''),
     [assessment?.sectionSummary],
@@ -313,8 +315,11 @@ const ScholarshipInstructions: React.FC<{ kind?: 'scholarship' | 'hiring' | 'cer
           <h3 className={styles.briefH3}>What is monitored</h3>
           <ul className={styles.briefUl}>
             <li>
-              The test runs full screen. Leaving it, or switching to another tab or window, is
-              recorded and shown to the reviewer.
+              {needsScreen ? 'The test runs full screen. Leaving it, or switching' : 'Switching'} to
+              another tab or window is recorded and shown to the reviewer.
+              {tabLimit > 0 ? (
+                <> <strong>After {tabLimit} times{needsScreen ? ' (switches and full-screen exits together)' : ''}, the test ends and is submitted.</strong></>
+              ) : null}
             </li>
             {assessment.proctoring?.blockCopyPaste ? (
               <li>Copy and paste are disabled inside the test, and attempts are recorded.</li>
@@ -358,8 +363,10 @@ const ScholarshipInstructions: React.FC<{ kind?: 'scholarship' | 'hiring' | 'cer
           <p className={styles.briefP}>
             This test is monitored. Switching away from it, blocking the camera when one is
             required, or anything else that looks like outside help is recorded and shown to the
-            reviewer alongside your answers. Nothing here fails you automatically — a person reads
-            it — but it is read.
+            reviewer alongside your answers.{' '}
+            {tabLimit > 0
+              ? `Leaving the test (switching tab or window${needsScreen ? ', or exiting full screen' : ''}) ${tabLimit} times ends it and submits your answers as they are. Everything else is reviewed by a person.`
+              : 'Nothing here fails you automatically — a person reads it — but it is read.'}
           </p>
 
           <h3 className={styles.briefH3}>Permissions</h3>
@@ -426,8 +433,10 @@ const ScholarshipInstructions: React.FC<{ kind?: 'scholarship' | 'hiring' | 'cer
               <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
               <span>
                 I have read the instructions and the integrity guidelines, I am ready to sit the
-                whole {assessment.durationMinutes} minutes now, and I understand this is my one
-                attempt{watched ? ', and I consent to my camera and microphone being monitored while I sit it' : ''}.
+                whole {assessment.durationMinutes} minutes now, and I understand
+                {assessment.maxAttempts > 1
+                  ? ` this is attempt ${Math.min((assessment.attemptsUsed ?? 0) + 1, assessment.maxAttempts)} of ${assessment.maxAttempts} and it counts`
+                  : ' this is my one attempt'}{watched ? ', and I consent to my camera and microphone being monitored while I sit it' : ''}.
               </span>
             </label>
           ) : null}

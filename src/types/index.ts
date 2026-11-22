@@ -22,14 +22,6 @@ export interface PracticeSet {
   iconColor: string;
 }
 
-export interface PendingAction {
-  id: string;
-  title: string;
-  type: string;
-  topicsCount?: number;
-  hasAlert: boolean;
-}
-
 export type TopicType =
   | 'All'
   // Language fundamentals

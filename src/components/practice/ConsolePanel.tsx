@@ -1,27 +1,6 @@
 import React, { useState } from 'react';
+import { T } from './theme';
 
-// ─── Design tokens ─────────────────────────────────────────────
-const T = {
-  bg: '#0d0f1a',
-  bgPanel: '#111320',
-  bgCard: '#151829',
-  bgHover: '#1a1d30',
-  border: '#1f2235',
-  primary: '#4648d4',
-  primaryHover: '#5557e8',
-  primaryGlow: 'rgba(70,72,212,0.12)',
-  green: '#00ea64',
-  greenDim: '#052e16',
-  red: '#f87171',
-  redDim: '#2a0a0a',
-  purple: '#c0c1ff',
-  amber: '#fbbf24',
-  textPrimary: '#e2e8f0',
-  textSecondary: '#94a3b8',
-  textMuted: '#4b5675',
-  mono: "'Fira Code','JetBrains Mono',monospace",
-  sans: "'Plus Jakarta Sans',sans-serif",
-};
 
 // ─── Types ──────────────────────────────────────────────────────
 interface CaseResult {
@@ -78,7 +57,7 @@ const IOLabel = ({ children }: { children: React.ReactNode }) => (
 
 const CodeBlock = ({ children, color }: { children: React.ReactNode; color?: string }) => (
   <pre style={{
-    fontFamily: T.mono, fontSize: 12, lineHeight: 1.65,
+    fontFamily: T.fontMono, fontSize: 12, lineHeight: 1.65,
     background: T.bgCard, border: `1px solid ${T.border}`,
     borderRadius: 8, padding: '8px 12px',
     color: color ?? T.textPrimary,
@@ -114,7 +93,7 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
   const tabStyle = (tab: typeof activeTab): React.CSSProperties => ({
     display: 'flex', alignItems: 'center', gap: 6,
     padding: '10px 14px', fontSize: 12, fontWeight: 700,
-    fontFamily: T.sans, cursor: 'pointer', border: 'none', background: 'transparent',
+    fontFamily: T.fontSans, cursor: 'pointer', border: 'none', background: 'transparent',
     borderBottom: `2px solid ${activeTab === tab ? T.primary : 'transparent'}`,
     marginBottom: -1,
     color: activeTab === tab ? T.purple : T.textMuted,
@@ -124,8 +103,8 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
 
   const casePillStyle = (active: boolean): React.CSSProperties => ({
     padding: '4px 12px', borderRadius: 8, fontSize: 12, fontWeight: 700,
-    fontFamily: T.sans, cursor: 'pointer', border: `1px solid ${active ? T.primary : T.border}`,
-    background: active ? T.primaryGlow : T.bgCard,
+    fontFamily: T.fontSans, cursor: 'pointer', border: `1px solid ${active ? T.primary : T.border}`,
+    background: active ? T.primaryGlowSoft : T.bgCard,
     color: active ? T.purple : T.textSecondary,
     transition: 'all .15s',
   });
@@ -133,7 +112,6 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Fira+Code:wght@400;500&display=swap');
         .cp-scroll::-webkit-scrollbar{width:4px}
         .cp-scroll::-webkit-scrollbar-thumb{background:${T.border};border-radius:4px}
         .cp-run:hover{background:${T.bgHover}!important;border-color:${T.textMuted}!important;color:${T.textPrimary}!important}
@@ -147,7 +125,7 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
       <div style={{
         display: 'flex', flexDirection: 'column', height: '100%',
         background: T.bgPanel, border: `1px solid ${T.border}`,
-        borderRadius: 12, overflow: 'hidden', fontFamily: T.sans,
+        borderRadius: 12, overflow: 'hidden', fontFamily: T.fontSans,
       }}>
 
         {/* ── Tab bar ── */}
@@ -189,7 +167,7 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
               padding: '5px 12px', borderRadius: 8,
               background: T.bgCard, border: `1px solid ${T.border}`,
               color: T.textSecondary, fontSize: 12, fontWeight: 700,
-              cursor: 'pointer', fontFamily: T.sans, transition: 'all .15s',
+              cursor: 'pointer', fontFamily: T.fontSans, transition: 'all .15s',
               opacity: isRunning || isSubmitting ? 0.5 : 1,
               pointerEvents: isRunning || isSubmitting ? 'none' : 'auto',
             }}>
@@ -201,7 +179,7 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
               padding: '5px 14px', borderRadius: 8,
               background: T.primary, border: 'none',
               color: '#fff', fontSize: 12, fontWeight: 800,
-              cursor: 'pointer', fontFamily: T.sans, transition: 'background .15s',
+              cursor: 'pointer', fontFamily: T.fontSans, transition: 'background .15s',
               opacity: isRunning || isSubmitting ? 0.5 : 1,
               pointerEvents: isRunning || isSubmitting ? 'none' : 'auto',
               boxShadow: `0 0 14px rgba(70,72,212,.3)`,
@@ -225,7 +203,7 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
                 ))}
               </div>
               {examples[caseIdx] ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontFamily: T.mono }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontFamily: T.fontMono }}>
                   <div><IOLabel>Input Variable(s)</IOLabel><CodeBlock>{examples[caseIdx].input}</CodeBlock></div>
                   <div><IOLabel>Expected Output</IOLabel><CodeBlock color={T.green}>{examples[caseIdx].output}</CodeBlock></div>
                 </div>
@@ -257,7 +235,7 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
                 placeholder={'e.g. [2,7,11,15]\n9'}
                 style={{
                   flex: 1, minHeight: 120, width: '100%', resize: 'none',
-                  padding: '10px 12px', fontFamily: T.mono, fontSize: 12,
+                  padding: '10px 12px', fontFamily: T.fontMono, fontSize: 12,
                   background: T.bgCard, border: `1px solid ${T.border}`,
                   borderRadius: 8, color: T.textPrimary, outline: 'none',
                   transition: 'border-color .15s',
@@ -291,7 +269,7 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
                       </span>
                     </div>
                     {runResults.runtime && (
-                      <div style={{ display: 'flex', gap: 14, fontSize: 11, fontFamily: T.mono, color: T.textSecondary }}>
+                      <div style={{ display: 'flex', gap: 14, fontSize: 11, fontFamily: T.fontMono, color: T.textSecondary }}>
                         <span>Runtime: <strong style={{ color: T.textPrimary }}>{runResults.runtime}</strong></span>
                         <span>Memory: <strong style={{ color: T.textPrimary }}>{runResults.memory}</strong></span>
                       </div>
@@ -299,7 +277,7 @@ const ConsolePanel: React.FC<ConsolePanelProps> = ({
                   </div>
 
                   {runResults.error ? (
-                    <div style={{ background: T.redDim, border: `1px solid ${T.red}30`, borderRadius: 8, padding: '10px 12px', fontFamily: T.mono, fontSize: 12, color: T.red, whiteSpace: 'pre-wrap' }}>
+                    <div style={{ background: T.redDim, border: `1px solid ${T.red}30`, borderRadius: 8, padding: '10px 12px', fontFamily: T.fontMono, fontSize: 12, color: T.red, whiteSpace: 'pre-wrap' }}>
                       {runResults.error}
                     </div>
                   ) : (

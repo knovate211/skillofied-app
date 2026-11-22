@@ -1,4 +1,57 @@
+import { clearSession } from './lib/session';
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+
+// ── Request core ──────────────────────────────────────────────────────────────
+
+/**
+ * The session is gone server-side (expired or revoked): forget it here and send
+ * the learner to log in again. Every authenticated request ends up here, REST
+ * or GraphQL, so an expired session behaves the same wherever it is noticed.
+ */
+function endSession(): void {
+  clearSession();
+  if (window.location.pathname !== '/login') window.location.href = '/login';
+}
+
+interface RequestOptions {
+  method?: string;
+  body?: unknown;
+  /** Send the bearer token, and treat a 401 as an expired session. Default true. */
+  auth?: boolean;
+  /** Let the request outlive the page (the last integrity snapshots on unload). */
+  keepalive?: boolean;
+}
+
+/**
+ * The one place a request is made: base URL, JSON body, bearer token. `data` is
+ * the parsed JSON body, or undefined when the response was not JSON — a dev
+ * server without a proxy for the path answers with index.html and a 200. The
+ * body is parsed whatever its content type says: the gateway labels some JSON
+ * error bodies text/plain.
+ */
+async function request(path: string, { method = 'GET', body, auth = true, keepalive }: RequestOptions = {}) {
+  const headers: Record<string, string> = {};
+  const token = auth ? localStorage.getItem('token') : null;
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  if (body !== undefined) headers['Content-Type'] = 'application/json';
+
+  const resp = await fetch(`${API_BASE}${path}`, {
+    method,
+    headers,
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+    keepalive,
+  });
+  const text = await resp.text();
+  let data: any;
+  try {
+    data = text ? JSON.parse(text) : {};
+  } catch {
+    data = undefined;
+  }
+  if (auth && resp.status === 401) endSession();
+  return { ok: resp.ok, status: resp.status, data };
+}
 
 export interface User {
   id: string;
@@ -176,6 +229,8 @@ export async function getMyReferralsApi(): Promise<MyReferrals> {
  */
 export interface CertificateRecord {
   credentialId: string;
+  /** The name printed on the certificate. */
+  holderName?: string;
   title: string;
   scorePercent: number;
   issuedAt: string;
@@ -195,38 +250,20 @@ export async function getCertificatesApi(): Promise<CertificateRecord[]> {
 }
 
 export async function loginApi(email: string, password: string): Promise<LoginResponse> {
-  const resp = await fetch(`${API_BASE}/api/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ email, password }),
-  });
-
-  if (!resp.ok) {
-    const errData = await resp.json().catch(() => ({}));
-    throw new Error(errData.error || 'Failed to authenticate');
-  }
-
-  return resp.json();
+  const { ok, data } = await request('/api/login', { method: 'POST', body: { email, password }, auth: false });
+  if (!ok || !data) throw new Error(data?.error || 'Failed to authenticate');
+  return data;
 }
 
+/** A POST that needs no session (password reset, the hand-off claims). */
 async function postPublic(
   path: string,
   body: Record<string, unknown>,
   fallbackError: string,
 ): Promise<any> {
-  const resp = await fetch(`${API_BASE}${path}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-
-  const data = await resp.json().catch(() => ({}));
-  if (!resp.ok) {
-    throw new Error(data.error || fallbackError);
-  }
-  return data;
+  const { ok, data } = await request(path, { method: 'POST', body, auth: false });
+  if (!ok) throw new Error(data?.error || fallbackError);
+  return data ?? {};
 }
 
 /**
@@ -267,34 +304,13 @@ export async function confirmPasswordResetApi(
 }
 
 export async function graphqlRequest<T = any>(query: string, variables: Record<string, any> = {}): Promise<T> {
-  const token = localStorage.getItem('token');
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  const resp = await fetch(`${API_BASE}/api/graphql`, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({
-      query,
-      variables,
-    }),
-  });
-
-  const result = await resp.json();
+  const { status, data: result } = await request('/api/graphql', { method: 'POST', body: { query, variables } });
+  if (!result) throw new Error(`Unexpected response from the server (${status})`);
 
   if (result.errors && result.errors.length > 0) {
     const errMsg = result.errors[0].message || 'GraphQL Query Error';
-    if (errMsg === 'authentication required') {
-      localStorage.removeItem('token');
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
-    }
+    // GraphQL reports a missing or expired session as an error, not a 401.
+    if (errMsg === 'authentication required') endSession();
     throw new Error(errMsg);
   }
 
@@ -1151,6 +1167,26 @@ export interface CertificationOutcome {
   credentialId?: string;
   verifyUrl?: string;
   issuedAt?: string;
+  /** Which attempt of this registration this was, and how many it allows. */
+  attemptNo?: number;
+  maxAttempts?: number;
+  /** Attempts still available on this registration (0 once passed). */
+  attemptsLeft?: number;
+  /** The paper, so a retake can go back to its instructions. */
+  assessmentId?: string;
+  /** The name printed on the certificate. */
+  holderName?: string;
+  marks?: number;
+  maxMarks?: number;
+  timeTakenMinutes?: number;
+  durationMinutes?: number;
+  submittedAt?: string;
+  /** The exam's page on the marketing site (register, resit). */
+  examUrl?: string;
+  /** Set once no attempts are left: when a new registration opens. */
+  resitFrom?: string;
+  /** The attempt was ended by the tab-switch limit, not submitted. */
+  endedByProctor?: boolean;
 }
 
 export async function getCertificationOutcomeApi(attemptId: string): Promise<CertificationOutcome> {
@@ -1193,12 +1229,9 @@ export interface ScholarshipOutcome {
  * rather than erroring, so the result page can call it unconditionally.
  */
 export async function getScholarshipOutcomeApi(attemptId: string): Promise<ScholarshipOutcome> {
-  const token = localStorage.getItem('token');
-  const resp = await fetch(`${API_BASE}/api/scholarship/outcome?attemptId=${encodeURIComponent(attemptId)}`, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-  });
-  if (!resp.ok) return { isScholarship: false };
-  return resp.json();
+  const { ok, data } = await request(`/api/scholarship/outcome?attemptId=${encodeURIComponent(attemptId)}`);
+  if (!ok || !data) return { isScholarship: false };
+  return data;
 }
 
 // ── Live-class attendance ─────────────────────────────────────────────────────
@@ -1228,24 +1261,41 @@ export interface AttendanceHistory {
 }
 
 async function authedRequest<T>(method: string, path: string, body?: unknown): Promise<T> {
-  const token = localStorage.getItem('token');
-  const headers: Record<string, string> = {};
-  if (token) headers['Authorization'] = `Bearer ${token}`;
-  if (body !== undefined) headers['Content-Type'] = 'application/json';
-
-  const resp = await fetch(`${API_BASE}${path}`, {
-    method,
-    headers,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
-  });
-  // A dev server without a proxy for this path answers with index.html and a
-  // 200 — treat anything that is not JSON as a failure, not as an empty result.
-  if (!(resp.headers.get('content-type') || '').includes('application/json')) {
-    throw new Error(`Unexpected response from ${path} (${resp.status})`);
-  }
-  const data = await resp.json().catch(() => ({}));
-  if (!resp.ok) throw new Error(data.error || `Request failed (${resp.status})`);
+  const { ok, status, data } = await request(path, { method, body });
+  // Not JSON: most likely a dev server without a proxy for this path, which
+  // answers with index.html — a failure, not an empty result.
+  if (data === undefined) throw new Error(`Unexpected response from ${path} (${status})`);
+  if (!ok) throw new Error(data.error || `Request failed (${status})`);
   return data as T;
+}
+
+export interface CourseProgressRecord {
+  course_key: string;
+  max_index: number;
+  last_lesson: string;
+}
+
+/** How far the signed-in learner has read through every course they opened. */
+export const getCourseProgressApi = () =>
+  authedRequest<{ progress: CourseProgressRecord[] }>('GET', '/api/course-progress');
+
+/** Records progress in one course. The server keeps the furthest index it has seen. */
+export const saveCourseProgressApi = (courseKey: string, maxIndex: number, lastLesson: string) =>
+  authedRequest<CourseProgressRecord>('PUT', `/api/course-progress/${encodeURIComponent(courseKey)}`, {
+    max_index: maxIndex,
+    last_lesson: lastLesson,
+  });
+
+/**
+ * Asks the course AI mentor. The conversation goes to the api-gateway, which
+ * holds the model key and the mentor's instructions; only the reply comes back.
+ */
+export async function askMentorApi(
+  messages: { role: 'user' | 'assistant'; content: string }[],
+  course?: string,
+): Promise<string> {
+  const data = await authedRequest<{ reply: string }>('POST', '/api/ai-mentor/chat', { messages, course });
+  return data.reply;
 }
 
 /** Today's classes for the signed-in student, with the server's clock. */
@@ -1270,18 +1320,9 @@ export const getAttendanceHistoryApi = (from?: string, to?: string) => {
 // interrupt a candidate's test, so failures are swallowed by the callers.
 
 async function postIntegrity(path: string, body: unknown, keepalive = false): Promise<void> {
-  const token = localStorage.getItem('token');
-  const resp = await fetch(`${API_BASE}/api/integrity/${path}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-    body: JSON.stringify(body),
-    // Lets the last batch of snapshots leave even as the page unloads.
-    keepalive,
-  });
-  if (!resp.ok) throw new Error(`integrity ${path} failed (${resp.status})`);
+  // keepalive lets the last batch of snapshots leave even as the page unloads.
+  const { ok, status } = await request(`/api/integrity/${path}`, { method: 'POST', body, keepalive });
+  if (!ok) throw new Error(`integrity ${path} failed (${status})`);
 }
 
 /** Which browser session is sitting the attempt — the server spots a second one. */
@@ -1298,3 +1339,89 @@ export interface CodeSnapshot {
 /** Editor history for code playback in the reviewer's report. */
 export const integritySnapshotsApi = (attemptId: string, questionId: string, snapshots: CodeSnapshot[], keepalive = false) =>
   postIntegrity('snapshots', { attemptId, questionId, snapshots }, keepalive);
+
+// ── College link ──────────────────────────────────────────────────────────────
+// A student can link their account to their college, so its placement cell
+// sees their progress, attendance, test scores and certificates (never answers,
+// camera data or messages). Linking is the student's choice and can be undone.
+
+export interface CollegeLinkEntry {
+  collegeId: string;
+  name: string;
+  city: string;
+  rollNo: string;
+  branch: string;
+  year: string;
+  linkedAt?: string;
+}
+
+export const getCollegeLinkApi = () =>
+  authedRequest<{ college: CollegeLinkEntry | null; requests: CollegeLinkEntry[] }>('GET', '/api/college/link');
+export const linkCollegeApi = (body: { code: string; rollNo: string; branch: string; year: string }) =>
+  authedRequest<{ linked: boolean; collegeId: string; name: string }>('POST', '/api/college/link', body);
+export const unlinkCollegeApi = () => authedRequest<{ unlinked: boolean }>('DELETE', '/api/college/link');
+export const answerCollegeRequestApi = (collegeId: string, answer: 'accept' | 'decline') =>
+  authedRequest<{ linked?: boolean; declined?: boolean }>('POST', `/api/college/requests/${encodeURIComponent(collegeId)}/${answer}`);
+
+// ─── Profile photo & resume ──────────────────────────────────────────────────
+//
+// Files are sent as the raw request body (not JSON) and read back as blobs,
+// because the gateway needs the session header that an <img src> cannot send.
+
+export type UserFileKind = 'avatar' | 'resume';
+
+export interface UserFileMeta {
+  name: string;
+  size: number;
+  type: string;
+  updatedAt: string;
+}
+
+async function filesFetch(path: string, init: RequestInit = {}): Promise<Response> {
+  const token = localStorage.getItem('token');
+  const headers = new Headers(init.headers);
+  if (token) headers.set('Authorization', `Bearer ${token}`);
+  const resp = await fetch(`${API_BASE}/api/files${path}`, { ...init, headers });
+  if (resp.status === 401) endSession();
+  return resp;
+}
+
+async function filesError(resp: Response, fallback: string): Promise<never> {
+  let msg = fallback;
+  try {
+    const data = await resp.json();
+    if (data?.error) msg = data.error;
+  } catch { /* not JSON */ }
+  throw new Error(msg);
+}
+
+export async function getMyFilesApi(): Promise<Record<UserFileKind, UserFileMeta | null>> {
+  const resp = await filesFetch('/me');
+  if (!resp.ok) return filesError(resp, 'Could not load your files');
+  const data = await resp.json().catch(() => null);
+  if (!data || typeof data !== 'object') throw new Error('Could not load your files');
+  return { avatar: data.avatar ?? null, resume: data.resume ?? null };
+}
+
+export async function uploadMyFileApi(kind: UserFileKind, file: Blob, name: string): Promise<UserFileMeta> {
+  const resp = await filesFetch(`/me/${kind}?name=${encodeURIComponent(name)}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': file.type || 'application/octet-stream' },
+    body: file,
+  });
+  if (!resp.ok) return filesError(resp, 'Upload failed');
+  return resp.json();
+}
+
+export async function deleteMyFileApi(kind: UserFileKind): Promise<void> {
+  const resp = await filesFetch(`/me/${kind}`, { method: 'DELETE' });
+  if (!resp.ok) return filesError(resp, 'Could not delete the file');
+}
+
+/** The file itself, or null when nothing is uploaded. */
+export async function getMyFileBlobApi(kind: UserFileKind): Promise<Blob | null> {
+  const resp = await filesFetch(`/me/${kind}`);
+  if (resp.status === 404) return null;
+  if (!resp.ok) return filesError(resp, 'Could not open the file');
+  return resp.blob();
+}

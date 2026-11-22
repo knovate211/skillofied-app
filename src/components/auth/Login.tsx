@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import styles from './Login.module.css';
 import loginArt from '../../assets/apploginpage.png';
 import ForgotPasswordModal from './ForgotPasswordModal';
+import { claimLearnerData } from '../../lib/learnerData';
+import { setSession } from '../../lib/session';
+import knovateLogo from '../../assets/knovate-logo.svg';
 import { loginApi } from '../../api';
 
 interface LoginProps {
@@ -9,14 +12,6 @@ interface LoginProps {
 }
 
 /** The K mark, drawn so it stays crisp beside the wordmark at any size. */
-const Mark: React.FC<{ size?: number }> = ({ size = 34 }) => (
-  <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
-    <path d="M4 3h7v26H4z" fill="#CE9C3C" />
-    <path d="M11 16 21 3h8L19 16z" fill="#E9C273" />
-    <path d="M11 16h8l10 13h-8z" fill="#B5701F" />
-  </svg>
-);
-
 const MailIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
     <rect x="3" y="5" width="18" height="14" rx="2" />
@@ -55,8 +50,8 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
     try {
       const data = await loginApi(email, password);
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      setSession(data.token, data.user);
+      claimLearnerData(data.user?.id);
       setIsLoading(false);
       onLogin();
     } catch (err: any) {
@@ -86,7 +81,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       {/* ── Sign-in card ── */}
       <div className={styles.formPanel}>
         <div className={`${styles.card} ${shake ? styles.shake : ''}`}>
-          <span className={styles.cardLogo}><Mark size={32} /> Knovate</span>
+          <span className={styles.cardLogo}><img src={knovateLogo} alt="Knovate" style={{ height: 44, width: 'auto' }} /></span>
           <h1 className={styles.heading}>LMS Login</h1>
           <p className={styles.sub}>Continue your learning journey. Sign in to your account.</p>
 
