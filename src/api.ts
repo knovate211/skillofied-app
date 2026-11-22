@@ -1362,3 +1362,66 @@ export const linkCollegeApi = (body: { code: string; rollNo: string; branch: str
 export const unlinkCollegeApi = () => authedRequest<{ unlinked: boolean }>('DELETE', '/api/college/link');
 export const answerCollegeRequestApi = (collegeId: string, answer: 'accept' | 'decline') =>
   authedRequest<{ linked?: boolean; declined?: boolean }>('POST', `/api/college/requests/${encodeURIComponent(collegeId)}/${answer}`);
+
+// ─── Profile photo & resume ──────────────────────────────────────────────────
+//
+// Files are sent as the raw request body (not JSON) and read back as blobs,
+// because the gateway needs the session header that an <img src> cannot send.
+
+export type UserFileKind = 'avatar' | 'resume';
+
+export interface UserFileMeta {
+  name: string;
+  size: number;
+  type: string;
+  updatedAt: string;
+}
+
+async function filesFetch(path: string, init: RequestInit = {}): Promise<Response> {
+  const token = localStorage.getItem('token');
+  const headers = new Headers(init.headers);
+  if (token) headers.set('Authorization', `Bearer ${token}`);
+  const resp = await fetch(`${API_BASE}/api/files${path}`, { ...init, headers });
+  if (resp.status === 401) endSession();
+  return resp;
+}
+
+async function filesError(resp: Response, fallback: string): Promise<never> {
+  let msg = fallback;
+  try {
+    const data = await resp.json();
+    if (data?.error) msg = data.error;
+  } catch { /* not JSON */ }
+  throw new Error(msg);
+}
+
+export async function getMyFilesApi(): Promise<Record<UserFileKind, UserFileMeta | null>> {
+  const resp = await filesFetch('/me');
+  if (!resp.ok) return filesError(resp, 'Could not load your files');
+  const data = await resp.json().catch(() => null);
+  if (!data || typeof data !== 'object') throw new Error('Could not load your files');
+  return { avatar: data.avatar ?? null, resume: data.resume ?? null };
+}
+
+export async function uploadMyFileApi(kind: UserFileKind, file: Blob, name: string): Promise<UserFileMeta> {
+  const resp = await filesFetch(`/me/${kind}?name=${encodeURIComponent(name)}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': file.type || 'application/octet-stream' },
+    body: file,
+  });
+  if (!resp.ok) return filesError(resp, 'Upload failed');
+  return resp.json();
+}
+
+export async function deleteMyFileApi(kind: UserFileKind): Promise<void> {
+  const resp = await filesFetch(`/me/${kind}`, { method: 'DELETE' });
+  if (!resp.ok) return filesError(resp, 'Could not delete the file');
+}
+
+/** The file itself, or null when nothing is uploaded. */
+export async function getMyFileBlobApi(kind: UserFileKind): Promise<Blob | null> {
+  const resp = await filesFetch(`/me/${kind}`);
+  if (resp.status === 404) return null;
+  if (!resp.ok) return filesError(resp, 'Could not open the file');
+  return resp.blob();
+}

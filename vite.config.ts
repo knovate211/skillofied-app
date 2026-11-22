@@ -67,6 +67,11 @@ export default defineConfig(({ mode }) => {
           target: apiTarget,
           changeOrigin: true,
         },
+        // Profile photo and resume uploads.
+        '/api/files': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
         // Live-class attendance: the pop-up and the profile Attendance tab.
         '/api/attendance': {
           target: apiTarget,

@@ -1,0 +1,51 @@
+/* Profile photo, drawn inside the existing 76px avatar disc. */
+.avatarBox { position: absolute; inset: 7px; }
+.avatarBtn {
+  position: relative; width: 100%; height: 100%; padding: 0; border: none; border-radius: 50%;
+  background: transparent; cursor: pointer; display: grid; place-items: center;
+}
+.avatarBtn:disabled { cursor: progress; }
+.avatarBtn:focus-visible { outline: 3px solid var(--accent, #c98a3a); outline-offset: 2px; }
+.avatarImg { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+.initials { color: #fff; font-weight: 700; font-size: 1.3rem; letter-spacing: 1px; }
+.camera {
+  position: absolute; right: -4px; bottom: -4px; width: 28px; height: 28px; border-radius: 50%;
+  background: #2b2620; color: #fff; display: grid; place-items: center; border: 2px solid var(--bg-surface, #fff);
+}
+.camera svg { width: 14px; height: 14px; }
+.avatarBtn:hover .camera { background: #c98a3a; }
+.spinner { width: 12px; height: 12px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+
+.menu {
+  position: absolute; top: calc(100% + 10px); left: 0; z-index: 30; min-width: 160px; padding: 4px;
+  background: var(--bg-surface, #fff); border: 1px solid var(--border, #e7e3da); border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.14); display: flex; flex-direction: column;
+}
+.menu button {
+  text-align: left; padding: 9px 12px; border: none; background: transparent; border-radius: 7px;
+  font: inherit; font-size: .9rem; color: var(--text-primary, #2b2620); cursor: pointer;
+}
+.menu button:hover { background: rgba(201, 138, 58, .1); }
+.danger { color: #c0492f !important; }
+.avatarError {
+  position: absolute; top: calc(100% + 10px); left: 0; width: 220px; z-index: 29;
+  font-size: .8rem; color: #c0492f; background: #fbecea; border-radius: 8px; padding: 6px 8px;
+}
+
+/* Resume card */
+.resumeCard { cursor: default; align-items: flex-start; }
+.resumeCard:hover { transform: none; }
+.resumeText { min-width: 0; flex: 1; }
+.resumeText > div:nth-child(2) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.resumeSub { font-size: .78rem; color: var(--text-secondary, #6c6455); margin-top: 2px; }
+.resumeError { font-size: .8rem; color: #c0492f; margin-top: 4px; }
+.resumeActions { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.resumeActions button {
+  padding: 5px 12px; border-radius: 7px; border: 1px solid rgba(43, 38, 32, .25); background: transparent;
+  font: inherit; font-size: .8rem; font-weight: 600; color: var(--text-primary, #2b2620); cursor: pointer;
+}
+.resumeActions button:hover:not(:disabled) { background: rgba(43, 38, 32, .06); }
+.resumeActions button:disabled { opacity: .55; cursor: progress; }
+.resumeActions button.danger { border-color: rgba(192, 73, 47, .4); }
